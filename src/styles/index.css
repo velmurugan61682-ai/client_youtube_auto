@@ -1,0 +1,262 @@
+@import "tailwindcss";
+
+:root {
+  /* Design System - YouTube Studio Inspired */
+  --bg-app: #f9f9f9;
+  --bg-card: #ffffff;
+  --bg-sidebar: #ffffff;
+  
+  --primary: #ff0000; /* YouTube Red */
+  --primary-hover: #cc0000;
+  --primary-soft: #fff1f0;
+  
+  --secondary: #065fd4; /* YouTube Blue */
+  
+  --text-main: #0f0f0f;
+  --text-sub: #606060;
+  --text-dim: #909090;
+  
+  --border-main: #e5e5e5;
+  --border-soft: #f2f2f2;
+  
+  --success: #2ba640;
+  --success-soft: #e6f4ea;
+  --error: #d93025;
+  --error-soft: #fce8e6;
+  --warning: #f9ab00;
+  --warning-soft: #fff8e1;
+  
+  --radius-card: 32px;
+  --radius-button: 16px;
+  --radius-input: 16px;
+  
+  --header-h: 72px;
+  --sidebar-w: 280px;
+  
+  --shadow-card: 0 4px 12px rgba(0,0,0,0.03);
+  --shadow-hover: 0 20px 40px -12px rgba(0,0,0,0.1);
+}
+
+@layer base {
+  body {
+    background-color: #fafafa;
+    color: var(--text-main);
+    font-family: 'Outfit', 'Inter', -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.01em;
+  }
+
+  /* Responsive Typography */
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.25rem; }
+  h3 { font-size: 1.125rem; }
+
+  @media (min-width: 768px) {
+    h1 { font-size: 1.875rem; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.25rem; }
+  }
+}
+
+/* --- Layout Components --- */
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.main-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100vh;
+}
+
+.content-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem; /* p-4 for mobile */
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (min-width: 768px) {
+  .content-scroll {
+    padding: 1.5rem; /* p-6 */
+  }
+}
+
+@media (min-width: 1024px) {
+  .content-scroll {
+    padding: 2rem; /* lg:p-8 */
+  }
+}
+
+/* --- UI Components --- */
+
+.yt-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-main);
+  border-radius: var(--radius-card);
+  padding: 1rem; /* Reduced for mobile */
+  box-shadow: var(--shadow-card);
+  transition: all 0.3s ease;
+}
+
+@media (min-width: 768px) {
+  .yt-card {
+    padding: 1.5rem;
+  }
+}
+
+.yt-card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.875rem 1rem; /* Slightly larger for touch */
+  margin: 0 0.5rem;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-sub);
+  transition: all 0.15s ease;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sidebar-item:active {
+  background-color: var(--border-soft);
+}
+
+.sidebar-item:hover {
+  background-color: var(--border-soft);
+  color: var(--text-main);
+}
+
+.sidebar-item.active {
+  background-color: var(--primary-soft);
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.yt-btn-primary {
+  background-color: var(--primary);
+  color: white;
+  font-weight: 700;
+  padding: 0.75rem 1.5rem; /* Larger for mobile touch */
+  border-radius: var(--radius-button);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (min-width: 768px) {
+  .yt-btn-primary {
+    padding: 0.625rem 1.5rem;
+  }
+}
+
+.yt-btn-primary:active {
+  transform: scale(0.98);
+}
+
+.yt-input {
+  width: 100%;
+  background-color: var(--bg-app);
+  border: 1px solid var(--border-main);
+  color: var(--text-main);
+  border-radius: var(--radius-input);
+  padding: 0.75rem 1rem;
+  font-size: 1rem; /* 16px to prevent zoom on iOS */
+  transition: all 0.2s ease;
+}
+
+@media (min-width: 768px) {
+  .yt-input {
+    font-size: 0.875rem;
+  }
+}
+
+/* --- Badges --- */
+
+.yt-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+  .yt-badge {
+    font-size: 10px;
+  }
+}
+
+.yt-badge-success { background-color: var(--success-soft); color: var(--success); }
+.yt-badge-danger { background-color: var(--error-soft); color: var(--error); }
+.yt-badge-warning { background-color: var(--warning-soft); color: #b45309; }
+.yt-badge-neutral { background-color: var(--border-soft); color: var(--text-sub); }
+
+/* --- Scrollbar --- */
+
+.custom-scroll::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+@media (max-width: 1024px) {
+  .custom-scroll::-webkit-scrollbar {
+    width: 0px; /* Hide scrollbar for cleaner look on touch devices */
+    height: 0px;
+  }
+}
+
+.custom-scroll {
+  scrollbar-width: thin;
+  -ms-overflow-style: none;
+}
+
+/* --- Animations --- */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
+}
