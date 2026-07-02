@@ -6,8 +6,19 @@ export const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    const token = localStorage.getItem('token');
+    console.log('INITIAL TOKEN:', token);
+    return !!token;
+  });
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem('user');
+    try {
+      return savedUser ? JSON.parse(savedUser) : null;
+    } catch {
+      return null;
+    }
+  });
   const [authLoading, setAuthLoading] = useState(true);
 
   const checkAuth = useCallback(async () => {
@@ -26,14 +37,15 @@ export const AuthProvider = ({ children }) => {
 
       if (sso_username && sso_key) {
         try {
-          const res = await api.post('/auth/sso', { sso_username, sso_key });
-          localStorage.setItem('token', res.data.token);
+          const response = await api.post('/auth/sso', { sso_username, sso_key });
+          localStorage.setItem('token', response.data.token);
+          localStorage.setItem('user', JSON.stringify(response.data.user));
           
           // Clear SSO params from URL
           const newUrl = window.location.pathname;
           window.history.replaceState({}, '', newUrl);
           
-          setUser(res.data.user);
+          setUser(response.data.user);
           setIsAuthenticated(true);
           setAuthLoading(false);
           return;
@@ -46,12 +58,17 @@ export const AuthProvider = ({ children }) => {
 
       const res = await api.get('/auth/me');
       setUser(res.data);
+      localStorage.setItem('user', JSON.stringify(res.data));
       setIsAuthenticated(true);
     } catch (error) {
       console.warn('Auth check failed:', error.message);
       setIsAuthenticated(false);
       setUser(null);
-      localStorage.removeItem('token');
+      if (error.response?.status === 401) {
+        console.log('TOKEN REMOVED: checkAuth failed');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+      }
     } finally {
       setAuthLoading(false);
     }
@@ -66,7 +83,9 @@ export const AuthProvider = ({ children }) => {
         if (error.response?.status === 401) {
           setIsAuthenticated(false);
           setUser(null);
+          console.log('TOKEN REMOVED: response interceptor 401');
           localStorage.removeItem('token');
+          localStorage.removeItem('user');
         }
         return Promise.reject(error);
       }
@@ -77,17 +96,25 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const res = await api.post('/auth/login', { email, password });
-      if (res.data.token) {
-        localStorage.setItem('token', res.data.token);
+      const response = await api.post('/auth/login', { email, password });
+      if (response.data.token) {
+        localStorage.setItem('token', response.data.token);
+        console.log('TOKEN AFTER LOGIN:', localStorage.getItem('token'));
       }
-      setUser(res.data.user);
+      if (response.data.user) {
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+      }
+      setUser(response.data.user);
       setIsAuthenticated(true);
-      return res.data;
+      return response.data;
     } catch (error) {
       setIsAuthenticated(false);
       setUser(null);
-      localStorage.removeItem('token');
+      if (error.response?.status === 401) {
+        console.log('TOKEN REMOVED: login failed');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+      }
       throw error;
     }
   };
@@ -106,7 +133,9 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setIsAuthenticated(false);
       setUser(null);
+      console.log('TOKEN REMOVED: user logged out');
       localStorage.removeItem('token');
+      localStorage.removeItem('user');
     }
   };
 

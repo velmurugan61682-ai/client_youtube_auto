@@ -3,7 +3,7 @@ import axios from 'axios';
 // RUNTIME Dynamic Base URL detection
 const getBaseURL = () => {
   // 1. Check if we have an explicit ENV variable (highest priority)
-  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
+  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL.replace('/auth/google', '');
   
   // 2. Check if we are running on Vercel (production)
   const isProd = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
@@ -30,24 +30,38 @@ const api = axios.create({
 });
 
 // Request interceptor to attach Bearer Token
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+
+  console.log('Token exists:', !!token);
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+    console.log('Authorization header attached');
+  }
+
+  return config;
+});
 
 // Response interceptor for global error handling
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-       localStorage.removeItem('token');
+      console.error(
+        '401 Unauthorized:',
+        error.response.data
+      );
+
+      console.log('TOKEN REMOVED BECAUSE OF 401');
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+
+      if (error.config && !error.config.url.endsWith('/auth/login')) {
+        window.location.href = '/';
+      }
     }
+
     return Promise.reject(error);
   }
 );

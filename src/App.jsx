@@ -45,6 +45,11 @@ import Register from './components/Register';
 
 const App = () => {
   const { user, authLoading, logout } = useAuth();
+  
+  console.log("Current pathname:", window.location.pathname);
+  console.log("Authentication state:", !!user);
+  console.log("Token exists:", !!localStorage.getItem("token"));
+
   const [isRegistering, setIsRegistering] = useState(false);
   const [activeTab, setActiveTab] = useState(() => {
     const queryParams = new URLSearchParams(window.location.search);
@@ -119,6 +124,11 @@ const App = () => {
   }, [user]);
 
   const fetchAnalytics = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.log('Waiting for login...');
+      return;
+    }
     try {
       const url = selectedChannelId ? `/analytics?channelId=${selectedChannelId}` : '/analytics';
       const res = await api.get(url);
@@ -132,6 +142,11 @@ const App = () => {
   };
 
   const fetchChannels = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.log('Waiting for login...');
+      return;
+    }
     try {
       const res = await api.get('/youtube/channels');
       setChannels(res.data);

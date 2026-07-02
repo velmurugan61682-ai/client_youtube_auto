@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 const Login = ({ onSwitchToRegister }) => {
   const { login } = useAuth();
@@ -20,6 +21,15 @@ const Login = ({ onSwitchToRegister }) => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  let navigate;
+  try {
+    navigate = useNavigate();
+  } catch {
+    navigate = (path) => {
+      console.log('Navigating to:', path);
+    };
+  }
 
   // Detect if we're inside an embedded iframe (switch account mode)
   const isEmbedded = new URLSearchParams(window.location.search).get('embed') === 'true';
@@ -31,6 +41,9 @@ const Login = ({ onSwitchToRegister }) => {
       setError('');
       try {
         await login(email, password);
+        console.log("Login successful");
+        console.log("Navigating to dashboard...");
+        navigate('/dashboard');
       } catch (err) {
         setError(err.response?.data?.error || 'Invalid credentials. Please try again.');
       } finally {
