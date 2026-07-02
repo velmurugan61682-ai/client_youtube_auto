@@ -22,7 +22,7 @@ export const API_BASE_URL = getBaseURL().endsWith('/') ? getBaseURL().slice(0, -
 
 const api = axios.create({
   baseURL: `${API_BASE_URL}/api`,
-  timeout: 15000,
+  timeout: 60000, // Increased to 60 seconds to accommodate Render backend cold start
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -35,35 +35,12 @@ api.interceptors.request.use((config) => {
 
   console.log('Token exists:', !!token);
 
-  if (token) {
+  if (token && token !== 'null' && token !== 'undefined') {
     config.headers.Authorization = `Bearer ${token}`;
     console.log('Authorization header attached');
   }
 
   return config;
 });
-
-// Response interceptor for global error handling
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      console.error(
-        '401 Unauthorized:',
-        error.response.data
-      );
-
-      console.log('TOKEN REMOVED BECAUSE OF 401');
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-
-      if (error.config && !error.config.url.endsWith('/auth/login')) {
-        window.location.href = '/';
-      }
-    }
-
-    return Promise.reject(error);
-  }
-);
 
 export default api;

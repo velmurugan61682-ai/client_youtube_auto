@@ -9,12 +9,12 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     const token = localStorage.getItem('token');
     console.log('INITIAL TOKEN:', token);
-    return !!token;
+    return !!token && token !== 'null' && token !== 'undefined';
   });
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('user');
     try {
-      return savedUser ? JSON.parse(savedUser) : null;
+      return savedUser && savedUser !== 'null' && savedUser !== 'undefined' ? JSON.parse(savedUser) : null;
     } catch {
       return null;
     }
@@ -23,23 +23,20 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuth = useCallback(async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        setAuthLoading(false);
-        return;
-      }
-
-      setAuthLoading(true);
-
       const queryParams = new URLSearchParams(window.location.search);
       const sso_username = queryParams.get('sso_username');
       const sso_key = queryParams.get('sso_key');
 
       if (sso_username && sso_key) {
         try {
+          setAuthLoading(true);
           const response = await api.post('/auth/sso', { sso_username, sso_key });
-          localStorage.setItem('token', response.data.token);
-          localStorage.setItem('user', JSON.stringify(response.data.user));
+          if (response.data.token) {
+            localStorage.setItem('token', response.data.token);
+          }
+          if (response.data.user) {
+            localStorage.setItem('user', JSON.stringify(response.data.user));
+          }
           
           // Clear SSO params from URL
           const newUrl = window.location.pathname;
@@ -56,6 +53,15 @@ export const AuthProvider = ({ children }) => {
         }
       }
 
+      const token = localStorage.getItem('token');
+      if (!token || token === 'null' || token === 'undefined') {
+        setAuthLoading(false);
+        setIsAuthenticated(false);
+        setUser(null);
+        return;
+      }
+
+      setAuthLoading(true);
       const res = await api.get('/auth/me');
       setUser(res.data);
       localStorage.setItem('user', JSON.stringify(res.data));
