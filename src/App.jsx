@@ -141,8 +141,9 @@ const App = () => {
     try {
       const res = await api.get('/youtube/channels');
       setChannels(res.data);
-      if (res.data.length > 0 && !selectedChannelId) {
-        setSelectedChannelId(res.data[0].channelId);
+      const channelExists = res.data.some(c => c.channelId === selectedChannelId);
+      if (!channelExists) {
+        setSelectedChannelId(res.data.length > 0 ? res.data[0].channelId : null);
       }
     } catch (err) {
       console.error('Fetch Channels Error:', err);
