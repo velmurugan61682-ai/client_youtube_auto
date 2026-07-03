@@ -46,6 +46,7 @@ import Register from './components/Register';
 const App = () => {
   const { user, authLoading, logout } = useAuth();
   
+  console.log("VITE_GOOGLE_CLIENT_ID:", import.meta.env.VITE_GOOGLE_CLIENT_ID);
   console.log("Current pathname:", window.location.pathname);
   console.log("Authentication state:", !!user);
   console.log("Token exists:", !!localStorage.getItem("token"));
@@ -221,7 +222,10 @@ const App = () => {
         return <ChannelsPage 
           channels={channels} 
           onDisconnect={disconnectChannel}
-          onAdd={() => window.location.href = `${API_BASE_URL}/auth`}
+          onAdd={() => {
+            const token = localStorage.getItem('token');
+            window.location.href = `${API_BASE_URL}/auth?token=${token}`;
+          }}
           setActiveTab={setActiveTab}
           setSelectedChannelId={setSelectedChannelId}
         />;

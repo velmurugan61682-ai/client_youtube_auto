@@ -1,5 +1,5 @@
 import React from 'react';
-import { PlaySquare, Trash2, Calendar, ShieldCheck } from 'lucide-react';
+import { PlaySquare, Trash2, Calendar, ShieldCheck, AlertTriangle } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const ChannelsPage = ({ channels, onDisconnect, onAdd, setActiveTab, setSelectedChannelId }) => {
@@ -38,25 +38,43 @@ const ChannelsPage = ({ channels, onDisconnect, onAdd, setActiveTab, setSelected
                 <h3 className="text-lg font-black text-[#0f0f0f] truncate">{channel.title}</h3>
                 <p className="text-[12px] font-bold text-[#909090] mt-0.5">ID: {channel.channelId.substring(0, 12)}...</p>
                 <div className="mt-4 flex items-center gap-3">
-                   <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#2ba640] bg-[#e6f4ea] px-2.5 py-1 rounded-full">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#2ba640] animate-pulse"></div>
-                      Active
-                   </div>
-                   <span className="text-[11px] font-bold text-[#909090] uppercase tracking-widest">Scanning Live</span>
+                   {channel.reconnectRequired ? (
+                     <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#d93025] bg-[#fce8e6] px-2.5 py-1 rounded-full" title={channel.reconnectReason || 'Token invalid or revoked'}>
+                        <AlertTriangle size={12} className="text-[#d93025]" />
+                        Reconnect Required
+                     </div>
+                   ) : (
+                     <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#2ba640] bg-[#e6f4ea] px-2.5 py-1 rounded-full">
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#2ba640] animate-pulse"></div>
+                        Active
+                     </div>
+                   )}
+                   <span className="text-[11px] font-bold text-[#909090] uppercase tracking-widest">
+                     {channel.reconnectRequired ? 'Paused' : 'Scanning Live'}
+                   </span>
                 </div>
               </div>
             </div>
             
             <div className="mt-6 pt-5 border-t border-[#f8f8f8] flex items-center justify-between">
-               <button 
-                 onClick={() => {
-                   setSelectedChannelId(channel.channelId);
-                   setActiveTab('videos');
-                 }}
-                 className="text-[13px] font-bold text-[#065fd4] hover:underline flex items-center gap-1"
-               >
-                 View Videos
-               </button>
+               {channel.reconnectRequired ? (
+                 <button 
+                   onClick={onAdd}
+                   className="text-[13px] font-bold text-[#d93025] hover:underline flex items-center gap-1"
+                 >
+                   Reconnect Now
+                 </button>
+               ) : (
+                 <button 
+                   onClick={() => {
+                     setSelectedChannelId(channel.channelId);
+                     setActiveTab('videos');
+                   }}
+                   className="text-[13px] font-bold text-[#065fd4] hover:underline flex items-center gap-1"
+                 >
+                   View Videos
+                 </button>
+               )}
                <button 
                  onClick={() => onDisconnect(channel.channelId, channel.title)}
                  className="text-[13px] font-bold text-[#909090] hover:text-[#d93025] transition-colors flex items-center gap-1"

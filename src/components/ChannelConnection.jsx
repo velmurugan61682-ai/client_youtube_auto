@@ -25,6 +25,7 @@ const ChannelConnection = ({ channels, setChannels }) => {
   const [success, setSuccess] = useState('');
 
   const handleOAuthConnect = () => {
+    console.log("VITE_GOOGLE_CLIENT_ID:", import.meta.env.VITE_GOOGLE_CLIENT_ID);
     const isProd = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
     const apiBase = import.meta.env.VITE_API_URL?.replace('/api', '') || (isProd ? window.location.origin : 'http://localhost:5000');
     
