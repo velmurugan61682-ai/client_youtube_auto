@@ -24,17 +24,23 @@ const ChannelConnection = ({ channels, setChannels }) => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  const handleOAuthConnect = () => {
+  const handleOAuthConnect = async () => {
     console.log("VITE_GOOGLE_CLIENT_ID:", import.meta.env.VITE_GOOGLE_CLIENT_ID);
-    const isProd = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
-    const apiBase = import.meta.env.VITE_API_URL?.replace('/api', '') || (isProd ? window.location.origin : 'http://localhost:5000');
-    
-    if (isProd && !import.meta.env.VITE_API_URL) {
-      alert("⚠️ Production Configuration Error: The backend URL is not set in Vercel. Please follow the deployment instructions provided by the AI.");
-      return;
+    try {
+      setLoading(true);
+      setError('');
+      setSuccess('');
+      const res = await api.post('/youtube/auth/initiate');
+      if (res.data.redirectUrl) {
+        window.location.href = res.data.redirectUrl;
+      } else {
+        throw new Error('No redirect URL received');
+      }
+    } catch (err) {
+      setError(err.response?.data?.error || err.message || 'Failed to initiate secure connection');
+    } finally {
+      setLoading(false);
     }
-    
-    window.location.href = `${apiBase}/api/youtube/auth`;
   };
 
   const handleApiKeyConnect = async (e) => {

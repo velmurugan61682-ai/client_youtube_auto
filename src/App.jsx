@@ -222,9 +222,15 @@ const App = () => {
         return <ChannelsPage 
           channels={channels} 
           onDisconnect={disconnectChannel}
-          onAdd={() => {
-            const token = localStorage.getItem('token');
-            window.location.href = `${API_BASE_URL}/auth?token=${token}`;
+          onAdd={async () => {
+            try {
+              const res = await api.post('/youtube/auth/initiate');
+              if (res.data.redirectUrl) {
+                window.location.href = res.data.redirectUrl;
+              }
+            } catch (err) {
+              alert(err.response?.data?.error || 'Failed to initiate secure connection');
+            }
           }}
           setActiveTab={setActiveTab}
           setSelectedChannelId={setSelectedChannelId}
