@@ -1,7 +1,7 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
 import axios from 'axios';
 import api, { API_BASE_URL } from './services/api';
-import { io } from 'socket.io-client';
+import { connectSocket, disconnectSocket } from './services/socket';
 import { 
   MessageSquare, 
   ShieldCheck, 
@@ -90,37 +90,26 @@ const App = () => {
       fetchAnalytics();
       fetchChannels();
       
-      const socket = io(API_BASE_URL, {
-        transports: ['websocket', 'polling'],
-        reconnectionAttempts: 5,
-        reconnectionDelay: 2000,
-        auth: {
-          token: localStorage.getItem('token')
-        }
-      });
+      const socket = connectSocket(localStorage.getItem('token'));
 
-      console.log('🔌 Connecting to WebSocket...');
-      
-      socket.on('connect', () => {
-        console.log('✅ WebSocket Connected');
-      });
-      
-      socket.on('connect_error', (err) => {
-        console.error('❌ WebSocket Connection Error:', err.message);
-      });
-
-      socket.on('live_activity', (activity) => {
+      const handleLiveActivity = (activity) => {
         setActivities(prev => {
           if (prev.find(a => (a._id || a.id) === (activity._id || activity.id))) return prev;
           const updated = [activity, ...prev];
           return updated.slice(0, 10);
         });
-      });
+      };
 
+      socket.on('live_activity', handleLiveActivity);
       socket.on('stats_updated', fetchAnalytics);
       socket.on('new_comment_analyzed', fetchAnalytics);
       
-      return () => socket.disconnect();
+      return () => {
+        socket.off('live_activity', handleLiveActivity);
+        socket.off('stats_updated', fetchAnalytics);
+        socket.off('new_comment_analyzed', fetchAnalytics);
+        disconnectSocket();
+      };
     }
   }, [user]);
 

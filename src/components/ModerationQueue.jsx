@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
-import { io } from 'socket.io-client';
+import { getSocket } from '../services/socket';
 import { 
   ThumbsUp, 
   Trash2, 
@@ -35,16 +35,14 @@ const ModerationQueue = ({ onAction, searchQuery }) => {
   useEffect(() => {
     fetchComments();
 
-    const socketUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000';
-    const socket = io(socketUrl, {
-      transports: ['websocket', 'polling'],
-      reconnectionAttempts: 5,
-      reconnectionDelay: 2000,
-    });
+    const socket = getSocket();
     socket.on('stats_updated', fetchComments);
     socket.on('new_comment_analyzed', fetchComments);
     
-    return () => socket.disconnect();
+    return () => {
+      socket.off('stats_updated', fetchComments);
+      socket.off('new_comment_analyzed', fetchComments);
+    };
   }, [filter]);
 
   const fetchComments = async () => {
