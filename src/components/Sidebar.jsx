@@ -9,7 +9,8 @@ import {
   Zap,
   UsersRound,
   ChevronRight,
-  ShieldAlert
+  ShieldAlert,
+  Clock
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -20,6 +21,7 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen }) => {
     { id: 'channels', label: 'Channels', icon: PlaySquare },
     { id: 'leads', label: 'Leads', icon: UsersRound },
     { id: 'moderation', label: 'Auto-Mod', icon: ShieldCheck },
+    { id: 'autoschedule', label: 'Auto-Schedule', icon: Clock },
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
 

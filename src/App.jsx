@@ -36,6 +36,7 @@ const ChannelsPage = lazy(() => import('./pages/ChannelsPage'));
 const ModerationPage = lazy(() => import('./pages/ModerationPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 const LeadsPage = lazy(() => import('./pages/LeadsPage'));
+const AutoSchedulePage = lazy(() => import('./pages/AutoSchedule'));
 
 // Components
 import Header from './components/Header';
@@ -228,6 +229,12 @@ const App = () => {
         return <ModerationPage channels={channels} onAction={fetchAnalytics} searchQuery={searchQuery} />;
       case 'leads':
         return <LeadsPage searchQuery={searchQuery} />;
+      case 'autoschedule':
+        return <AutoSchedulePage 
+          channels={channels}
+          selectedChannelId={selectedChannelId}
+          setSelectedChannelId={setSelectedChannelId}
+        />;
       case 'settings':
         return <SettingsPage />;
       default:
