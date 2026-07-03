@@ -107,6 +107,7 @@ const AutoSchedule = ({ channels = [], selectedChannelId, setSelectedChannelId }
         headers: {
           'Content-Type': 'multipart/form-data',
         },
+        timeout: 30 * 60 * 1000, // 30 minutes timeout for this request
         onUploadProgress: (progressEvent) => {
           const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
           setUploadProgress(percentCompleted);
