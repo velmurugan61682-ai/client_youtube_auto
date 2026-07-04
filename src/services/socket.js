@@ -16,6 +16,7 @@ export const getSocket = () => {
     console.log(`🔌 [Socket.IO] Initializing singleton instance for URL: ${socketUrl}`);
 
     socket = io(socketUrl, {
+      reconnection: true,
       transports: ['polling', 'websocket'], // Robust default: start with polling, upgrade to WS
       reconnectionAttempts: 10,
       reconnectionDelay: 2000,

@@ -37,6 +37,7 @@ const ModerationPage = lazy(() => import('./pages/ModerationPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 const LeadsPage = lazy(() => import('./pages/LeadsPage'));
 const AutoSchedulePage = lazy(() => import('./pages/AutoSchedule'));
+const AutoDmPage = lazy(() => import('./pages/AutoDm'));
 
 // Components
 import Header from './components/Header';
@@ -232,6 +233,12 @@ const App = () => {
         return <LeadsPage searchQuery={searchQuery} />;
       case 'autoschedule':
         return <AutoSchedulePage 
+          channels={channels}
+          selectedChannelId={selectedChannelId}
+          setSelectedChannelId={setSelectedChannelId}
+        />;
+      case 'autodm':
+        return <AutoDmPage 
           channels={channels}
           selectedChannelId={selectedChannelId}
           setSelectedChannelId={setSelectedChannelId}
