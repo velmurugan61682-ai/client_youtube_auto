@@ -59,8 +59,7 @@ const App = () => {
     if (queryParams.get('status') === 'success') {
       // Small alert to confirm success
       setTimeout(() => alert('✅ YouTube Channel Connected Successfully!'), 500);
-      // Clean up the URL to avoid repeated alerts on refresh
-      window.history.replaceState({}, document.title, window.location.pathname);
+      return 'channels';
     }
     return queryParams.get('redirect') === 'comments' ? 'videos' : 'dashboard';
   });
@@ -70,7 +69,17 @@ const App = () => {
   });
   const [stats, setStats] = useState(null);
   const [channels, setChannels] = useState([]);
-  const [selectedChannelId, setSelectedChannelId] = useState(null);
+  const [selectedChannelId, setSelectedChannelId] = useState(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+    return queryParams.get('channelId') || null;
+  });
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+    if (queryParams.get('status') === 'success') {
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
   const [loading, setLoading] = useState(true);
   const [activities, setActivities] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(() => {
