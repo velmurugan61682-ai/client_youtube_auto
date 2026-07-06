@@ -242,6 +242,7 @@ const AutoDm = ({ channels, selectedChannelId, setSelectedChannelId }) => {
               <KeywordEditor
                 keywords={config.keywords}
                 onChange={(val) => setConfig({ ...config, keywords: val })}
+                videoId={selectedVideoId}
               />
               <TemplateEditor
                 templates={config.replyTemplates}

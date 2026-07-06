@@ -1,20 +1,59 @@
 import React, { useState } from 'react';
-import { Plus, X } from 'lucide-react';
+import { Plus, X, Loader2 } from 'lucide-react';
+import { addKeyword, removeKeyword } from '../../services/api/autoDmApi';
 
-const KeywordEditor = ({ keywords, onChange }) => {
+// FIX #5: KeywordEditor now calls atomic $addToSet / $pull backend routes directly.
+// This prevents existing keywords from being deleted when a new keyword is added,
+// which happened because the old flow replaced the full array on save.
+const KeywordEditor = ({ keywords, onChange, videoId }) => {
   const [newKeyword, setNewKeyword] = useState('');
+  const [adding, setAdding] = useState(false);
+  const [removingKeyword, setRemovingKeyword] = useState(null);
 
-  const handleAdd = (e) => {
+  const handleAdd = async (e) => {
     e.preventDefault();
     const keyword = newKeyword.trim().toLowerCase();
-    if (keyword && !keywords.includes(keyword)) {
+    if (!keyword || keywords.includes(keyword)) return;
+
+    // If a videoId is provided, use the atomic backend route (Fix #5).
+    // Otherwise fall back to local-only update (pre-save state before config exists).
+    if (videoId) {
+      try {
+        setAdding(true);
+        const data = await addKeyword(videoId, keyword);
+        // Sync local state with authoritative DB response
+        onChange(data.keywords || [...keywords, keyword]);
+        console.log(`[Fix #5] Keyword "${keyword}" added via $addToSet. Updated list: ${JSON.stringify(data.keywords)} (KeywordEditor.jsx)`);
+      } catch (err) {
+        console.error('[Fix #5] Failed to add keyword via API, falling back to local state:', err);
+        onChange([...keywords, keyword]);
+      } finally {
+        setAdding(false);
+      }
+    } else {
+      // No config saved yet — update local state only; will be persisted on Save
       onChange([...keywords, keyword]);
-      setNewKeyword('');
     }
+    setNewKeyword('');
   };
 
-  const handleRemove = (keywordToRemove) => {
-    onChange(keywords.filter((kw) => kw !== keywordToRemove));
+  const handleRemove = async (keywordToRemove) => {
+    // If a videoId is provided, use the atomic backend route (Fix #5).
+    if (videoId) {
+      try {
+        setRemovingKeyword(keywordToRemove);
+        const data = await removeKeyword(videoId, keywordToRemove);
+        onChange(data.keywords || keywords.filter((kw) => kw !== keywordToRemove));
+        console.log(`[Fix #5] Keyword "${keywordToRemove}" removed via $pull. Updated list: ${JSON.stringify(data.keywords)} (KeywordEditor.jsx)`);
+      } catch (err) {
+        console.error('[Fix #5] Failed to remove keyword via API, falling back to local state:', err);
+        onChange(keywords.filter((kw) => kw !== keywordToRemove));
+      } finally {
+        setRemovingKeyword(null);
+      }
+    } else {
+      onChange(keywords.filter((kw) => kw !== keywordToRemove));
+    }
   };
 
   return (
@@ -34,9 +73,10 @@ const KeywordEditor = ({ keywords, onChange }) => {
         />
         <button
           type="submit"
-          className="bg-[#0f0f0f] hover:bg-[#0f0f0f]/90 text-white rounded-xl px-4 py-2.5 flex items-center justify-center transition-colors shadow-sm"
+          disabled={adding}
+          className="bg-[#0f0f0f] hover:bg-[#0f0f0f]/90 text-white rounded-xl px-4 py-2.5 flex items-center justify-center transition-colors shadow-sm disabled:opacity-55"
         >
-          <Plus size={18} />
+          {adding ? <Loader2 size={18} className="animate-spin" /> : <Plus size={18} />}
         </button>
       </form>
 
@@ -53,9 +93,10 @@ const KeywordEditor = ({ keywords, onChange }) => {
               <button
                 type="button"
                 onClick={() => handleRemove(kw)}
-                className="w-4 h-4 rounded-full bg-white flex items-center justify-center text-[#909090] hover:text-[#ff0000] hover:bg-[#fce8e6] transition-colors"
+                disabled={removingKeyword === kw}
+                className="w-4 h-4 rounded-full bg-white flex items-center justify-center text-[#909090] hover:text-[#ff0000] hover:bg-[#fce8e6] transition-colors disabled:opacity-55"
               >
-                <X size={10} />
+                {removingKeyword === kw ? <Loader2 size={8} className="animate-spin" /> : <X size={10} />}
               </button>
             </div>
           ))

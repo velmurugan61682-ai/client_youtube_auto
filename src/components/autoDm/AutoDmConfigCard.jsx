@@ -29,25 +29,27 @@ const AutoDmConfigCard = ({
   const fetchVideosForChannel = async (channelId) => {
     try {
       setLoadingVideos(true);
-      const res = await api.get(`/youtube/videos?channelId=${channelId}`);
-      console.log('Videos API response:', res.data);
-      
-      const videosArray = Array.isArray(res.data) 
-        ? res.data 
-        : (res.data && Array.isArray(res.data.videos)) 
-          ? res.data.videos 
-          : (res.data && Array.isArray(res.data.data)) 
-            ? res.data.data 
+      const res = await api.get('/youtube/videos', { params: { channelId } });
+      console.log('[Fix #1] Videos API response for channel', channelId, ':', res.data);
+
+      // Authoritative extraction: the endpoint always returns { videos: [...] }
+      const videosArray = Array.isArray(res.data)
+        ? res.data
+        : (res.data && Array.isArray(res.data.videos))
+          ? res.data.videos
+          : (res.data && Array.isArray(res.data.data))
+            ? res.data.data
             : [];
-      
+
+      console.log(`[Fix #1] Loaded ${videosArray.length} videos for channel ${channelId}. First title: "${videosArray[0]?.title}" (AutoDmConfigCard.jsx)`);
       setVideos(videosArray);
-      
+
       // If there are videos and none is selected, select the first one
       if (videosArray && videosArray.length > 0 && !selectedVideoId) {
         onVideoChange(videosArray[0].videoId);
       }
     } catch (err) {
-      console.error('Error fetching videos for channel:', err);
+      console.error('[Fix #1] Error fetching videos for channel:', err);
     } finally {
       setLoadingVideos(false);
     }
@@ -93,17 +95,17 @@ const AutoDmConfigCard = ({
               disabled={loadingVideos || !selectedChannelId}
               className="w-full bg-[#f9f9f9] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm font-bold text-[#0f0f0f] focus:outline-none focus:border-[#ff0000]/30 transition-all cursor-pointer disabled:opacity-55 disabled:cursor-not-allowed"
             >
-              {loadingVideos ? (
-                <option>Loading videos...</option>
-              ) : Array.isArray(videos) && videos.length > 0 ? (
-                videos.map((vid) => (
-                  <option key={vid.videoId} value={vid.videoId}>
-                    {vid.title}
-                  </option>
-                ))
-              ) : (
-                <option value="">No videos available</option>
-              )}
+              {/* FIX #1: Always show a placeholder so browser never falls back to showing
+                  a date or wrong field when selectedVideoId doesn't match any option */}
+              <option value="" disabled>
+                {loadingVideos ? 'Loading videos...' : 'Select a video'}
+              </option>
+              {Array.isArray(videos) && videos.map((vid) => (
+                <option key={vid.videoId} value={vid.videoId}>
+                  {/* FIX #1: Use vid.title with vid.videoId fallback in case title is empty/null */}
+                  {vid.title || vid.videoId}
+                </option>
+              ))}
             </select>
           </div>
         </div>
