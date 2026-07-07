@@ -52,6 +52,7 @@ let activeChannelsPromise = null;
 const App = () => {
   const { user, authLoading, logout } = useAuth();
   const [planSelected, setPlanSelected] = useState(() => sessionStorage.getItem('plan_acknowledged') === 'true');
+  const [loadingChannels, setLoadingChannels] = useState(true);
   const [isRegistering, setIsRegistering] = useState(false);
   const [activeTab, setActiveTab] = useState(() => {
     const queryParams = new URLSearchParams(window.location.search);
@@ -79,7 +80,12 @@ const App = () => {
       window.history.replaceState({}, document.title, window.location.pathname);
     } else if (queryParams.get('status') === 'error') {
       const errMsg = queryParams.get('error') || 'Failed to connect account.';
-      setTimeout(() => alert(`❌ Connection Error: ${errMsg}`), 500);
+      setTimeout(() => {
+        alert(`❌ Connection Error: ${errMsg}`);
+        if (errMsg.toLowerCase().includes('limit') || errMsg.toLowerCase().includes('free plan') || errMsg.toLowerCase().includes('pro')) {
+          setActiveTab('subscription');
+        }
+      }, 500);
       window.history.replaceState({}, document.title, window.location.pathname);
     }
   }, []);
@@ -101,8 +107,8 @@ const App = () => {
       if (isPremium || planAcknowledged) {
         setPlanSelected(true);
       } else {
+        // We will wait for fetchChannels to complete before deciding if they need the gate
         setPlanSelected(false);
-        setActiveTab('subscription');
       }
     } else {
       setPlanSelected(false);
@@ -125,9 +131,17 @@ const App = () => {
     });
   };
 
+  // 1. Fetch channels on startup to verify connected accounts & gate bypass
+  useEffect(() => {
+    if (user) {
+      fetchChannels();
+    }
+  }, [user]);
+
+  // 2. Load analytics and sockets once the gate is passed
   useEffect(() => {
     if (user && planSelected) {
-      fetchChannels();
+      fetchAnalytics();
       
       const socket = connectSocket(localStorage.getItem('token'));
 
@@ -196,6 +210,13 @@ const App = () => {
     activeChannelsPromise = api.get('/youtube/channels')
       .then(res => {
         setChannels(res.data);
+        
+        // Auto-bypass plan gate if they already have 1 or more channels connected
+        if (res.data.length >= 1) {
+          setPlanSelected(true);
+          sessionStorage.setItem('plan_acknowledged', 'true');
+        }
+
         const channelExists = res.data.some(c => c.channelId === selectedChannelId);
         if (!channelExists) {
           setSelectedChannelId(res.data.length > 0 ? res.data[0].channelId : null);
@@ -207,6 +228,7 @@ const App = () => {
       })
       .finally(() => {
         activeChannelsPromise = null;
+        setLoadingChannels(false);
       });
 
     return activeChannelsPromise;
@@ -239,7 +261,7 @@ const App = () => {
     }
   };
 
-  if (authLoading) return (
+  if (authLoading || (user && !planSelected && loadingChannels)) return (
     <div className="h-screen w-full flex items-center justify-center bg-[#f9f9f9]">
       <div className="flex flex-col items-center gap-4">
         <Loader2 className="animate-spin text-[#ff0000]" size={48} />
@@ -308,7 +330,11 @@ const App = () => {
                 window.location.href = res.data.redirectUrl;
               }
             } catch (err) {
-              alert(err.response?.data?.error || 'Failed to initiate secure connection');
+              const errMsg = err.response?.data?.error || 'Failed to initiate secure connection';
+              alert(`❌ ${errMsg}`);
+              if (err.response?.status === 403) {
+                setActiveTab('subscription'); // Redirect to subscription plans to upgrade
+              }
             }
           }}
           setActiveTab={setActiveTab}
