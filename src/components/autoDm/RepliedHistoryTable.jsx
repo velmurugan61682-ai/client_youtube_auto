@@ -6,6 +6,7 @@ const RepliedHistoryTable = ({ history, loading, page, pages, onPageChange }) =>
   const formatTime = (timeStr) => {
     if (!timeStr) return '';
     const date = new Date(timeStr);
+    if (isNaN(date.getTime())) return '';
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' ' + date.toLocaleDateString([], { month: 'short', day: 'numeric' });
   };
 

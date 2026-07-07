@@ -6,6 +6,7 @@ const StatsCards = ({ stats, loading }) => {
   const formatTime = (timeStr) => {
     if (!timeStr) return 'Never';
     const date = new Date(timeStr);
+    if (isNaN(date.getTime())) return 'Never';
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' ' + date.toLocaleDateString([], { month: 'short', day: 'numeric' });
   };
 

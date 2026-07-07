@@ -1,4 +1,4 @@
-import api from '../api';
+import api from '../api.js';
 
 export const getAutoDmConfig = async (videoId) => {
   const response = await api.get(`/auto-dm/config/${videoId}`);

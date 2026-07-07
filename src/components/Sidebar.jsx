@@ -11,7 +11,8 @@ import {
   ChevronRight,
   ShieldAlert,
   Clock,
-  MessageCircle
+  MessageCircle,
+  CreditCard
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -24,6 +25,7 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen }) => {
     { id: 'moderation', label: 'Auto-Mod', icon: ShieldCheck },
     { id: 'autoschedule', label: 'Auto-Schedule', icon: Clock },
     { id: 'autodm', label: 'Auto DM', icon: MessageCircle },
+    { id: 'subscription', label: 'Subscription', icon: CreditCard },
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
 

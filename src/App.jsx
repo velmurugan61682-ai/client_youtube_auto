@@ -38,6 +38,7 @@ const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 const LeadsPage = lazy(() => import('./pages/LeadsPage'));
 const AutoSchedulePage = lazy(() => import('./pages/AutoSchedule'));
 const AutoDmPage = lazy(() => import('./pages/AutoDm'));
+const SubscriptionPage = lazy(() => import('./pages/SubscriptionPage'));
 
 // Components
 import Header from './components/Header';
@@ -45,14 +46,12 @@ import Sidebar from './components/Sidebar';
 import Login from './components/Login';
 import Register from './components/Register';
 
+let activeAnalyticsPromise = null;
+let activeChannelsPromise = null;
+
 const App = () => {
   const { user, authLoading, logout } = useAuth();
-  
-  console.log("VITE_GOOGLE_CLIENT_ID:", import.meta.env.VITE_GOOGLE_CLIENT_ID);
-  console.log("Current pathname:", window.location.pathname);
-  console.log("Authentication state:", !!user);
-  console.log("Token exists:", !!localStorage.getItem("token"));
-
+  const [planSelected, setPlanSelected] = useState(() => sessionStorage.getItem('plan_acknowledged') === 'true');
   const [isRegistering, setIsRegistering] = useState(false);
   const [activeTab, setActiveTab] = useState(() => {
     const queryParams = new URLSearchParams(window.location.search);
@@ -71,15 +70,45 @@ const App = () => {
   const [channels, setChannels] = useState([]);
   const [selectedChannelId, setSelectedChannelId] = useState(() => {
     const queryParams = new URLSearchParams(window.location.search);
-    return queryParams.get('channelId') || null;
+    return queryParams.get('channelId') || localStorage.getItem('lastSelectedChannelId') || null;
   });
 
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
     if (queryParams.get('status') === 'success') {
       window.history.replaceState({}, document.title, window.location.pathname);
+    } else if (queryParams.get('status') === 'error') {
+      const errMsg = queryParams.get('error') || 'Failed to connect account.';
+      setTimeout(() => alert(`❌ Connection Error: ${errMsg}`), 500);
+      window.history.replaceState({}, document.title, window.location.pathname);
     }
   }, []);
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      if (window.confirm('🔄 A new version of the app is available. Click OK to reload and update.')) {
+        window.location.reload();
+      }
+    };
+    window.addEventListener('sw-update-available', handleUpdate);
+    return () => window.removeEventListener('sw-update-available', handleUpdate);
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      const isPremium = user.subscription?.status === 'active' || user.subscription?.id === 'trial_promo_active' || user.role === 'admin';
+      const planAcknowledged = sessionStorage.getItem('plan_acknowledged') === 'true';
+      if (isPremium || planAcknowledged) {
+        setPlanSelected(true);
+      } else {
+        setPlanSelected(false);
+        setActiveTab('subscription');
+      }
+    } else {
+      setPlanSelected(false);
+      sessionStorage.removeItem('plan_acknowledged');
+    }
+  }, [user]);
   const [loading, setLoading] = useState(true);
   const [activities, setActivities] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(() => {
@@ -97,8 +126,7 @@ const App = () => {
   };
 
   useEffect(() => {
-    if (user) {
-      fetchAnalytics();
+    if (user && planSelected) {
       fetchChannels();
       
       const socket = connectSocket(localStorage.getItem('token'));
@@ -122,7 +150,7 @@ const App = () => {
         disconnectSocket();
       };
     }
-  }, [user]);
+  }, [user, planSelected]);
 
   const fetchAnalytics = async () => {
     const token = localStorage.getItem('token');
@@ -130,16 +158,28 @@ const App = () => {
       console.log('Waiting for login...');
       return;
     }
-    try {
-      const url = selectedChannelId ? `/analytics?channelId=${selectedChannelId}` : '/analytics';
-      const res = await api.get(url);
-      setStats(res.data);
-      if (res.data.activities) setActivities(res.data.activities);
-    } catch (err) {
-      console.error('Fetch Analytics Error:', err);
-    } finally {
-      setLoading(false);
+    const url = selectedChannelId ? `/analytics?channelId=${selectedChannelId}` : '/analytics';
+    
+    if (activeAnalyticsPromise && activeAnalyticsPromise.url === url) {
+      return activeAnalyticsPromise.promise;
     }
+
+    const promise = api.get(url)
+      .then(res => {
+        setStats(res.data);
+        if (res.data.activities) setActivities(res.data.activities);
+        return res.data;
+      })
+      .catch(err => {
+        console.error('Fetch Analytics Error:', err);
+      })
+      .finally(() => {
+        activeAnalyticsPromise = null;
+        setLoading(false);
+      });
+
+    activeAnalyticsPromise = { url, promise };
+    return promise;
   };
 
   const fetchChannels = async () => {
@@ -148,21 +188,38 @@ const App = () => {
       console.log('Waiting for login...');
       return;
     }
-    try {
-      const res = await api.get('/youtube/channels');
-      setChannels(res.data);
-      const channelExists = res.data.some(c => c.channelId === selectedChannelId);
-      if (!channelExists) {
-        setSelectedChannelId(res.data.length > 0 ? res.data[0].channelId : null);
-      }
-    } catch (err) {
-      console.error('Fetch Channels Error:', err);
+    
+    if (activeChannelsPromise) {
+      return activeChannelsPromise;
     }
+
+    activeChannelsPromise = api.get('/youtube/channels')
+      .then(res => {
+        setChannels(res.data);
+        const channelExists = res.data.some(c => c.channelId === selectedChannelId);
+        if (!channelExists) {
+          setSelectedChannelId(res.data.length > 0 ? res.data[0].channelId : null);
+        }
+        return res.data;
+      })
+      .catch(err => {
+        console.error('Fetch Channels Error:', err);
+      })
+      .finally(() => {
+        activeChannelsPromise = null;
+      });
+
+    return activeChannelsPromise;
   };
 
   useEffect(() => {
-    if (user && !loading) fetchAnalytics();
-  }, [selectedChannelId]);
+    if (selectedChannelId) {
+      localStorage.setItem('lastSelectedChannelId', selectedChannelId);
+    }
+    if (user && planSelected) {
+      fetchAnalytics();
+    }
+  }, [selectedChannelId, user, planSelected]);
 
   const disconnectChannel = async (id, name) => {
     if(!window.confirm(`Are you sure you want to disconnect ${name}? All related comments and data will be removed.`)) return;
@@ -195,6 +252,27 @@ const App = () => {
     return isRegistering ? 
       <Register onSwitchToLogin={() => setIsRegistering(false)} /> : 
       <Login onSwitchToRegister={() => setIsRegistering(true)} />;
+  }
+
+  if (user && !planSelected) {
+    return (
+      <div className="h-screen w-full overflow-y-auto bg-[#f9f9f9] py-12 px-4 md:px-8 flex items-center justify-center">
+        <Suspense fallback={
+          <div className="h-full w-full flex items-center justify-center">
+            <Loader2 className="animate-spin text-[#ff0000]" size={40} />
+          </div>
+        }>
+          <SubscriptionPage 
+            isGate={true} 
+            onSelectPlan={() => {
+              sessionStorage.setItem('plan_acknowledged', 'true');
+              setPlanSelected(true);
+              setActiveTab('dashboard');
+            }} 
+          />
+        </Suspense>
+      </div>
+    );
   }
 
   const renderActiveTab = () => {
@@ -254,6 +332,8 @@ const App = () => {
         />;
       case 'settings':
         return <SettingsPage />;
+      case 'subscription':
+        return <SubscriptionPage isGate={false} />;
       default:
         return null;
     }

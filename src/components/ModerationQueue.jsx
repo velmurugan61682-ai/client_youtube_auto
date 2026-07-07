@@ -25,6 +25,17 @@ import { formatDistanceToNow } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getSentimentConfig } from '../utils/constants/sentimentColors.js';
 
+const safeFormatDistanceToNow = (dateStr) => {
+  try {
+    if (!dateStr) return 'some time';
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return 'some time';
+    return formatDistanceToNow(date);
+  } catch (e) {
+    return 'some time';
+  }
+};
+
 const ModerationQueue = ({ onAction, searchQuery }) => {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -54,7 +65,7 @@ const ModerationQueue = ({ onAction, searchQuery }) => {
           autoLiked: filter === 'liked' ? true : undefined
         }
       });
-      setComments(res.data);
+      setComments(Array.isArray(res.data) ? res.data : (res.data?.comments || []));
     } catch (err) {
       console.error('Fetch error:', err);
     } finally {
@@ -193,7 +204,7 @@ const ModerationQueue = ({ onAction, searchQuery }) => {
                                 </span>
                               )}
                               <span className="text-[10px] font-bold text-[#aaaaaa] flex items-center gap-1">
-                                <Clock size={10} /> {formatDistanceToNow(new Date(comment.publishedAt))}
+                                <Clock size={10} /> {safeFormatDistanceToNow(comment.publishedAt)}
                               </span>
                             </div>
                           </div>

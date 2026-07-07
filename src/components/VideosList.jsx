@@ -22,6 +22,17 @@ import { getSentimentConfig, SENTIMENT_COLORS } from '../utils/constants/sentime
 import { useAuth } from '../context/AuthContext';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
+const safeFormatDistanceToNow = (dateStr) => {
+  try {
+    if (!dateStr) return 'some time';
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return 'some time';
+    return formatDistanceToNow(date);
+  } catch (e) {
+    return 'some time';
+  }
+};
+
 const formatChartDate = (dateStr) => {
   try {
     const date = new Date(dateStr);
@@ -66,7 +77,13 @@ const VideosList = ({
     try {
       setLoadingVideos(true);
       const res = await api.get('/youtube/videos', { params: { channelId } });
-      const fetchedVideos = res.data.videos || [];
+      const fetchedVideos = Array.isArray(res.data)
+        ? res.data
+        : (res.data && Array.isArray(res.data.videos))
+          ? res.data.videos
+          : (res.data && Array.isArray(res.data.data))
+            ? res.data.data
+            : [];
       setVideos(fetchedVideos);
       if (fetchedVideos.length > 0 && !selectedVideo) {
         handleVideoSelect(fetchedVideos[0].videoId);
@@ -93,7 +110,7 @@ const VideosList = ({
         })
       ]);
       
-      setComments(commentsRes.data || []);
+      setComments(Array.isArray(commentsRes.data) ? commentsRes.data : (commentsRes.data?.comments || []));
       setVideoAnalytics(analyticsRes.data?.video || null);
     } catch (err) {
       console.error('Error fetching video selection data:', err);
@@ -250,8 +267,36 @@ const VideosList = ({
 
   if (loadingVideos && videos.length === 0) {
     return (
-      <div className="flex-1 flex items-center justify-center">
-        <Loader2 className="animate-spin text-[#ff0000]" size={40} />
+      <div className="flex flex-col lg:flex-row h-full gap-4 md:gap-6 overflow-hidden animate-pulse">
+        {/* Left Pane: Videos List Skeleton */}
+        <div className="w-full lg:w-[320px] flex flex-col gap-4 shrink-0 h-[40%] lg:h-full">
+          <div className="bg-white rounded-[32px] border border-[#f0f0f0] p-5 flex flex-col gap-4 h-full">
+            <div className="h-5 bg-gray-200 rounded-xl w-1/2 mb-2" />
+            {[1, 2, 3, 4].map(n => (
+              <div key={n} className="flex gap-3 p-3 border border-[#f0f0f0] rounded-2xl" style={{ contentVisibility: 'auto' }}>
+                <div className="w-20 h-12 bg-gray-200 rounded-xl shrink-0" />
+                <div className="flex-1 space-y-2 py-1">
+                  <div className="h-3 bg-gray-200 rounded w-5/6" />
+                  <div className="h-2 bg-gray-200 rounded w-1/2" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        {/* Right Workspace Skeleton */}
+        <div className="flex-1 bg-white rounded-[32px] border border-[#f0f0f0] p-6 flex flex-col gap-6">
+          <div className="flex justify-between items-center pb-4 border-b border-gray-100">
+            <div className="h-6 bg-gray-200 rounded-xl w-1/3" />
+            <div className="h-10 bg-gray-200 rounded-2xl w-24" />
+          </div>
+          <div className="flex-1 flex flex-col gap-4 justify-center items-center">
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
+              <Loader2 className="animate-spin text-gray-400" size={24} />
+            </div>
+            <div className="h-4 bg-gray-200 rounded w-1/4" />
+            <div className="h-3 bg-gray-200 rounded w-1/3" />
+          </div>
+        </div>
       </div>
     );
   }
@@ -308,7 +353,7 @@ const VideosList = ({
                       {video.title}
                     </h4>
                     <p className="text-[10px] md:text-[11px] font-medium text-[#909090] mt-0.5 md:mt-1 flex items-center gap-1">
-                      <Clock size={10} /> {formatDistanceToNow(new Date(video.publishedAt))} ago
+                      <Clock size={10} /> {safeFormatDistanceToNow(video.publishedAt)} ago
                     </p>
                   </div>
                   {selectedVideo === video.videoId && <ChevronRight size={16} className="text-[#ff0000] self-center hidden md:block" />}
@@ -436,7 +481,7 @@ const VideosList = ({
                                    </span>
                                  </div>
                                  <span className="text-[9px] md:text-[11px] font-bold text-[#909090] uppercase tracking-tighter whitespace-nowrap">
-                                   {formatDistanceToNow(new Date(comment.publishedAt))} ago
+                                   {safeFormatDistanceToNow(comment.publishedAt)} ago
                                  </span>
                               </div>
                               <p className="text-[13px] md:text-[14px] text-[#222] leading-relaxed mb-3 md:mb-4">{comment.text}</p>

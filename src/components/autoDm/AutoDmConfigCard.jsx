@@ -55,7 +55,7 @@ const AutoDmConfigCard = ({
     }
   };
 
-  const cleanNumber = whatsappNumber.replace(/[^\d]/g, '');
+  const cleanNumber = (whatsappNumber || '').replace(/[^\d]/g, '');
   const waLink = cleanNumber ? `https://wa.me/${cleanNumber}` : '';
 
   return (

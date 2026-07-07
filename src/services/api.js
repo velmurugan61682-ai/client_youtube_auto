@@ -43,4 +43,24 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// Response interceptor to handle auto-retry once on 5xx or network errors
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const config = error.config;
+    
+    // Check if it's already a retry or if it's a 4xx error (which we shouldn't retry, e.g. 401/403/404)
+    if (!config || config._retry || (error.response && error.response.status < 500)) {
+      return Promise.reject(error);
+    }
+    
+    config._retry = true; // Mark as retried
+    console.warn(`⚠️ API call failed: ${error.message}. Retrying once in 1s...`);
+    
+    // 1-second delay to settle transient glitches
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    return api(config);
+  }
+);
+
 export default api;
