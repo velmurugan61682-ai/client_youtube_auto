@@ -101,7 +101,7 @@ const Header = ({ toggleSidebar, onSearch, setActiveTab, sidebarOpen, notificati
   };
 
   return (
-    <header className="h-[72px] bg-white/80 backdrop-blur-md border-b border-[#f0f0f0] flex items-center justify-between px-6 sticky top-0 z-[100] transition-all">
+    <header className="h-[72px] bg-white/15 backdrop-blur-2xl border-b border-white/35 flex items-center justify-between px-6 sticky top-0 z-[100] transition-all">
       {/* Left: Branding */}
       <div className="flex items-center gap-6">
         <button 

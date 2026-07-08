@@ -106,12 +106,19 @@ const App = () => {
 
   useEffect(() => {
     if (user) {
-      const isPremium = user.subscription?.status === 'active' || user.subscription?.id === 'trial_promo_active' || user.role === 'admin';
+      const isPremium = user.subscription?.status === 'active' || user.role === 'admin';
+      
+      // Determine if free trial (30 days from user registration) is still active
+      const oneMonthMs = 30 * 24 * 60 * 60 * 1000;
+      const registrationTime = user.createdAt ? new Date(user.createdAt).getTime() : Date.now();
+      const isFreeTrialActive = (Date.now() - registrationTime) < oneMonthMs;
+
+      const hasAccess = isPremium || isFreeTrialActive;
       const planAcknowledged = sessionStorage.getItem('plan_acknowledged') === 'true';
-      if (isPremium || planAcknowledged) {
+
+      if (hasAccess || planAcknowledged) {
         setPlanSelected(true);
       } else {
-        // We will wait for fetchChannels to complete before deciding if they need the gate
         setPlanSelected(false);
       }
     } else {
@@ -376,7 +383,11 @@ const App = () => {
               </Suspense>
             </div>
           ) : (
-            <div className="h-screen flex flex-col overflow-hidden bg-[#f9f9f9]">
+            <div className="h-screen flex flex-col overflow-hidden bg-slate-50 relative selection:bg-red-500/20 selection:text-red-900">
+              {/* Vibrant Background Mesh for beautiful internal Glassmorphism */}
+              <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-[#ff0055] to-[#ff7700] opacity-15 blur-[130px] pointer-events-none" />
+              <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-gradient-to-br from-[#0055ff] to-[#aa00ff] opacity-15 blur-[130px] pointer-events-none" />
+              <div className="absolute top-[25%] left-[20%] w-[450px] h-[450px] rounded-full bg-gradient-to-r from-[#00f2fe] to-[#4facfe] opacity-10 blur-[110px] pointer-events-none" />
               {!isEmbedded && (
                 <Header 
                   toggleSidebar={toggleSidebar} 

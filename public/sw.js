@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tech-vaseegraah-cache-v1';
+const CACHE_NAME = 'tech-vaseegraah-cache-v2';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -37,30 +37,34 @@ self.addEventListener('activate', (event) => {
 
 // Fetch Event
 self.addEventListener('fetch', (event) => {
-  // Only cache GET requests and skip browser extensions/external APIs
   if (event.request.method !== 'GET') return;
   
   const url = new URL(event.request.url);
-  if (url.origin !== self.location.origin) return;
+
+  // Handle external image caching (Google/YouTube avatars and thumbnails)
+  const isExternalImage = event.request.destination === 'image' && 
+    (url.hostname.includes('ggpht.com') || 
+     url.hostname.includes('ytimg.com') || 
+     url.hostname.includes('googleusercontent.com'));
+
+  if (url.origin !== self.location.origin && !isExternalImage) return;
 
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
-        // Return cached asset, fetch fresh version in background
+        // Return cached, refresh in background
         fetch(event.request).then((networkResponse) => {
           if (networkResponse.status === 200) {
             caches.open(CACHE_NAME).then((cache) => {
               cache.put(event.request, networkResponse);
             });
           }
-        }).catch(() => {/* Ignore background network failures */});
-        
+        }).catch(() => {});
         return cachedResponse;
       }
 
       return fetch(event.request).then((networkResponse) => {
-        // Cache dynamic runtime assets
-        if (networkResponse.status === 200 && !url.pathname.startsWith('/api/')) {
+        if (networkResponse.status === 200 && (!url.pathname.startsWith('/api/') || isExternalImage)) {
           const responseClone = networkResponse.clone();
           caches.open(CACHE_NAME).then((cache) => {
             cache.put(event.request, responseClone);
@@ -68,8 +72,7 @@ self.addEventListener('fetch', (event) => {
         }
         return networkResponse;
       }).catch(() => {
-        // Fallback for HTML pages when offline
-        if (event.request.headers.get('accept').includes('text/html')) {
+        if (event.request.headers.get('accept')?.includes('text/html')) {
           return caches.match('/index.html');
         }
       });
@@ -77,7 +80,7 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// Push Notification Event Listener (Architecture Ready)
+// Push Notification Event Listener
 self.addEventListener('push', (event) => {
   const data = event.data ? event.data.json() : { title: 'Notification', body: 'New updates from Tech Vaseegraah' };
   

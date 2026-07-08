@@ -50,7 +50,7 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen }) => {
           x: (typeof window !== 'undefined' && window.innerWidth >= 1024) ? 0 : (isOpen ? 0 : -280),
         }}
         transition={{ type: 'spring', damping: 28, stiffness: 220 }}
-        className="fixed inset-y-0 left-0 bg-white border-r border-[#f0f0f0] flex flex-col z-[150] lg:relative transition-all duration-300"
+        className="fixed inset-y-0 left-0 bg-white/20 backdrop-blur-2xl border-r border-white/40 flex flex-col z-[150] lg:relative transition-all duration-300"
       >
         {/* Navigation Section */}
         <div className="flex-1 py-8 flex flex-col gap-2 overflow-y-auto no-scrollbar">
@@ -108,8 +108,8 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen }) => {
         </div>
 
         {/* AI & Security Footer */}
-        <div className="p-4 mt-auto border-t border-[#f0f0f0] bg-[#fcfcfc] space-y-3">
-          <div className={`overflow-hidden transition-all duration-500 rounded-[24px] cursor-default bg-white border border-[#f0f0f0] hover:border-red-500/20 group/ai ${isOpen ? 'p-4' : 'p-0 h-14 flex items-center justify-center'}`}>
+        <div className="p-4 mt-auto border-t border-white/30 bg-white/5 space-y-3">
+          <div className={`overflow-hidden transition-all duration-500 rounded-[24px] cursor-default bg-white/40 border border-white/50 hover:border-red-500/20 group/ai ${isOpen ? 'p-4' : 'p-0 h-14 flex items-center justify-center'}`}>
              <div className={`flex items-center ${isOpen ? 'gap-3 mb-3' : 'justify-center'}`}>
                 <div className={`rounded-xl transition-all duration-500 flex items-center justify-center ${isOpen ? 'w-10 h-10 bg-red-50 text-red-600' : 'w-12 h-12 bg-white text-red-600 border border-red-50 group-hover/ai:border-red-500/20'}`}>
                    <Zap size={isOpen ? 20 : 24} className="animate-pulse" fill="currentColor" />

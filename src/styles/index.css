@@ -2,9 +2,9 @@
 
 :root {
   /* Design System - YouTube Studio Inspired */
-  --bg-app: #f9f9f9;
-  --bg-card: #ffffff;
-  --bg-sidebar: #ffffff;
+  --bg-app: #fafbfd;
+  --bg-card: rgba(255, 255, 255, 0.3);
+  --bg-sidebar: rgba(255, 255, 255, 0.2);
   
   --primary: #ff0000; /* YouTube Red */
   --primary-hover: #cc0000;
@@ -13,11 +13,11 @@
   --secondary: #065fd4; /* YouTube Blue */
   
   --text-main: #0f0f0f;
-  --text-sub: #606060;
-  --text-dim: #909090;
+  --text-sub: #4b5563;
+  --text-dim: #9ca3af;
   
-  --border-main: #e5e5e5;
-  --border-soft: #f2f2f2;
+  --border-main: rgba(255, 255, 255, 0.5);
+  --border-soft: rgba(255, 255, 255, 0.3);
   
   --success: #2ba640;
   --success-soft: #e6f4ea;
@@ -102,6 +102,8 @@
   padding: 1rem; /* Reduced for mobile */
   box-shadow: var(--shadow-card);
   transition: all 0.3s ease;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 @media (min-width: 768px) {
