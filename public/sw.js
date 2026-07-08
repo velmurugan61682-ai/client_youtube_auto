@@ -1,28 +1,33 @@
-const CACHE_NAME = 'yt-ai-mod-cache-v1';
+const CACHE_NAME = 'tech-vaseegraah-cache-v1';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
+  '/logo.svg',
   '/favicon.svg',
-  '/manifest.json'
+  '/manifest.json',
+  '/icon-192.png',
+  '/icon-512.png'
 ];
 
-// Install Event - cache core shell assets
-self.addEventListener('install', (e) => {
-  e.waitUntil(
+// Install Event
+self.addEventListener('install', (event) => {
+  event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
+      console.log('[Service Worker] Pre-caching offline assets...');
       return cache.addAll(ASSETS_TO_CACHE);
     }).then(() => self.skipWaiting())
   );
 });
 
-// Activate Event - clean up old caches
-self.addEventListener('activate', (e) => {
-  e.waitUntil(
-    caches.keys().then((keys) => {
+// Activate Event
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
       return Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE_NAME) {
-            return caches.delete(key);
+        cacheNames.map((cache) => {
+          if (cache !== CACHE_NAME) {
+            console.log('[Service Worker] Clearing old cache:', cache);
+            return caches.delete(cache);
           }
         })
       );
@@ -30,54 +35,81 @@ self.addEventListener('activate', (e) => {
   );
 });
 
-// Fetch Event - dynamic caching strategy
-self.addEventListener('fetch', (e) => {
-  const url = new URL(e.request.url);
+// Fetch Event
+self.addEventListener('fetch', (event) => {
+  // Only cache GET requests and skip browser extensions/external APIs
+  if (event.request.method !== 'GET') return;
+  
+  const url = new URL(event.request.url);
+  if (url.origin !== self.location.origin) return;
 
-  // Bypass service worker cache for API requests
-  if (url.pathname.startsWith('/api/') || url.pathname.includes('/socket.io/')) {
-    return;
-  }
-
-  // SPA navigation fallback to /index.html if offline
-  if (e.request.mode === 'navigate') {
-    e.respondWith(
-      fetch(e.request).catch(() => caches.match('/index.html'))
-    );
-    return;
-  }
-
-  // Cache-First strategy for static assets
-  const isStaticAsset = (
-    url.pathname.endsWith('.js') ||
-    url.pathname.endsWith('.css') ||
-    url.pathname.endsWith('.png') ||
-    url.pathname.endsWith('.jpg') ||
-    url.pathname.endsWith('.svg') ||
-    url.pathname.endsWith('.json') ||
-    url.pathname.endsWith('.woff') ||
-    url.pathname.endsWith('.woff2')
-  );
-
-  if (isStaticAsset) {
-    e.respondWith(
-      caches.match(e.request).then((cachedResponse) => {
-        if (cachedResponse) return cachedResponse;
-
-        return fetch(e.request).then((networkResponse) => {
-          if (!networkResponse || networkResponse.status !== 200) {
-            return networkResponse;
+  event.respondWith(
+    caches.match(event.request).then((cachedResponse) => {
+      if (cachedResponse) {
+        // Return cached asset, fetch fresh version in background
+        fetch(event.request).then((networkResponse) => {
+          if (networkResponse.status === 200) {
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, networkResponse);
+            });
           }
+        }).catch(() => {/* Ignore background network failures */});
+        
+        return cachedResponse;
+      }
 
-          // Cache the fetched resource
-          const responseToCache = networkResponse.clone();
+      return fetch(event.request).then((networkResponse) => {
+        // Cache dynamic runtime assets
+        if (networkResponse.status === 200 && !url.pathname.startsWith('/api/')) {
+          const responseClone = networkResponse.clone();
           caches.open(CACHE_NAME).then((cache) => {
-            cache.put(e.request, responseToCache);
+            cache.put(event.request, responseClone);
           });
+        }
+        return networkResponse;
+      }).catch(() => {
+        // Fallback for HTML pages when offline
+        if (event.request.headers.get('accept').includes('text/html')) {
+          return caches.match('/index.html');
+        }
+      });
+    })
+  );
+});
 
-          return networkResponse;
-        });
-      })
-    );
-  }
+// Push Notification Event Listener (Architecture Ready)
+self.addEventListener('push', (event) => {
+  const data = event.data ? event.data.json() : { title: 'Notification', body: 'New updates from Tech Vaseegraah' };
+  
+  const options = {
+    body: data.body,
+    icon: '/icon-192.png',
+    badge: '/icon-192.png',
+    vibrate: [100, 50, 100],
+    data: {
+      url: data.url || '/'
+    }
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(data.title, options)
+  );
+});
+
+// Notification click event
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      const targetUrl = event.notification.data?.url || '/';
+      for (const client of clientList) {
+        if (client.url === targetUrl && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      if (clients.openWindow) {
+        return clients.openWindow(targetUrl);
+      }
+    })
+  );
 });

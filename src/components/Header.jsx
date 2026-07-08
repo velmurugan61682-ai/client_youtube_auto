@@ -20,15 +20,57 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import api from '../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Header = ({ toggleSidebar, onSearch, setActiveTab, sidebarOpen, notifications = [] }) => {
-  const { user, logout } = useAuth();
+  const { user, logout, switchOrg } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [orgs, setOrgs] = useState([]);
+
+  useEffect(() => {
+    if (user && user.role === 'admin') {
+      api.get('/auth/organizations')
+        .then(res => setOrgs(res.data))
+        .catch(err => console.error('Failed to load switcher orgs:', err));
+    }
+  }, [user]);
+
+  const handleOrgChange = async (e) => {
+    const orgId = e.target.value;
+    if (orgId) {
+      try {
+        await switchOrg(orgId);
+        window.location.reload();
+      } catch (err) {
+        alert('Failed to switch organization tenant.');
+      }
+    }
+  };
   const [showNotifications, setShowNotifications] = useState(false);
   const menuRef = useRef(null);
   const notifRef = useRef(null);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        setDeferredPrompt(null);
+      }
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -79,6 +121,20 @@ const Header = ({ toggleSidebar, onSearch, setActiveTab, sidebarOpen, notificati
             <span className="text-[10px] font-black text-[#ff0000] tracking-[0.2em] -mt-1 uppercase opacity-80">CREATOR AI</span>
           </div>
         </div>
+
+        {user && user.role === 'admin' && orgs.length > 0 && (
+          <div className="ml-4 flex items-center gap-2 border-l border-zinc-200 pl-4">
+            <select
+              value={user.organizationId || ''}
+              onChange={handleOrgChange}
+              className="bg-zinc-100 hover:bg-zinc-200 border-none rounded-xl px-2.5 py-1.5 text-[9px] font-black uppercase tracking-wider outline-none transition-all text-zinc-700 cursor-pointer"
+            >
+              {orgs.map(org => (
+                <option key={org._id} value={org._id}>{org.name}</option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
 
       {/* Center: Search */}
@@ -173,6 +229,15 @@ const Header = ({ toggleSidebar, onSearch, setActiveTab, sidebarOpen, notificati
            </AnimatePresence>
         </div>
 
+        {deferredPrompt && (
+          <button
+            onClick={handleInstallClick}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all border border-red-100 shadow-sm mr-2"
+          >
+            Install App
+          </button>
+        )}
+
         <button 
           onClick={() => setActiveTab('settings')}
           className="p-2.5 hover:bg-[#f8f8f8] text-[#606060] rounded-2xl transition-all group lg:mr-2"
@@ -193,9 +258,9 @@ const Header = ({ toggleSidebar, onSearch, setActiveTab, sidebarOpen, notificati
             </div>
             <div className="hidden lg:flex flex-col items-start pr-1 max-w-[120px]">
               <span className="text-[13px] font-black text-[#0f0f0f] truncate w-full">{user?.name || 'Admin'}</span>
-              <span className="text-[10px] font-bold text-[#2ba640] uppercase tracking-wider flex items-center gap-1">
+              <span className="text-[9px] font-black text-red-500 uppercase tracking-wider flex items-center gap-1">
                 <div className="w-1 h-1 bg-[#2ba640] rounded-full animate-pulse" />
-                Live Agent
+                {user?.role === 'admin' ? 'Admin' : (user?.subscription?.status === 'active' ? (user?.subscription?.planType || 'Pro') : 'Free Plan')}
               </span>
             </div>
             <ChevronDown size={14} className={`text-[#909090] transition-transform ${showProfileMenu ? 'rotate-180' : ''}`} />

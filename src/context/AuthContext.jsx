@@ -145,6 +145,24 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const switchOrg = async (organizationId) => {
+    try {
+      const response = await api.post('/auth/switch-org', { organizationId });
+      if (response.data.token) {
+        localStorage.setItem('token', response.data.token);
+      }
+      if (response.data.user) {
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+      }
+      setUser(response.data.user);
+      setIsAuthenticated(true);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to switch organization:', error);
+      throw error;
+    }
+  };
+
   return (
     <AuthContext.Provider value={{ 
       isAuthenticated, 
@@ -153,7 +171,8 @@ export const AuthProvider = ({ children }) => {
       login, 
       register, 
       logout, 
-      checkAuth 
+      checkAuth,
+      switchOrg
     }}>
       {children}
     </AuthContext.Provider>
