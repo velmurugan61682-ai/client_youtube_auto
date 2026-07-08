@@ -144,7 +144,7 @@ const LeadsList = ({ searchQuery: globalSearch }) => {
 
       <div className="yt-card !p-0 overflow-hidden border-[#e5e5e5]">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="w-full text-left border-collapse min-w-[800px]">
             <thead>
               <tr className="bg-[#f9f9f9] border-b border-[#f0f0f0]">
                 <th className="px-6 py-4 text-[11px] font-black text-[#909090] uppercase tracking-wider w-[20%]">Author</th>

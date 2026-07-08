@@ -116,9 +116,9 @@ const Header = ({ toggleSidebar, onSearch, setActiveTab, sidebarOpen, notificati
           className="flex items-center gap-2.5 cursor-pointer group select-none"
         >
           <img src="/logo.svg" className="w-9 h-9 object-contain" alt="Logo" />
-          <div className="flex flex-col -gap-1">
+          <div className="hidden sm:flex flex-col -gap-1">
             <span className="text-[17px] font-black tracking-tighter text-[#0f0f0f]">TECH VASEEGRAAH</span>
-            <span className="text-[10px] font-black text-[#ff0000] tracking-[0.2em] -mt-1 uppercase opacity-80">CREATOR AI</span>
+            <span className="text-[10px] font-black text-[#22c55e] tracking-[0.2em] -mt-1 uppercase opacity-80">CREATOR AI</span>
           </div>
         </div>
 
@@ -140,7 +140,7 @@ const Header = ({ toggleSidebar, onSearch, setActiveTab, sidebarOpen, notificati
       {/* Center: Search */}
       <div className="hidden md:flex flex-1 max-w-[600px] mx-8">
         <div className="relative w-full group">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#909090] transition-colors group-focus-within:text-[#ff0000]" size={18} />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#909090] transition-colors group-focus-within:text-[#22c55e]" size={18} />
           <input 
             type="text"
             value={searchQuery}
@@ -161,7 +161,7 @@ const Header = ({ toggleSidebar, onSearch, setActiveTab, sidebarOpen, notificati
            >
              <Bell size={20} className={showNotifications ? '' : 'group-hover:rotate-12 transition-transform'} />
              {notifications.length > 0 && (
-               <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-[#ff0000] rounded-full border-2 border-white shadow-sm" />
+               <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-[#22c55e] rounded-full border-2 border-white shadow-sm" />
              )}
            </button>
 
@@ -171,11 +171,11 @@ const Header = ({ toggleSidebar, onSearch, setActiveTab, sidebarOpen, notificati
                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                className="absolute right-0 mt-3 w-[360px] glass-panel !bg-white/70 rounded-[32px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] border-white/50 overflow-hidden z-[200]"
+                className="absolute right-[-48px] sm:right-0 mt-3 w-[calc(100vw-32px)] sm:w-[360px] max-w-[360px] glass-panel !bg-white/70 rounded-[32px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] border-white/50 overflow-hidden z-[200]"
                >
                  <div className="p-5 border-b border-white/40 flex items-center justify-between bg-white/40 sticky top-0 backdrop-blur-md">
                     <h3 className="font-black text-[#0f0f0f] text-base tracking-tight">AI Insights</h3>
-                    <span className="bg-red-50 text-[#ff0000] text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">{notifications.length} New</span>
+                    <span className="bg-green-50 text-[#22c55e] text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">{notifications.length} New</span>
                  </div>
                  
                  <div className="max-h-[400px] overflow-y-auto no-scrollbar">
@@ -201,7 +201,7 @@ const Header = ({ toggleSidebar, onSearch, setActiveTab, sidebarOpen, notificati
                               setShowNotifications(false);
                             }}
                           >
-                             <div className="w-10 h-10 rounded-xl bg-white/50 flex items-center justify-center shrink-0 border border-white/40 group-hover:border-[#ff0000]/10 group-hover:bg-red-50 transition-colors">
+                             <div className="w-10 h-10 rounded-xl bg-white/50 flex items-center justify-center shrink-0 border border-white/40 group-hover:border-[#22c55e]/10 group-hover:bg-green-50 transition-colors">
                                 {getNotifIcon(notif.type)}
                              </div>
                              <div className="min-w-0 flex-1">
@@ -232,7 +232,7 @@ const Header = ({ toggleSidebar, onSearch, setActiveTab, sidebarOpen, notificati
         {deferredPrompt && (
           <button
             onClick={handleInstallClick}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all border border-red-100 shadow-sm mr-2"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-green-50 hover:bg-green-100 text-green-600 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all border border-green-100 shadow-sm mr-2"
           >
             Install App
           </button>
@@ -258,7 +258,7 @@ const Header = ({ toggleSidebar, onSearch, setActiveTab, sidebarOpen, notificati
             </div>
             <div className="hidden lg:flex flex-col items-start pr-1 max-w-[120px]">
               <span className="text-[13px] font-black text-[#0f0f0f] truncate w-full">{user?.name || 'Admin'}</span>
-              <span className="text-[9px] font-black text-red-500 uppercase tracking-wider flex items-center gap-1">
+              <span className="text-[9px] font-black text-green-600 uppercase tracking-wider flex items-center gap-1">
                 <div className="w-1 h-1 bg-[#2ba640] rounded-full animate-pulse" />
                 {user?.role === 'admin' ? 'Admin' : (user?.subscription?.status === 'active' ? (user?.subscription?.planType || 'Pro') : 'Free Plan')}
               </span>

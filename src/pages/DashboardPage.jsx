@@ -54,7 +54,7 @@ const DashboardPage = ({
           <h1 className="text-xl md:text-2xl font-black text-[#0f0f0f] tracking-tighter">Channel Dashboard</h1>
           <p className="text-[12px] md:text-[13px] text-[#606060] font-medium">Monitoring emotional engagement across your content.</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {channels.length > 1 && (
             <select 
               value={selectedChannelId || ''} 

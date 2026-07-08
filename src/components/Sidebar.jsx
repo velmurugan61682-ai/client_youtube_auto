@@ -65,7 +65,7 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen }) => {
                   }}
                   className={`relative w-full h-full flex items-center gap-4 rounded-2xl transition-all duration-300 group ${
                     isMenuTabActive 
-                      ? 'bg-gradient-to-r from-white/90 to-white/60 text-zinc-950 border border-white shadow-sm' 
+                      ? 'bg-green-500/10 text-green-600 border border-green-500/20 shadow-sm font-black' 
                       : 'hover:bg-white/45 text-[#606060] hover:text-[#0f0f0f] border border-transparent'
                   } ${isOpen ? 'px-4' : 'justify-center'}`}
                 >
@@ -100,7 +100,7 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen }) => {
                   )}
                 </button>
                 {isMenuTabActive && !isOpen && (
-                   <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-zinc-950 rounded-l-full" />
+                   <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-[#22c55e] rounded-l-full" />
                 )}
               </div>
             );
@@ -109,9 +109,9 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen }) => {
 
         {/* AI & Security Footer */}
         <div className="p-4 mt-auto border-t border-white/30 bg-white/5 space-y-3">
-          <div className={`overflow-hidden transition-all duration-500 rounded-[24px] cursor-default bg-white/40 border border-white/50 hover:border-red-500/20 group/ai ${isOpen ? 'p-4' : 'p-0 h-14 flex items-center justify-center'}`}>
+          <div className={`overflow-hidden transition-all duration-500 rounded-[24px] cursor-default bg-white/40 border border-white/50 hover:border-green-500/20 group/ai ${isOpen ? 'p-4' : 'p-0 h-14 flex items-center justify-center'}`}>
              <div className={`flex items-center ${isOpen ? 'gap-3 mb-3' : 'justify-center'}`}>
-                 <div className={`rounded-xl transition-all duration-500 flex items-center justify-center ${isOpen ? 'w-10 h-10 bg-zinc-100 text-zinc-800' : 'w-12 h-12 bg-white text-zinc-800 border border-zinc-100 group-hover/ai:border-zinc-500/20'}`}>
+                 <div className={`rounded-xl transition-all duration-500 flex items-center justify-center ${isOpen ? 'w-10 h-10 bg-zinc-100 text-zinc-800' : 'w-12 h-12 bg-white text-zinc-800 border border-zinc-100 group-hover/ai:border-green-500/20'}`}>
                     <Zap size={isOpen ? 20 : 24} className="animate-pulse" fill="currentColor" />
                  </div>
                 {isOpen && (
@@ -127,7 +127,7 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen }) => {
                     initial={{ x: '-100%' }}
                     animate={{ x: '0%' }}
                     transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
-                    className="h-full bg-zinc-950 w-1/2 shadow-[0_0_10px_rgba(0,0,0,0.15)]"
+                    className="h-full bg-[#22c55e] w-1/2 shadow-[0_0_10px_#22c55e]"
                    />
                 </div>
              )}

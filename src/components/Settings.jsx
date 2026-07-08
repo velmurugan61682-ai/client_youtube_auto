@@ -117,12 +117,12 @@ const Settings = () => {
   return (
     <div className="w-full py-4 space-y-8 pb-16">
       {/* Premium Tab Switcher */}
-      <div className="flex bg-white p-1 rounded-[24px] border border-[#f0f0f0] w-fit shadow-sm">
+      <div className="flex flex-wrap bg-white p-1 rounded-[24px] border border-[#f0f0f0] w-full sm:w-fit shadow-sm gap-1">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2.5 px-6 py-3 rounded-[20px] text-[13px] font-black transition-all ${
+            className={`flex-1 sm:flex-initial flex items-center justify-center gap-2.5 px-4 sm:px-6 py-3 rounded-[20px] text-[13px] font-black transition-all ${
               activeTab === tab.id 
                 ? 'bg-[#0f0f0f] text-white shadow-lg shadow-black/10' 
                 : 'text-[#909090] hover:text-[#0f0f0f] hover:bg-gray-50'
@@ -144,7 +144,7 @@ const Settings = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
-                className="yt-card p-8"
+                className="yt-card p-4 sm:p-6 md:p-8"
               >
                 <div className="flex items-center gap-4 mb-8 pb-5 border-b border-[#f8f8f8]">
                    <div className="w-12 h-12 bg-[#fff1f0] text-[#ff0000] rounded-2xl flex items-center justify-center">
@@ -206,7 +206,7 @@ const Settings = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
-                className="yt-card p-8"
+                className="yt-card p-4 sm:p-6 md:p-8"
               >
                 <div className="flex items-center gap-4 mb-8 pb-5 border-b border-[#f8f8f8]">
                    <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center">
@@ -309,7 +309,7 @@ const Settings = () => {
 
         {/* Info/Side Column */}
         <div className="space-y-6">
-           <div className="bg-[#0f0f0f] rounded-[32px] p-8 text-white relative overflow-hidden group">
+           <div className="bg-[#0f0f0f] rounded-[32px] p-4 sm:p-6 md:p-8 text-white relative overflow-hidden group">
               <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:rotate-12 transition-transform">
                  <Lock size={80} />
               </div>
@@ -330,7 +330,7 @@ const Settings = () => {
               </div>
            </div>
 
-           <div className="bg-white border border-[#f0f0f0] rounded-[32px] p-8 space-y-6">
+           <div className="bg-white border border-[#f0f0f0] rounded-[32px] p-4 sm:p-6 md:p-8 space-y-6">
               <h4 className="text-[13px] font-black text-[#0f0f0f] uppercase tracking-widest">Why provide keys?</h4>
               <div className="space-y-4">
                  {[

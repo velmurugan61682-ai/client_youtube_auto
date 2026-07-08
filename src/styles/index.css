@@ -1,49 +1,45 @@
 @import "tailwindcss";
 
 :root {
-  /* Design System - YouTube Studio Inspired with Glassmorphism */
-  --bg-app: transparent;
-  --bg-card: rgba(255, 255, 255, 0.45);
-  --bg-sidebar: rgba(255, 255, 255, 0.3);
+  /* Design System - Premium SaaS Minimal White UI */
+  --bg-app: #f8fafc;
+  --bg-card: rgba(255, 255, 255, 0.65);
+  --bg-sidebar: rgba(255, 255, 255, 0.55);
   
-  --primary: #ff0000; /* YouTube Red */
-  --primary-hover: #cc0000;
-  --primary-soft: rgba(255, 0, 0, 0.05);
+  --primary: #22c55e; /* SaaS Green Accent */
+  --primary-hover: #16a34a;
+  --primary-soft: rgba(34, 197, 94, 0.08);
   
-  --secondary: #065fd4; /* YouTube Blue */
+  --secondary: #3b82f6; /* Accent Blue */
   
-  --text-main: #0f0f0f;
-  --text-sub: #4b5563;
-  --text-dim: #9ca3af;
+  --text-main: #0f172a;
+  --text-sub: #475569;
+  --text-dim: #94a3b8;
   
-  --border-main: rgba(255, 255, 255, 0.55);
-  --border-soft: rgba(255, 255, 255, 0.35);
+  --border-main: rgba(241, 245, 249, 0.85);
+  --border-soft: rgba(241, 245, 249, 0.6);
   
-  --success: #2ba640;
-  --success-soft: #e6f4ea;
-  --error: #d93025;
-  --error-soft: #fce8e6;
-  --warning: #f9ab00;
-  --warning-soft: #fff8e1;
+  --success: #22c55e;
+  --success-soft: #f0fdf4;
+  --error: #ef4444;
+  --error-soft: #fef2f2;
+  --warning: #f59e0b;
+  --warning-soft: #fefbeb;
   
-  --radius-card: 32px;
-  --radius-button: 16px;
-  --radius-input: 16px;
+  --radius-card: 24px; /* SaaS Premium rounded corners */
+  --radius-button: 12px;
+  --radius-input: 12px;
   
   --header-h: 72px;
   --sidebar-w: 280px;
   
-  --shadow-card: 0 8px 32px 0 rgba(31, 38, 135, 0.03);
-  --shadow-hover: 0 20px 40px -12px rgba(31, 38, 135, 0.08);
+  --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+  --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
 }
 
 @layer base {
   body {
-    background: radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 45%),
-                radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.05) 0%, transparent 45%),
-                radial-gradient(circle at 80% 10%, rgba(148, 163, 184, 0.06) 0%, transparent 40%),
-                #f8fafc;
+    background: #f8fafc;
     color: var(--text-main);
     font-family: 'Outfit', 'Inter', -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;

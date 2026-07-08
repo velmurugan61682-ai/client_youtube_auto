@@ -82,7 +82,7 @@ const ChannelConnection = ({ channels, setChannels }) => {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-2">
-             <div className="w-1.5 h-1.5 bg-[#ff0000] rounded-full" />
+             <div className="w-1.5 h-1.5 bg-[#22c55e] rounded-full" />
              <span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#909090]">Global Connectivity</span>
           </div>
           <h2 className="text-3xl font-black text-[#0f0f0f] tracking-tight">Channel Hub</h2>
@@ -110,7 +110,7 @@ const ChannelConnection = ({ channels, setChannels }) => {
              <Youtube size={140} className="text-white" />
           </div>
           
-          <div className="w-20 h-20 bg-white rounded-[24px] flex items-center justify-center text-[#ff0000] shadow-xl shrink-0 rotate-3 group-hover:rotate-0 transition-transform">
+          <div className="w-20 h-20 bg-white rounded-[24px] flex items-center justify-center text-[#22c55e] shadow-xl shrink-0 rotate-3 group-hover:rotate-0 transition-transform">
             <Youtube size={44} fill="currentColor" />
           </div>
 
@@ -126,7 +126,7 @@ const ChannelConnection = ({ channels, setChannels }) => {
             </p>
             <button 
               onClick={handleOAuthConnect}
-              className="w-full md:w-auto bg-[#ff0000] text-white py-3 px-8 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-white hover:text-[#0f0f0f] transition-all flex items-center justify-center gap-2 group/btn"
+              className="w-full md:w-auto bg-[#22c55e] hover:bg-[#16a34a] text-white py-3 px-8 rounded-xl font-black text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-2 group/btn"
             >
               Link Now <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
             </button>
@@ -199,7 +199,7 @@ const ChannelConnection = ({ channels, setChannels }) => {
         </div>
 
         {channels.length === 0 ? (
-          <div className="py-24 flex flex-col items-center justify-center text-center bg-[#fcfcfc] border-2 border-dashed border-[#f0f0f0] rounded-[40px] group hover:border-[#ff0000]/20 transition-colors">
+          <div className="py-24 flex flex-col items-center justify-center text-center bg-[#fcfcfc] border-2 border-dashed border-[#f0f0f0] rounded-[40px] group hover:border-[#22c55e]/20 transition-colors">
             <div className="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center text-[#cccccc] mb-6 group-hover:scale-110 transition-transform">
                <Globe size={32} />
             </div>
@@ -222,7 +222,7 @@ const ChannelConnection = ({ channels, setChannels }) => {
                     <div className="relative shrink-0">
                       <img src={channel.thumbnailUrl} className="w-16 h-16 rounded-[22px] border-2 border-white shadow-md bg-[#f8f8f8]" alt="" />
                       <div className="absolute -bottom-1 -right-1 p-1.5 bg-white rounded-full shadow-lg border border-[#f0f0f0]">
-                        {channel.apiKey ? <Key size={12} className="text-[#909090]" /> : <ShieldCheck size={12} className="text-[#ff0000]" />}
+                        {channel.apiKey ? <Key size={12} className="text-[#909090]" /> : <ShieldCheck size={12} className="text-[#22c55e]" />}
                       </div>
                     </div>
 
@@ -243,7 +243,7 @@ const ChannelConnection = ({ channels, setChannels }) => {
                         <a 
                           href={`https://youtube.com/channel/${channel.channelId}`} 
                           target="_blank" 
-                          className="flex items-center gap-2 px-3 py-1.5 bg-[#f8f9fa] hover:bg-[#ff0000]/5 text-[#606060] hover:text-[#ff0000] rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
+                          className="flex items-center gap-2 px-3 py-1.5 bg-[#f8f9fa] hover:bg-green-50 text-[#606060] hover:text-[#22c55e] rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
                         >
                           <ExternalLink size={14} /> Open Studio
                         </a>

@@ -74,7 +74,7 @@ const Login = ({ onSwitchToRegister }) => {
           </div>
         )}
 
-        <div className="bg-white/60 backdrop-blur-xl border border-white/50 rounded-[28px] p-8 sm:p-10 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] relative text-zinc-800">
+        <div className="bg-white/60 backdrop-blur-xl border border-white/50 rounded-[28px] p-6 sm:p-8 md:p-10 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] relative text-zinc-800">
           {/* Top Logo Container */}
           <div className="flex flex-col items-center text-center mb-8">
             <Link to="/" className="flex flex-col items-center">

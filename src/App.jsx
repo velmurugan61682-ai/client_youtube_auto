@@ -95,6 +95,12 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      setSidebarOpen(false);
+    }
+  }, []);
+
+  useEffect(() => {
     const handleUpdate = () => {
       if (window.confirm('🔄 A new version of the app is available. Click OK to reload and update.')) {
         window.location.reload();
@@ -383,11 +389,7 @@ const App = () => {
               </Suspense>
             </div>
           ) : (
-            <div className="h-screen flex flex-col overflow-hidden bg-slate-50/20 backdrop-blur-[40px] relative selection:bg-red-500/20 selection:text-red-900">
-              {/* Vibrant Background Mesh for beautiful internal Glassmorphism */}
-              <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-[#0055ff] to-[#00f2fe] opacity-15 blur-[130px] pointer-events-none" />
-              <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-gradient-to-br from-[#3b82f6] to-[#6366f1] opacity-15 blur-[130px] pointer-events-none" />
-              <div className="absolute top-[25%] left-[20%] w-[450px] h-[450px] rounded-full bg-gradient-to-r from-[#00f2fe] to-[#4facfe] opacity-10 blur-[110px] pointer-events-none" />
+            <div className="h-screen flex flex-col overflow-hidden bg-[#f8fafc] relative selection:bg-green-500/20 selection:text-green-900">
               {!isEmbedded && (
                 <Header 
                   toggleSidebar={toggleSidebar} 

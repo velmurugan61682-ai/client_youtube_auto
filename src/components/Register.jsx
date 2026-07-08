@@ -69,7 +69,7 @@ const Register = ({ onSwitchToLogin }) => {
         animate={{ opacity: 1, scale: 1 }}
         className="w-full max-w-[480px] z-10"
       >
-        <div className="bg-white/60 backdrop-blur-xl border border-white/50 rounded-[32px] p-8 sm:p-10 shadow-[0_24px_80px_rgba(0,0,0,0.02)] relative overflow-hidden text-zinc-850">
+        <div className="bg-white/60 backdrop-blur-xl border border-white/50 rounded-[32px] p-6 sm:p-8 md:p-10 shadow-[0_24px_80px_rgba(0,0,0,0.02)] relative overflow-hidden text-zinc-850">
           {/* Header */}
           <div className="flex flex-col items-center text-center mb-8">
             <Link to="/" className="flex flex-col items-center">
