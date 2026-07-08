@@ -45,6 +45,10 @@ import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import Login from './components/Login';
 import Register from './components/Register';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import LandingPage from './pages/LandingPage';
+import PrivacyPage from './pages/PrivacyPage';
+import TermsPage from './pages/TermsPage';
 
 let activeAnalyticsPromise = null;
 let activeChannelsPromise = null;
@@ -261,42 +265,6 @@ const App = () => {
     }
   };
 
-  if (authLoading || (user && !planSelected && loadingChannels)) return (
-    <div className="h-screen w-full flex items-center justify-center bg-[#f9f9f9]">
-      <div className="flex flex-col items-center gap-4">
-        <Loader2 className="animate-spin text-[#ff0000]" size={48} />
-        <p className="text-[14px] font-bold text-[#606060] uppercase tracking-widest">Initialising Studio...</p>
-      </div>
-    </div>
-  );
-
-  if (!user) {
-    return isRegistering ? 
-      <Register onSwitchToLogin={() => setIsRegistering(false)} /> : 
-      <Login onSwitchToRegister={() => setIsRegistering(true)} />;
-  }
-
-  if (user && !planSelected) {
-    return (
-      <div className="h-screen w-full overflow-y-auto bg-[#f9f9f9] py-12 px-4 md:px-8 flex items-center justify-center">
-        <Suspense fallback={
-          <div className="h-full w-full flex items-center justify-center">
-            <Loader2 className="animate-spin text-[#ff0000]" size={40} />
-          </div>
-        }>
-          <SubscriptionPage 
-            isGate={true} 
-            onSelectPlan={() => {
-              sessionStorage.setItem('plan_acknowledged', 'true');
-              setPlanSelected(true);
-              setActiveTab('dashboard');
-            }} 
-          />
-        </Suspense>
-      </div>
-    );
-  }
-
   const renderActiveTab = () => {
     switch (activeTab) {
       case 'dashboard':
@@ -365,53 +333,100 @@ const App = () => {
     }
   };
 
-  return (
-    <div className="h-screen flex flex-col overflow-hidden bg-[#f9f9f9]">
-      {!isEmbedded && (
-        <Header 
-          toggleSidebar={toggleSidebar} 
-          onSearch={setSearchQuery} 
-          setActiveTab={setActiveTab}
-          sidebarOpen={sidebarOpen}
-        />
-      )}
-      
-      <div className="flex flex-1 overflow-hidden relative">
-        {!isEmbedded && (
-          <Sidebar 
-            activeTab={activeTab} 
-            setActiveTab={setActiveTab} 
-            onLogout={logout} 
-            isOpen={sidebarOpen}
-            setIsOpen={setSidebarOpen}
-          />
-        )}
-        
-        <main className={`flex-1 ${isEmbedded ? 'overflow-hidden p-0' : 'overflow-y-auto p-4 md:p-6 lg:p-8'} custom-scroll transition-all duration-300 ease-in-out`}>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0, x: 10 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -10 }}
-              transition={{ duration: 0.2 }}
-              className="h-full"
-            >
-              <Suspense fallback={
-                <div className="h-full w-full flex items-center justify-center">
-                  <div className="flex flex-col items-center gap-4">
-                    <Loader2 className="animate-spin text-[#ff0000]" size={40} />
-                    <p className="text-[12px] font-bold text-[#909090] uppercase tracking-widest">Loading Module...</p>
-                  </div>
-                </div>
-              }>
-                {renderActiveTab()}
-              </Suspense>
-            </motion.div>
-          </AnimatePresence>
-        </main>
+  if (authLoading) return (
+    <div className="h-screen w-full flex items-center justify-center bg-[#f9f9f9]">
+      <div className="flex flex-col items-center gap-4">
+        <Loader2 className="animate-spin text-[#ff0000]" size={48} />
+        <p className="text-[14px] font-bold text-[#606060] uppercase tracking-widest">Initialising Studio...</p>
       </div>
     </div>
+  );
+
+  return (
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/privacy" element={<PrivacyPage />} />
+      <Route path="/terms" element={<TermsPage />} />
+      <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <Login />} />
+      <Route path="/register" element={user ? <Navigate to="/dashboard" replace /> : <Register />} />
+      <Route path="/dashboard" element={
+        !user ? <Navigate to="/login" replace /> : (
+          !planSelected && loadingChannels ? (
+            <div className="h-screen w-full flex items-center justify-center bg-[#f9f9f9]">
+              <div className="flex flex-col items-center gap-4">
+                <Loader2 className="animate-spin text-[#ff0000]" size={48} />
+                <p className="text-[14px] font-bold text-[#606060] uppercase tracking-widest">Initialising Studio...</p>
+              </div>
+            </div>
+          ) : !planSelected ? (
+            <div className="h-screen w-full overflow-y-auto bg-[#f9f9f9] py-12 px-4 md:px-8 flex items-center justify-center">
+              <Suspense fallback={
+                <div className="h-full w-full flex items-center justify-center">
+                  <Loader2 className="animate-spin text-[#ff0000]" size={40} />
+                </div>
+              }>
+                <SubscriptionPage 
+                  isGate={true} 
+                  onSelectPlan={() => {
+                    sessionStorage.setItem('plan_acknowledged', 'true');
+                    setPlanSelected(true);
+                    setActiveTab('dashboard');
+                  }} 
+                />
+              </Suspense>
+            </div>
+          ) : (
+            <div className="h-screen flex flex-col overflow-hidden bg-[#f9f9f9]">
+              {!isEmbedded && (
+                <Header 
+                  toggleSidebar={toggleSidebar} 
+                  onSearch={setSearchQuery} 
+                  setActiveTab={setActiveTab}
+                  sidebarOpen={sidebarOpen}
+                />
+              )}
+              
+              <div className="flex flex-1 overflow-hidden relative">
+                {!isEmbedded && (
+                  <Sidebar 
+                    activeTab={activeTab} 
+                    setActiveTab={setActiveTab} 
+                    onLogout={logout} 
+                    isOpen={sidebarOpen}
+                    setIsOpen={setSidebarOpen}
+                  />
+                )}
+                
+                <main className={`flex-1 ${isEmbedded ? 'overflow-hidden p-0' : 'overflow-y-auto p-4 md:p-6 lg:p-8'} custom-scroll transition-all duration-300 ease-in-out`}>
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={activeTab}
+                      initial={{ opacity: 0, x: 10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -10 }}
+                      transition={{ duration: 0.2 }}
+                      className="h-full"
+                    >
+                      <Suspense fallback={
+                        <div className="h-full w-full flex items-center justify-center">
+                          <div className="flex flex-col items-center gap-4">
+                            <Loader2 className="animate-spin text-[#ff0000]" size={40} />
+                            <p className="text-[12px] font-bold text-[#909090] uppercase tracking-widest">Loading Module...</p>
+                          </div>
+                        </div>
+                      }>
+                        {renderActiveTab()}
+                      </Suspense>
+                    </motion.div>
+                  </AnimatePresence>
+                </main>
+              </div>
+            </div>
+          )
+        )
+      } />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 };
 
