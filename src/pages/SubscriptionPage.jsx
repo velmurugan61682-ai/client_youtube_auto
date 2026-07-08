@@ -63,21 +63,96 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
     }
   }, [activeSubTab]);
 
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      if (window.Razorpay) {
+        resolve(true);
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
   const handleSubscribe = async (planType) => {
     try {
       setPurchasing(true);
       setMessage('');
-      const res = await api.post('/subscription/create', { planType });
-      if (res.data.shortUrl) {
-        window.location.href = res.data.shortUrl; // Redirect to Razorpay hosted checkout
-      } else {
-        setMessage('Checkout URL missing. Running in developer sandbox mode.');
-        // Verify mock subscription locally
-        if (res.data.subscriptionId) {
-          await api.post('/subscription/verify', { razorpay_subscription_id: res.data.subscriptionId });
+
+      // If it is the Free Plan, downgrade directly
+      if (planType === 'free') {
+        const res = await api.post('/subscription/create', { planType });
+        if (res.data.success) {
           await fetchStatus();
+          alert('Downgraded to Free Plan successfully.');
         }
+        return;
       }
+
+      // Otherwise, handle paid subscription
+      const res = await api.post('/subscription/create', { planType });
+      const { subscriptionId, razorpayKeyId, shortUrl } = res.data;
+
+      // If we are in mock mode (no Key ID, mock ID, or shortUrl is '#' or missing)
+      if (!razorpayKeyId || !subscriptionId || subscriptionId.includes('mock') || shortUrl === '#') {
+        setMessage('Running in developer sandbox mode.');
+        if (subscriptionId) {
+          await api.post('/subscription/verify', { razorpay_subscription_id: subscriptionId });
+          await fetchStatus();
+          alert('Mock subscription activated successfully.');
+        }
+        return;
+      }
+
+      // Load Razorpay script for standard checkout
+      const scriptLoaded = await loadRazorpayScript();
+      if (!scriptLoaded) {
+        setMessage('Failed to load Razorpay SDK. Please check your internet connection.');
+        return;
+      }
+
+      // Open Razorpay Standard Checkout Modal
+      const options = {
+        key: razorpayKeyId,
+        subscription_id: subscriptionId,
+        name: "Tech Vaseegraah",
+        description: "Premium Pro Plan Subscription",
+        handler: async function (response) {
+          try {
+            setPurchasing(true);
+            const verifyRes = await api.post('/subscription/verify', {
+              razorpay_subscription_id: response.razorpay_subscription_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature
+            });
+            if (verifyRes.data.success) {
+              await fetchStatus();
+              alert('Subscription activated successfully!');
+            }
+          } catch (err) {
+            console.error(err);
+            setMessage('Payment verification failed. Please contact support.');
+          } finally {
+            setPurchasing(false);
+          }
+        },
+        prefill: {
+          email: subData?.email || '',
+        },
+        theme: {
+          color: "#ff0000"
+        },
+        modal: {
+          ondismiss: function() {
+            setPurchasing(false);
+          }
+        }
+      };
+      const rzp = new window.Razorpay(options);
+      rzp.open();
     } catch (err) {
       console.error(err);
       setMessage(err.response?.data?.error || 'Subscription initiation failed.');
