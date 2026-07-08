@@ -73,12 +73,7 @@ const Header = ({ toggleSidebar, onSearch, setActiveTab, sidebarOpen, notificati
           onClick={() => setActiveTab && setActiveTab('dashboard')}
           className="flex items-center gap-2.5 cursor-pointer group select-none"
         >
-          <div className="relative">
-            <div className="w-10 h-7 bg-[#ff0000] rounded-[8px] flex items-center justify-center shadow-lg shadow-red-100 group-hover:scale-105 transition-transform">
-               <div className="w-0 h-0 border-t-[4px] border-t-transparent border-l-[6px] border-l-white border-b-[4px] border-b-transparent ml-0.5" />
-            </div>
-            <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-400 rounded-full animate-ping opacity-20" />
-          </div>
+          <img src="/logo.svg" className="w-9 h-9 object-contain" alt="Logo" />
           <div className="flex flex-col -gap-1">
             <span className="text-[17px] font-black tracking-tighter text-[#0f0f0f]">TECH VASEEGRAAH</span>
             <span className="text-[10px] font-black text-[#ff0000] tracking-[0.2em] -mt-1 uppercase opacity-80">CREATOR AI</span>
