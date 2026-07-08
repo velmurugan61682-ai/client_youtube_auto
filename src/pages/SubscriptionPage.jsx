@@ -24,16 +24,18 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingInvoices, setLoadingInvoices] = useState(false);
-  const [purchasing, setPurchasing] = useState(false);
+  const [purchasingPlan, setPurchasingPlan] = useState(null);
   const [cancelling, setCancelling] = useState(false);
   const [message, setMessage] = useState('');
   const [activeSubTab, setActiveSubTab] = useState('plans'); // 'plans' or 'billing'
+  const [trialExpired, setTrialExpired] = useState(false);
 
   const fetchStatus = async () => {
     try {
       setLoading(true);
       const res = await api.get('/subscription/status');
       setSubData(res.data.subscription);
+      setTrialExpired(res.data.trialExpired || false);
     } catch (err) {
       console.error('Failed to load subscription status:', err);
     } finally {
@@ -78,8 +80,9 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
   };
 
   const handleSubscribe = async (planType) => {
+    if (purchasingPlan) return;
     try {
-      setPurchasing(true);
+      setPurchasingPlan(planType);
       setMessage('');
 
       // If it is the Free Plan, downgrade directly
@@ -122,7 +125,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
         description: "Premium Pro Plan Subscription",
         handler: async function (response) {
           try {
-            setPurchasing(true);
+            setPurchasingPlan(planType);
             const verifyRes = await api.post('/subscription/verify', {
               razorpay_subscription_id: response.razorpay_subscription_id,
               razorpay_payment_id: response.razorpay_payment_id,
@@ -136,7 +139,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
             console.error(err);
             setMessage('Payment verification failed. Please contact support.');
           } finally {
-            setPurchasing(false);
+            setPurchasingPlan(null);
           }
         },
         prefill: {
@@ -147,7 +150,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
         },
         modal: {
           ondismiss: function() {
-            setPurchasing(false);
+            setPurchasingPlan(null);
           }
         }
       };
@@ -157,7 +160,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
       console.error(err);
       setMessage(err.response?.data?.error || 'Subscription initiation failed.');
     } finally {
-      setPurchasing(false);
+      setPurchasingPlan(null);
     }
   };
 
@@ -385,20 +388,27 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
                   </div>
 
                   <button
-                    disabled={purchasing || (plan.type === 'free' && isActive) || (plan.type === 'professional' && isActive)}
+                    disabled={
+                      (purchasingPlan === plan.type) || 
+                      (plan.type === 'free' && isActive) || 
+                      (plan.type === 'professional' && isActive) ||
+                      (plan.type === 'free' && trialExpired)
+                    }
                     onClick={() => handleSubscribe(plan.type)}
                     className={`w-full py-3 text-xs font-black uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-1.5 ${
-                      plan.type === 'free' && isActive
+                      (plan.type === 'free' && isActive) || (plan.type === 'free' && trialExpired)
                         ? 'bg-zinc-100 text-zinc-400 cursor-default border border-zinc-200'
                         : plan.type === 'professional' && isActive
                         ? 'bg-[#00c853] text-white cursor-default shadow-[0_4px_12px_rgba(0,200,83,0.2)]'
                         : 'bg-zinc-900 hover:bg-zinc-800 text-white active:scale-98'
                     }`}
                   >
-                    {purchasing ? (
+                    {purchasingPlan === plan.type ? (
                       <Loader2 className="animate-spin" size={14} />
                     ) : plan.type === 'free' && isActive ? (
                       'FREE TIER'
+                    ) : plan.type === 'free' && trialExpired ? (
+                      'TRIAL EXPIRED'
                     ) : plan.type === 'professional' && isActive ? (
                       <>
                         <UserCheck size={14} /> ACTIVE PRO SESSION
