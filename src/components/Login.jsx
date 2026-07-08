@@ -87,7 +87,7 @@ const Login = ({ onSwitchToRegister }) => {
               >
                 <div className="w-0 h-0 border-t-[8px] border-t-transparent border-l-[14px] border-l-white border-b-[8px] border-b-transparent ml-1" />
               </motion.div>
-              <h1 className="text-[24px] font-black text-white leading-tight mb-1 tracking-tighter">YouTube AI Moderator</h1>
+              <h1 className="text-[24px] font-black text-white leading-tight mb-1 tracking-tighter">Velmurugan Creator AI</h1>
               <p className="text-white/60 text-[13px] font-semibold">Sign in to your AI moderation centre</p>
             </Link>
           </div>
@@ -200,7 +200,7 @@ const Login = ({ onSwitchToRegister }) => {
               <span className="flex items-center gap-2"><Zap size={14}/> AI Core v4.2</span>
            </div>
            <p className="text-[10px] font-black text-white/30 uppercase tracking-[0.4em]">
-             &copy; 2026 YouTube AI MOD &bull; Global Systems LLC
+             &copy; 2026 Velmurugan Creator AI &bull; Global Systems LLC
            </p>
         </div>
       </motion.div>
