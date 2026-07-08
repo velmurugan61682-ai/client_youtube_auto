@@ -96,7 +96,7 @@ const StatsGrid = ({ stats }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.05 }}
-          className="bg-white rounded-[32px] border border-[#f0f0f0] p-6 shadow-sm hover:shadow-xl hover:translate-y-[-4px] transition-all duration-500 group relative overflow-hidden"
+          className="glass-panel glass-panel-hover rounded-[32px] p-6 group relative overflow-hidden"
         >
           {/* Subtle Accent Glow */}
           <div className={`absolute -right-4 -bottom-4 w-24 h-24 rounded-full blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-700 ${card.iconBg}`} />
@@ -117,14 +117,14 @@ const StatsGrid = ({ stats }) => {
             <p className="text-[10px] font-black text-[#909090] uppercase tracking-[0.2em]">{card.label}</p>
           </div>
           
-          <div className="mt-6 pt-5 border-t border-[#f8f8f8] flex items-center justify-between relative z-10">
+          <div className="mt-6 pt-5 border-t border-white/40 flex items-center justify-between relative z-10">
              <div className="flex items-center gap-2">
                 <div className={`w-2 h-2 rounded-full ${card.isUp ? 'bg-[#2ba640]' : 'bg-[#d93025]'} animate-pulse`} />
                 <span className="text-[10px] font-bold text-[#aaaaaa]">Real-time Track</span>
              </div>
              <motion.div 
               whileHover={{ x: 3 }}
-              className="w-8 h-8 rounded-full bg-[#f8f9fa] flex items-center justify-center text-[#909090] cursor-pointer"
+              className="w-8 h-8 rounded-full bg-white/45 flex items-center justify-center text-[#909090] cursor-pointer hover:bg-white/60 transition-colors border border-white/20"
              >
                 <TrendingUp size={14} className={card.isUp ? '' : 'rotate-180'} />
              </motion.div>
@@ -137,7 +137,7 @@ const StatsGrid = ({ stats }) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="bg-[#0f0f0f] rounded-[32px] p-6 shadow-xl shadow-black/10 relative overflow-hidden group col-span-1 min-h-[220px]"
+        className="bg-gradient-to-br from-red-600 to-[#e50914] rounded-[32px] p-6 shadow-xl shadow-red-500/10 border border-white/20 relative overflow-hidden group col-span-1 min-h-[220px]"
       >
          <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:rotate-12 transition-transform duration-700">
             <Zap size={100} className="text-white" fill="white" />

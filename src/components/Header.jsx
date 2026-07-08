@@ -101,7 +101,7 @@ const Header = ({ toggleSidebar, onSearch, setActiveTab, sidebarOpen, notificati
   };
 
   return (
-    <header className="h-[72px] bg-white/15 backdrop-blur-2xl border-b border-white/35 flex items-center justify-between px-6 sticky top-0 z-[100] transition-all">
+    <header className="h-[72px] glass-panel border-b border-white/40 flex items-center justify-between px-6 sticky top-0 z-[100] transition-all">
       {/* Left: Branding */}
       <div className="flex items-center gap-6">
         <button 
@@ -146,7 +146,7 @@ const Header = ({ toggleSidebar, onSearch, setActiveTab, sidebarOpen, notificati
             value={searchQuery}
             onChange={handleSearch}
             placeholder="Search activity, leads, or video audits..."
-            className="w-full bg-[#f8f9fa] border border-[#e5e5e5] rounded-2xl py-2.5 pl-12 pr-6 text-[14px] font-medium outline-none focus:bg-white focus:border-[#ff0000]/30 transition-all placeholder-[#adb5bd]"
+            className="w-full glass-input rounded-2xl py-2.5 pl-12 pr-6 text-[14px] font-medium outline-none transition-all placeholder-[#adb5bd]"
           />
         </div>
       </div>
@@ -171,9 +171,9 @@ const Header = ({ toggleSidebar, onSearch, setActiveTab, sidebarOpen, notificati
                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                className="absolute right-0 mt-3 w-[360px] bg-white rounded-[32px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-[#f0f0f0] overflow-hidden z-[200]"
+                className="absolute right-0 mt-3 w-[360px] glass-panel !bg-white/70 rounded-[32px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] border-white/50 overflow-hidden z-[200]"
                >
-                 <div className="p-5 border-b border-[#f0f0f0] flex items-center justify-between bg-white sticky top-0">
+                 <div className="p-5 border-b border-white/40 flex items-center justify-between bg-white/40 sticky top-0 backdrop-blur-md">
                     <h3 className="font-black text-[#0f0f0f] text-base tracking-tight">AI Insights</h3>
                     <span className="bg-red-50 text-[#ff0000] text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">{notifications.length} New</span>
                  </div>
@@ -181,27 +181,27 @@ const Header = ({ toggleSidebar, onSearch, setActiveTab, sidebarOpen, notificati
                  <div className="max-h-[400px] overflow-y-auto no-scrollbar">
                     {notifications.length === 0 ? (
                       <div className="py-12 flex flex-col items-center justify-center text-center">
-                         <div className="w-12 h-12 bg-[#f8f9fa] rounded-2xl flex items-center justify-center text-[#cccccc] mb-3">
+                         <div className="w-12 h-12 bg-white/40 rounded-2xl flex items-center justify-center text-[#cccccc] mb-3">
                             <Bell size={24} />
                          </div>
                          <p className="text-[12px] font-bold text-[#909090]">No recent system alerts</p>
                       </div>
                     ) : (
-                      <div className="divide-y divide-[#fcfcfc]">
+                      <div className="divide-y divide-white/40">
                         {notifications.map((notif, idx) => (
                           <motion.div 
                             key={notif._id || idx}
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: idx * 0.05 }}
-                            className="p-4 hover:bg-[#fcfcfc] transition-colors cursor-pointer group flex gap-3"
+                            className="p-4 hover:bg-white/50 transition-colors cursor-pointer group flex gap-3"
                             onClick={() => {
                               if (notif.type === 'like' || notif.type === 'new_comment') setActiveTab('moderation');
                               else if (notif.whatsappSent) setActiveTab('leads');
                               setShowNotifications(false);
                             }}
                           >
-                             <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center shrink-0 border border-[#f0f0f0] group-hover:border-[#ff0000]/10 group-hover:bg-red-50 transition-colors">
+                             <div className="w-10 h-10 rounded-xl bg-white/50 flex items-center justify-center shrink-0 border border-white/40 group-hover:border-[#ff0000]/10 group-hover:bg-red-50 transition-colors">
                                 {getNotifIcon(notif.type)}
                              </div>
                              <div className="min-w-0 flex-1">
@@ -220,7 +220,7 @@ const Header = ({ toggleSidebar, onSearch, setActiveTab, sidebarOpen, notificati
                  
                  <button 
                   onClick={() => { setActiveTab('dashboard'); setShowNotifications(false); }}
-                  className="w-full py-4 bg-[#fcfcfc] border-t border-[#f0f0f0] text-[11px] font-black text-[#606060] uppercase tracking-widest hover:bg-[#f8f8f8] transition-colors"
+                  className="w-full py-4 bg-white/40 border-t border-white/40 text-[11px] font-black text-[#606060] uppercase tracking-widest hover:bg-white/60 transition-colors"
                  >
                     View All Activity Feed
                  </button>
@@ -272,9 +272,9 @@ const Header = ({ toggleSidebar, onSearch, setActiveTab, sidebarOpen, notificati
                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                className="absolute right-0 mt-3 w-64 bg-white rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-[#f0f0f0] overflow-hidden p-2 z-[200]"
+                className="absolute right-0 mt-3 w-64 glass-panel !bg-white/70 rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.1)] border-white/50 overflow-hidden p-2 z-[200]"
               >
-                <div className="p-4 mb-2 bg-[#fcfcfc] rounded-2xl border border-[#f0f0f0] flex items-center gap-3">
+                <div className="p-4 mb-2 bg-white/40 rounded-2xl border border-white/45 flex items-center gap-3">
                    <div className="w-10 h-10 rounded-xl bg-[#ff0000] flex items-center justify-center text-white font-black text-lg">
                      {user?.name?.charAt(0).toUpperCase() || 'A'}
                    </div>

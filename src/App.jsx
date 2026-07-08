@@ -383,7 +383,7 @@ const App = () => {
               </Suspense>
             </div>
           ) : (
-            <div className="h-screen flex flex-col overflow-hidden bg-slate-50 relative selection:bg-red-500/20 selection:text-red-900">
+            <div className="h-screen flex flex-col overflow-hidden bg-slate-50/20 backdrop-blur-[40px] relative selection:bg-red-500/20 selection:text-red-900">
               {/* Vibrant Background Mesh for beautiful internal Glassmorphism */}
               <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-[#ff0055] to-[#ff7700] opacity-15 blur-[130px] pointer-events-none" />
               <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-gradient-to-br from-[#0055ff] to-[#aa00ff] opacity-15 blur-[130px] pointer-events-none" />

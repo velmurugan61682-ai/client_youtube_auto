@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  /* Design System - YouTube Studio Inspired */
-  --bg-app: #fafbfd;
-  --bg-card: rgba(255, 255, 255, 0.3);
-  --bg-sidebar: rgba(255, 255, 255, 0.2);
+  /* Design System - YouTube Studio Inspired with Glassmorphism */
+  --bg-app: transparent;
+  --bg-card: rgba(255, 255, 255, 0.45);
+  --bg-sidebar: rgba(255, 255, 255, 0.3);
   
   --primary: #ff0000; /* YouTube Red */
   --primary-hover: #cc0000;
-  --primary-soft: #fff1f0;
+  --primary-soft: rgba(255, 0, 0, 0.05);
   
   --secondary: #065fd4; /* YouTube Blue */
   
@@ -16,8 +16,8 @@
   --text-sub: #4b5563;
   --text-dim: #9ca3af;
   
-  --border-main: rgba(255, 255, 255, 0.5);
-  --border-soft: rgba(255, 255, 255, 0.3);
+  --border-main: rgba(255, 255, 255, 0.55);
+  --border-soft: rgba(255, 255, 255, 0.35);
   
   --success: #2ba640;
   --success-soft: #e6f4ea;
@@ -33,17 +33,22 @@
   --header-h: 72px;
   --sidebar-w: 280px;
   
-  --shadow-card: 0 4px 12px rgba(0,0,0,0.03);
-  --shadow-hover: 0 20px 40px -12px rgba(0,0,0,0.1);
+  --shadow-card: 0 8px 32px 0 rgba(31, 38, 135, 0.03);
+  --shadow-hover: 0 20px 40px -12px rgba(31, 38, 135, 0.08);
 }
 
 @layer base {
   body {
-    background-color: #fafafa;
+    background: radial-gradient(circle at 10% 20%, rgba(255, 0, 85, 0.07) 0%, transparent 45%),
+                radial-gradient(circle at 90% 80%, rgba(0, 85, 255, 0.09) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(240, 0, 255, 0.04) 0%, transparent 45%),
+                radial-gradient(circle at 80% 10%, rgba(255, 119, 0, 0.06) 0%, transparent 40%),
+                #f8fafc;
     color: var(--text-main);
     font-family: 'Outfit', 'Inter', -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
     letter-spacing: -0.01em;
+    min-height: 100vh;
   }
 
   /* Responsive Typography */
@@ -101,9 +106,9 @@
   border-radius: var(--radius-card);
   padding: 1rem; /* Reduced for mobile */
   box-shadow: var(--shadow-card);
-  transition: all 0.3s ease;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(24px) saturate(130%);
+  -webkit-backdrop-filter: blur(24px) saturate(130%);
 }
 
 @media (min-width: 768px) {
@@ -113,7 +118,41 @@
 }
 
 .yt-card:hover {
-  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  background-color: rgba(255, 255, 255, 0.58);
+  border-color: rgba(255, 255, 255, 0.7);
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
+}
+
+/* Glassmorphism panel definitions */
+.glass-panel {
+  background-color: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(24px) saturate(135%);
+  -webkit-backdrop-filter: blur(24px) saturate(135%);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.03);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-panel-hover:hover {
+  background-color: rgba(255, 255, 255, 0.58);
+  border-color: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 20px 40px -12px rgba(31, 38, 135, 0.08);
+  transform: translateY(-2px);
+}
+
+.glass-input {
+  background-color: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  transition: all 0.2s ease-in-out;
+}
+
+.glass-input:focus {
+  background-color: rgba(255, 255, 255, 0.6);
+  border-color: rgba(255, 0, 0, 0.25);
+  box-shadow: 0 0 0 4px rgba(255, 0, 0, 0.05);
 }
 
 .sidebar-item {

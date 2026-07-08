@@ -50,7 +50,7 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen }) => {
           x: (typeof window !== 'undefined' && window.innerWidth >= 1024) ? 0 : (isOpen ? 0 : -280),
         }}
         transition={{ type: 'spring', damping: 28, stiffness: 220 }}
-        className="fixed inset-y-0 left-0 bg-white/20 backdrop-blur-2xl border-r border-white/40 flex flex-col z-[150] lg:relative transition-all duration-300"
+        className="fixed inset-y-0 left-0 glass-panel border-r border-white/40 flex flex-col z-[150] lg:relative transition-all duration-300"
       >
         {/* Navigation Section */}
         <div className="flex-1 py-8 flex flex-col gap-2 overflow-y-auto no-scrollbar">
@@ -65,8 +65,8 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen }) => {
                   }}
                   className={`relative w-full h-full flex items-center gap-4 rounded-2xl transition-all duration-300 group ${
                     isMenuTabActive 
-                      ? 'bg-[#0f0f0f] text-white shadow-lg shadow-black/10' 
-                      : 'hover:bg-[#f8f8f8] text-[#909090] hover:text-[#0f0f0f]'
+                      ? 'bg-gradient-to-r from-red-600/15 to-red-500/5 text-red-600 border border-red-500/20 shadow-sm shadow-red-500/5' 
+                      : 'hover:bg-white/45 text-[#606060] hover:text-[#0f0f0f] border border-transparent'
                   } ${isOpen ? 'px-4' : 'justify-center'}`}
                 >
                   <div className="flex-shrink-0">
@@ -136,8 +136,8 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen }) => {
           <div className="px-1">
             <button 
               onClick={onLogout}
-              className={`flex items-center transition-all duration-300 rounded-[20px] ${
-                isOpen ? 'w-full px-4 py-3 bg-[#fce8e6]/30 text-[#d93025] hover:bg-[#fce8e6] font-black text-xs uppercase tracking-widest' : 'h-14 w-full justify-center text-[#909090] hover:text-[#d93025] hover:bg-[#fce8e6]'
+              className={`flex items-center transition-all duration-300 rounded-[20px] border ${
+                isOpen ? 'w-full px-4 py-3 bg-red-500/10 border-red-500/15 text-[#d93025] hover:bg-red-500/20 font-black text-xs uppercase tracking-widest' : 'h-14 w-full justify-center text-[#909090] hover:text-[#d93025] hover:bg-red-500/10 border-transparent hover:border-red-500/15'
               }`}
             >
               <LogOut size={20} />

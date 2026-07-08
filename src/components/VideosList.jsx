@@ -306,7 +306,7 @@ const VideosList = ({
       {/* Left Pane: Videos List */}
       <div className="w-full lg:w-[320px] flex flex-col gap-4 overflow-hidden shrink-0 h-[40%] lg:h-full">
         <div className={`yt-card !p-0 flex flex-col h-full overflow-hidden ${isEmbedded ? '!rounded-none !border-y-0 !border-l-0 !shadow-none' : ''}`}>
-           <div className="p-4 md:p-5 border-b border-[#f0f0f0] flex items-center justify-between bg-white sticky top-0 z-10">
+           <div className="p-4 md:p-5 border-b border-white/40 flex items-center justify-between bg-white/20 sticky top-0 z-10 backdrop-blur-md">
               <div className="flex items-center gap-2 min-w-0 flex-1">
                 <h3 className="text-base md:text-lg font-black text-[#0f0f0f] tracking-tight truncate">Channel Videos</h3>
                 {isEmbedded && channels.length > 1 && (
@@ -341,8 +341,8 @@ const VideosList = ({
                 <button
                   key={video.videoId}
                   onClick={() => handleVideoSelect(video.videoId)}
-                  className={`w-full flex gap-3 p-2.5 md:p-3 rounded-xl transition-all text-left mb-1 group ${
-                    selectedVideo === video.videoId ? 'bg-[#fff1f0] border border-[#ff0000]/10' : 'hover:bg-[#f9f9f9] border border-transparent'
+                  className={`w-full flex gap-3 p-2.5 md:p-3 rounded-xl transition-all text-left mb-1 border group ${
+                    selectedVideo === video.videoId ? 'bg-red-500/10 border-red-500/25 text-[#ff0000] shadow-sm' : 'hover:bg-white/45 border-transparent text-[#606060]'
                   }`}
                 >
                   <div className="relative flex-shrink-0 w-20 md:w-24 h-12 md:h-14 rounded-lg overflow-hidden bg-[#f0f0f0] shadow-sm">
@@ -367,7 +367,7 @@ const VideosList = ({
       <div className="flex-1 flex flex-col gap-4 overflow-hidden h-[60%] lg:h-full">
         <div className={`yt-card !p-0 flex flex-col h-full overflow-hidden ${isEmbedded ? '!rounded-none !border-y-0 !border-l-0 !shadow-none' : ''}`}>
           {/* Header & Panel Tabs */}
-          <div className="p-4 md:p-6 border-b border-[#f0f0f0] bg-white sticky top-0 z-20">
+          <div className="p-4 md:p-6 border-b border-white/40 bg-white/20 sticky top-0 z-20 backdrop-blur-md">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                <div>
                   <h3 className="text-lg md:text-xl font-black text-[#0f0f0f] tracking-tight">Video Workspace</h3>
@@ -383,7 +383,7 @@ const VideosList = ({
                     href={`https://youtube.com/watch?v=${selectedVideo}`} 
                     target="_blank" 
                     rel="noreferrer"
-                    className="p-2.5 bg-[#f8f8f8] border border-[#e5e5e5] rounded-xl hover:bg-[#f2f2f2] transition-colors"
+                    className="p-2.5 bg-white/40 border border-white/50 rounded-xl hover:bg-white/60 transition-colors"
                   >
                     <ExternalLink size={18} />
                   </a>
@@ -391,23 +391,23 @@ const VideosList = ({
             </div>
 
             {/* Tab Toggle buttons */}
-            <div className="flex gap-2 border-b border-[#f0f0f0] pb-3 mb-3">
+            <div className="flex gap-2 border-b border-white/40 pb-3 mb-3">
               <button 
                 onClick={() => setActivePanelTab('comments')} 
-                className={`py-2 px-4 text-xs font-black uppercase tracking-wider rounded-xl transition-all ${
+                className={`py-2 px-4 text-xs font-black uppercase tracking-wider rounded-xl transition-all border ${
                   activePanelTab === 'comments' 
-                    ? 'bg-[#0f0f0f] text-white shadow-sm' 
-                    : 'text-[#909090] hover:text-[#0f0f0f] bg-[#f8f8f8]'
+                    ? 'bg-gradient-to-r from-red-600/15 to-red-500/5 text-red-600 border-red-500/20 shadow-sm' 
+                    : 'text-[#909090] hover:text-[#0f0f0f] bg-white/40 border-transparent hover:bg-white/60'
                 }`}
               >
                 Comments & Moderation
               </button>
               <button 
                 onClick={() => setActivePanelTab('analytics')} 
-                className={`py-2 px-4 text-xs font-black uppercase tracking-wider rounded-xl transition-all ${
+                className={`py-2 px-4 text-xs font-black uppercase tracking-wider rounded-xl transition-all border ${
                   activePanelTab === 'analytics' 
-                    ? 'bg-[#0f0f0f] text-white shadow-sm' 
-                    : 'text-[#909090] hover:text-[#0f0f0f] bg-[#f8f8f8]'
+                    ? 'bg-gradient-to-r from-red-600/15 to-red-500/5 text-red-600 border-red-500/20 shadow-sm' 
+                    : 'text-[#909090] hover:text-[#0f0f0f] bg-white/40 border-transparent hover:bg-white/60'
                 }`}
               >
                 Dashboard & Analytics
@@ -422,11 +422,11 @@ const VideosList = ({
                      key={f.id}
                      onClick={() => setFilter(f.id)}
                      className={`flex items-center gap-1.5 px-3 py-1.5 md:px-4 md:py-2 rounded-xl text-[11px] md:text-xs font-bold transition-all border ${
-                       filter === f.id ? 'bg-[#ff0000] text-white border-[#ff0000] shadow-md scale-105' : `bg-white border-[#e5e5e5] ${f.color.split(' ')[1]} hover:border-[#cccccc]`
+                       filter === f.id ? 'bg-gradient-to-r from-red-600 to-[#e50914] text-white border-white/20 shadow-md scale-105' : `bg-white/40 border-white/50 ${f.color.split(' ')[1]} hover:bg-white/60 hover:border-white/70`
                      }`}
                    >
                      {f.label}
-                     <span className={`px-1.5 py-0.5 rounded-md text-[9px] md:text-[10px] ${filter === f.id ? 'bg-white/20 text-white' : 'bg-[#f0f0f0] text-[#606060]'}`}>
+                     <span className={`px-1.5 py-0.5 rounded-md text-[9px] md:text-[10px] ${filter === f.id ? 'bg-white/20 text-white' : 'bg-white/50 text-[#606060]'}`}>
                        {getStatsForFilter(f.id)}
                      </span>
                    </button>
@@ -436,7 +436,7 @@ const VideosList = ({
           </div>
 
           {/* Conditional Content Rendering */}
-          <div className="flex-1 overflow-y-auto custom-scroll p-3 md:p-6 bg-[#fafafa]">
+          <div className="flex-1 overflow-y-auto custom-scroll p-3 md:p-6 bg-white/20">
              {activePanelTab === 'comments' ? (
                 // Comments Tab Content
                 loadingComments ? (
@@ -459,7 +459,7 @@ const VideosList = ({
                          initial={{ opacity: 0, y: 10 }}
                          animate={{ opacity: 1, y: 0 }}
                          transition={{ delay: index * 0.05 }}
-                         className={`bg-white border border-[#f0f0f0] p-4 md:p-5 rounded-[20px] shadow-sm hover:shadow-md transition-all group ${comment.status === 'deleted' ? 'opacity-40 grayscale' : ''}`}
+                          className={`glass-panel glass-panel-hover p-4 md:p-5 rounded-[20px] shadow-sm transition-all group ${comment.status === 'deleted' ? 'opacity-40 grayscale' : ''}`}
                        >
                          <div className="flex gap-3 md:gap-4">
                            <div className="relative flex-shrink-0">

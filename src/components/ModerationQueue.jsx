@@ -126,7 +126,7 @@ const ModerationQueue = ({ onAction, searchQuery }) => {
   return (
     <div className="flex flex-col">
       {/* Premium Filters Bar */}
-      <div className="flex items-center gap-3 p-6 bg-white border-b border-[#f0f0f0] overflow-x-auto no-scrollbar scroll-smooth">
+      <div className="flex items-center gap-3 p-6 bg-white/20 border-b border-white/40 backdrop-blur-xl overflow-x-auto no-scrollbar scroll-smooth">
         <div className="flex items-center gap-2 mr-4 shrink-0">
            <Zap size={16} className="text-[#ff0000]" />
            <span className="text-[11px] font-black uppercase tracking-widest text-[#0f0f0f]">Auditor Context</span>
@@ -138,8 +138,8 @@ const ModerationQueue = ({ onAction, searchQuery }) => {
               onClick={() => { setFilter(f.id); setLoading(true); }}
               className={`px-5 py-2 rounded-2xl text-[12px] font-black transition-all border whitespace-nowrap flex items-center gap-2 ${
                 filter === f.id 
-                  ? 'bg-[#0f0f0f] text-white border-[#0f0f0f] shadow-lg shadow-black/10' 
-                  : 'bg-white text-[#606060] border-[#f0f0f0] hover:border-[#ff0000]/30 hover:text-[#0f0f0f]'
+                  ? 'bg-gradient-to-r from-red-600/15 to-red-500/5 text-red-650 border-red-500/20 shadow-sm shadow-red-500/5' 
+                  : 'bg-white/40 text-[#606060] border-white/50 hover:bg-white/60 hover:text-[#0f0f0f]'
               }`}
             >
               {f.dot && <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: f.dot }} />}
@@ -149,17 +149,17 @@ const ModerationQueue = ({ onAction, searchQuery }) => {
         </div>
       </div>
 
-      <div className="w-full overflow-x-auto no-scrollbar">
+      <div className="w-full overflow-x-auto no-scrollbar glass-panel rounded-3xl mt-6 border-white/50">
         <table className="w-full border-separate border-spacing-0 min-w-[1000px]">
           <thead>
-            <tr className="bg-[#fcfcfc]">
-              <th className="text-left py-5 px-6 text-[10px] font-black text-[#909090] uppercase tracking-[0.15em] border-b border-[#f0f0f0]">Author & Intelligence</th>
-              <th className="text-left py-5 px-6 text-[10px] font-black text-[#909090] uppercase tracking-[0.15em] border-b border-[#f0f0f0]">Evaluation</th>
-              <th className="text-left py-5 px-6 text-[10px] font-black text-[#909090] uppercase tracking-[0.15em] border-b border-[#f0f0f0]">AI Status</th>
-              <th className="text-right py-5 px-6 text-[10px] font-black text-[#909090] uppercase tracking-[0.15em] border-b border-[#f0f0f0]">Audit Actions</th>
+            <tr className="bg-white/40">
+              <th className="text-left py-5 px-6 text-[10px] font-black text-[#909090] uppercase tracking-[0.15em] border-b border-white/30 backdrop-blur-md">Author & Intelligence</th>
+              <th className="text-left py-5 px-6 text-[10px] font-black text-[#909090] uppercase tracking-[0.15em] border-b border-white/30 backdrop-blur-md">Evaluation</th>
+              <th className="text-left py-5 px-6 text-[10px] font-black text-[#909090] uppercase tracking-[0.15em] border-b border-white/30 backdrop-blur-md">AI Status</th>
+              <th className="text-right py-5 px-6 text-[10px] font-black text-[#909090] uppercase tracking-[0.15em] border-b border-white/30 backdrop-blur-md">Audit Actions</th>
             </tr>
           </thead>
-          <tbody className="bg-white">
+          <tbody className="bg-white/20">
             <AnimatePresence mode="popLayout">
               {comments.length === 0 ? (
                 <motion.tr initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -180,7 +180,7 @@ const ModerationQueue = ({ onAction, searchQuery }) => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.03 }}
-                    className={`group transition-all hover:bg-[#fcfcfc] ${editingId === comment._id ? 'bg-red-50/30' : ''}`}
+                    className={`group transition-all hover:bg-white/40 border-b border-white/20 ${editingId === comment._id ? 'bg-red-50/30' : ''}`}
                   >
                     <td className="py-6 px-6 align-top">
                       <div className="flex gap-5">
@@ -240,11 +240,11 @@ const ModerationQueue = ({ onAction, searchQuery }) => {
                     <td className="py-6 px-6 align-top">
                       <div className="flex flex-col gap-4">
                         {editingId === comment._id ? (
-                          <div className="relative group">
+                           <div className="relative group">
                             <select 
                               value={editForm.sentiment}
                               onChange={(e) => setEditForm({...editForm, sentiment: e.target.value})}
-                              className="appearance-none text-[12px] font-black border border-[#f0f0f0] rounded-xl px-4 py-2.5 w-full bg-white focus:border-[#ff0000]/20 outline-none"
+                              className="appearance-none text-[12px] font-black glass-input rounded-xl px-4 py-2.5 w-full outline-none"
                             >
                               <option value="positive">Positive</option>
                               <option value="neutral">Neutral</option>
@@ -284,7 +284,7 @@ const ModerationQueue = ({ onAction, searchQuery }) => {
                         <select 
                           value={editForm.status}
                           onChange={(e) => setEditForm({...editForm, status: e.target.value})}
-                          className="text-[12px] font-black border border-[#f0f0f0] rounded-xl px-4 py-2.5 w-full bg-white outline-none"
+                          className="text-[12px] font-black glass-input rounded-xl px-4 py-2.5 w-full outline-none"
                         >
                           <option value="pending">Pending Audit</option>
                           <option value="approved">Global Approved</option>
@@ -325,25 +325,25 @@ const ModerationQueue = ({ onAction, searchQuery }) => {
                     <td className="py-6 px-6 align-top text-right">
                       <div className="flex flex-col items-end gap-3">
                         <div className="flex items-center gap-2">
-                           <a href={`https://youtube.com/watch?v=${comment.videoId}`} target="_blank" className="p-3 bg-white border border-[#f0f0f0] text-[#909090] hover:text-[#ff0000] hover:border-[#ff0000]/20 rounded-xl transition-all shadow-sm" title="Watch Original">
-                            <Eye size={16} />
+                           <a href={`https://youtube.com/watch?v=${comment.videoId}`} target="_blank" className="p-3 bg-white/45 border border-white/50 text-[#606060] hover:text-[#ff0000] hover:border-[#ff0000]/20 hover:bg-white/60 rounded-xl transition-all shadow-sm" title="Watch Original">
+                             <Eye size={16} />
                            </a>
-                           <div className="w-px h-6 bg-[#f0f0f0] mx-1" />
+                           <div className="w-px h-6 bg-white/40 mx-1" />
                            {editingId === comment._id ? (
                             <div className="flex gap-2">
-                              <button onClick={() => saveEdit(comment._id)} className="px-4 py-2.5 bg-[#0f0f0f] text-white rounded-xl text-xs font-black uppercase tracking-widest shadow-lg shadow-black/10 hover:translate-y-[-2px] transition-all flex items-center gap-2">
+                              <button onClick={() => saveEdit(comment._id)} className="px-4 py-2.5 bg-gradient-to-r from-red-600 to-[#e50914] text-white border border-white/20 rounded-xl text-xs font-black uppercase tracking-widest hover:translate-y-[-2px] transition-all flex items-center gap-2 shadow-sm">
                                 <CheckCircle2 size={14} /> Commit
                               </button>
-                              <button onClick={() => setEditingId(null)} className="p-2.5 bg-white border border-[#f0f0f0] text-[#909090] rounded-xl hover:bg-gray-50 transition-all">
+                              <button onClick={() => setEditingId(null)} className="p-2.5 bg-white/40 border border-white/50 text-[#909090] rounded-xl hover:bg-white/60 hover:text-red-600 transition-all">
                                 <XCircle size={18} />
                               </button>
                             </div>
                            ) : (
                             <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                              <button onClick={() => handleAction(comment._id, 'like')} className="p-2.5 bg-white border border-[#f0f0f0] hover:border-blue-500/20 text-[#606060] hover:text-[#065fd4] rounded-xl transition-all shadow-sm" title="Force Like"><Heart size={16} /></button>
-                              <button onClick={() => handleAction(comment._id, 'approve')} className="p-2.5 bg-white border border-[#f0f0f0] hover:border-green-500/20 text-[#606060] hover:text-[#2ba640] rounded-xl transition-all shadow-sm" title="Approve"><CheckCircle2 size={16} /></button>
-                              <button onClick={() => startEdit(comment)} className="p-2.5 bg-white border border-[#f0f0f0] hover:border-[#0f0f0f] text-[#606060] hover:text-[#0f0f0f] rounded-xl transition-all shadow-sm" title="Edit Properties"><Edit3 size={16} /></button>
-                              <button onClick={() => handleAction(comment._id, 'delete')} className="p-2.5 bg-white border border-[#f0f0f0] hover:border-red-500/20 text-[#606060] hover:text-[#d93025] rounded-xl transition-all shadow-sm" title="Erase Permanently"><Trash2 size={16} /></button>
+                              <button onClick={() => handleAction(comment._id, 'like')} className="p-2.5 bg-white/45 border border-white/50 hover:bg-white/65 hover:border-blue-500/20 text-[#606060] hover:text-[#065fd4] rounded-xl transition-all shadow-sm" title="Force Like"><Heart size={16} /></button>
+                              <button onClick={() => handleAction(comment._id, 'approve')} className="p-2.5 bg-white/45 border border-white/50 hover:bg-white/65 hover:border-green-500/20 text-[#606060] hover:text-[#2ba640] rounded-xl transition-all shadow-sm" title="Approve"><CheckCircle2 size={16} /></button>
+                              <button onClick={() => startEdit(comment)} className="p-2.5 bg-white/45 border border-white/50 hover:bg-white/65 hover:border-[#0f0f0f] text-[#606060] hover:text-[#0f0f0f] rounded-xl transition-all shadow-sm" title="Edit Properties"><Edit3 size={16} /></button>
+                              <button onClick={() => handleAction(comment._id, 'delete')} className="p-2.5 bg-white/45 border border-white/50 hover:bg-white/65 hover:border-red-500/20 text-[#606060] hover:text-[#d93025] rounded-xl transition-all shadow-sm" title="Erase Permanently"><Trash2 size={16} /></button>
                             </div>
                            )}
                         </div>
@@ -355,7 +355,7 @@ const ModerationQueue = ({ onAction, searchQuery }) => {
                               placeholder="Audit metadata/note..."
                               value={editForm.note}
                               onChange={(e) => setEditForm({...editForm, note: e.target.value})}
-                              className="text-[11px] w-full bg-white border border-[#f0f0f0] rounded-xl p-3 focus:outline-none focus:border-[#ff0000]/20 transition-all placeholder-[#ccc] font-medium"
+                              className="text-[11px] w-full glass-input rounded-xl p-3 focus:outline-none focus:border-[#ff0000]/20 transition-all placeholder-[#ccc] font-medium"
                             />
                           </div>
                         )}
