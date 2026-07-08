@@ -53,7 +53,7 @@ const LandingPage = () => {
               <div className="w-0 h-0 border-t-[4px] border-t-transparent border-l-[6px] border-l-white border-b-[4px] border-b-transparent ml-0.5" />
             </div>
             <div className="flex flex-col -gap-1">
-              <span className="text-[17px] font-black tracking-tighter text-white">VELMURUGAN</span>
+              <span className="text-[17px] font-black tracking-tighter text-white">TECH VASEEGRAAH</span>
               <span className="text-[10px] font-black text-red-500 tracking-[0.2em] -mt-1 uppercase">CREATOR AI</span>
             </div>
           </div>
@@ -87,13 +87,13 @@ const LandingPage = () => {
             <span className="text-[10px] font-black uppercase tracking-widest">Advanced Creator Tools</span>
           </div>
           <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-[1.1] mb-6 bg-gradient-to-r from-white via-white to-red-500 bg-clip-text text-transparent">
-            Velmurugan Creator AI
+            Tech Vaseegraah Creator AI
           </h1>
           <h2 className="text-xl sm:text-2xl font-bold text-white/95 mb-4 uppercase tracking-wider">
             AI-Powered YouTube Moderation Platform
           </h2>
           <p className="text-[15px] sm:text-[17px] text-white/70 font-semibold leading-relaxed mb-10 max-w-2xl mx-auto">
-            Automatically moderate YouTube comments using AI, detect spam, generate intelligent replies, analyze audience sentiment, and securely manage your channel using Google OAuth.
+            Tech Vaseegraah Creator AI is an AI-powered platform that helps YouTube creators automatically moderate comments, detect spam, generate intelligent AI replies, analyze audience sentiment, and securely manage their channels using Google OAuth and the YouTube Data API.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
@@ -156,7 +156,7 @@ const LandingPage = () => {
           </div>
           <div className="space-y-4 text-white/80 text-xs sm:text-[13px] font-semibold leading-relaxed">
             <p>
-              To provide automated services, the <strong>Velmurugan Creator AI</strong> requests permission to view and manage your YouTube comments and channel details via official Google OAuth APIs.
+              To provide automated services, the <strong>Tech Vaseegraah Creator AI</strong> requests permission to view and manage your YouTube comments and channel details via official Google OAuth APIs.
             </p>
             <ul className="space-y-2 list-disc list-inside pl-1 text-white/70">
               <li>We fetch comment threads on your connected videos to run our AI analysis.</li>
@@ -165,7 +165,7 @@ const LandingPage = () => {
               <li>We encrypt and store OAuth tokens securely. We never share your data with external third parties.</li>
             </ul>
             <p className="pt-2 border-t border-white/[0.05] text-[11px] text-white/50">
-              By connecting your YouTube account, you authorize Velmurugan Creator AI to perform actions on your behalf in compliance with Google's API policies. You can revoke this access at any time directly through your <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline inline-flex items-center gap-0.5">Google Security Settings <ExternalLink size={10} /></a>.
+              By connecting your YouTube account, you authorize Tech Vaseegraah Creator AI to perform actions on your behalf in compliance with Google's API policies. You can revoke this access at any time directly through your <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline inline-flex items-center gap-0.5">Google Security Settings <ExternalLink size={10} /></a>.
             </p>
           </div>
         </div>
@@ -175,7 +175,7 @@ const LandingPage = () => {
       <footer className="relative z-10 border-t border-white/[0.05] bg-[#030303] py-12">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-2 text-white/60 text-xs font-semibold">
-            <span>&copy; {new Date().getFullYear()} Velmurugan Creator AI.</span>
+            <span>&copy; {new Date().getFullYear()} Tech Vaseegraah Creator AI.</span>
             <span>All rights reserved.</span>
           </div>
           <div className="flex items-center gap-6 text-xs font-bold text-white/50">

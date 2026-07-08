@@ -17,7 +17,7 @@ const PrivacyPage = () => {
             <div className="w-10 h-7 bg-[#ff0000] rounded-[8px] flex items-center justify-center">
               <div className="w-0 h-0 border-t-[4px] border-t-transparent border-l-[6px] border-l-white border-b-[4px] border-b-transparent ml-0.5" />
             </div>
-            <span className="text-[17px] font-black tracking-tighter text-white font-['Outfit']">VELMURUGAN CREATOR AI</span>
+            <span className="text-[17px] font-black tracking-tighter text-white font-['Outfit']">TECH VASEEGRAAH CREATOR AI</span>
           </Link>
           <Link 
             to="/" 
@@ -53,7 +53,7 @@ const PrivacyPage = () => {
                 1. Overview
               </h2>
               <p className="pl-3 text-white/70">
-                Velmurugan Creator AI ("we", "our", or "us") provides comment analytics, toxic comment moderation, and auto-reply tools for creators. This Privacy Policy details how we access, collect, store, and process your personal and channel data when you use our website and services, specifically through Google APIs.
+                Tech Vaseegraah Creator AI ("we", "our", or "us") provides comment analytics, toxic comment moderation, and auto-reply tools for creators. This Privacy Policy details how we access, collect, store, and process your personal and channel data when you use our website and services, specifically through Google APIs.
               </p>
             </section>
 

@@ -17,7 +17,7 @@ const TermsPage = () => {
             <div className="w-10 h-7 bg-[#ff0000] rounded-[8px] flex items-center justify-center">
               <div className="w-0 h-0 border-t-[4px] border-t-transparent border-l-[6px] border-l-white border-b-[4px] border-b-transparent ml-0.5" />
             </div>
-            <span className="text-[17px] font-black tracking-tighter text-white font-['Outfit']">VELMURUGAN CREATOR AI</span>
+            <span className="text-[17px] font-black tracking-tighter text-white font-['Outfit']">TECH VASEEGRAAH CREATOR AI</span>
           </Link>
           <Link 
             to="/" 
@@ -53,7 +53,7 @@ const TermsPage = () => {
                 1. Acceptance of Terms
               </h2>
               <p className="pl-3 text-white/70">
-                By accessing or using the Velmurugan Creator AI service, you agree to comply with and be bound by these Terms of Service. If you do not agree, you may not access or use the platform.
+                By accessing or using the Tech Vaseegraah Creator AI service, you agree to comply with and be bound by these Terms of Service. If you do not agree, you may not access or use the platform.
               </p>
             </section>
 
@@ -103,7 +103,7 @@ const TermsPage = () => {
                 4. Moderation & Automated Reply Rules
               </h2>
               <p className="pl-3 text-white/70">
-                Velmurugan Creator AI provides tools for automated sentiment tracking, category auditing, and automatic replies. You are fully responsible for the auto-replies generated and posted. You must ensure your automated responses do not violate YouTube's spam, harassment, or community guidelines.
+                Tech Vaseegraah Creator AI provides tools for automated sentiment tracking, category auditing, and automatic replies. You are fully responsible for the auto-replies generated and posted. You must ensure your automated responses do not violate YouTube's spam, harassment, or community guidelines.
               </p>
             </section>
 
@@ -113,7 +113,7 @@ const TermsPage = () => {
                 5. Limitation of Liability
               </h2>
               <p className="pl-3 text-white/70">
-                Under no circumstances shall Velmurugan Creator AI or its creators be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of channel access, suspension by YouTube, data loss, or content flag actions resulting from automated activities.
+                Under no circumstances shall Tech Vaseegraah Creator AI or its creators be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of channel access, suspension by YouTube, data loss, or content flag actions resulting from automated activities.
               </p>
             </section>
 

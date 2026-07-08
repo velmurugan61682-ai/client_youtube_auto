@@ -80,7 +80,7 @@ const Header = ({ toggleSidebar, onSearch, setActiveTab, sidebarOpen, notificati
             <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-400 rounded-full animate-ping opacity-20" />
           </div>
           <div className="flex flex-col -gap-1">
-            <span className="text-[17px] font-black tracking-tighter text-[#0f0f0f]">VELMURUGAN</span>
+            <span className="text-[17px] font-black tracking-tighter text-[#0f0f0f]">TECH VASEEGRAAH</span>
             <span className="text-[10px] font-black text-[#ff0000] tracking-[0.2em] -mt-1 uppercase opacity-80">CREATOR AI</span>
           </div>
         </div>
