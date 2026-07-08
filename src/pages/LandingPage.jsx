@@ -17,22 +17,22 @@ import { motion } from 'framer-motion';
 const LandingPage = () => {
   const features = [
     {
-      icon: <ShieldCheck className="text-red-500" size={24} />,
+      icon: <ShieldCheck className="text-red-600" size={24} />,
       title: "AI Comment Moderation",
       desc: "Instantly analyze viewer comments for sentiment, flagging toxicity and filtering out spam in real-time."
     },
     {
-      icon: <Zap className="text-amber-500" size={24} />,
+      icon: <Zap className="text-amber-600" size={24} />,
       title: "Smart Auto Replies",
       desc: "Engage your audience 24/7 with custom, context-aware auto-replies powered by DeepSeek AI."
     },
     {
-      icon: <BarChart3 className="text-blue-500" size={24} />,
+      icon: <BarChart3 className="text-blue-600" size={24} />,
       title: "Deep Analytics",
       desc: "Visualize emotional distribution, tracking trends, category breakdowns, and performance analytics."
     },
     {
-      icon: <Lock className="text-emerald-500" size={24} />,
+      icon: <Lock className="text-emerald-650" size={24} />,
       title: "Secure Google OAuth",
       desc: "Seamless, secure integration through Google's official API. Your account credentials are never exposed."
     }
@@ -40,13 +40,14 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 text-zinc-900 font-['Outfit'] relative overflow-x-hidden selection:bg-red-500/20 selection:text-red-900">
-      {/* Background Decorative Gradients */}
-      <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-gradient-to-tr from-[#ff0055]/10 to-[#0055ff]/15 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-gradient-to-br from-[#7000ff]/10 to-[#ff5e00]/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute top-[30%] left-[20%] w-[400px] h-[400px] bg-[#00d2ff]/10 rounded-full blur-[100px] pointer-events-none" />
+      {/* Highly Vibrant Background Mesh for beautiful Glassmorphism visibility */}
+      <div className="absolute top-[-5%] left-[-5%] w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-[#ff0055] to-[#ff7700] opacity-20 blur-[130px] pointer-events-none" />
+      <div className="absolute bottom-[10%] right-[-5%] w-[600px] h-[600px] rounded-full bg-gradient-to-br from-[#0055ff] to-[#aa00ff] opacity-20 blur-[130px] pointer-events-none" />
+      <div className="absolute top-[25%] left-[15%] w-[450px] h-[450px] rounded-full bg-gradient-to-r from-[#00f2fe] to-[#4facfe] opacity-15 blur-[110px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] left-[30%] w-[550px] h-[550px] rounded-full bg-gradient-to-tr from-[#f000ff] to-[#7000ff] opacity-15 blur-[140px] pointer-events-none" />
 
       {/* Navigation Header */}
-      <header className="sticky top-0 z-50 bg-white/40 backdrop-blur-xl border-b border-white/40 transition-all">
+      <header className="sticky top-0 z-50 bg-white/15 backdrop-blur-2xl border-b border-white/30 transition-all">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3 select-none">
             <img src="/logo.svg" className="w-9 h-9 object-contain" alt="Logo" />
@@ -58,7 +59,7 @@ const LandingPage = () => {
           <div className="flex items-center gap-4">
             <Link 
               to="/login" 
-              className="text-[13px] font-bold text-zinc-600 hover:text-zinc-900 transition-colors px-4 py-2"
+              className="text-[13px] font-bold text-zinc-655 hover:text-zinc-900 transition-colors px-4 py-2"
             >
               Sign In
             </Link>
@@ -80,7 +81,7 @@ const LandingPage = () => {
           transition={{ duration: 0.6 }}
           className="max-w-3xl mx-auto"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-50 border border-red-200 text-red-600 rounded-full mb-6 shadow-sm">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-white/40 border border-white/60 text-red-650 rounded-full mb-6 shadow-[0_2px_12px_rgba(0,0,0,0.02)] backdrop-blur-md">
             <Sparkles size={13} className="animate-pulse" />
             <span className="text-[10px] font-black uppercase tracking-widest">Advanced Creator Tools</span>
           </div>
@@ -104,7 +105,7 @@ const LandingPage = () => {
             </Link>
             <Link 
               to="/login" 
-              className="w-full sm:w-auto text-[14px] font-bold bg-white/50 hover:bg-white/80 text-zinc-800 border border-white/60 px-8 py-3.5 rounded-xl transition-all flex items-center justify-center shadow-sm"
+              className="w-full sm:w-auto text-[14px] font-bold bg-white/30 hover:bg-white/65 text-zinc-800 border border-white/65 px-8 py-3.5 rounded-xl transition-all flex items-center justify-center shadow-sm backdrop-blur-md"
             >
               Sign In to Account
             </Link>
@@ -126,9 +127,9 @@ const LandingPage = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, duration: 0.5 }}
-              className="bg-white/60 hover:bg-white/80 backdrop-blur-xl border border-white/50 hover:border-white/80 rounded-[28px] p-6 transition-all duration-300 flex gap-4 shadow-[0_8px_30px_rgba(0,0,0,0.01)] text-zinc-800"
+              className="bg-white/20 hover:bg-white/35 backdrop-blur-2xl border border-white/45 hover:border-white/60 rounded-[28px] p-6 transition-all duration-300 flex gap-4 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.03)] text-zinc-800 hover:shadow-[0_20px_50px_rgba(0,0,0,0.05)]"
             >
-              <div className="p-3 bg-white/70 rounded-2xl h-fit border border-white/50 shadow-sm">
+              <div className="p-3 bg-white/60 rounded-2xl h-fit border border-white/50 shadow-sm">
                 {f.icon}
               </div>
               <div className="space-y-1">
@@ -142,7 +143,7 @@ const LandingPage = () => {
 
       {/* Google OAuth & Data Usage Explanation (Google Verification Requirement) */}
       <section className="relative z-10 max-w-4xl mx-auto px-6 py-16">
-        <div className="bg-white/60 border border-white/50 rounded-[32px] p-8 sm:p-10 backdrop-blur-xl shadow-[0_12px_40px_rgba(0,0,0,0.01)] relative overflow-hidden text-zinc-800">
+        <div className="bg-white/25 border border-white/45 rounded-[32px] p-8 sm:p-10 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.03)] relative overflow-hidden text-zinc-850">
           <div className="absolute top-0 right-0 p-8 opacity-5 text-zinc-950">
             <Lock size={120} />
           </div>
@@ -170,7 +171,7 @@ const LandingPage = () => {
       </section>
 
       {/* Footer */}
-      <footer className="relative z-10 border-t border-zinc-200/50 bg-white/20 backdrop-blur-md py-12 text-zinc-600">
+      <footer className="relative z-10 border-t border-zinc-200/50 bg-white/10 backdrop-blur-xl py-12 text-zinc-650">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-2 text-xs font-semibold">
             <span>&copy; {new Date().getFullYear()} Tech Vaseegraah Creator AI.</span>

@@ -6,12 +6,12 @@ import { motion } from 'framer-motion';
 const TermsPage = () => {
   return (
     <div className="min-h-screen bg-slate-50 text-zinc-900 font-['Outfit'] relative overflow-x-hidden selection:bg-red-500/20 selection:text-red-900">
-      {/* Background Decorative Gradients */}
-      <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-gradient-to-tr from-[#ff0055]/10 to-[#0055ff]/15 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-gradient-to-br from-[#7000ff]/10 to-[#ff5e00]/10 rounded-full blur-[120px] pointer-events-none" />
+      {/* Highly Vibrant Background Mesh for beautiful Glassmorphism visibility */}
+      <div className="absolute top-[-5%] left-[-5%] w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-[#ff0055] to-[#ff7700] opacity-20 blur-[130px] pointer-events-none" />
+      <div className="absolute bottom-[10%] right-[-5%] w-[600px] h-[600px] rounded-full bg-gradient-to-br from-[#0055ff] to-[#aa00ff] opacity-20 blur-[130px] pointer-events-none" />
 
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white/40 backdrop-blur-xl border-b border-white/40">
+      <header className="sticky top-0 z-50 bg-white/15 backdrop-blur-2xl border-b border-white/30">
         <div className="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 select-none">
             <img src="/logo.svg" className="w-9 h-9 object-contain" alt="Logo" />
@@ -32,7 +32,7 @@ const TermsPage = () => {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-white/60 border border-white/50 rounded-[32px] p-8 sm:p-12 backdrop-blur-xl shadow-[0_24px_80px_rgba(0,0,0,0.02)] text-zinc-800"
+          className="bg-white/25 border border-white/45 rounded-[32px] p-8 sm:p-12 backdrop-blur-2xl shadow-[0_24px_80px_rgba(0,0,0,0.02)] text-zinc-800"
         >
           <div className="flex items-center gap-3 mb-8 pb-6 border-b border-zinc-200/50">
             <div className="w-10 h-10 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-500 border border-blue-500/20 shadow-sm">
