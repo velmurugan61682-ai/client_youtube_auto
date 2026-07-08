@@ -112,21 +112,8 @@ const App = () => {
 
   useEffect(() => {
     if (user) {
-      const isPremium = user.subscription?.status === 'active' || user.role === 'admin';
-      
-      // Determine if free trial (30 days from user registration) is still active
-      const oneMonthMs = 30 * 24 * 60 * 60 * 1000;
-      const registrationTime = user.createdAt ? new Date(user.createdAt).getTime() : Date.now();
-      const isFreeTrialActive = (Date.now() - registrationTime) < oneMonthMs;
-
-      const hasAccess = isPremium || isFreeTrialActive;
-      const planAcknowledged = sessionStorage.getItem('plan_acknowledged') === 'true';
-
-      if (hasAccess || planAcknowledged) {
-        setPlanSelected(true);
-      } else {
-        setPlanSelected(false);
-      }
+      // Free plan is permanent and lets users enter the app; they are restricted at channel-connection level.
+      setPlanSelected(true);
     } else {
       setPlanSelected(false);
       sessionStorage.removeItem('plan_acknowledged');
