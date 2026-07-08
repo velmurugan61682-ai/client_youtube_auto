@@ -119,65 +119,37 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
 
   const plans = [
     {
-      type: "starter",
-      name: "Starter Plan",
-      price: "₹299",
-      period: "/ month",
+      type: "free",
+      name: "STARTER PACK",
+      displayName: "Free Plan",
+      price: "₹0",
+      period: "/ forever",
       desc: "Perfect for single creators starting out.",
       features: [
         "Connect 1 YouTube Channel",
-        "AI Autopilot Moderation",
-        "DeepSeek Lite Response Engine",
-        "Real-Time Activity Dashboard"
+        "AI Autopilot Comment Moderation",
+        "Auto DM WhatsApp Automations",
+        "Basic Analytics Dashboard"
       ],
-      color: "text-blue-600",
-      bgClass: "border-blue-200"
+      color: "text-zinc-500",
+      bgClass: "border-zinc-200"
     },
     {
       type: "professional",
-      name: "Professional",
+      name: "SAAS PROFESSIONAL",
+      displayName: "Premium Pro",
       price: "₹999",
       period: "/ month",
       desc: "Great for growing YouTube channels.",
       features: [
-        "Connect 3 YouTube Channels",
-        "Priority AI Response Generation",
-        "WhatsApp Auto DM Integrations",
-        "Exportable Lead Databases"
+        "Connect Unlimited YouTube Channels",
+        "Dedicated Channel Sync Workers",
+        "Advanced Multi-Account Analytics",
+        "24/7 Priority VIP Support"
       ],
-      color: "text-red-500",
-      bgClass: "border-red-200",
+      color: "text-green-600",
+      bgClass: "border-green-400 ring-2 ring-green-400/20",
       recommended: true
-    },
-    {
-      type: "business",
-      name: "Business Plan",
-      price: "₹2,999",
-      period: "/ month",
-      desc: "Designed for multi-channel creators & agencies.",
-      features: [
-        "Connect 10 YouTube Channels",
-        "Full DeepSeek Pro API access",
-        "Advanced Team Roles & Access",
-        "Direct Live WhatsApp Broadcasts"
-      ],
-      color: "text-amber-500",
-      bgClass: "border-amber-200"
-    },
-    {
-      type: "enterprise",
-      name: "Enterprise",
-      price: "Custom",
-      period: "",
-      desc: "Custom solutions for large networks.",
-      features: [
-        "Connect Unlimited Channels",
-        "Dedicated Sentiment Models",
-        "Custom Integration Support",
-        "Dedicated Account Manager"
-      ],
-      color: "text-emerald-500",
-      bgClass: "border-emerald-200"
     }
   ];
 
@@ -186,8 +158,8 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
       
       {/* Background Decorative Blobs */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[400px] h-[400px] rounded-full bg-red-500/5 blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[450px] h-[450px] rounded-full bg-blue-500/5 blur-[120px]" />
+        <div className="absolute top-[-10%] left-[-10%] w-[400px] h-[400px] rounded-full bg-blue-500/5 blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[450px] h-[450px] rounded-full bg-cyan-500/5 blur-[120px]" />
       </div>
 
       {/* Header Panel */}
@@ -289,34 +261,41 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
           )}
 
           {/* Pricing Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-8">
             {plans.map((plan) => {
-              const isActive = isPlanActive(plan.type);
+              const isActive = plan.type === 'free' ? !hasAnyActiveSub : isPlanActive(plan.type);
               
               return (
                 <div 
                   key={plan.type}
-                  className={`bg-white/60 backdrop-blur-xl rounded-[28px] border border-white/50 p-6 flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:border-zinc-300 relative overflow-hidden ${
-                    plan.recommended && !hasAnyActiveSub ? 'ring-2 ring-red-500 ring-offset-2' : ''
+                  className={`bg-white/45 backdrop-blur-xl rounded-[28px] border p-6 flex flex-col justify-between transition-all duration-300 hover:shadow-xl relative overflow-hidden ${
+                    plan.type === 'professional' && hasAnyActiveSub ? 'border-green-400 ring-2 ring-green-400/20' : 'border-white/50'
                   }`}
                 >
-                  {plan.recommended && !hasAnyActiveSub && (
-                    <div className="absolute top-0 right-0 bg-red-500 text-white text-[8px] font-black uppercase tracking-widest py-1 px-4 rounded-bl-2xl">
-                      Popular
+                  {plan.type === 'professional' && isActive && (
+                    <div className="absolute top-0 right-0 bg-[#00c853] text-white text-[8px] font-black uppercase tracking-widest py-1.5 px-4 rounded-bl-2xl flex items-center gap-1">
+                      <Star size={8} fill="white" /> Active Pro
                     </div>
                   )}
                   
                   <div>
-                    <div className="mb-4">
-                      <span className={`text-[10px] font-black uppercase tracking-wider ${plan.color}`}>
-                        {plan.name}
-                      </span>
-                      <div className="mt-2 flex items-baseline">
-                        <span className="text-3xl font-black text-zinc-950 tracking-tight">{plan.price}</span>
-                        <span className="text-[11px] font-semibold text-zinc-400 ml-1">{plan.period}</span>
+                    <div className="mb-4 flex justify-between items-start">
+                      <div>
+                        <span className={`text-[10px] font-black uppercase tracking-wider ${plan.color}`}>
+                          {plan.name}
+                        </span>
+                        <h2 className="text-xl font-black text-zinc-950 mt-1">{plan.displayName}</h2>
                       </div>
-                      <p className="text-xs text-zinc-400 font-semibold mt-2 min-h-[32px]">{plan.desc}</p>
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center border ${plan.type === 'professional' ? 'bg-red-50 text-red-500 border-red-100' : 'bg-zinc-100 text-zinc-500 border-zinc-200'}`}>
+                        {plan.type === 'professional' ? <CreditCard size={14} /> : <Star size={14} />}
+                      </div>
                     </div>
+
+                    <div className="flex items-baseline mt-4">
+                      <span className="text-4xl font-black text-zinc-950 tracking-tight">{plan.price}</span>
+                      <span className="text-[11px] font-semibold text-zinc-400 ml-1">{plan.period}</span>
+                    </div>
+                    <p className="text-xs text-zinc-400 font-semibold mt-2 min-h-[32px]">{plan.desc}</p>
 
                     <div className="w-full h-[1px] bg-zinc-200/50 my-4" />
 
@@ -331,24 +310,24 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
                   </div>
 
                   <button
-                    disabled={purchasing || isActive || plan.type === 'enterprise'}
+                    disabled={purchasing || (plan.type === 'free' && isActive) || (plan.type === 'professional' && isActive)}
                     onClick={() => handleSubscribe(plan.type)}
                     className={`w-full py-3 text-xs font-black uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-1.5 ${
-                      isActive 
-                        ? 'bg-green-500 text-white cursor-default'
-                        : plan.type === 'enterprise'
-                        ? 'bg-zinc-100 hover:bg-zinc-200 text-zinc-700'
+                      plan.type === 'free' && isActive
+                        ? 'bg-zinc-100 text-zinc-400 cursor-default border border-zinc-200'
+                        : plan.type === 'professional' && isActive
+                        ? 'bg-[#00c853] text-white cursor-default shadow-[0_4px_12px_rgba(0,200,83,0.2)]'
                         : 'bg-zinc-900 hover:bg-zinc-800 text-white active:scale-98'
                     }`}
                   >
                     {purchasing ? (
                       <Loader2 className="animate-spin" size={14} />
-                    ) : isActive ? (
+                    ) : plan.type === 'free' && isActive ? (
+                      'FREE TIER'
+                    ) : plan.type === 'professional' && isActive ? (
                       <>
-                        <UserCheck size={14} /> Active
+                        <UserCheck size={14} /> ACTIVE PRO SESSION
                       </>
-                    ) : plan.type === 'enterprise' ? (
-                      'Contact Us'
                     ) : (
                       <>
                         Subscribe <ArrowRight size={12} />

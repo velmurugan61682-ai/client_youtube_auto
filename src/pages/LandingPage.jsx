@@ -41,10 +41,10 @@ const LandingPage = () => {
   return (
     <div className="min-h-screen bg-slate-50 text-zinc-900 font-['Outfit'] relative overflow-x-hidden selection:bg-red-500/20 selection:text-red-900">
       {/* Highly Vibrant Background Mesh for beautiful Glassmorphism visibility */}
-      <div className="absolute top-[-5%] left-[-5%] w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-[#ff0055] to-[#ff7700] opacity-20 blur-[130px] pointer-events-none" />
-      <div className="absolute bottom-[10%] right-[-5%] w-[600px] h-[600px] rounded-full bg-gradient-to-br from-[#0055ff] to-[#aa00ff] opacity-20 blur-[130px] pointer-events-none" />
+      <div className="absolute top-[-5%] left-[-5%] w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-[#0055ff] to-[#00f2fe] opacity-20 blur-[130px] pointer-events-none" />
+      <div className="absolute bottom-[10%] right-[-5%] w-[600px] h-[600px] rounded-full bg-gradient-to-br from-[#3b82f6] to-[#6366f1] opacity-20 blur-[130px] pointer-events-none" />
       <div className="absolute top-[25%] left-[15%] w-[450px] h-[450px] rounded-full bg-gradient-to-r from-[#00f2fe] to-[#4facfe] opacity-15 blur-[110px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] left-[30%] w-[550px] h-[550px] rounded-full bg-gradient-to-tr from-[#f000ff] to-[#7000ff] opacity-15 blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] left-[30%] w-[550px] h-[550px] rounded-full bg-gradient-to-tr from-[#0055ff] to-[#7000ff] opacity-15 blur-[140px] pointer-events-none" />
 
       {/* Navigation Header */}
       <header className="sticky top-0 z-50 bg-white/15 backdrop-blur-2xl border-b border-white/30 transition-all">

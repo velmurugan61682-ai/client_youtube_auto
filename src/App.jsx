@@ -385,8 +385,8 @@ const App = () => {
           ) : (
             <div className="h-screen flex flex-col overflow-hidden bg-slate-50/20 backdrop-blur-[40px] relative selection:bg-red-500/20 selection:text-red-900">
               {/* Vibrant Background Mesh for beautiful internal Glassmorphism */}
-              <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-[#ff0055] to-[#ff7700] opacity-15 blur-[130px] pointer-events-none" />
-              <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-gradient-to-br from-[#0055ff] to-[#aa00ff] opacity-15 blur-[130px] pointer-events-none" />
+              <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-[#0055ff] to-[#00f2fe] opacity-15 blur-[130px] pointer-events-none" />
+              <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-gradient-to-br from-[#3b82f6] to-[#6366f1] opacity-15 blur-[130px] pointer-events-none" />
               <div className="absolute top-[25%] left-[20%] w-[450px] h-[450px] rounded-full bg-gradient-to-r from-[#00f2fe] to-[#4facfe] opacity-10 blur-[110px] pointer-events-none" />
               {!isEmbedded && (
                 <Header 
