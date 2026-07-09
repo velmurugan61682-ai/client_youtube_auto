@@ -7,15 +7,12 @@ let socket = null;
  */
 export const getSocket = () => {
   if (!socket) {
-    const isProd = import.meta.env.PROD || (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1');
     let socketUrl;
 
-    if (isProd) {
-      socketUrl = import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL || 'https://server-youtube-automation.onrender.com';
-      socketUrl = socketUrl
-        .replace(/\/api\/?$/, '')
-        .replace(/\/auth\/google\/?$/, '');
-      console.log(`✓ Socket URL: ${socketUrl}`);
+    if (import.meta.env.PROD === true) {
+      // In production mode, strictly use the Render production backend URL
+      socketUrl = 'https://server-youtube-automation.onrender.com';
+      console.log(`✓ Production Socket URL: ${socketUrl}`);
     } else {
       const rawUrl = import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL || '';
       socketUrl = rawUrl

@@ -12,10 +12,13 @@ precacheAndRoute(self.__WB_MANIFEST || []);
 
 // Ensure API requests, authorization endpoints, and socket.io are never cached (always Network Only)
 registerRoute(
-  ({ url }) => 
-    url.pathname.startsWith('/api/') || 
-    url.pathname.startsWith('/socket.io/') || 
-    url.pathname.includes('/auth/'),
+  ({ url }) => {
+    const isApi = url.pathname.startsWith('/api') || url.href.includes('/api');
+    const isSocket = url.pathname.startsWith('/socket.io') || url.href.includes('/socket.io');
+    const isAuth = url.pathname.includes('/auth') || url.href.includes('/auth');
+    const isBackend = url.hostname.includes('server-youtube-automation.onrender.com');
+    return isApi || isSocket || isAuth || isBackend;
+  },
   new NetworkOnly()
 );
 
@@ -95,4 +98,11 @@ self.addEventListener('notificationclick', (event) => {
       }
     })
   );
+});
+
+// Message event to skip waiting on command
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });
