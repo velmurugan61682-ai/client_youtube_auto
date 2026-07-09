@@ -217,8 +217,8 @@ const Register = ({ onSwitchToLogin }) => {
         </div>
       </motion.div>
 
-      <div className="mt-8 flex flex-col items-center gap-5 opacity-60 z-10">
-         <div className="flex items-center gap-8 text-zinc-450 text-[10px] font-black uppercase tracking-widest">
+      <div className="absolute right-8 top-1/2 -translate-y-1/2 opacity-60 z-10">
+         <div className="flex flex-col items-start gap-8 text-zinc-450 text-[10px] font-black uppercase tracking-widest">
             <span className="flex items-center gap-2"><ShieldCheck size={14}/> AES-256 Encryption</span>
             <span className="flex items-center gap-2"><Zap size={14}/> AI Core v4.2</span>
          </div>
