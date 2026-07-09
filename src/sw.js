@@ -1,6 +1,6 @@
-import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching';
-import { registerRoute } from 'workbox-routing';
-import { CacheFirst } from 'workbox-strategies';
+import { precacheAndRoute, cleanupOutdatedCaches, createHandlerBoundToURL } from 'workbox-precaching';
+import { registerRoute, NavigationRoute } from 'workbox-routing';
+import { CacheFirst, NetworkOnly } from 'workbox-strategies';
 import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 import { ExpirationPlugin } from 'workbox-expiration';
 
@@ -9,6 +9,22 @@ cleanupOutdatedCaches();
 
 // Precache all compiled assets (HTML, JS, CSS, images, etc.)
 precacheAndRoute(self.__WB_MANIFEST || []);
+
+// Ensure API requests, authorization endpoints, and socket.io are never cached (always Network Only)
+registerRoute(
+  ({ url }) => 
+    url.pathname.startsWith('/api/') || 
+    url.pathname.startsWith('/socket.io/') || 
+    url.pathname.includes('/auth/'),
+  new NetworkOnly()
+);
+
+// Navigation fallback for SPA routing
+const handler = createHandlerBoundToURL('/index.html');
+const navigationRoute = new NavigationRoute(handler, {
+  denylist: [/^\/api/, /^\/socket.io/, /^\/auth/],
+});
+registerRoute(navigationRoute);
 
 // Handle external image caching (Google/YouTube avatars and thumbnails)
 registerRoute(

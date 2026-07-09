@@ -2,27 +2,24 @@ import axios from 'axios';
 
 // RUNTIME Dynamic Base URL detection
 const getBaseURL = () => {
-  // 1. Check if we have an explicit ENV variable (highest priority)
-  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL.replace('/auth/google', '');
-  
-  // 2. Check if we are running on Vercel (production)
-  const isProd = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+  const isProd = import.meta.env.PROD || (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1');
   
   if (isProd) {
-    // On Vercel, if VITE_API_URL is missing, we MUST have a relative path or error
-    console.warn('⚠️ VITE_API_URL is missing. Attempting relative API path...');
-    return window.location.origin; // Try to call the same domain
+    const prodUrl = import.meta.env.VITE_API_URL || 'https://server-youtube-automation.onrender.com';
+    return prodUrl.replace(/\/auth\/google\/?$/, '');
   }
   
-  // 3. Fallback for Local Development
-  return 'http://localhost:5000';
+  // Fallback for Local Development
+  return import.meta.env.VITE_API_URL || 'http://localhost:5000';
 };
 
 export const API_BASE_URL = getBaseURL().endsWith('/') ? getBaseURL().slice(0, -1) : getBaseURL();
 
+console.log(`✓ Production API URL: ${API_BASE_URL}`);
+
 const api = axios.create({
   baseURL: `${API_BASE_URL}/api`,
-  timeout: 60000, // Increased to 60 seconds to accommodate Render backend cold start
+  timeout: 60000, // 60 seconds
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -32,20 +29,22 @@ const api = axios.create({
 // Request interceptor to attach Bearer Token
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
-
-  console.log('Token exists:', !!token);
-
   if (token && token !== 'null' && token !== 'undefined') {
     config.headers.Authorization = `Bearer ${token}`;
-    console.log('Authorization header attached');
   }
-
   return config;
 });
 
 // Response interceptor to handle auto-retry once on 5xx or network errors
+let apiConnectedLogged = false;
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    if (!apiConnectedLogged) {
+      console.log('✓ API Connected');
+      apiConnectedLogged = true;
+    }
+    return response;
+  },
   async (error) => {
     const config = error.config;
     

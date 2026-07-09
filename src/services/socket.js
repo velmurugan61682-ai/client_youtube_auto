@@ -7,21 +7,29 @@ let socket = null;
  */
 export const getSocket = () => {
   if (!socket) {
-    const rawUrl = import.meta.env.VITE_API_URL || '';
-    // Strip trailing endpoints to get the root server URL
-    const socketUrl = rawUrl
-      .replace(/\/api\/?$/, '')
-      .replace(/\/auth\/google\/?$/, '') || 'http://localhost:5000';
+    const isProd = import.meta.env.PROD || (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1');
+    let socketUrl;
 
-    console.log(`🔌 [Socket.IO] Initializing singleton instance for URL: ${socketUrl}`);
+    if (isProd) {
+      socketUrl = import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL || 'https://server-youtube-automation.onrender.com';
+      socketUrl = socketUrl
+        .replace(/\/api\/?$/, '')
+        .replace(/\/auth\/google\/?$/, '');
+      console.log(`✓ Socket URL: ${socketUrl}`);
+    } else {
+      const rawUrl = import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL || '';
+      socketUrl = rawUrl
+        .replace(/\/api\/?$/, '')
+        .replace(/\/auth\/google\/?$/, '') || 'http://localhost:5000';
+    }
 
     socket = io(socketUrl, {
       reconnection: true,
-      transports: ['polling', 'websocket'], // Robust default: start with polling, upgrade to WS
-      reconnectionAttempts: 10,
-      reconnectionDelay: 2000,
-      reconnectionDelayMax: 10000,
-      autoConnect: false, // Wait for explicit connection call with token
+      transports: ['websocket', 'polling'], // prioritize websocket transport
+      reconnectionAttempts: Infinity, // Reconnect automatically
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      autoConnect: false,
     });
 
     // Global connection lifecycle logging
@@ -66,6 +74,16 @@ export const getSocket = () => {
     socket.io.on('ping', () => {
       console.log('⚡ [Socket.IO] Ping sent to server');
     });
+
+    // Handle automatic reconnection after network restoration
+    if (typeof window !== 'undefined') {
+      window.addEventListener('online', () => {
+        console.log('✓ Network Connected (Restored). Reconnecting socket...');
+        if (socket && !socket.connected) {
+          socket.connect();
+        }
+      });
+    }
   }
   return socket;
 };
