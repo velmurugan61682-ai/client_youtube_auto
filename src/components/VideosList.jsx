@@ -237,13 +237,15 @@ const VideosList = ({
   };
 
   const filteredComments = comments.filter(c => {
+    if (c.isBotReply || (c.youtubeId && c.youtubeId.includes('.'))) return false;
     if (filter === 'all') return true;
     return c.sentiment === filter;
   });
 
   const getStatsForFilter = (type) => {
-    if (type === 'all') return comments.length;
-    return comments.filter(c => c.sentiment === type).length;
+    const topLevelComments = comments.filter(c => !c.isBotReply && !(c.youtubeId && c.youtubeId.includes('.')));
+    if (type === 'all') return topLevelComments.length;
+    return topLevelComments.filter(c => c.sentiment === type).length;
   };
 
   const filters = [
@@ -485,6 +487,72 @@ const VideosList = ({
                                  </span>
                               </div>
                               <p className="text-[13px] md:text-[14px] text-[#222] leading-relaxed mb-3 md:mb-4">{comment.text}</p>
+                              
+                              {comment.replyText && (comment.replyStatus === 'sent' || comment.hasReplied) && (
+                                <div className="mt-4 ml-4 md:ml-6 pl-4 border-l-2 border-green-500/40 space-y-3 bg-green-50/20 p-3 rounded-2xl border border-green-500/10 text-left">
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                      <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-[10px] font-bold">
+                                        AI
+                                      </div>
+                                      <div className="flex items-center gap-1.5">
+                                        <span className="font-extrabold text-[11px] md:text-xs text-[#0f0f0f]">Channel Owner (AI Auto-Reply)</span>
+                                        <span className="text-[9px] font-black uppercase bg-[#2ba640]/10 text-[#2ba640] px-1.5 py-0.5 rounded-md border border-[#2ba640]/20 flex items-center gap-1">
+                                          <span className="w-1 h-1 rounded-full bg-[#2ba640] animate-pulse" />
+                                          Sent via DeepSeek
+                                        </span>
+                                      </div>
+                                    </div>
+                                    {comment.repliedAt && (
+                                      <span className="text-[9px] font-bold text-[#909090]">
+                                        {safeFormatDistanceToNow(comment.repliedAt)} ago
+                                      </span>
+                                    )}
+                                  </div>
+                                  <p className="text-[12px] md:text-[13px] text-[#333] font-medium leading-relaxed bg-white/60 p-3 rounded-xl border border-white/80">
+                                    {comment.replyText}
+                                  </p>
+                                </div>
+                              )}
+
+                              {comment.replyStatus === 'failed' && (
+                                <div className="mt-4 ml-4 md:ml-6 pl-4 border-l-2 border-red-500/40 space-y-2 bg-red-50/20 p-3 rounded-2xl border border-red-500/10 text-left">
+                                  <div className="flex items-center gap-2">
+                                    <div className="w-6 h-6 rounded-full bg-red-100 flex items-center justify-center text-red-700 text-[10px] font-bold">
+                                      AI
+                                    </div>
+                                    <div className="flex items-center gap-1.5">
+                                      <span className="font-extrabold text-[11px] md:text-xs text-[#0f0f0f]">Channel Owner (AI Auto-Reply)</span>
+                                      <span className="text-[9px] font-black uppercase bg-[#d93025]/10 text-[#d93025] px-1.5 py-0.5 rounded-md border border-[#d93025]/20 flex items-center gap-1">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-[#d93025]" />
+                                        Reply Failed
+                                      </span>
+                                    </div>
+                                  </div>
+                                  {comment.replyError && (
+                                    <p className="text-[11px] text-[#c5221f] font-semibold">
+                                      Error: {comment.replyError}
+                                    </p>
+                                  )}
+                                </div>
+                              )}
+
+                              {comment.replyStatus === 'pending' && (
+                                <div className="mt-4 ml-4 md:ml-6 pl-4 border-l-2 border-amber-500/40 space-y-2 bg-amber-50/20 p-3 rounded-2xl border border-amber-500/10 text-left">
+                                  <div className="flex items-center gap-2">
+                                    <div className="w-6 h-6 rounded-full bg-amber-100 flex items-center justify-center text-amber-700 text-[10px] font-bold">
+                                      AI
+                                    </div>
+                                    <div className="flex items-center gap-1.5">
+                                      <span className="font-extrabold text-[11px] md:text-xs text-[#0f0f0f]">Channel Owner (AI Auto-Reply)</span>
+                                      <span className="text-[9px] font-black uppercase bg-[#f9ab00]/10 text-[#f9ab00] px-1.5 py-0.5 rounded-md border border-[#f9ab00]/20 flex items-center gap-1">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-[#f9ab00] animate-ping" />
+                                        Reply Pending
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
                               
                               {comment.status !== 'deleted' && (
                                 <div className="flex flex-col sm:flex-row sm:items-center justify-between border-t border-[#f8f8f8] pt-3 gap-3">

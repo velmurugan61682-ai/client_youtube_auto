@@ -65,7 +65,8 @@ const ModerationQueue = ({ onAction, searchQuery }) => {
           autoLiked: filter === 'liked' ? true : undefined
         }
       });
-      setComments(Array.isArray(res.data) ? res.data : (res.data?.comments || []));
+      const data = Array.isArray(res.data) ? res.data : (res.data?.comments || []);
+      setComments(data.filter(c => !c.isBotReply && !(c.youtubeId && c.youtubeId.includes('.'))));
     } catch (err) {
       console.error('Fetch error:', err);
     } finally {
@@ -209,6 +210,50 @@ const ModerationQueue = ({ onAction, searchQuery }) => {
                             </div>
                           </div>
                           <p className="text-[13.5px] text-[#222] font-medium leading-relaxed mb-4 max-w-[500px]">"{comment.text}"</p>
+                           
+                           {comment.replyText && (comment.replyStatus === 'sent' || comment.hasReplied) && (
+                             <div className="mt-3 ml-4 pl-4 border-l-2 border-green-500/40 space-y-2 bg-green-50/20 p-3 rounded-2xl border border-green-500/10 text-left max-w-[500px]">
+                               <div className="flex items-center justify-between">
+                                 <div className="flex items-center gap-2">
+                                   <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-[9px] font-bold">
+                                     AI
+                                   </div>
+                                   <div className="flex items-center gap-1">
+                                     <span className="font-extrabold text-[10px] text-[#0f0f0f]">Channel Owner (AI Auto-Reply)</span>
+                                     <span className="text-[8px] font-black uppercase bg-[#2ba640]/10 text-[#2ba640] px-1.5 py-0.5 rounded-md border border-[#2ba640]/20 flex items-center gap-1">
+                                       <span className="w-1 h-1 rounded-full bg-[#2ba640] animate-pulse" />
+                                       DeepSeek Sent
+                                     </span>
+                                   </div>
+                                 </div>
+                               </div>
+                               <p className="text-[11.5px] text-[#333] italic font-medium leading-relaxed bg-white/60 p-2.5 rounded-xl border border-white/80">
+                                 "{comment.replyText}"
+                               </p>
+                             </div>
+                           )}
+
+                           {comment.replyStatus === 'failed' && (
+                             <div className="mt-3 ml-4 pl-4 border-l-2 border-red-500/40 space-y-2 bg-red-50/20 p-3 rounded-2xl border border-red-500/10 text-left max-w-[500px]">
+                               <div className="flex items-center gap-2">
+                                 <div className="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center text-red-700 text-[9px] font-bold">
+                                   AI
+                                 </div>
+                                 <div className="flex items-center gap-1">
+                                   <span className="font-extrabold text-[10px] text-[#0f0f0f]">Channel Owner (AI Auto-Reply)</span>
+                                   <span className="text-[8px] font-black uppercase bg-[#d93025]/10 text-[#d93025] px-1.5 py-0.5 rounded-md border border-[#d93025]/20 flex items-center gap-1">
+                                     <span className="w-1 h-1 rounded-full bg-[#d93025]" />
+                                     Reply Failed
+                                   </span>
+                                 </div>
+                               </div>
+                               {comment.replyError && (
+                                 <p className="text-[10px] text-[#c5221f] font-semibold">
+                                   Error: {comment.replyError}
+                                 </p>
+                               )}
+                             </div>
+                           )}
                           
                           {comment.detectedWords && comment.detectedWords.length > 0 && (
                             <div className="flex flex-wrap gap-2">
