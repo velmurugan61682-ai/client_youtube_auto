@@ -40,16 +40,16 @@ const LeadsPage = lazy(() => import('./pages/LeadsPage'));
 const AutoSchedulePage = lazy(() => import('./pages/AutoSchedule'));
 const AutoDmPage = lazy(() => import('./pages/AutoDm'));
 const SubscriptionPage = lazy(() => import('./pages/SubscriptionPage'));
+const LandingPage = lazy(() => import('./pages/LandingPage'));
+const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
+const TermsPage = lazy(() => import('./pages/TermsPage'));
+const Login = lazy(() => import('./components/Login'));
+const Register = lazy(() => import('./components/Register'));
 
 // Components
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
-import Login from './components/Login';
-import Register from './components/Register';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import LandingPage from './pages/LandingPage';
-import PrivacyPage from './pages/PrivacyPage';
-import TermsPage from './pages/TermsPage';
 
 let activeAnalyticsPromise = null;
 let activeChannelsPromise = null;
@@ -357,7 +357,15 @@ const App = () => {
 
   return (
     <>
-      <Routes>
+      <Suspense fallback={
+        <div className="h-screen w-full flex items-center justify-center bg-[#f9f9f9]">
+          <div className="flex flex-col items-center gap-4">
+            <Loader2 className="animate-spin text-[#ff0000]" size={48} />
+            <p className="text-[14px] font-bold text-[#606060] uppercase tracking-widest">Initialising Studio...</p>
+          </div>
+        </div>
+      }>
+        <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/privacy" element={<PrivacyPage />} />
       <Route path="/terms" element={<TermsPage />} />
@@ -441,6 +449,7 @@ const App = () => {
       } />
       <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      </Suspense>
       <AnimatePresence>
         {isOffline && (
           <motion.div
