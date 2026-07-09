@@ -6,9 +6,7 @@ import {
   Loader2,
   CheckCircle2,
   AlertCircle,
-  ArrowRight,
-  ShieldCheck,
-  Zap
+  ArrowRight
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -217,12 +215,6 @@ const Register = ({ onSwitchToLogin }) => {
         </div>
       </motion.div>
 
-      <div className="absolute right-8 top-1/2 -translate-y-1/2 opacity-60 z-10">
-         <div className="flex flex-col items-start gap-8 text-zinc-450 text-[10px] font-black uppercase tracking-widest">
-            <span className="flex items-center gap-2"><ShieldCheck size={14}/> AES-256 Encryption</span>
-            <span className="flex items-center gap-2"><Zap size={14}/> AI Core v4.2</span>
-         </div>
-      </div>
     </div>
   );
 };
