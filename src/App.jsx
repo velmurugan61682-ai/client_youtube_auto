@@ -18,7 +18,8 @@ import {
   ShieldAlert,
   CheckCircle2,
   ExternalLink,
-  Search
+  Search,
+  WifiOff
 } from 'lucide-react';
 import { 
   PieChart, Pie, Cell, 
@@ -56,6 +57,18 @@ let activeChannelsPromise = null;
 const App = () => {
   const { user, authLoading, logout } = useAuth();
   const [planSelected, setPlanSelected] = useState(() => sessionStorage.getItem('plan_acknowledged') === 'true');
+  const [isOffline, setIsOffline] = useState(!navigator.onLine);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
   const [loadingChannels, setLoadingChannels] = useState(true);
   const [isRegistering, setIsRegistering] = useState(false);
   const [activeTab, setActiveTab] = useState(() => {
@@ -343,7 +356,8 @@ const App = () => {
   );
 
   return (
-    <Routes>
+    <>
+      <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/privacy" element={<PrivacyPage />} />
       <Route path="/terms" element={<TermsPage />} />
@@ -426,7 +440,21 @@ const App = () => {
         )
       } />
       <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+      </Routes>
+      <AnimatePresence>
+        {isOffline && (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            className="fixed bottom-6 right-6 z-[9999] flex items-center gap-3 px-4 py-3 bg-[#d93025] text-white rounded-2xl shadow-2xl font-black text-xs uppercase tracking-wider border border-white/20 backdrop-blur-md"
+          >
+            <WifiOff size={16} />
+            <span>You are currently offline</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 
