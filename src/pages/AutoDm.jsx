@@ -46,6 +46,11 @@ const AutoDm = ({ channels, selectedChannelId, setSelectedChannelId }) => {
     }
   }, [channels, selectedChannelId, setSelectedChannelId]);
 
+  // Reset selected video when channel changes
+  useEffect(() => {
+    setSelectedVideoId('');
+  }, [selectedChannelId]);
+
   // Load config, stats, and history when video selection changes
   useEffect(() => {
     if (selectedVideoId) {

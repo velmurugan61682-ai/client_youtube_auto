@@ -87,7 +87,7 @@ const AutoDmConfigCard = ({
           {/* Video Dropdown */}
           <div className="space-y-2">
             <label className="text-xs font-black text-[#909090] uppercase tracking-wider flex items-center gap-1.5">
-              <Video size={14} /> YouTube Video
+              <Video size={14} /> Channel Video
             </label>
             <select
               value={selectedVideoId || ''}
