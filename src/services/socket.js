@@ -22,7 +22,7 @@ export const getSocket = () => {
 
     socket = io(socketUrl, {
       reconnection: true,
-      transports: ['websocket', 'polling'], // prioritize websocket transport
+      transports: ['polling', 'websocket'], // start with polling then upgrade to avoid websocket connection failure logs
       reconnectionAttempts: Infinity, // Reconnect automatically
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
