@@ -110,6 +110,20 @@ const AutoDmConfigCard = ({
           </div>
         </div>
 
+        {/* Video Player Embed */}
+        {selectedVideoId && (
+          <div className="pt-4 border-t border-[#f5f5f5]">
+            <iframe
+              className="w-full aspect-video rounded-xl border border-[#e5e5e5] shadow-sm"
+              src={`https://www.youtube.com/embed/${selectedVideoId}`}
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            ></iframe>
+          </div>
+        )}
+
         {/* Video Toggle Status */}
         {selectedVideoId && (
           <div className="flex items-center justify-between gap-6 pt-4 border-t border-[#f5f5f5]">

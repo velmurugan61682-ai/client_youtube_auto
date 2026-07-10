@@ -43,6 +43,23 @@ const ModerationQueue = ({ onAction, searchQuery }) => {
   const [editForm, setEditForm] = useState({ sentiment: '', status: '', note: '' });
   const [filter, setFilter] = useState('all');
 
+  const [displayLimit, setDisplayLimit] = useState(50);
+
+  useEffect(() => {
+    setDisplayLimit(50);
+  }, [filter, comments]);
+
+  useEffect(() => {
+    const handleWindowScroll = () => {
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 150) {
+        setDisplayLimit(prev => Math.min(comments.length, prev + 50));
+      }
+    };
+
+    window.addEventListener('scroll', handleWindowScroll);
+    return () => window.removeEventListener('scroll', handleWindowScroll);
+  }, [comments.length]);
+
   useEffect(() => {
     fetchComments();
 
@@ -174,6 +191,7 @@ const ModerationQueue = ({ onAction, searchQuery }) => {
               ) : (
                 comments
                   .filter(c => c.text.toLowerCase().includes((searchQuery || '').toLowerCase()) || c.author.toLowerCase().includes((searchQuery || '').toLowerCase()))
+                  .slice(0, displayLimit)
                   .map((comment, i) => (
                   <motion.tr 
                     key={comment._id}

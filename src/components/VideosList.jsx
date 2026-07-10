@@ -65,6 +65,32 @@ const VideosList = ({
   const [videoAnalytics, setVideoAnalytics] = useState(null);
   const [loadingAnalytics, setLoadingAnalytics] = useState(false);
 
+  // Performance optimizations: lazy render limits for videos and comments
+  const [displayLimit, setDisplayLimit] = useState(50);
+  const [commentsDisplayLimit, setCommentsDisplayLimit] = useState(50);
+
+  useEffect(() => {
+    setDisplayLimit(50);
+  }, [channelId, videos]);
+
+  useEffect(() => {
+    setCommentsDisplayLimit(50);
+  }, [selectedVideo, filter]);
+
+  const handleVideoListScroll = (e) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+    if (scrollHeight - scrollTop - clientHeight < 150) {
+      setDisplayLimit(prev => Math.min(videos.length, prev + 50));
+    }
+  };
+
+  const handleCommentsScroll = (e) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+    if (scrollHeight - scrollTop - clientHeight < 150) {
+      setCommentsDisplayLimit(prev => Math.min(filteredComments.length, prev + 50));
+    }
+  };
+
   useEffect(() => {
     if (channelId) {
       fetchVideos();
@@ -338,8 +364,8 @@ const VideosList = ({
               </div>
            </div>
            
-           <div className="flex-1 overflow-y-auto custom-scroll p-2">
-              {videos.map((video) => (
+           <div className="flex-1 overflow-y-auto custom-scroll p-2" onScroll={handleVideoListScroll}>
+              {videos.slice(0, displayLimit).map((video) => (
                 <button
                   key={video.videoId}
                   onClick={() => handleVideoSelect(video.videoId)}
@@ -438,7 +464,19 @@ const VideosList = ({
           </div>
 
           {/* Conditional Content Rendering */}
-          <div className="flex-1 overflow-y-auto custom-scroll p-3 md:p-6 bg-white/20">
+          <div className="flex-1 overflow-y-auto custom-scroll p-3 md:p-6 bg-white/20" onScroll={handleCommentsScroll}>
+             {selectedVideo && (
+               <div className="max-w-[900px] mx-auto mb-6">
+                 <iframe
+                   className="w-full aspect-video rounded-2xl border border-[#e5e5e5] shadow-md"
+                   src={`https://www.youtube.com/embed/${selectedVideo}`}
+                   title="YouTube video player"
+                   frameBorder="0"
+                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                   allowFullScreen
+                 ></iframe>
+               </div>
+             )}
              {activePanelTab === 'comments' ? (
                 // Comments Tab Content
                 loadingComments ? (
@@ -455,6 +493,7 @@ const VideosList = ({
                   <div className="space-y-3 md:space-y-4 max-w-[900px] mx-auto">
                     {filteredComments
                        .filter(c => c.text.toLowerCase().includes((searchQuery || '').toLowerCase()) || c.author.toLowerCase().includes((searchQuery || '').toLowerCase()))
+                       .slice(0, commentsDisplayLimit)
                        .map((comment, index) => (
                        <motion.div 
                          key={comment._id}
