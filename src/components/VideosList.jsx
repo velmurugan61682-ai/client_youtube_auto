@@ -92,12 +92,12 @@ const VideosList = ({
   };
 
   useEffect(() => {
-    if (channelId) {
+    if (channelId && channels && channels.some(c => c.channelId === channelId)) {
       fetchVideos();
     } else {
       setLoadingVideos(false);
     }
-  }, [channelId]);
+  }, [channelId, channels]);
 
   const fetchVideos = async () => {
     try {

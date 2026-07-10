@@ -32,7 +32,7 @@ const RepliedHistoryTable = ({ history, loading, page, pages, onPageChange }) =>
             </tr>
           </thead>
           <tbody className="divide-y divide-[#f0f0f0]">
-            <AnimatePresence>
+            <AnimatePresence mode="wait">
               {loading ? (
                 Array(5).fill(0).map((_, i) => (
                   <tr key={i} className="animate-pulse">

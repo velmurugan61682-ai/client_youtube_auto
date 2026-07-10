@@ -19,12 +19,12 @@ const AutoDmConfigCard = ({
   const [loadingVideos, setLoadingVideos] = useState(false);
 
   useEffect(() => {
-    if (selectedChannelId) {
+    if (selectedChannelId && channels && channels.some(c => c.channelId === selectedChannelId)) {
       fetchVideosForChannel(selectedChannelId);
     } else {
       setVideos([]);
     }
-  }, [selectedChannelId]);
+  }, [selectedChannelId, channels]);
 
   const fetchVideosForChannel = async (channelId) => {
     try {
