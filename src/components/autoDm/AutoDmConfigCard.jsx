@@ -44,7 +44,7 @@ const AutoDmConfigCard = ({
       console.log(`[Fix #1] Loaded ${videosArray.length} videos for channel ${channelId}. First title: "${videosArray[0]?.title}" (AutoDmConfigCard.jsx)`);
       setVideos(videosArray);
 
-      // If there are videos and none is selected, select the first one
+      // Select first video if none is selected
       if (videosArray && videosArray.length > 0 && !selectedVideoId) {
         onVideoChange(videosArray[0].videoId);
       }
@@ -54,6 +54,15 @@ const AutoDmConfigCard = ({
       setLoadingVideos(false);
     }
   };
+
+  useEffect(() => {
+    if (videos && videos.length > 0) {
+      const hasSelected = videos.some(v => v.videoId === selectedVideoId);
+      if (!hasSelected) {
+        onVideoChange(videos[0].videoId);
+      }
+    }
+  }, [videos, selectedVideoId, onVideoChange]);
 
   const cleanNumber = (whatsappNumber || '').replace(/[^\d]/g, '');
   const waLink = cleanNumber ? `https://wa.me/${cleanNumber}` : '';
@@ -114,6 +123,8 @@ const AutoDmConfigCard = ({
         {selectedVideoId && (
           <div className="pt-4 border-t border-[#f5f5f5]">
             <iframe
+              width="100%"
+              height="360"
               className="w-full aspect-video rounded-xl border border-[#e5e5e5] shadow-sm"
               src={`https://www.youtube.com/embed/${selectedVideoId}`}
               title="YouTube video player"
