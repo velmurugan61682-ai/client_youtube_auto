@@ -50,7 +50,7 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen }) => {
           x: (typeof window !== 'undefined' && window.innerWidth >= 1024) ? 0 : (isOpen ? 0 : -280),
         }}
         transition={{ type: 'spring', damping: 28, stiffness: 220 }}
-        className="fixed inset-y-0 left-0 bg-[#111827]/75 backdrop-blur-xl rounded-r-[28px] border-r border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] flex flex-col z-[150] lg:relative transition-all duration-300"
+        className="fixed inset-y-0 left-0 bg-white/70 backdrop-blur-xl rounded-r-3xl border border-white/40 shadow-2xl flex flex-col z-[150] lg:relative transition-all duration-300"
       >
         {/* Navigation Section */}
         <div className="flex-1 py-8 flex flex-col gap-2 overflow-y-auto no-scrollbar">
@@ -66,7 +66,7 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen }) => {
                   className={`relative w-full h-full flex items-center gap-4 rounded-2xl transition-all duration-300 group ${
                     isMenuTabActive 
                       ? 'bg-green-500/20 text-[#22c55e] border border-green-500/30 shadow-[0_0_15px_rgba(34,197,94,0.1)] font-black' 
-                      : 'hover:bg-white/5 text-gray-400 hover:text-white border border-transparent'
+                      : 'hover:bg-slate-500/10 text-slate-600 hover:text-slate-950 border border-transparent'
                   } ${isOpen ? 'px-4' : 'justify-center'}`}
                 >
                   <div className="flex-shrink-0">
@@ -108,21 +108,21 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen }) => {
         </div>
 
         {/* AI & Security Footer */}
-        <div className="p-4 mt-auto border-t border-white/5 bg-white/0 space-y-3">
-          <div className={`overflow-hidden transition-all duration-500 rounded-[24px] cursor-default bg-white/5 border border-white/10 hover:border-green-500/20 group/ai ${isOpen ? 'p-4' : 'p-0 h-14 flex items-center justify-center'}`}>
+        <div className="p-4 mt-auto border-t border-slate-100 bg-white/0 space-y-3">
+          <div className={`overflow-hidden transition-all duration-500 rounded-[24px] cursor-default bg-slate-500/5 border border-slate-200/55 hover:border-green-500/20 group/ai ${isOpen ? 'p-4' : 'p-0 h-14 flex items-center justify-center'}`}>
              <div className={`flex items-center ${isOpen ? 'gap-3 mb-3' : 'justify-center'}`}>
-                 <div className={`rounded-xl transition-all duration-500 flex items-center justify-center ${isOpen ? 'w-10 h-10 bg-white/5 text-[#22c55e]' : 'w-12 h-12 bg-white/5 text-[#22c55e] border border-white/10 group-hover/ai:border-green-500/20'}`}>
+                 <div className={`rounded-xl transition-all duration-500 flex items-center justify-center ${isOpen ? 'w-10 h-10 bg-slate-500/5 text-[#22c55e]' : 'w-12 h-12 bg-slate-500/5 text-[#22c55e] border border-slate-200/55 group-hover/ai:border-green-500/20'}`}>
                     <Zap size={isOpen ? 20 : 24} className="animate-pulse" fill="currentColor" />
                  </div>
                 {isOpen && (
                   <div className="min-w-0">
-                    <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest leading-none mb-1">AI Guardian</p>
-                    <p className="text-[14px] font-black text-white truncate">Online</p>
+                    <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none mb-1">AI Guardian</p>
+                    <p className="text-[14px] font-black text-slate-800 truncate">Online</p>
                   </div>
                 )}
              </div>
              {isOpen && (
-                <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                <div className="w-full h-1 bg-slate-200 rounded-full overflow-hidden">
                    <motion.div 
                     initial={{ x: '-100%' }}
                     animate={{ x: '0%' }}
@@ -137,7 +137,7 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen }) => {
             <button 
               onClick={onLogout}
               className={`flex items-center transition-all duration-300 rounded-[20px] border ${
-                isOpen ? 'w-full px-4 py-3 bg-white/5 border-white/10 text-gray-300 hover:bg-red-500/20 hover:text-white hover:border-red-500/30 font-black text-xs uppercase tracking-widest' : 'h-14 w-full justify-center text-gray-400 hover:text-white hover:bg-white/5 border-transparent hover:border-white/10'
+                isOpen ? 'w-full px-4 py-3 bg-slate-500/5 border-slate-200/55 text-slate-600 hover:bg-red-50 hover:text-red-600 hover:border-red-500/30 font-black text-xs uppercase tracking-widest' : 'h-14 w-full justify-center text-slate-400 hover:text-slate-900 hover:bg-slate-500/5 border-transparent hover:border-slate-200/55'
               }`}
             >
               <LogOut size={20} />
