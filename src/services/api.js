@@ -4,7 +4,7 @@ import axios from 'axios';
 const getBaseURL = () => {
   // If we are in production mode, strictly use the Render production backend URL
   if (import.meta.env.PROD === true) {
-    return 'https://server-youtube-automation.onrender.com';
+    return 'https://server-youtube-auto.onrender.com';
   }
   
   // Fallback for Local Development
