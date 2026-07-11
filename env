@@ -1,0 +1,8 @@
+# Local Development Backend
+# VITE_API_URL=http://localhost:5000
+
+# Production Backend
+VITE_API_URL=https://server-youtube-automation.onrender.com
+
+GOOGLE_CLIENT_ID=668583860142-q4v5aeds6a02bdv6tcdhcuqmaghbtdl6.apps.googleusercontent.com
+PORT=5173

@@ -1,19 +1,14 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { 
   Search, 
-  Mic, 
-  Video, 
   Bell, 
   Menu,
   LogOut,
-  User,
   Settings,
   ChevronDown,
   Sparkles,
-  Zap,
   LayoutDashboard,
   MessageSquare,
-  ShieldCheck,
   ThumbsUp,
   Clock,
   Trash2,
@@ -23,7 +18,7 @@ import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const Header = ({ toggleSidebar, onSearch, setActiveTab, sidebarOpen, notifications = [] }) => {
+const Header = ({ toggleSidebar, onSearch, setActiveTab, notifications = [] }) => {
   const { user, logout, switchOrg } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -44,6 +39,7 @@ const Header = ({ toggleSidebar, onSearch, setActiveTab, sidebarOpen, notificati
         await switchOrg(orgId);
         window.location.reload();
       } catch (err) {
+        console.error('Failed to switch organization:', err);
         alert('Failed to switch organization tenant.');
       }
     }
@@ -260,7 +256,7 @@ const Header = ({ toggleSidebar, onSearch, setActiveTab, sidebarOpen, notificati
               <span className="text-[13px] font-black text-[#0f0f0f] truncate w-full">{user?.name || 'Admin'}</span>
               <span className="text-[9px] font-black text-green-600 uppercase tracking-wider flex items-center gap-1">
                 <div className="w-1 h-1 bg-[#2ba640] rounded-full animate-pulse" />
-                {user?.role === 'admin' ? 'Admin' : (user?.subscription?.status === 'active' ? (user?.subscription?.planType || 'Pro') : 'Free Plan')}
+                {user?.role === 'admin' ? 'Admin' : ((user?.subscription?.status === 'active' || (user?.subscription?.status === 'cancelled' && user?.subscription?.currentEnd && new Date(user.subscription.currentEnd) > new Date())) ? (user?.subscription?.planType || 'Pro') : 'Free Plan')}
               </span>
             </div>
             <ChevronDown size={14} className={`text-[#909090] transition-transform ${showProfileMenu ? 'rotate-180' : ''}`} />

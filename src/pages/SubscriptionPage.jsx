@@ -1,24 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import api from '../services/api';
 import { 
   CreditCard, 
   Check, 
   AlertTriangle, 
   Loader2, 
-  Sparkles, 
   Star, 
   LogOut, 
   ArrowRight, 
   UserCheck, 
   Zap, 
   History, 
-  Download, 
-  ShieldAlert 
+  Download
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { motion } from 'framer-motion';
 
-const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
+const SubscriptionPage = ({ isGate = false }) => {
   const { logout } = useAuth();
   const [subData, setSubData] = useState(null);
   const [invoices, setInvoices] = useState([]);
@@ -56,12 +53,16 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
   };
 
   useEffect(() => {
-    fetchStatus();
+    Promise.resolve().then(() => {
+      fetchStatus();
+    });
   }, []);
 
   useEffect(() => {
     if (activeSubTab === 'billing') {
-      fetchInvoices();
+      Promise.resolve().then(() => {
+        fetchInvoices();
+      });
     }
   }, [activeSubTab]);
 
@@ -190,10 +191,14 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
   }
 
   const isPlanActive = (planType) => {
-    return subData && subData.planType === planType && subData.status === 'active';
+    if (!subData || subData.planType !== planType) return false;
+    const isStatusActive = subData.status === 'active';
+    const isCancelledButNotExpired = subData.status === 'cancelled' && subData.currentEnd && new Date(subData.currentEnd) > new Date();
+    return isStatusActive || isCancelledButNotExpired;
   };
 
-  const hasAnyActiveSub = subData && subData.status === 'active';
+  const hasAnyActiveSub = subData && (subData.status === 'active' || 
+    (subData.status === 'cancelled' && subData.currentEnd && new Date(subData.currentEnd) > new Date()));
 
   const plans = [
     {

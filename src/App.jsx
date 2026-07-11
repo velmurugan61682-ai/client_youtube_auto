@@ -1,34 +1,12 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
-import axios from 'axios';
-import api, { API_BASE_URL } from './services/api';
+import { useState, useEffect, lazy, Suspense, useCallback } from 'react';
+import api from './services/api';
 import { connectSocket, disconnectSocket } from './services/socket';
 import { 
-  MessageSquare, 
-  ShieldCheck, 
-  BarChart3, 
   Loader2,
-  AlertTriangle,
-  PlaySquare,
-  Zap,
-  TrendingUp,
-  Clock,
-  ThumbsUp,
-  Trash2,
-  Activity,
-  ShieldAlert,
-  CheckCircle2,
-  ExternalLink,
-  Search,
   WifiOff
 } from 'lucide-react';
-import { 
-  PieChart, Pie, Cell, 
-  ResponsiveContainer, Tooltip,
-  AreaChart, Area, XAxis, YAxis, CartesianGrid
-} from 'recharts';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from './context/AuthContext';
-import { SENTIMENT_COLORS, SENTIMENT_ORDER, getSentimentConfig } from './utils/constants/sentimentColors';
 
 // Import Pages (Lazy Loaded)
 const DashboardPage = lazy(() => import('./pages/DashboardPage'));
@@ -58,19 +36,7 @@ const App = () => {
   const { user, authLoading, logout } = useAuth();
   const [planSelected, setPlanSelected] = useState(() => sessionStorage.getItem('plan_acknowledged') === 'true');
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
-
-  useEffect(() => {
-    const handleOnline = () => setIsOffline(false);
-    const handleOffline = () => setIsOffline(true);
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
-  }, []);
   const [loadingChannels, setLoadingChannels] = useState(true);
-  const [isRegistering, setIsRegistering] = useState(false);
   const [activeTab, setActiveTab] = useState(() => {
     const queryParams = new URLSearchParams(window.location.search);
     if (queryParams.get('status') === 'success') {
@@ -90,6 +56,32 @@ const App = () => {
     const queryParams = new URLSearchParams(window.location.search);
     return queryParams.get('channelId') || localStorage.getItem('lastSelectedChannelId') || null;
   });
+  const [loading, setLoading] = useState(true);
+  const [activities, setActivities] = useState([]);
+  const [sidebarOpen, setSidebarOpen] = useState(() => {
+    const saved = localStorage.getItem('sidebarOpen');
+    return saved !== null ? JSON.parse(saved) : true;
+  });
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const toggleSidebar = () => {
+    setSidebarOpen(prev => {
+      const newState = !prev;
+      localStorage.setItem('sidebarOpen', JSON.stringify(newState));
+      return newState;
+    });
+  };
+
+  useEffect(() => {
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
@@ -109,7 +101,9 @@ const App = () => {
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.innerWidth < 1024) {
-      setSidebarOpen(false);
+      Promise.resolve().then(() => {
+        setSidebarOpen(false);
+      });
     }
   }, []);
 
@@ -126,64 +120,18 @@ const App = () => {
   useEffect(() => {
     if (user) {
       // Free plan is permanent and lets users enter the app; they are restricted at channel-connection level.
-      setPlanSelected(true);
+      Promise.resolve().then(() => {
+        setPlanSelected(true);
+      });
     } else {
-      setPlanSelected(false);
-      sessionStorage.removeItem('plan_acknowledged');
-    }
-  }, [user]);
-  const [loading, setLoading] = useState(true);
-  const [activities, setActivities] = useState([]);
-  const [sidebarOpen, setSidebarOpen] = useState(() => {
-    const saved = localStorage.getItem('sidebarOpen');
-    return saved !== null ? JSON.parse(saved) : true;
-  });
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const toggleSidebar = () => {
-    setSidebarOpen(prev => {
-      const newState = !prev;
-      localStorage.setItem('sidebarOpen', JSON.stringify(newState));
-      return newState;
-    });
-  };
-
-  // 1. Fetch channels on startup to verify connected accounts & gate bypass
-  useEffect(() => {
-    if (user) {
-      fetchChannels();
+      Promise.resolve().then(() => {
+        setPlanSelected(false);
+        sessionStorage.removeItem('plan_acknowledged');
+      });
     }
   }, [user]);
 
-  // 2. Load analytics and sockets once the gate is passed
-  useEffect(() => {
-    if (user && planSelected) {
-      fetchAnalytics();
-      
-      const socket = connectSocket(localStorage.getItem('token'));
-
-      const handleLiveActivity = (activity) => {
-        setActivities(prev => {
-          if (prev.find(a => (a._id || a.id) === (activity._id || activity.id))) return prev;
-          const updated = [activity, ...prev];
-          return updated.slice(0, 10);
-        });
-      };
-
-      socket.on('live_activity', handleLiveActivity);
-      socket.on('stats_updated', fetchAnalytics);
-      socket.on('new_comment_analyzed', fetchAnalytics);
-      
-      return () => {
-        socket.off('live_activity', handleLiveActivity);
-        socket.off('stats_updated', fetchAnalytics);
-        socket.off('new_comment_analyzed', fetchAnalytics);
-        disconnectSocket();
-      };
-    }
-  }, [user, planSelected]);
-
-  const fetchAnalytics = async () => {
+  const fetchAnalytics = useCallback(async () => {
     const token = localStorage.getItem('token');
     if (!token) {
       console.log('Waiting for login...');
@@ -211,9 +159,9 @@ const App = () => {
 
     activeAnalyticsPromise = { url, promise };
     return promise;
-  };
+  }, [selectedChannelId]);
 
-  const fetchChannels = async () => {
+  const fetchChannels = useCallback(async () => {
     const token = localStorage.getItem('token');
     if (!token) {
       console.log('Waiting for login...');
@@ -249,7 +197,42 @@ const App = () => {
       });
 
     return activeChannelsPromise;
-  };
+  }, [selectedChannelId]);
+
+  // 1. Fetch channels on startup to verify connected accounts & gate bypass
+  useEffect(() => {
+    if (user) {
+      fetchChannels();
+    }
+  }, [user, fetchChannels]);
+
+  // 2. Load analytics and sockets once the gate is passed
+  useEffect(() => {
+    if (user && planSelected) {
+      fetchAnalytics();
+      
+      const socket = connectSocket(localStorage.getItem('token'));
+
+      const handleLiveActivity = (activity) => {
+        setActivities(prev => {
+          if (prev.find(a => (a._id || a.id) === (activity._id || activity.id))) return prev;
+          const updated = [activity, ...prev];
+          return updated.slice(0, 10);
+        });
+      };
+
+      socket.on('live_activity', handleLiveActivity);
+      socket.on('stats_updated', fetchAnalytics);
+      socket.on('new_comment_analyzed', fetchAnalytics);
+      
+      return () => {
+        socket.off('live_activity', handleLiveActivity);
+        socket.off('stats_updated', fetchAnalytics);
+        socket.off('new_comment_analyzed', fetchAnalytics);
+        disconnectSocket();
+      };
+    }
+  }, [user, planSelected, fetchAnalytics]);
 
   useEffect(() => {
     if (selectedChannelId) {
@@ -258,7 +241,7 @@ const App = () => {
     if (user && planSelected) {
       fetchAnalytics();
     }
-  }, [selectedChannelId, user, planSelected]);
+  }, [selectedChannelId, user, planSelected, fetchAnalytics]);
 
   const disconnectChannel = async (id, name) => {
     if(!window.confirm(`Are you sure you want to disconnect ${name}? All related comments and data will be removed.`)) return;
@@ -272,6 +255,7 @@ const App = () => {
         fetchAnalytics();
       }
     } catch (err) {
+      console.error('Failed to disconnect channel:', err);
       alert('Failed to disconnect channel.');
     } finally {
       setLoading(false);
