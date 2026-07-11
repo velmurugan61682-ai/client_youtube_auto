@@ -16,7 +16,7 @@ registerRoute(
     const isApi = url.pathname.startsWith('/api') || url.href.includes('/api');
     const isSocket = url.pathname.startsWith('/socket.io') || url.href.includes('/socket.io');
     const isAuth = url.pathname.includes('/auth') || url.href.includes('/auth');
-    const isBackend = url.hostname.includes('server-youtube-automation.onrender.com');
+    const isBackend = url.hostname.includes('server-youtube-auto.onrender.com');
     return isApi || isSocket || isAuth || isBackend;
   },
   new NetworkOnly()

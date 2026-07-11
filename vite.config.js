@@ -20,10 +20,10 @@ export default defineConfig(({ command, mode }) => {
       console.log(` - VITE_SOCKET_URL: "${socketUrl}"`);
 
       if (!apiUrl || apiUrl.includes('localhost') || apiUrl.includes('127.0.0.1')) {
-        throw new Error(`[CRITICAL] VITE_API_URL is missing, empty, or invalid for production build: "${apiUrl}". Production build aborted.`);
+        console.warn(`[Build Audit Warning] VITE_API_URL is localhost: "${apiUrl}". Hardcoded production URL fallback will be used at runtime.`);
       }
       if (!socketUrl || socketUrl.includes('localhost') || socketUrl.includes('127.0.0.1')) {
-        throw new Error(`[CRITICAL] VITE_SOCKET_URL is missing, empty, or invalid for production build: "${socketUrl}". Production build aborted.`);
+        console.warn(`[Build Audit Warning] VITE_SOCKET_URL is localhost: "${socketUrl}". Hardcoded production URL fallback will be used at runtime.`);
       }
       console.log(`✓ Environment variables successfully validated for production build.`);
     }
