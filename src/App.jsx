@@ -114,6 +114,19 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      if (sidebarOpen) {
+        document.body.style.overflow = "hidden";
+      } else {
+        document.body.style.overflow = "";
+      }
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [sidebarOpen]);
+
+  useEffect(() => {
     const handleUpdate = () => {
       if (window.confirm('🔄 A new version of the app is available. Click OK to reload and update.')) {
         window.location.reload();
@@ -405,7 +418,7 @@ const App = () => {
               </Suspense>
             </div>
           ) : (
-            <div className="h-screen flex flex-col overflow-hidden bg-[#f8fafc] relative selection:bg-green-500/20 selection:text-green-900">
+            <div className="min-h-screen lg:h-screen flex flex-col lg:overflow-hidden bg-[#f8fafc] relative selection:bg-green-500/20 selection:text-green-900">
               {!isEmbedded && (
                 <Header 
                   toggleSidebar={toggleSidebar} 
@@ -415,7 +428,7 @@ const App = () => {
                 />
               )}
               
-              <div className="flex flex-1 overflow-hidden relative">
+              <div className="flex flex-1 lg:overflow-hidden relative">
                 {!isEmbedded && (
                   <Sidebar 
                     activeTab={activeTab} 
@@ -426,7 +439,7 @@ const App = () => {
                   />
                 )}
                 
-                <main className={`flex-1 ${isEmbedded ? 'overflow-hidden p-0' : 'overflow-y-auto p-4 md:p-6 lg:p-8 pb-20 md:pb-6 lg:pb-8'} custom-scroll transition-all duration-300 ease-in-out`}>
+                <main className={`flex-1 overflow-y-auto overflow-x-hidden ${isEmbedded ? 'p-0' : 'p-4 md:p-6 lg:p-8 pb-20 md:pb-6 lg:pb-8'} custom-scroll transition-all duration-300 ease-in-out`}>
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={activeTab}

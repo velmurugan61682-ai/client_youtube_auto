@@ -50,7 +50,7 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen }) => {
           x: (typeof window !== 'undefined' && window.innerWidth >= 1024) ? 0 : (isOpen ? 0 : -280),
         }}
         transition={{ type: 'spring', damping: 28, stiffness: 220 }}
-        className="fixed inset-y-0 left-0 bg-[#111827] rounded-r-[28px] border-r border-white/5 flex flex-col z-[150] lg:relative transition-all duration-300"
+        className="fixed inset-y-0 left-0 bg-[#111827]/75 backdrop-blur-xl rounded-r-[28px] border-r border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] flex flex-col z-[150] lg:relative transition-all duration-300"
       >
         {/* Navigation Section */}
         <div className="flex-1 py-8 flex flex-col gap-2 overflow-y-auto no-scrollbar">

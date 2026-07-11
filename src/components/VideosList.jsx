@@ -331,9 +331,9 @@ const VideosList = ({
   }
 
   return (
-    <div className={`flex flex-col lg:flex-row h-full ${isEmbedded ? 'gap-2 lg:gap-4 bg-[#f9f9f9]' : 'gap-4 md:gap-6'} overflow-hidden`}>
+    <div className={`flex flex-col lg:flex-row lg:h-full w-full ${isEmbedded ? 'gap-2 lg:gap-4 bg-[#f9f9f9]' : 'gap-4 md:gap-6'} overflow-y-auto lg:overflow-hidden`}>
       {/* Left Pane: Videos List */}
-      <div className="w-full lg:w-[320px] flex flex-col gap-4 overflow-hidden shrink-0 h-[40%] lg:h-full">
+      <div className="w-full lg:w-[320px] flex flex-col gap-4 shrink-0 h-[350px] lg:h-full overflow-hidden">
         <div className={`yt-card !p-0 flex flex-col h-full overflow-hidden ${isEmbedded ? '!rounded-none !border-y-0 !border-l-0 !shadow-none' : ''}`}>
            <div className="p-4 md:p-5 border-b border-white/40 flex items-center justify-between bg-white/20 sticky top-0 z-10 backdrop-blur-md">
               <div className="flex items-center gap-2 min-w-0 flex-1">
@@ -411,8 +411,8 @@ const VideosList = ({
       </div>
 
       {/* Right Pane: Analysis & Comments */}
-      <div className="flex-1 flex flex-col gap-4 overflow-hidden h-[60%] lg:h-full">
-        <div className={`yt-card !p-0 flex flex-col h-full overflow-hidden ${isEmbedded ? '!rounded-none !border-y-0 !border-l-0 !shadow-none' : ''}`}>
+      <div className="flex-1 flex flex-col gap-4 lg:overflow-hidden h-auto lg:h-full">
+        <div className={`yt-card !p-0 flex flex-col h-auto lg:h-full overflow-visible lg:overflow-hidden ${isEmbedded ? '!rounded-none !border-y-0 !border-l-0 !shadow-none' : ''}`}>
           {/* Header & Panel Tabs */}
           <div className="p-4 md:p-6 border-b border-white/40 bg-white/20 sticky top-0 z-20 backdrop-blur-md">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
