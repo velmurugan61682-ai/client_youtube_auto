@@ -306,6 +306,23 @@ const App = () => {
           onDisconnect={disconnectChannel}
           onAdd={async () => {
             try {
+              const [subRes, channelsRes] = await Promise.all([
+                api.get('/subscription/status'),
+                api.get('/youtube/channels')
+              ]);
+              const currentSub = subRes.data.subscription;
+              const userRole = subRes.data.role;
+              const currentChannelsCount = channelsRes.data.length;
+
+              const isSubActive = currentSub && currentSub.status === 'active';
+              const isAdmin = userRole === 'admin';
+
+              if (!isAdmin && !isSubActive && currentChannelsCount >= 1) {
+                alert("❌ Upgrade to Premium Pro to add more channels");
+                setActiveTab('subscription');
+                return;
+              }
+
               const res = await api.post('/youtube/auth/initiate');
               if (res.data.redirectUrl) {
                 window.location.href = res.data.redirectUrl;
