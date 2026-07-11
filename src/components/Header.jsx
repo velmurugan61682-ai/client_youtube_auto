@@ -92,12 +92,12 @@ const Header = ({ toggleSidebar, onSearch, setActiveTab, notifications = [] }) =
       case 'like': return <ThumbsUp size={14} className="text-[#065fd4]" />;
       case 'delete': return <Trash2 size={14} className="text-[#d93025]" />;
       case 'flagged': return <AlertCircle size={14} className="text-[#f9ab00]" />;
-      default: return <MessageSquare size={14} className="text-[#ff0000]" />;
+      default: return <MessageSquare size={14} className="text-[#22c55e]" />;
     }
   };
 
   return (
-    <header className="h-[72px] glass-panel border-b border-white/40 flex items-center justify-between px-6 sticky top-0 z-[100] transition-all">
+    <header className="h-[72px] bg-white/70 backdrop-blur-md border-b border-white/40 flex items-center justify-between px-6 sticky top-0 z-[100] transition-all">
       {/* Left: Branding */}
       <div className="flex items-center gap-6">
         <button 
@@ -153,11 +153,11 @@ const Header = ({ toggleSidebar, onSearch, setActiveTab, notifications = [] }) =
         <div className="relative" ref={notifRef}>
            <button 
              onClick={() => setShowNotifications(!showNotifications)}
-             className={`p-2.5 hover:bg-[#f8f8f8] text-[#606060] rounded-2xl transition-all relative group ${showNotifications ? 'bg-[#f8f8f8] text-[#ff0000]' : ''}`}
+             className={`p-2.5 hover:bg-[#f8f8f8] text-[#606060] rounded-2xl transition-all relative group ${showNotifications ? 'bg-[#f8f8f8] text-[#22c55e]' : ''}`}
            >
              <Bell size={20} className={showNotifications ? '' : 'group-hover:rotate-12 transition-transform'} />
              {notifications.length > 0 && (
-               <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-[#22c55e] rounded-full border-2 border-white shadow-sm" />
+                <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-[#22c55e] rounded-full border-2 border-white shadow-sm" />
              )}
            </button>
 
@@ -271,7 +271,7 @@ const Header = ({ toggleSidebar, onSearch, setActiveTab, notifications = [] }) =
                 className="absolute right-0 mt-3 w-64 glass-panel !bg-white/70 rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.1)] border-white/50 overflow-hidden p-2 z-[200]"
               >
                 <div className="p-4 mb-2 bg-white/40 rounded-2xl border border-white/45 flex items-center gap-3">
-                   <div className="w-10 h-10 rounded-xl bg-[#ff0000] flex items-center justify-center text-white font-black text-lg">
+                   <div className="w-10 h-10 rounded-xl bg-[#22c55e] flex items-center justify-center text-white font-black text-lg">
                      {user?.name?.charAt(0).toUpperCase() || 'A'}
                    </div>
                    <div className="min-w-0">

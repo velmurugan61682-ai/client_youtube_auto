@@ -57,44 +57,44 @@ const KeywordEditor = ({ keywords, onChange, videoId }) => {
   };
 
   return (
-    <div className="yt-card p-6 border-[#e5e5e5]">
+    <div className="bg-white border border-slate-100 rounded-[20px] p-6 shadow-sm">
       <h2 className="text-lg font-black text-[#0f0f0f] tracking-tight mb-2">Keyword Triggers</h2>
-      <p className="text-xs text-[#606060] font-medium mb-4">
+      <p className="text-xs text-[#606060] font-semibold mb-4">
         Comments containing any of these keywords (case-insensitive) will trigger the automatic reply.
       </p>
 
-      <form onSubmit={handleAdd} className="flex gap-2 mb-4">
+      <form onSubmit={handleAdd} className="relative mb-4 flex items-center">
         <input
           type="text"
           placeholder="Add trigger keyword (e.g. price)"
           value={newKeyword}
           onChange={(e) => setNewKeyword(e.target.value)}
-          className="flex-1 bg-[#f9f9f9] border border-[#e5e5e5] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#ff0000]/30 transition-all font-medium"
+          className="w-full bg-slate-50 border border-slate-200 rounded-full pl-5 pr-14 py-3 text-sm focus:outline-none focus:border-[#22c55e]/30 transition-all font-semibold"
         />
         <button
           type="submit"
           disabled={adding}
-          className="bg-[#0f0f0f] hover:bg-[#0f0f0f]/90 text-white rounded-xl px-4 py-2.5 flex items-center justify-center transition-colors shadow-sm disabled:opacity-55"
+          className="absolute right-1.5 w-9 h-9 bg-[#22c55e] hover:bg-[#16a34a] text-white rounded-full flex items-center justify-center transition-all shadow-sm disabled:opacity-55"
         >
-          {adding ? <Loader2 size={18} className="animate-spin" /> : <Plus size={18} />}
+          {adding ? <Loader2 size={16} className="animate-spin" /> : <Plus size={16} />}
         </button>
       </form>
 
       <div className="flex flex-wrap gap-2">
         {keywords.length === 0 ? (
-          <p className="text-xs text-[#909090] font-medium italic">No keywords added. Adding keywords is required to trigger replies.</p>
+          <p className="text-xs text-[#909090] font-semibold italic">No keywords added. Adding keywords is required to trigger replies.</p>
         ) : (
           keywords.map((kw) => (
             <div
               key={kw}
-              className="flex items-center gap-1.5 bg-[#f3f3f3] text-[#0f0f0f] border border-[#e5e5e5] rounded-full pl-3 pr-1.5 py-1 text-xs font-bold transition-all hover:bg-[#eaeaea]"
+              className="flex items-center gap-1.5 bg-green-500/10 text-green-700 border border-green-500/10 rounded-full pl-3.5 pr-1.5 py-1 text-xs font-bold transition-all hover:bg-green-500/15"
             >
               <span>{kw}</span>
               <button
                 type="button"
                 onClick={() => handleRemove(kw)}
                 disabled={removingKeyword === kw}
-                className="w-4 h-4 rounded-full bg-white flex items-center justify-center text-[#909090] hover:text-[#ff0000] hover:bg-[#fce8e6] transition-colors disabled:opacity-55"
+                className="w-4.5 h-4.5 rounded-full bg-white flex items-center justify-center text-[#909090] hover:text-[#ef4444] hover:bg-red-50 transition-colors disabled:opacity-55"
               >
                 {removingKeyword === kw ? <Loader2 size={8} className="animate-spin" /> : <X size={10} />}
               </button>

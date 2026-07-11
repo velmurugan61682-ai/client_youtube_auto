@@ -96,37 +96,37 @@ const StatsGrid = ({ stats }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.05 }}
-          className="glass-panel glass-panel-hover rounded-[32px] p-6 group relative overflow-hidden"
+          className="bg-white border border-slate-100 rounded-[20px] p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group relative overflow-hidden"
         >
           {/* Subtle Accent Glow */}
-          <div className={`absolute -right-4 -bottom-4 w-24 h-24 rounded-full blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-700 ${card.iconBg}`} />
+          <div className={`absolute -right-4 -bottom-4 w-24 h-24 rounded-full blur-3xl opacity-0 group-hover:opacity-10 transition-opacity duration-700 ${card.iconBg}`} />
 
           <div className="flex justify-between items-start mb-6 relative z-10">
-            <div className={`w-12 h-12 rounded-[14px] ${card.iconBg} ${card.iconColor} flex items-center justify-center transition-transform group-hover:scale-110 duration-500`}>
-              <card.icon size={22} strokeWidth={2.5} />
+            <div className={`w-10 h-10 rounded-[12px] ${card.iconBg} ${card.iconColor} flex items-center justify-center transition-transform group-hover:scale-105 duration-500`}>
+              <card.icon size={18} strokeWidth={2.5} />
             </div>
-            <div className={`flex items-center gap-1 text-[10px] font-black tracking-widest uppercase py-1 px-2.5 rounded-full border ${card.isUp ? 'bg-green-50 text-[#2ba640] border-green-100' : 'bg-red-50 text-[#d93025] border-red-100'}`}>
+            <div className={`flex items-center gap-1 text-[9px] font-black tracking-wider uppercase py-1 px-2.5 rounded-full border ${card.isUp ? 'bg-green-50 text-[#22c55e] border-green-100' : 'bg-red-50 text-[#d93025] border-red-100'}`}>
                {card.trend}
             </div>
           </div>
           
           <div className="space-y-1 relative z-10">
-            <h3 className={`text-[28px] font-black ${card.color} tracking-tighter leading-none`}>
+            <h3 className={`text-[26px] font-black ${card.color} tracking-tighter leading-none`}>
               {card.value.toLocaleString()}
             </h3>
-            <p className="text-[10px] font-black text-[#909090] uppercase tracking-[0.2em]">{card.label}</p>
+            <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.15em]">{card.label}</p>
           </div>
           
-          <div className="mt-6 pt-5 border-t border-white/40 flex items-center justify-between relative z-10">
+          <div className="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between relative z-10">
              <div className="flex items-center gap-2">
-                <div className={`w-2 h-2 rounded-full ${card.isUp ? 'bg-[#2ba640]' : 'bg-[#d93025]'} animate-pulse`} />
-                <span className="text-[10px] font-bold text-[#aaaaaa]">Real-time Track</span>
+                <div className={`w-1.5 h-1.5 rounded-full ${card.isUp ? 'bg-[#22c55e]' : 'bg-[#d93025]'} animate-pulse`} />
+                <span className="text-[9px] font-semibold text-slate-400">Real-time Track</span>
              </div>
              <motion.div 
-              whileHover={{ x: 3 }}
-              className="w-8 h-8 rounded-full bg-white/45 flex items-center justify-center text-[#909090] cursor-pointer hover:bg-white/60 transition-colors border border-white/20"
+              whileHover={{ x: 2 }}
+              className="w-7 h-7 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 cursor-pointer hover:bg-slate-100 transition-colors border border-slate-100"
              >
-                <TrendingUp size={14} className={card.isUp ? '' : 'rotate-180'} />
+                <TrendingUp size={12} className={card.isUp ? '' : 'rotate-180'} />
              </motion.div>
           </div>
         </motion.div>
@@ -137,22 +137,22 @@ const StatsGrid = ({ stats }) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="bg-gradient-to-br from-red-600 to-[#e50914] rounded-[32px] p-6 shadow-xl shadow-red-500/10 border border-white/20 relative overflow-hidden group col-span-1 min-h-[220px]"
+        className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-[20px] p-6 shadow-md shadow-green-500/5 border border-white/10 relative overflow-hidden group col-span-1 min-h-[220px]"
       >
          <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:rotate-12 transition-transform duration-700">
             <Zap size={100} className="text-white" fill="white" />
          </div>
          <div className="relative z-10 h-full flex flex-col justify-between">
-            <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-white">
-               <Zap size={20} fill="white" />
+            <div className="w-10 h-10 bg-white/15 rounded-xl flex items-center justify-center text-white">
+               <Zap size={18} fill="white" />
             </div>
             <div className="mt-8">
-               <h3 className="text-white text-[15px] font-black uppercase tracking-widest leading-snug mb-1">AI Efficiency</h3>
-               <p className="text-white/60 text-xs font-medium leading-relaxed">System is running at 98.4% accuracy across all linked channels.</p>
+               <h3 className="text-white text-[14px] font-black uppercase tracking-wider leading-snug mb-1">AI Efficiency</h3>
+               <p className="text-white/80 text-xs font-semibold leading-relaxed">System is running at 98.4% accuracy across all linked channels.</p>
             </div>
             <div className="mt-6 pt-4 border-t border-white/10 flex items-center gap-2">
-               <span className="text-[10px] font-black text-white uppercase bg-white/10 px-2 py-0.5 rounded tracking-tighter">Healthy</span>
-               <div className="flex-1 h-1 bg-white/10 rounded-full overflow-hidden">
+               <span className="text-[9px] font-black text-white uppercase bg-white/15 px-2 py-0.5 rounded tracking-wider">Healthy</span>
+               <div className="flex-1 h-1 bg-white/15 rounded-full overflow-hidden">
                   <div className="h-full bg-white w-[98%] animate-pulse" />
                </div>
             </div>

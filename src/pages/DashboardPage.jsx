@@ -202,7 +202,7 @@ const DashboardPage = ({
                 </div>
                 <div className="h-1.5 w-full bg-[#f0f0f0] rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-[#ff0000]" 
+                    className="h-full bg-[#22c55e]" 
                     style={{ width: `${(lang.count / (stats.totalComments || 1)) * 100}%` }}
                   />
                 </div>
@@ -216,7 +216,7 @@ const DashboardPage = ({
           <div className="flex flex-wrap gap-3">
             {stats?.topCategories?.map((cat) => (
               <div key={cat._id} className="flex flex-col items-center gap-1 bg-[#f9f9f9] border border-[#f0f0f0] p-4 rounded-2xl min-w-[100px] flex-1">
-                <span className="text-[20px] font-black text-[#ff0000]">{cat.count}</span>
+                <span className="text-[20px] font-black text-[#22c55e]">{cat.count}</span>
                 <span className="text-[10px] font-black text-[#909090] uppercase tracking-tighter">{cat._id}</span>
               </div>
             ))}

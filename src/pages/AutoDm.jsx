@@ -163,17 +163,17 @@ const AutoDm = ({ channels, selectedChannelId, setSelectedChannelId }) => {
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-6 max-w-7xl mx-auto"
+      className="space-y-6 max-w-7xl mx-auto pb-12"
     >
       {/* Header section */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="flex items-center gap-4">
-          <div className="p-3 bg-[#ff0000]/5 text-[#ff0000] rounded-2xl">
+          <div className="p-3 bg-green-500/10 text-[#22c55e] rounded-2xl shrink-0">
             <MessageCircle size={28} />
           </div>
           <div>
-            <h1 className="text-3xl font-black text-[#0f0f0f] tracking-tighter">Auto DM — WhatsApp Comment Reply</h1>
-            <p className="text-[#606060] font-medium mt-0.5">
+            <h1 className="text-2xl md:text-3xl font-black text-[#0f0f0f] tracking-tighter">Auto DM — WhatsApp Comment Reply</h1>
+            <p className="text-xs md:text-sm text-[#606060] font-medium mt-0.5">
               Automatically reply to YouTube comments and redirect users to WhatsApp.
             </p>
           </div>
@@ -181,11 +181,12 @@ const AutoDm = ({ channels, selectedChannelId, setSelectedChannelId }) => {
 
         {/* Action buttons */}
         {selectedVideoId && (
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto">
             <button
               onClick={handleManualRun}
-              disabled={runningManual || !config.enabled}
-              className="flex items-center gap-2 bg-[#f3f3f3] hover:bg-[#eaeaea] text-[#0f0f0f] rounded-xl px-4 py-2.5 text-xs font-black uppercase tracking-widest transition-all disabled:opacity-55 disabled:cursor-not-allowed"
+              disabled={runningManual || !config.enabled || !config._id}
+              title={!config._id ? "Please save settings first" : "Run manual test"}
+              className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#22c55e] hover:bg-[#16a34a] text-white rounded-xl px-5 py-3 text-xs font-black uppercase tracking-widest transition-all disabled:opacity-55 disabled:cursor-not-allowed shadow-sm shadow-green-500/10"
             >
               {runningManual ? (
                 <Loader2 className="animate-spin" size={14} />
@@ -198,7 +199,7 @@ const AutoDm = ({ channels, selectedChannelId, setSelectedChannelId }) => {
             <button
               onClick={handleSave}
               disabled={savingConfig}
-              className="flex items-center gap-2 bg-[#0f0f0f] hover:bg-[#0f0f0f]/90 text-white rounded-xl px-5 py-2.5 text-xs font-black uppercase tracking-widest transition-all disabled:opacity-55 shadow-md shadow-black/10"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white border border-[#22c55e] text-[#22c55e] hover:bg-green-50/30 rounded-xl px-6 py-3 text-xs font-black uppercase tracking-widest transition-all disabled:opacity-55"
             >
               {savingConfig ? (
                 <Loader2 className="animate-spin" size={14} />

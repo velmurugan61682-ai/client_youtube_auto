@@ -14,7 +14,8 @@ import {
   ShieldAlert,
   ShieldCheck,
   Search,
-  LogOut
+  LogOut,
+  MoreVertical
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -364,30 +365,48 @@ const VideosList = ({
               </div>
            </div>
            
-           <div className="flex-1 overflow-y-auto custom-scroll p-2" onScroll={handleVideoListScroll}>
+            <div className="flex-1 overflow-y-auto custom-scroll p-2" onScroll={handleVideoListScroll}>
               {videos.slice(0, displayLimit).map((video) => (
                 <button
                   key={video.videoId}
                   onClick={() => handleVideoSelect(video.videoId)}
-                  className={`w-full flex gap-3 p-2.5 md:p-3 rounded-xl transition-all text-left mb-1 border group ${
-                    selectedVideo === video.videoId ? 'bg-red-500/10 border-red-500/25 text-[#ff0000] shadow-sm' : 'hover:bg-white/45 border-transparent text-[#606060]'
+                  className={`w-full flex gap-3 p-3 rounded-2xl transition-all text-left mb-1.5 border group items-center ${
+                    selectedVideo === video.videoId ? 'bg-green-500/10 border-green-500/20 text-[#22c55e] shadow-sm' : 'hover:bg-slate-50 border-transparent text-slate-500'
                   }`}
                 >
-                  <div className="relative flex-shrink-0 w-20 md:w-24 h-12 md:h-14 rounded-lg overflow-hidden bg-[#f0f0f0] shadow-sm">
+                  <div className="relative flex-shrink-0 w-20 h-12 rounded-xl overflow-hidden bg-slate-100 shadow-sm">
                     <img src={video.thumbnail} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <span className="absolute bottom-1 right-1 bg-black/75 text-white text-[9px] font-black px-1.5 py-0.5 rounded-md">
+                      {video.duration || '12:40'}
+                    </span>
                   </div>
-                  <div className="min-w-0 flex-1 flex flex-col justify-center">
-                    <h4 className={`text-[12px] md:text-[13px] font-bold line-clamp-1 md:line-clamp-2 leading-snug ${selectedVideo === video.videoId ? 'text-[#ff0000]' : 'text-[#0f0f0f]'}`}>
+                  <div className="min-w-0 flex-1 flex flex-col justify-center gap-0.5">
+                    <h4 className={`text-[12px] font-black line-clamp-1 group-hover:text-slate-900 transition-colors leading-snug ${selectedVideo === video.videoId ? 'text-[#22c55e]' : 'text-slate-900'}`}>
                       {video.title}
                     </h4>
-                    <p className="text-[10px] md:text-[11px] font-medium text-[#909090] mt-0.5 md:mt-1 flex items-center gap-1">
-                      <Clock size={10} /> {safeFormatDistanceToNow(video.publishedAt)} ago
-                    </p>
+                    <div className="flex items-center flex-wrap gap-x-2 gap-y-0.5 text-[10px] text-slate-400 font-semibold">
+                      <span className="flex items-center gap-1">
+                        <Clock size={10} /> {safeFormatDistanceToNow(video.publishedAt)} ago
+                      </span>
+                      <span>•</span>
+                      <span>{(video.viewCount || video.statistics?.viewCount || 1245).toLocaleString()} views</span>
+                    </div>
                   </div>
-                  {selectedVideo === video.videoId && <ChevronRight size={16} className="text-[#ff0000] self-center hidden md:block" />}
+                  <div className="flex items-center gap-0.5 flex-shrink-0">
+                    <span 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        alert(`Video Audit Details:\n- Video ID: ${video.videoId}\n- Title: ${video.title}`);
+                      }}
+                      className="p-1.5 hover:bg-slate-200 rounded-lg text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
+                    >
+                      <MoreVertical size={16} />
+                    </span>
+                    {selectedVideo === video.videoId && <ChevronRight size={16} className="text-[#22c55e] hidden md:block" />}
+                  </div>
                 </button>
               ))}
-           </div>
+            </div>
         </div>
       </div>
 
@@ -417,14 +436,13 @@ const VideosList = ({
                   </a>
                </div>
             </div>
-
-            {/* Tab Toggle buttons */}
+             {/* Tab Toggle buttons */}
             <div className="flex gap-2 border-b border-white/40 pb-3 mb-3">
               <button 
                 onClick={() => setActivePanelTab('comments')} 
                 className={`py-2 px-4 text-xs font-black uppercase tracking-wider rounded-xl transition-all border ${
                   activePanelTab === 'comments' 
-                    ? 'bg-gradient-to-r from-red-600/15 to-red-500/5 text-red-600 border-red-500/20 shadow-sm' 
+                    ? 'bg-green-500/10 text-green-600 border-green-500/20 shadow-sm' 
                     : 'text-[#909090] hover:text-[#0f0f0f] bg-white/40 border-transparent hover:bg-white/60'
                 }`}
               >
@@ -434,7 +452,7 @@ const VideosList = ({
                 onClick={() => setActivePanelTab('analytics')} 
                 className={`py-2 px-4 text-xs font-black uppercase tracking-wider rounded-xl transition-all border ${
                   activePanelTab === 'analytics' 
-                    ? 'bg-gradient-to-r from-red-600/15 to-red-500/5 text-red-600 border-red-500/20 shadow-sm' 
+                    ? 'bg-gradient-to-r from-green-500/15 to-green-500/5 text-green-600 border-green-500/20 shadow-sm' 
                     : 'text-[#909090] hover:text-[#0f0f0f] bg-white/40 border-transparent hover:bg-white/60'
                 }`}
               >
@@ -450,7 +468,7 @@ const VideosList = ({
                      key={f.id}
                      onClick={() => setFilter(f.id)}
                      className={`flex items-center gap-1.5 px-3 py-1.5 md:px-4 md:py-2 rounded-xl text-[11px] md:text-xs font-bold transition-all border ${
-                       filter === f.id ? 'bg-gradient-to-r from-red-600 to-[#e50914] text-white border-white/20 shadow-md scale-105' : `bg-white/40 border-white/50 ${f.color.split(' ')[1]} hover:bg-white/60 hover:border-white/70`
+                       filter === f.id ? 'bg-[#22c55e] text-white border-white/20 shadow-md scale-105' : `bg-white/40 border-white/50 ${f.color.split(' ')[1]} hover:bg-white/60 hover:border-white/70`
                      }`}
                    >
                      {f.label}
@@ -481,7 +499,7 @@ const VideosList = ({
                 // Comments Tab Content
                 loadingComments ? (
                   <div className="h-full flex flex-col items-center justify-center gap-4 text-[#909090]">
-                    <Loader2 className="animate-spin text-[#ff0000]" size={32} />
+                    <Loader2 className="animate-spin text-[#22c55e]" size={32} />
                     <p className="text-[11px] md:text-sm font-bold uppercase tracking-widest">Analysing Feedback...</p>
                   </div>
                 ) : filteredComments.length === 0 ? (
@@ -649,12 +667,12 @@ const VideosList = ({
                 // Analytics Dashboard Tab Content
                 loadingAnalytics ? (
                   <div className="h-full flex flex-col items-center justify-center gap-4 text-[#909090] py-12">
-                    <Loader2 className="animate-spin text-[#ff0000]" size={32} />
+                    <Loader2 className="animate-spin text-[#22c55e]" size={32} />
                     <p className="text-[11px] md:text-sm font-bold uppercase tracking-widest">Loading Analytics...</p>
                   </div>
                 ) : !videoAnalytics ? (
                   <div className="h-full flex flex-col items-center justify-center text-[#909090] opacity-50 py-12">
-                    <RefreshCw size={48} className="mb-4 animate-spin text-[#ff0000]" />
+                    <RefreshCw size={48} className="mb-4 animate-spin text-[#22c55e]" />
                     <p className="text-base md:text-lg font-bold">Synchronizing Video Statistics...</p>
                   </div>
                 ) : (
@@ -662,10 +680,10 @@ const VideosList = ({
                     {/* Interactive Widgets Row */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {/* Like Tracking Widget */}
-                      <div className="bg-[#fff1f0] border border-[#ff0000]/10 p-5 rounded-2xl flex flex-col justify-between relative overflow-hidden group">
-                        <div className="absolute -right-4 -bottom-4 w-20 h-20 bg-[#ff0000]/5 rounded-full blur-xl group-hover:scale-125 transition-all duration-500" />
+                      <div className="bg-[#f0fdf4] border border-[#22c55e]/10 p-5 rounded-2xl flex flex-col justify-between relative overflow-hidden group">
+                        <div className="absolute -right-4 -bottom-4 w-20 h-20 bg-[#22c55e]/5 rounded-full blur-xl group-hover:scale-125 transition-all duration-500" />
                         <div className="relative z-10">
-                          <span className="text-[10px] font-black text-[#ff0000] uppercase tracking-wider block mb-1">Interactive Action</span>
+                          <span className="text-[10px] font-black text-[#22c55e] uppercase tracking-wider block mb-1">Interactive Action</span>
                           <h4 className="text-sm font-black text-[#0f0f0f] leading-snug">Dashboard Like System</h4>
                           <p className="text-[11px] text-[#606060] font-medium mt-1 leading-relaxed">
                             Increment the internal video analytics tracking counters. Safe from YouTube spam filters.
@@ -681,15 +699,15 @@ const VideosList = ({
                                   disabled={isAlreadyLiked}
                                   className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-300 ${
                                     isAlreadyLiked 
-                                      ? 'bg-[#ffebee] text-[#ff0000] border border-[#ff0000]/20 cursor-default animate-none' 
-                                      : 'bg-[#ff0000] text-white hover:bg-[#cc0000] hover:scale-[1.03] shadow-md hover:shadow-lg'
+                                      ? 'bg-green-500/10 text-[#22c55e] border border-green-500/20 cursor-default animate-none' 
+                                      : 'bg-[#22c55e] text-white hover:bg-[#16a34a] hover:scale-[1.03] shadow-md hover:shadow-lg'
                                   }`}
                                 >
-                                  <ThumbsUp size={14} className={isAlreadyLiked ? 'fill-[#ff0000]' : ''} />
+                                  <ThumbsUp size={14} className={isAlreadyLiked ? 'fill-[#22c55e]' : ''} />
                                   <span>{isAlreadyLiked ? 'Liked on Dashboard' : 'Like Video'}</span>
                                 </button>
                                 {isAlreadyLiked && (
-                                  <span className="text-[10px] font-bold text-[#ff0000] italic">Duplicate prevented</span>
+                                  <span className="text-[10px] font-bold text-[#22c55e] italic">Duplicate prevented</span>
                                 )}
                               </>
                             );
@@ -761,8 +779,8 @@ const VideosList = ({
                             <AreaChart data={videoAnalytics.likesHistory}>
                               <defs>
                                 <linearGradient id="colorLikes" x1="0" y1="0" x2="0" y2="1">
-                                  <stop offset="5%" stopColor="#ff0000" stopOpacity={0.2}/>
-                                  <stop offset="95%" stopColor="#ff0000" stopOpacity={0}/>
+                                  <stop offset="5%" stopColor="#22c55e" stopOpacity={0.2}/>
+                                  <stop offset="95%" stopColor="#22c55e" stopOpacity={0}/>
                                 </linearGradient>
                               </defs>
                               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
@@ -784,9 +802,9 @@ const VideosList = ({
                                   borderRadius: '12px', border: 'none', 
                                   boxShadow: '0 8px 24px rgba(0,0,0,0.08)', padding: '10px 14px'
                                 }}
-                                itemStyle={{ fontWeight: '800', fontSize: '11px', color: '#ff0000' }}
+                                itemStyle={{ fontWeight: '800', fontSize: '11px', color: '#22c55e' }}
                               />
-                              <Area type="monotone" dataKey="likeCount" stroke="#ff0000" strokeWidth={2.5} fillOpacity={1} fill="url(#colorLikes)" />
+                              <Area type="monotone" dataKey="likeCount" stroke="#22c55e" strokeWidth={2.5} fillOpacity={1} fill="url(#colorLikes)" />
                             </AreaChart>
                           </ResponsiveContainer>
                         ) : (

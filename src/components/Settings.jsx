@@ -27,6 +27,11 @@ const Settings = () => {
   const [threshold, setThreshold] = useState(85);
   const [languages, setLanguages] = useState(['English', 'Tamil', 'Tanglish']);
   const [realTimeAlerts, setRealTimeAlerts] = useState(true);
+  const [whatsappNumber, setWhatsappNumber] = useState('');
+  const [delay, setDelay] = useState(5);
+  const [smartAiReply, setSmartAiReply] = useState(true);
+  const [archiveComments, setArchiveComments] = useState(false);
+  const [channelFilter, setChannelFilter] = useState('all');
   
   // API Keys / Credentials
   const [credentials, setCredentials] = useState({
@@ -55,6 +60,11 @@ const Settings = () => {
         setThreshold(settings.confidenceThreshold ?? 85);
         setLanguages(settings.languages ?? ['English', 'Tamil', 'Tanglish']);
         setRealTimeAlerts(settings.realTimeAlerts ?? true);
+        setWhatsappNumber(settings.whatsappNumber || '');
+        setDelay(settings.delay ?? 5);
+        setSmartAiReply(settings.smartAiReply ?? true);
+        setArchiveComments(settings.archiveComments ?? false);
+        setChannelFilter(settings.channelFilter || 'all');
       }
       if (savedCreds) {
         setCredentials({
@@ -83,7 +93,12 @@ const Settings = () => {
             autoLike,
             confidenceThreshold: threshold,
             languages,
-            realTimeAlerts
+            realTimeAlerts,
+            whatsappNumber,
+            delay,
+            smartAiReply,
+            archiveComments,
+            channelFilter
           }
         });
       } else {
@@ -102,7 +117,7 @@ const Settings = () => {
     return (
       <div className="h-[400px] w-full flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <Loader2 className="animate-spin text-[#ff0000]" size={40} strokeWidth={2.5} />
+          <Loader2 className="animate-spin text-[#22c55e]" size={40} strokeWidth={2.5} />
           <p className="text-[10px] font-black text-[#909090] uppercase tracking-[0.2em]">Authenticating Core...</p>
         </div>
       </div>
@@ -144,50 +159,81 @@ const Settings = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
-                className="yt-card p-4 sm:p-6 md:p-8"
+                className="space-y-6"
               >
-                <div className="flex items-center gap-4 mb-8 pb-5 border-b border-[#f8f8f8]">
-                   <div className="w-12 h-12 bg-[#fff1f0] text-[#ff0000] rounded-2xl flex items-center justify-center">
+                {/* Section Header */}
+                <div className="bg-white border border-slate-100 rounded-[20px] p-6 shadow-sm flex items-center gap-4">
+                   <div className="w-12 h-12 bg-green-500/10 text-[#22c55e] rounded-2xl flex items-center justify-center">
                      <Sparkles size={24} />
                    </div>
                    <div>
                      <h3 className="text-[18px] font-black text-[#0f0f0f] tracking-tight">Intelligence Engine</h3>
-                     <p className="text-[12px] font-medium text-[#909090]">Fine-tune your AI agent's decision logic.</p>
+                     <p className="text-[12px] font-semibold text-[#909090]">Configure your AI agent's decision logic and automation rules.</p>
                    </div>
                 </div>
 
-                <div className="space-y-8">
-                  {/* Toggles and Sliders go here (copied from previous refined version) */}
-                  <div className="flex items-center justify-between gap-6">
-                    <div className="max-w-[400px]">
-                       <p className="text-[14px] font-black text-[#0f0f0f] mb-1">Smart Moderation</p>
-                       <p className="text-[12px] text-[#909090] font-medium leading-relaxed">Automatically purge or hide toxic, abusive, or spam comments using neural analysis.</p>
+                {/* Group 1: AI Automation Rules */}
+                <div className="ios-list-group">
+                  <div className="ios-list-item">
+                    <div className="max-w-[480px] pr-4 text-left">
+                       <p className="text-[14px] font-black text-[#0f0f0f] mb-0.5">Smart Moderation</p>
+                       <p className="text-[11px] text-[#909090] font-semibold leading-relaxed">Automatically purge or hide toxic, abusive, or spam comments using neural analysis.</p>
                     </div>
                     <button 
                       onClick={() => setAutoMod(!autoMod)}
-                      className={`relative w-14 h-8 rounded-full transition-colors flex items-center px-1 ${autoMod ? 'bg-[#ff0000]' : 'bg-[#e5e5e5]'}`}
+                      className={`ios-toggle ${autoMod ? 'active' : ''}`}
                     >
-                      <div className={`w-6 h-6 bg-white rounded-full transition-all shadow-md ${autoMod ? 'translate-x-6' : 'translate-x-0'}`} />
+                      <div className="ios-toggle-thumb" />
                     </button>
                   </div>
 
-                  <div className="flex items-center justify-between gap-6 pt-6 border-t border-[#fcfcfc]">
-                    <div className="max-w-[400px]">
-                       <p className="text-[14px] font-black text-[#0f0f0f] mb-1">Auto-Engagement</p>
-                       <p className="text-[12px] text-[#909090] font-medium leading-relaxed">Automatically "Like" positive and appreciative comments to boost SEO performance.</p>
+                  <div className="ios-list-item">
+                    <div className="max-w-[480px] pr-4 text-left">
+                       <p className="text-[14px] font-black text-[#0f0f0f] mb-0.5">Smart AI Reply</p>
+                       <p className="text-[11px] text-[#909090] font-semibold leading-relaxed">Automatically generate replies based on the comment sentiment using AI.</p>
+                    </div>
+                    <button 
+                      onClick={() => setSmartAiReply(!smartAiReply)}
+                      className={`ios-toggle ${smartAiReply ? 'active' : ''}`}
+                    >
+                      <div className="ios-toggle-thumb" />
+                    </button>
+                  </div>
+
+                  <div className="ios-list-item">
+                    <div className="max-w-[480px] pr-4 text-left">
+                       <p className="text-[14px] font-black text-[#0f0f0f] mb-0.5">Auto-Engagement (Like)</p>
+                       <p className="text-[11px] text-[#909090] font-semibold leading-relaxed">Automatically "Like" positive and appreciative comments to boost SEO performance.</p>
                     </div>
                     <button 
                       onClick={() => setAutoLike(!autoLike)}
-                      className={`relative w-14 h-8 rounded-full transition-colors flex items-center px-1 ${autoLike ? 'bg-[#065fd4]' : 'bg-[#e5e5e5]'}`}
+                      className={`ios-toggle ${autoLike ? 'active' : ''}`}
                     >
-                      <div className={`w-6 h-6 bg-white rounded-full transition-all shadow-md ${autoLike ? 'translate-x-6' : 'translate-x-0'}`} />
+                      <div className="ios-toggle-thumb" />
                     </button>
                   </div>
 
-                  <div className="flex flex-col gap-5 pt-6 border-t border-[#fcfcfc]">
-                    <div className="flex items-center justify-between">
-                       <p className="text-[14px] font-black text-[#0f0f0f]">Decision Confidence</p>
-                       <span className="text-[13px] font-black text-[#ff0000] bg-[#fff1f0] px-3 py-1 rounded-lg">{threshold}%</span>
+                  <div className="ios-list-item">
+                    <div className="max-w-[480px] pr-4 text-left">
+                       <p className="text-[14px] font-black text-[#0f0f0f] mb-0.5">Archive Comments</p>
+                       <p className="text-[11px] text-[#909090] font-semibold leading-relaxed">Automatically archive comments once they have been approved or replied to.</p>
+                    </div>
+                    <button 
+                      onClick={() => setArchiveComments(!archiveComments)}
+                      className={`ios-toggle ${archiveComments ? 'active' : ''}`}
+                    >
+                      <div className="ios-toggle-thumb" />
+                    </button>
+                  </div>
+
+                  {/* Confidence Slider inside a list item */}
+                  <div className="ios-list-item flex-col items-start gap-4 text-left">
+                    <div className="flex justify-between w-full">
+                       <div>
+                         <p className="text-[14px] font-black text-[#0f0f0f] mb-0.5">Decision Confidence Threshold</p>
+                         <p className="text-[11px] text-[#909090] font-semibold leading-relaxed">Minimum AI confidence percentage required for auto moderation actions.</p>
+                       </div>
+                       <span className="text-[12px] font-black text-[#22c55e] bg-green-500/10 px-2.5 py-1 rounded-lg h-fit">{threshold}%</span>
                     </div>
                     <input 
                       type="range" 
@@ -195,8 +241,58 @@ const Settings = () => {
                       max="99" 
                       value={threshold} 
                       onChange={(e) => setThreshold(Number(e.target.value))}
-                      className="w-full accent-[#ff0000] h-1.5 bg-[#f0f0f0] rounded-full appearance-none cursor-pointer"
+                      className="w-full accent-[#22c55e] h-1 bg-slate-100 rounded-full appearance-none cursor-pointer"
                     />
+                  </div>
+                </div>
+
+                {/* Group 2: Channel & Timing Settings */}
+                <div className="ios-list-group">
+                  <div className="ios-list-item text-left">
+                    <div className="max-w-[320px]">
+                       <p className="text-[14px] font-black text-[#0f0f0f] mb-0.5">WhatsApp Contact Number</p>
+                       <p className="text-[11px] text-[#909090] font-semibold leading-relaxed">Primary WhatsApp link destination number.</p>
+                    </div>
+                    <input
+                      type="text"
+                      value={whatsappNumber}
+                      onChange={(e) => setWhatsappNumber(e.target.value)}
+                      placeholder="e.g. +919999999999"
+                      className="w-48 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-semibold focus:outline-none focus:border-[#22c55e]/30 text-right"
+                    />
+                  </div>
+
+                  <div className="ios-list-item text-left">
+                    <div>
+                       <p className="text-[14px] font-black text-[#0f0f0f] mb-0.5">Automation Scan Delay</p>
+                       <p className="text-[11px] text-[#909090] font-semibold leading-relaxed">Minutes to wait between scanning comments on selected videos.</p>
+                    </div>
+                    <select
+                      value={delay}
+                      onChange={(e) => setDelay(Number(e.target.value))}
+                      className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-semibold focus:outline-none focus:border-[#22c55e]/30 cursor-pointer"
+                    >
+                      <option value={1}>1 Minute</option>
+                      <option value={5}>5 Minutes</option>
+                      <option value={10}>10 Minutes</option>
+                      <option value={30}>30 Minutes</option>
+                      <option value={60}>1 Hour</option>
+                    </select>
+                  </div>
+
+                  <div className="ios-list-item text-left">
+                    <div>
+                       <p className="text-[14px] font-black text-[#0f0f0f] mb-0.5">Channel Filter</p>
+                       <p className="text-[11px] text-[#909090] font-semibold leading-relaxed">Determine which connected channels the scan loop targets.</p>
+                    </div>
+                    <select
+                      value={channelFilter}
+                      onChange={(e) => setChannelFilter(e.target.value)}
+                      className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-semibold focus:outline-none focus:border-[#22c55e]/30 cursor-pointer"
+                    >
+                      <option value="all">All Linked Channels</option>
+                      <option value="primary">Primary Channel Only</option>
+                    </select>
                   </div>
                 </div>
               </motion.div>

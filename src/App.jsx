@@ -3,7 +3,12 @@ import api from './services/api';
 import { connectSocket, disconnectSocket } from './services/socket';
 import { 
   Loader2,
-  WifiOff
+  WifiOff,
+  LayoutDashboard,
+  Video,
+  MessageCircle,
+  Settings,
+  LogOut
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from './context/AuthContext';
@@ -63,6 +68,7 @@ const App = () => {
     return saved !== null ? JSON.parse(saved) : true;
   });
   const [searchQuery, setSearchQuery] = useState('');
+  const [profileSheetOpen, setProfileSheetOpen] = useState(false);
 
   const toggleSidebar = () => {
     setSidebarOpen(prev => {
@@ -420,7 +426,7 @@ const App = () => {
                   />
                 )}
                 
-                <main className={`flex-1 ${isEmbedded ? 'overflow-hidden p-0' : 'overflow-y-auto p-4 md:p-6 lg:p-8'} custom-scroll transition-all duration-300 ease-in-out`}>
+                <main className={`flex-1 ${isEmbedded ? 'overflow-hidden p-0' : 'overflow-y-auto p-4 md:p-6 lg:p-8 pb-20 md:pb-6 lg:pb-8'} custom-scroll transition-all duration-300 ease-in-out`}>
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={activeTab}
@@ -433,7 +439,7 @@ const App = () => {
                       <Suspense fallback={
                         <div className="h-full w-full flex items-center justify-center">
                           <div className="flex flex-col items-center gap-4">
-                            <Loader2 className="animate-spin text-[#ff0000]" size={40} />
+                            <Loader2 className="animate-spin text-[#22c55e]" size={40} />
                             <p className="text-[12px] font-bold text-[#909090] uppercase tracking-widest">Loading Module...</p>
                           </div>
                         </div>
@@ -444,6 +450,59 @@ const App = () => {
                   </AnimatePresence>
                 </main>
               </div>
+
+              {/* Mobile Bottom Navigation */}
+              {!isEmbedded && (
+                <div className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-lg border-t border-slate-100 flex items-center justify-around px-4 z-40 pb-safe shadow-[0_-4px_20px_-4px_rgba(0,0,0,0.05)]">
+                  <button 
+                    onClick={() => setActiveTab('dashboard')} 
+                    className={`mobile-nav-item ${activeTab === 'dashboard' ? 'active' : ''}`}
+                  >
+                    <div className="mobile-nav-icon-container">
+                      <LayoutDashboard size={18} />
+                    </div>
+                    <span>Dashboard</span>
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab('videos')} 
+                    className={`mobile-nav-item ${activeTab === 'videos' ? 'active' : ''}`}
+                  >
+                    <div className="mobile-nav-icon-container">
+                      <Video size={18} />
+                    </div>
+                    <span>Videos</span>
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab('autodm')} 
+                    className={`mobile-nav-item ${activeTab === 'autodm' ? 'active' : ''}`}
+                  >
+                    <div className="mobile-nav-icon-container">
+                      <MessageCircle size={18} />
+                    </div>
+                    <span>Auto DM</span>
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab('settings')} 
+                    className={`mobile-nav-item ${activeTab === 'settings' ? 'active' : ''}`}
+                  >
+                    <div className="mobile-nav-icon-container">
+                      <Settings size={18} />
+                    </div>
+                    <span>Settings</span>
+                  </button>
+                  <button 
+                    onClick={() => setProfileSheetOpen(true)} 
+                    className="mobile-nav-item"
+                  >
+                    <div className="mobile-nav-icon-container">
+                      <div className="w-5 h-5 rounded-full bg-slate-900 text-white flex items-center justify-center text-[10px] font-black">
+                        {user?.name?.charAt(0).toUpperCase() || 'A'}
+                      </div>
+                    </div>
+                    <span>Profile</span>
+                  </button>
+                </div>
+              )}
             </div>
           )
         )
@@ -451,6 +510,60 @@ const App = () => {
       <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       </Suspense>
+
+      {/* Profile Bottom Sheet */}
+      <AnimatePresence>
+        {profileSheetOpen && (
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setProfileSheetOpen(false)}
+              className="bottom-sheet-overlay"
+            />
+            <motion.div 
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 250 }}
+              className="bottom-sheet-content"
+            >
+              <div className="bottom-sheet-handle" />
+              <h3 className="text-lg font-black text-slate-900 mb-4">User Profile</h3>
+              
+              <div className="p-4 bg-slate-50 rounded-2xl flex items-center gap-3 border border-slate-100 mb-6">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-green-500 to-emerald-600 text-white flex items-center justify-center font-black text-lg shadow-sm">
+                  {user?.name?.charAt(0).toUpperCase() || 'A'}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-black text-slate-900 truncate">{user?.name || 'Administrator'}</p>
+                  <p className="text-[11px] text-slate-500 truncate font-semibold">{user?.email}</p>
+                </div>
+                <span className="bg-green-500/10 text-green-600 text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">
+                  {user?.role === 'admin' ? 'Admin' : 'Pro'}
+                </span>
+              </div>
+
+              <div className="space-y-2">
+                <button 
+                  onClick={() => { setActiveTab('settings'); setProfileSheetOpen(false); }} 
+                  className="w-full flex items-center gap-3 px-4 py-3.5 hover:bg-slate-50 rounded-xl text-sm font-bold text-slate-700 transition-all text-left"
+                >
+                  <Settings size={18} /> Settings & Billing
+                </button>
+                <button 
+                  onClick={() => { logout(); setProfileSheetOpen(false); }} 
+                  className="w-full flex items-center gap-3 px-4 py-3.5 hover:bg-red-50 text-red-600 rounded-xl text-sm font-bold transition-all text-left border border-transparent hover:border-red-100/50"
+                >
+                  <LogOut size={18} /> Logout
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
       <AnimatePresence>
         {isOffline && (
           <motion.div
@@ -464,6 +577,7 @@ const App = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
     </>
   );
 };
