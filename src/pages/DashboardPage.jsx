@@ -65,18 +65,21 @@ const DashboardPage = ({
               {channels.map(c => <option key={c.channelId} value={c.channelId}>{c.title}</option>)}
             </select>
           )}
-          <div className="bg-white border border-[#e5e5e5] rounded-lg px-3 py-1.5 flex items-center gap-2 shadow-sm">
-            <Clock size={14} className="text-[#909090]" />
-            <span className="text-[12px] font-bold text-[#0f0f0f]">Last 30 Days</span>
+          <div className="flex flex-col min-[400px]:flex-row items-stretch min-[400px]:items-center justify-between md:justify-start gap-3 md:gap-2 w-full md:w-auto">
+            <div className="bg-white border border-[#e5e5e5] rounded-lg px-3 py-3 min-[400px]:py-2.5 md:py-1.5 flex items-center justify-center min-[400px]:justify-start gap-2 shadow-sm w-full min-[400px]:w-[45%] md:w-auto text-[14px] min-[400px]:text-[13px] md:text-[12px] font-bold text-[#0f0f0f] cursor-pointer min-h-[44px] md:min-h-0">
+              <Clock size={14} className="text-[#909090] shrink-0" />
+              <span>Last 30 Days</span>
+              <span className="text-[10px] md:hidden ml-1">▼</span>
+            </div>
+            <button 
+              onClick={fetchAnalytics}
+              disabled={loading}
+              className="yt-btn-primary !py-3 min-[400px]:!py-2.5 md:!py-1.5 !px-4 !text-sm md:!text-xs flex items-center justify-center gap-2 w-full min-[400px]:w-[55%] md:w-auto active:scale-95 transition-all min-h-[44px] md:min-h-0"
+            >
+              {loading ? <RefreshCw className="animate-spin" size={14} /> : <Zap size={14} fill="currentColor" />}
+              Live Analysis
+            </button>
           </div>
-          <button 
-            onClick={fetchAnalytics}
-            disabled={loading}
-            className="yt-btn-primary !py-1.5 !px-4 !text-xs flex items-center gap-2"
-          >
-            {loading ? <RefreshCw className="animate-spin" size={14} /> : <Zap size={14} fill="currentColor" />}
-            Live Analysis
-          </button>
         </div>
       </div>
 

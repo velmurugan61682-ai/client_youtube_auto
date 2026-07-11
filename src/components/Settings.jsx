@@ -15,7 +15,8 @@ import {
   Database,
   Lock,
   ChevronRight,
-  Sparkles
+  Sparkles,
+  Phone
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '../services/api';
@@ -248,18 +249,26 @@ const Settings = () => {
 
                 {/* Group 2: Channel & Timing Settings */}
                 <div className="ios-list-group">
-                  <div className="ios-list-item text-left">
-                    <div className="max-w-[320px]">
-                       <p className="text-[14px] font-black text-[#0f0f0f] mb-0.5">WhatsApp Contact Number</p>
-                       <p className="text-[11px] text-[#909090] font-semibold leading-relaxed">Primary WhatsApp link destination number.</p>
+                  <div className="ios-list-item text-left flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 md:gap-2 p-5 md:p-4.5 pr-12 md:pr-5 relative w-full">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-green-500/10 text-[#22c55e] rounded-xl flex items-center justify-center shrink-0 md:hidden">
+                        <Phone size={16} />
+                      </div>
+                      <div>
+                        <p className="text-[14px] font-black text-[#0f0f0f] mb-0.5">WhatsApp Number</p>
+                        <p className="text-[11px] text-[#909090] font-semibold leading-relaxed hidden md:block">Primary WhatsApp link destination number.</p>
+                      </div>
                     </div>
-                    <input
-                      type="text"
-                      value={whatsappNumber}
-                      onChange={(e) => setWhatsappNumber(e.target.value)}
-                      placeholder="e.g. +919999999999"
-                      className="w-48 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-semibold focus:outline-none focus:border-[#22c55e]/30 text-right"
-                    />
+                    <div className="relative w-full md:w-auto">
+                      <input
+                        type="text"
+                        value={whatsappNumber}
+                        onChange={(e) => setWhatsappNumber(e.target.value)}
+                        placeholder="e.g. +919999999999"
+                        className="w-full md:w-48 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-semibold focus:outline-none focus:border-[#22c55e]/30 text-left md:text-right pr-8 md:pr-2 text-wrap break-all"
+                      />
+                      <ChevronRight size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#909090] md:hidden" />
+                    </div>
                   </div>
 
                   <div className="ios-list-item text-left">

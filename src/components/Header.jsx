@@ -12,7 +12,8 @@ import {
   ThumbsUp,
   Clock,
   Trash2,
-  AlertCircle
+  AlertCircle,
+  X
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
@@ -20,6 +21,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const Header = ({ toggleSidebar, onSearch, setActiveTab, notifications = [] }) => {
   const { user, logout, switchOrg } = useAuth();
+  const [localNotifications, setLocalNotifications] = useState(notifications);
+
+  useEffect(() => {
+    setLocalNotifications(notifications);
+  }, [notifications]);
+
   const [searchQuery, setSearchQuery] = useState('');
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [orgs, setOrgs] = useState([]);
@@ -163,64 +170,111 @@ const Header = ({ toggleSidebar, onSearch, setActiveTab, notifications = [] }) =
 
            <AnimatePresence>
              {showNotifications && (
-               <motion.div 
-                initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                className="absolute right-[-48px] sm:right-0 mt-3 w-[calc(100vw-32px)] sm:w-[360px] max-w-[360px] glass-panel !bg-white/70 rounded-[32px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] border-white/50 overflow-hidden z-[200]"
-               >
-                 <div className="p-5 border-b border-white/40 flex items-center justify-between bg-white/40 sticky top-0 backdrop-blur-md">
-                    <h3 className="font-black text-[#0f0f0f] text-base tracking-tight">AI Insights</h3>
-                    <span className="bg-green-50 text-[#22c55e] text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">{notifications.length} New</span>
-                 </div>
+               <>
+                 {/* Backdrop overlay for mobile to tap outside to close */}
+                 <motion.div 
+                   initial={{ opacity: 0 }}
+                   animate={{ opacity: 0.3 }}
+                   exit={{ opacity: 0 }}
+                   onClick={() => setShowNotifications(false)}
+                   className="fixed inset-0 bg-[#0f0f0f] z-[190] sm:hidden"
+                 />
                  
-                 <div className="max-h-[400px] overflow-y-auto no-scrollbar">
-                    {notifications.length === 0 ? (
-                      <div className="py-12 flex flex-col items-center justify-center text-center">
-                         <div className="w-12 h-12 bg-white/40 rounded-2xl flex items-center justify-center text-[#cccccc] mb-3">
-                            <Bell size={24} />
-                         </div>
-                         <p className="text-[12px] font-bold text-[#909090]">No recent system alerts</p>
-                      </div>
-                    ) : (
-                      <div className="divide-y divide-white/40">
-                        {notifications.map((notif, idx) => (
-                          <motion.div 
-                            key={notif._id || idx}
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: idx * 0.05 }}
-                            className="p-4 hover:bg-white/50 transition-colors cursor-pointer group flex gap-3"
-                            onClick={() => {
-                              if (notif.type === 'like' || notif.type === 'new_comment') setActiveTab('moderation');
-                              else if (notif.whatsappSent) setActiveTab('leads');
-                              setShowNotifications(false);
-                            }}
-                          >
-                             <div className="w-10 h-10 rounded-xl bg-white/50 flex items-center justify-center shrink-0 border border-white/40 group-hover:border-[#22c55e]/10 group-hover:bg-green-50 transition-colors">
-                                {getNotifIcon(notif.type)}
-                             </div>
-                             <div className="min-w-0 flex-1">
-                                <p className="text-[12px] text-[#0f0f0f] font-medium leading-relaxed">
-                                   <span className="font-black">@{notif.author || 'System'}</span> {notif.type === 'like' ? 'was auto-liked' : (notif.type === 'delete' ? 'was purged' : 'posted a new comment')}
-                                </p>
-                                <p className="text-[10px] text-[#909090] mt-0.5 flex items-center gap-1 font-bold">
-                                   <Clock size={10} /> Just Now
-                                </p>
-                             </div>
-                          </motion.div>
-                        ))}
-                      </div>
-                    )}
-                 </div>
-                 
-                 <button 
-                  onClick={() => { setActiveTab('dashboard'); setShowNotifications(false); }}
-                  className="w-full py-4 bg-white/40 border-t border-white/40 text-[11px] font-black text-[#606060] uppercase tracking-widest hover:bg-white/60 transition-colors"
+                 <motion.div 
+                   initial={{ 
+                     opacity: 0, 
+                     x: typeof window !== 'undefined' && window.innerWidth < 640 ? '100%' : 0, 
+                     y: typeof window !== 'undefined' && window.innerWidth < 640 ? 0 : 10,
+                     scale: typeof window !== 'undefined' && window.innerWidth < 640 ? 1 : 0.95 
+                   }}
+                   animate={{ 
+                     opacity: 1, 
+                     x: 0, 
+                     y: 0,
+                     scale: 1 
+                   }}
+                   exit={{ 
+                     opacity: 0, 
+                     x: typeof window !== 'undefined' && window.innerWidth < 640 ? '100%' : 0, 
+                     y: typeof window !== 'undefined' && window.innerWidth < 640 ? 0 : 10,
+                     scale: typeof window !== 'undefined' && window.innerWidth < 640 ? 1 : 0.95 
+                   }}
+                   transition={{ type: 'spring', damping: 25, stiffness: 250 }}
+                   className="fixed right-0 top-0 h-[100vh] w-full max-w-[400px] bg-white z-[250] shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex flex-col sm:absolute sm:right-0 sm:top-auto sm:h-auto sm:w-[360px] sm:max-w-[360px] sm:mt-3 sm:rounded-[32px] sm:bg-white/70 sm:backdrop-blur-md sm:border sm:border-white/50 sm:shadow-[0_20px_50px_rgba(0,0,0,0.15)] sm:z-[200] overflow-hidden"
                  >
-                    View All Activity Feed
-                 </button>
-               </motion.div>
+                   {/* Sticky Header */}
+                   <div className="p-5 border-b border-slate-100 sm:border-white/40 flex items-center justify-between bg-white sm:bg-white/40 sticky top-0 backdrop-blur-md z-10 pt-[calc(1.25rem+env(safe-area-inset-top))] sm:pt-5">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-black text-[#0f0f0f] text-base tracking-tight">AI Insights</h3>
+                        <span className="bg-green-50 text-[#22c55e] text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">{localNotifications.length} New</span>
+                      </div>
+                      <button 
+                        onClick={() => setShowNotifications(false)}
+                        className="p-1 hover:bg-[#f8f8f8] text-[#909090] hover:text-[#0f0f0f] rounded-lg transition-colors sm:hidden"
+                      >
+                        <X size={20} />
+                      </button>
+                   </div>
+                   
+                   {/* Scrollable Content */}
+                   <div className="flex-1 overflow-y-auto scroll-smooth no-scrollbar sm:max-h-[400px] pb-[calc(100px+env(safe-area-inset-bottom))] sm:pb-0">
+                      {localNotifications.length === 0 ? (
+                        <div className="py-16 flex flex-col items-center justify-center text-center">
+                           <div className="w-12 h-12 bg-slate-50 sm:bg-white/40 rounded-2xl flex items-center justify-center text-[#cccccc] mb-3 border border-slate-100 sm:border-none">
+                              <Bell size={24} />
+                           </div>
+                           <p className="text-[12px] font-bold text-[#909090]">No recent system alerts</p>
+                        </div>
+                      ) : (
+                        <div className="divide-y divide-slate-100 sm:divide-white/40">
+                          {localNotifications.map((notif, idx) => (
+                            <motion.div 
+                              key={notif._id || idx}
+                              initial={{ opacity: 0, x: -10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: idx * 0.05 }}
+                              className="p-4 hover:bg-slate-50/50 sm:hover:bg-white/50 transition-colors cursor-pointer group flex gap-3"
+                              onClick={() => {
+                                if (notif.type === 'like' || notif.type === 'new_comment') setActiveTab('moderation');
+                                else if (notif.whatsappSent) setActiveTab('leads');
+                                setShowNotifications(false);
+                              }}
+                            >
+                               <div className="w-10 h-10 rounded-xl bg-slate-50 sm:bg-white/50 flex items-center justify-center shrink-0 border border-slate-100 sm:border-white/40 group-hover:border-[#22c55e]/10 group-hover:bg-green-50 transition-colors">
+                                  {getNotifIcon(notif.type)}
+                               </div>
+                               <div className="min-w-0 flex-1">
+                                  <p className="text-[12px] text-[#0f0f0f] font-medium leading-relaxed">
+                                     <span className="font-black">@{notif.author || 'System'}</span> {notif.type === 'like' ? 'was auto-liked' : (notif.type === 'delete' ? 'was purged' : 'posted a new comment')}
+                                  </p>
+                                  <p className="text-[10px] text-[#909090] mt-0.5 flex items-center gap-1 font-bold">
+                                     <Clock size={10} /> Just Now
+                                  </p>
+                               </div>
+                            </motion.div>
+                          ))}
+                        </div>
+                      )}
+                   </div>
+                   
+                   {/* Fixed Bottom Footer/Action */}
+                   <div className="absolute bottom-0 left-0 right-0 p-4 bg-white sm:bg-white/40 border-t border-slate-100 sm:border-white/40 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:pb-4 z-10 flex gap-2">
+                     <button 
+                      onClick={() => { setLocalNotifications([]); }}
+                      disabled={localNotifications.length === 0}
+                      className="flex-1 py-3 bg-[#0f0f0f] text-white hover:bg-slate-800 disabled:opacity-50 text-[11px] font-black uppercase tracking-widest rounded-xl transition-colors text-center"
+                     >
+                        Mark All as Read
+                     </button>
+                     <button 
+                      onClick={() => { setActiveTab('dashboard'); setShowNotifications(false); }}
+                      className="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-[#606060] text-[11px] font-black uppercase tracking-widest rounded-xl transition-colors text-center sm:hidden"
+                     >
+                        View Feed
+                     </button>
+                   </div>
+                 </motion.div>
+               </>
              )}
            </AnimatePresence>
         </div>

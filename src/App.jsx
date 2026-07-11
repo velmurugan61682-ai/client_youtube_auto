@@ -439,7 +439,7 @@ const App = () => {
                   />
                 )}
                 
-                <main className={`flex-1 overflow-y-auto overflow-x-hidden ${isEmbedded ? 'p-0' : 'p-4 md:p-6 lg:p-8 pb-20 md:pb-6 lg:pb-8'} custom-scroll transition-all duration-300 ease-in-out`}>
+                <main className={`flex-1 overflow-y-auto overflow-x-hidden ${isEmbedded ? 'p-0' : 'p-4 md:p-6 lg:p-8 pb-[calc(140px+env(safe-area-inset-bottom))] md:pb-6 lg:pb-8'} custom-scroll transition-all duration-300 ease-in-out`}>
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={activeTab}
