@@ -34,6 +34,7 @@ export default defineConfig(({ command, mode }) => {
       react(),
       tailwindcss(),
       VitePWA({
+        manifestFilename: 'manifest.json',
         strategies: 'injectManifest',
         srcDir: 'src',
         filename: 'sw.js',
