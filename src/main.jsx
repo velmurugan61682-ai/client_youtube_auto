@@ -47,7 +47,7 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 );
 
-if ('serviceWorker' in navigator) {
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
   // Listen for the controllerchange event to reload when a new service worker takes over
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     console.log('[PWA] New Service Worker took control. Reloading...');

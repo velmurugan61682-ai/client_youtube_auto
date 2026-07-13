@@ -19,7 +19,9 @@ import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const Header = ({ toggleSidebar, onSearch, setActiveTab, notifications = [] }) => {
+const EMPTY_ARRAY = [];
+
+const Header = ({ toggleSidebar, onSearch, setActiveTab, notifications = EMPTY_ARRAY }) => {
   const { user, logout, switchOrg } = useAuth();
   const [localNotifications, setLocalNotifications] = useState(notifications);
 
