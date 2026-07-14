@@ -2,6 +2,11 @@ import axios from 'axios';
 
 // RUNTIME Base URL detection
 const getBaseURL = () => {
+  // If we are on localhost, dynamically route to local backend
+  if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+    return 'http://localhost:5000';
+  }
+
   // If we are in production mode, strictly use the Render production backend URL
   if (import.meta.env.PROD === true) {
     return 'https://server-youtube-auto.onrender.com';

@@ -39,7 +39,10 @@ const TemplateEditor = ({ templates, onChange }) => {
         <Info size={20} className="flex-shrink-0 mt-0.5" />
         <div className="text-xs font-semibold leading-relaxed">
           <p className="font-bold text-[#0f0f0f] mb-1">How to use variables:</p>
-          Use <code className="bg-white border border-green-500/10 px-1 py-0.5 rounded font-black">{`{whatsapp_link}`}</code> in your templates to automatically inject the WhatsApp wa.me link.
+          <ul className="list-disc list-inside space-y-1 mt-1">
+            <li>Use <code className="bg-white border border-green-500/10 px-1 py-0.5 rounded font-black">{`{whatsapp_link}`}</code> to automatically inject the WhatsApp wa.me link.</li>
+            <li>Use <code className="bg-white border border-green-500/10 px-1 py-0.5 rounded font-black">{`{product_link}`}</code> to automatically inject the product destination link.</li>
+          </ul>
         </div>
       </div>
 

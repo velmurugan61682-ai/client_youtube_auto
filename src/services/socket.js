@@ -9,7 +9,9 @@ export const getSocket = () => {
   if (!socket) {
     let socketUrl;
 
-    if (import.meta.env.PROD === true) {
+    const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+    if (import.meta.env.PROD === true && !isLocalhost) {
       // In production mode, strictly use the Render production backend URL
       socketUrl = 'https://server-youtube-auto.onrender.com';
       console.log(`✓ Production Socket URL: ${socketUrl}`);
