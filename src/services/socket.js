@@ -24,7 +24,7 @@ export const getSocket = () => {
 
     socket = io(socketUrl, {
       reconnection: true,
-      transports: ['websocket', 'polling'], // prioritize websocket transport
+      transports: ['polling', 'websocket'], // Start with HTTP polling to establish connection, then upgrade to WebSocket. This is much more reliable and avoids 404/timeout handshake errors on Render.
       reconnectionAttempts: Infinity, // Reconnect automatically
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,

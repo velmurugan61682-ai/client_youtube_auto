@@ -65,6 +65,7 @@ const VideosList = ({
   const [activePanelTab, setActivePanelTab] = useState('comments'); // 'comments' or 'analytics'
   const [videoAnalytics, setVideoAnalytics] = useState(null);
   const [loadingAnalytics, setLoadingAnalytics] = useState(false);
+  const [submittingLike, setSubmittingLike] = useState(false);
 
   // Performance optimizations: lazy render limits for videos and comments
   const [displayLimit, setDisplayLimit] = useState(50);
@@ -148,8 +149,9 @@ const VideosList = ({
   };
 
   const handleLikeVideo = async () => {
-    if (!selectedVideo) return;
+    if (!selectedVideo || submittingLike) return;
     try {
+      setSubmittingLike(true);
       const res = await api.post(`/youtube/video/${selectedVideo}/like`);
       if (res.data?.success) {
         setVideoAnalytics(prev => {
@@ -177,6 +179,8 @@ const VideosList = ({
     } catch (err) {
       console.error('Failed to submit dashboard like:', err);
       alert(err.response?.data?.error || 'Failed to submit like.');
+    } finally {
+      setSubmittingLike(false);
     }
   };
 
@@ -699,20 +703,30 @@ const VideosList = ({
                         </div>
                         <div className="mt-4 relative z-10 flex items-center gap-3">
                           {(() => {
-                            const isAlreadyLiked = videoAnalytics?.likedByUsers?.includes(user?.id) || videoAnalytics?.likedByUsers?.includes(user?._id);
+                            const isAlreadyLiked = videoAnalytics?.likedByUsers?.some(id => 
+                              (id && user?.id && id.toString() === user.id.toString()) || 
+                              (id && user?._id && id.toString() === user._id.toString())
+                            );
+                            const isDisabled = isAlreadyLiked || submittingLike;
                             return (
                               <>
                                 <button 
                                   onClick={handleLikeVideo}
-                                  disabled={isAlreadyLiked}
+                                  disabled={isDisabled}
                                   className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-300 ${
                                     isAlreadyLiked 
                                       ? 'bg-green-500/10 text-[#22c55e] border border-green-500/20 cursor-default animate-none' 
-                                      : 'bg-[#22c55e] text-white hover:bg-[#16a34a] hover:scale-[1.03] shadow-md hover:shadow-lg'
+                                      : submittingLike
+                                        ? 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed'
+                                        : 'bg-[#22c55e] text-white hover:bg-[#16a34a] hover:scale-[1.03] shadow-md hover:shadow-lg'
                                   }`}
                                 >
-                                  <ThumbsUp size={14} className={isAlreadyLiked ? 'fill-[#22c55e]' : ''} />
-                                  <span>{isAlreadyLiked ? 'Liked on Dashboard' : 'Like Video'}</span>
+                                  {submittingLike ? (
+                                    <Loader2 size={14} className="animate-spin" />
+                                  ) : (
+                                    <ThumbsUp size={14} className={isAlreadyLiked ? 'fill-[#22c55e]' : ''} />
+                                  )}
+                                  <span>{isAlreadyLiked ? 'Liked on Dashboard' : submittingLike ? 'Submitting...' : 'Like Video'}</span>
                                 </button>
                                 {isAlreadyLiked && (
                                   <span className="text-[10px] font-bold text-[#22c55e] italic">Duplicate prevented</span>
