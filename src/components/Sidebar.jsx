@@ -23,7 +23,6 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen }) => {
     { id: 'channels', label: 'Channels', icon: PlaySquare },
     { id: 'leads', label: 'Leads', icon: UsersRound },
     { id: 'moderation', label: 'Auto-Mod', icon: ShieldCheck },
-    { id: 'autoschedule', label: 'Auto-Schedule', icon: Clock },
     { id: 'autodm', label: 'Auto DM', icon: MessageCircle },
     { id: 'subscription', label: 'Subscription', icon: CreditCard },
     { id: 'settings', label: 'Settings', icon: Settings },

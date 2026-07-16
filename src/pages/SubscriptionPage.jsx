@@ -197,6 +197,15 @@ const SubscriptionPage = ({ isGate = false }) => {
     return isStatusActive || isCancelledButNotExpired;
   };
 
+  const planDisplayNames = {
+    free: 'Free Plan',
+    one_rupee: 'One Rupee Trial',
+    monthly_345: 'Monthly Basic',
+    two_months_600: 'Standard Duo',
+    three_months_999: 'Quarterly Pro',
+    professional: 'Premium Pro'
+  };
+
   const hasAnyActiveSub = subData && (subData.status === 'active' || 
     (subData.status === 'cancelled' && subData.currentEnd && new Date(subData.currentEnd) > new Date()));
 
@@ -218,26 +227,74 @@ const SubscriptionPage = ({ isGate = false }) => {
       bgClass: "border-zinc-200"
     },
     {
-      type: "professional",
-      name: "SAAS PROFESSIONAL",
-      displayName: "Premium Pro",
-      price: "₹999",
+      type: "one_rupee",
+      name: "TRIAL PACK",
+      displayName: "One Rupee Trial",
+      price: "₹1",
+      period: "/ day",
+      desc: "Single day access for quick testing.",
+      features: [
+        "Connect 1 YouTube Channel",
+        "AI Autopilot Comment Moderation",
+        "Auto DM WhatsApp Automations",
+        "Basic Analytics Dashboard"
+      ],
+      color: "text-purple-600",
+      bgClass: "border-purple-200"
+    },
+    {
+      type: "monthly_345",
+      name: "BASIC MONTHLY",
+      displayName: "Monthly Basic",
+      price: "₹345",
       period: "/ month",
-      desc: "Great for growing YouTube channels.",
+      desc: "Ideal for growing creators with multiple channels.",
+      features: [
+        "Connect up to 5 YouTube Channels",
+        "AI Autopilot Comment Moderation",
+        "Auto DM WhatsApp Automations",
+        "Standard Channel Sync Workers"
+      ],
+      color: "text-blue-600",
+      bgClass: "border-blue-200"
+    },
+    {
+      type: "two_months_600",
+      name: "VALUE PACK",
+      displayName: "Standard Duo",
+      price: "₹600",
+      period: "/ 2 months",
+      desc: "Cost-effective 2-month plan for small teams.",
+      features: [
+        "Connect up to 10 YouTube Channels",
+        "AI Autopilot Comment Moderation",
+        "Fast Channel Sync Workers",
+        "Advanced Analytics Dashboard"
+      ],
+      color: "text-indigo-650",
+      bgClass: "border-indigo-300"
+    },
+    {
+      type: "three_months_999",
+      name: "BEST VALUE",
+      displayName: "Quarterly Pro",
+      price: "₹999",
+      period: "/ 3 months",
+      desc: "Quarterly saver for professional creators.",
       features: [
         "Connect Unlimited YouTube Channels",
         "Dedicated Channel Sync Workers",
         "Advanced Multi-Account Analytics",
-        "24/7 Priority VIP Support"
+        "24/7 Priority Support"
       ],
-      color: "text-green-600",
-      bgClass: "border-green-400 ring-2 ring-green-400/20",
+      color: "text-orange-650",
+      bgClass: "border-orange-300 ring-2 ring-orange-400/10",
       recommended: true
     }
   ];
 
   return (
-    <div className={`max-w-5xl mx-auto w-full transition-all duration-500 ${isGate ? 'max-w-4xl py-6' : 'py-2'}`}>
+    <div className={`max-w-6xl mx-auto w-full transition-all duration-500 ${isGate ? 'max-w-4xl py-6' : 'py-2'}`}>
       
       {/* Background Decorative Blobs */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -312,14 +369,14 @@ const SubscriptionPage = ({ isGate = false }) => {
                       ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
                       : 'bg-zinc-100 text-zinc-650 border-zinc-200'
                   }`}>
-                    {hasAnyActiveSub ? `Active: ${subData.planType}` : 'Free Tier Active'}
+                    {hasAnyActiveSub ? `Active: ${planDisplayNames[subData.planType] || subData.planType}` : 'Free Tier Active'}
                   </span>
                   {hasAnyActiveSub && <span className="text-xs text-zinc-400 font-semibold">Subscription ID: {subData.id}</span>}
                 </div>
                 
                 <p className="text-sm text-zinc-800 font-black">
                   {hasAnyActiveSub ? (
-                    `Premium Active — Connected channels share organization limits under the ${subData.planType} tier.`
+                    `Premium Active — Connected channels share organization limits under the ${planDisplayNames[subData.planType] || subData.planType} tier.`
                   ) : (
                     'Free Plan Active — Enforcing a 1-channel connection limit.'
                   )}
@@ -344,7 +401,7 @@ const SubscriptionPage = ({ isGate = false }) => {
           )}
 
           {/* Pricing Grid */}
-          <div className="max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-8">
+          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mt-8">
             {plans.map((plan) => {
               const isActive = plan.type === 'free' ? !hasAnyActiveSub : isPlanActive(plan.type);
               
@@ -352,12 +409,16 @@ const SubscriptionPage = ({ isGate = false }) => {
                 <div 
                   key={plan.type}
                   className={`bg-white/45 backdrop-blur-xl rounded-[28px] border p-6 flex flex-col justify-between transition-all duration-300 hover:shadow-xl relative overflow-hidden ${
-                    plan.type === 'professional' && hasAnyActiveSub ? 'border-green-400 ring-2 ring-green-400/20' : 'border-white/50'
+                    isActive 
+                      ? 'border-green-400 ring-2 ring-green-400/20' 
+                      : plan.recommended 
+                      ? 'border-orange-300 ring-2 ring-orange-400/10' 
+                      : 'border-white/50'
                   }`}
                 >
-                  {plan.type === 'professional' && isActive && (
+                  {isActive && (
                     <div className="absolute top-0 right-0 bg-[#00c853] text-white text-[8px] font-black uppercase tracking-widest py-1.5 px-4 rounded-bl-2xl flex items-center gap-1">
-                      <Star size={8} fill="white" /> Active Pro
+                      <Star size={8} fill="white" /> Active Plan
                     </div>
                   )}
                   
@@ -395,15 +456,14 @@ const SubscriptionPage = ({ isGate = false }) => {
                   <button
                     disabled={
                       (purchasingPlan === plan.type) || 
-                      (plan.type === 'free' && isActive) || 
-                      (plan.type === 'professional' && isActive) ||
+                      isActive ||
                       (plan.type === 'free' && trialExpired)
                     }
                     onClick={() => handleSubscribe(plan.type)}
                     className={`w-full py-3 text-xs font-black uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-1.5 ${
                       (plan.type === 'free' && isActive) || (plan.type === 'free' && trialExpired)
                         ? 'bg-zinc-100 text-zinc-400 cursor-default border border-zinc-200'
-                        : plan.type === 'professional' && isActive
+                        : isActive
                         ? 'bg-[#00c853] text-white cursor-default shadow-[0_4px_12px_rgba(0,200,83,0.2)]'
                         : 'bg-zinc-900 hover:bg-zinc-800 text-white active:scale-98'
                     }`}
@@ -414,9 +474,9 @@ const SubscriptionPage = ({ isGate = false }) => {
                       'FREE TIER'
                     ) : plan.type === 'free' && trialExpired ? (
                       'TRIAL EXPIRED'
-                    ) : plan.type === 'professional' && isActive ? (
+                    ) : isActive ? (
                       <>
-                        <UserCheck size={14} /> ACTIVE PRO SESSION
+                        <UserCheck size={14} /> ACTIVE SESSION
                       </>
                     ) : (
                       <>

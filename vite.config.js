@@ -85,6 +85,7 @@ export default defineConfig(({ command, mode }) => {
       'import.meta.env.VITE_BUILD_TIME': JSON.stringify(new Date().getTime().toString())
     },
     build: {
+      modulePreload: false,
       rollupOptions: {
         output: {
           manualChunks(id) {

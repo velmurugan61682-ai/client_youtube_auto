@@ -225,11 +225,18 @@ const App = () => {
     }
   }, [user, fetchChannels]);
 
-  // 2. Load analytics and sockets once the gate is passed
+  // 2a. Manage Socket.IO connection state based on login/plan status
   useEffect(() => {
     if (user && planSelected) {
-      fetchAnalytics();
-      
+      connectSocket(localStorage.getItem('token'));
+    } else if (!user) {
+      disconnectSocket();
+    }
+  }, [user, planSelected]);
+
+  // 2b. Register/unregister live Socket.IO event listeners
+  useEffect(() => {
+    if (user && planSelected) {
       const socket = connectSocket(localStorage.getItem('token'));
 
       const handleLiveActivity = (activity) => {
@@ -248,7 +255,6 @@ const App = () => {
         socket.off('live_activity', handleLiveActivity);
         socket.off('stats_updated', fetchAnalytics);
         socket.off('new_comment_analyzed', fetchAnalytics);
-        disconnectSocket();
       };
     }
   }, [user, planSelected, fetchAnalytics]);

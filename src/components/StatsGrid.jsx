@@ -14,8 +14,9 @@ import {
 import { motion } from 'framer-motion';
 import { SENTIMENT_COLORS } from '../utils/constants/sentimentColors.js';
 
-const StatsGrid = ({ stats }) => {
+const StatsGrid = React.memo(({ stats }) => {
   const cards = [
+    // ... cards definition
     { 
       label: 'Engagement', 
       value: stats?.totalComments || 0, 
@@ -160,6 +161,6 @@ const StatsGrid = ({ stats }) => {
       </motion.div>
     </div>
   );
-};
+});
 
 export default StatsGrid;

@@ -380,7 +380,7 @@ const VideosList = ({
                 >
                   <div className="relative flex-shrink-0 w-20 h-12 rounded-xl overflow-hidden bg-slate-100 shadow-sm">
                     <img 
-                      src={video.thumbnail} 
+                      src={video.thumbnail ? video.thumbnail.replace('_live.jpg', '.jpg') : ''} 
                       alt="" 
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                       onError={(e) => {
@@ -502,7 +502,7 @@ const VideosList = ({
                    src={`https://www.youtube.com/embed/${selectedVideo}`}
                    title="YouTube video player"
                    frameBorder="0"
-                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                   allow="accelerometer *; autoplay; clipboard-write; encrypted-media; gyroscope *; picture-in-picture; web-share"
                    allowFullScreen
                  ></iframe>
                </div>
