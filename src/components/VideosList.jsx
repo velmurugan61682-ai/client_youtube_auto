@@ -34,6 +34,28 @@ const safeFormatDistanceToNow = (dateStr) => {
   }
 };
 
+const parseISO8601Duration = (durationStr) => {
+  if (!durationStr) return { seconds: 0, formatted: '00:00' };
+  const regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
+  const matches = durationStr.match(regex);
+  if (!matches) {
+    return { seconds: 0, formatted: durationStr };
+  }
+  const hours = parseInt(matches[1] || 0, 10);
+  const minutes = parseInt(matches[2] || 0, 10);
+  const seconds = parseInt(matches[3] || 0, 10);
+  const totalSeconds = hours * 3600 + minutes * 60 + seconds;
+  let formatted = '';
+  if (hours > 0) {
+    formatted += hours + ':';
+    formatted += String(minutes).padStart(2, '0') + ':';
+  } else {
+    formatted += minutes + ':';
+  }
+  formatted += String(seconds).padStart(2, '0');
+  return { seconds: totalSeconds, formatted };
+};
+
 const formatChartDate = (dateStr) => {
   try {
     const date = new Date(dateStr);
@@ -55,11 +77,42 @@ const VideosList = ({
 }) => {
   const { user } = useAuth();
   const [videos, setVideos] = useState([]);
+  const [videoTab, setVideoTab] = useState('videos'); // 'videos', 'shorts', or 'posts'
   const [loadingVideos, setLoadingVideos] = useState(true);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [comments, setComments] = useState([]);
   const [loadingComments, setLoadingComments] = useState(false);
   const [filter, setFilter] = useState('all');
+
+  const processedVideos = (videos || []).map(v => {
+    if (v.isPost) {
+      return { ...v, durationSeconds: 0, formattedDuration: '' };
+    }
+    const { seconds, formatted } = parseISO8601Duration(v.duration);
+    return {
+      ...v,
+      durationSeconds: seconds,
+      formattedDuration: v.duration ? formatted : '--:--'
+    };
+  });
+
+  const longVideos = processedVideos.filter(v => !v.isPost && (!v.duration || v.durationSeconds >= 60));
+  const shortVideos = processedVideos.filter(v => !v.isPost && v.duration && v.durationSeconds < 60);
+  const communityPosts = processedVideos.filter(v => v.isPost);
+
+  const activeVideosList = videoTab === 'videos' ? longVideos : (videoTab === 'shorts' ? shortVideos : communityPosts);
+  const selectedVideoData = processedVideos.find(v => v.videoId === selectedVideo);
+
+  useEffect(() => {
+    if (activeVideosList.length > 0) {
+      const isCurrentSelectedInTab = activeVideosList.some(v => v.videoId === selectedVideo);
+      if (!isCurrentSelectedInTab) {
+        handleVideoSelect(activeVideosList[0].videoId);
+      }
+    } else {
+      setSelectedVideo(null);
+    }
+  }, [videoTab, videos]);
 
   // Analytics and Interactive Tabs
   const [activePanelTab, setActivePanelTab] = useState('comments'); // 'comments' or 'analytics'
@@ -82,7 +135,7 @@ const VideosList = ({
   const handleVideoListScroll = (e) => {
     const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
     if (scrollHeight - scrollTop - clientHeight < 150) {
-      setDisplayLimit(prev => Math.min(videos.length, prev + 50));
+      setDisplayLimit(prev => Math.min(activeVideosList.length, prev + 50));
     }
   };
 
@@ -367,10 +420,44 @@ const VideosList = ({
                   </button>
                 )}
               </div>
-           </div>
+            </div>
+            
+            {/* Tab Selector */}
+            <div className="px-4 py-2 border-b border-white/40 bg-white/10 flex gap-1">
+              <button
+                onClick={() => setVideoTab('videos')}
+                className={`flex-1 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-xl transition-all border ${
+                  videoTab === 'videos'
+                    ? 'bg-green-500/10 text-green-600 border-green-500/20 shadow-sm'
+                    : 'text-[#909090] hover:text-[#0f0f0f] border-transparent'
+                }`}
+              >
+                Videos ({longVideos.length})
+              </button>
+              <button
+                onClick={() => setVideoTab('shorts')}
+                className={`flex-1 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-xl transition-all border ${
+                  videoTab === 'shorts'
+                    ? 'bg-green-500/10 text-green-600 border-green-500/20 shadow-sm'
+                    : 'text-[#909090] hover:text-[#0f0f0f] border-transparent'
+                }`}
+              >
+                Shorts ({shortVideos.length})
+              </button>
+              <button
+                onClick={() => setVideoTab('posts')}
+                className={`flex-1 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-xl transition-all border ${
+                  videoTab === 'posts'
+                    ? 'bg-green-500/10 text-green-600 border-green-500/20 shadow-sm'
+                    : 'text-[#909090] hover:text-[#0f0f0f] border-transparent'
+                }`}
+              >
+                Posts ({communityPosts.length})
+              </button>
+            </div>
            
             <div className="flex-1 overflow-y-auto custom-scroll p-2" onScroll={handleVideoListScroll}>
-              {videos.slice(0, displayLimit).map((video) => (
+              {activeVideosList.slice(0, displayLimit).map((video) => (
                 <button
                   key={video.videoId}
                   onClick={() => handleVideoSelect(video.videoId)}
@@ -388,9 +475,15 @@ const VideosList = ({
                         e.target.src = 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=150&auto=format&fit=crop&q=60';
                       }}
                     />
-                    <span className="absolute bottom-1 right-1 bg-black/75 text-white text-[9px] font-black px-1.5 py-0.5 rounded-md">
-                      {video.duration || '12:40'}
-                    </span>
+                    {video.isPost ? (
+                      <span className="absolute bottom-1 right-1 bg-[#22c55e]/90 text-white text-[9px] font-black px-1.5 py-0.5 rounded-md">
+                        POST
+                      </span>
+                    ) : (
+                      <span className="absolute bottom-1 right-1 bg-black/75 text-white text-[9px] font-black px-1.5 py-0.5 rounded-md">
+                        {video.formattedDuration}
+                      </span>
+                    )}
                   </div>
                   <div className="min-w-0 flex-1 flex flex-col justify-center gap-0.5">
                     <h4 className={`text-[12px] font-black line-clamp-1 group-hover:text-slate-900 transition-colors leading-snug ${selectedVideo === video.videoId ? 'text-[#22c55e]' : 'text-slate-900'}`}>
@@ -495,7 +588,29 @@ const VideosList = ({
 
           {/* Conditional Content Rendering */}
           <div className="flex-1 overflow-y-auto custom-scroll p-3 md:p-6 bg-white/20" onScroll={handleCommentsScroll}>
-             {selectedVideo && (
+             {selectedVideoData && selectedVideoData.isPost ? (
+               <div className="max-w-[900px] mx-auto mb-6 p-6 bg-white border border-[#f0f0f0] rounded-2xl shadow-md text-left">
+                 <div className="flex items-center gap-3 mb-4">
+                   <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-red-600 to-red-500 text-white flex items-center justify-center font-black">
+                     CM
+                   </div>
+                   <div>
+                     <h4 className="font-black text-[#0f0f0f] text-sm">Channelmate</h4>
+                     <p className="text-[11px] text-[#909090] font-bold uppercase tracking-wider">Community Post</p>
+                   </div>
+                 </div>
+                 <p className="text-[14px] text-slate-800 leading-relaxed font-semibold mb-4 whitespace-pre-wrap">
+                   {selectedVideoData.description || selectedVideoData.title}
+                 </p>
+                 {selectedVideoData.thumbnail && (
+                   <img 
+                     src={selectedVideoData.thumbnail} 
+                     alt="Post Attachment" 
+                     className="w-full max-h-[400px] object-cover rounded-xl border border-slate-100"
+                   />
+                 )}
+               </div>
+             ) : selectedVideo && (
                <div className="max-w-[900px] mx-auto mb-6">
                  <iframe
                    className="w-full aspect-video rounded-2xl border border-[#e5e5e5] shadow-md"

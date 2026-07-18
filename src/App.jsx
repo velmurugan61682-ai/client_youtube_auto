@@ -424,7 +424,12 @@ const App = () => {
               </Suspense>
             </div>
           ) : (
-            <div className="min-h-screen lg:h-screen flex flex-col lg:overflow-hidden bg-[#f8fafc] relative selection:bg-green-500/20 selection:text-green-900">
+            <div className="min-h-screen lg:h-screen flex flex-col lg:overflow-hidden bg-[#f8fafc] relative selection:bg-green-500/20 selection:text-green-900 min-w-0 overflow-x-hidden">
+              {/* Dummy inputs for Chrome Password Manager / Autofill Trap */}
+              <div style={{ position: 'absolute', top: '-1000px', left: '-1000px', width: '0px', height: '0px', overflow: 'hidden' }} aria-hidden="true">
+                <input type="text" name="chrome_autocomplete_trap_email" tabIndex="-1" autoComplete="username" />
+                <input type="password" name="chrome_autocomplete_trap_password" tabIndex="-1" autoComplete="current-password" />
+              </div>
               {!isEmbedded && (
                 <Header 
                   toggleSidebar={toggleSidebar} 
@@ -434,7 +439,7 @@ const App = () => {
                 />
               )}
               
-              <div className="flex flex-1 lg:overflow-hidden relative">
+              <div className="flex flex-1 lg:overflow-hidden relative min-w-0 overflow-x-hidden">
                 {!isEmbedded && (
                   <Sidebar 
                     activeTab={activeTab} 
@@ -445,7 +450,7 @@ const App = () => {
                   />
                 )}
                 
-                <main className={`flex-1 overflow-y-auto overflow-x-hidden ${isEmbedded ? 'p-0' : 'p-4 md:p-6 lg:p-8 pb-[calc(140px+env(safe-area-inset-bottom))] md:pb-6 lg:pb-8'} custom-scroll transition-all duration-300 ease-in-out`}>
+                <main className={`flex-1 overflow-y-auto overflow-x-hidden min-w-0 ${isEmbedded ? 'p-0' : 'p-4 md:p-6 lg:p-8 pb-[calc(140px+env(safe-area-inset-bottom))] md:pb-6 lg:pb-8'} custom-scroll transition-all duration-300 ease-in-out`}>
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={activeTab}

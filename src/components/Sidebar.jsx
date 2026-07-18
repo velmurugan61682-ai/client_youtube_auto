@@ -15,8 +15,10 @@ import {
   CreditCard
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../context/AuthContext';
 
 const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen }) => {
+  const { user } = useAuth();
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'videos', label: 'Videos', icon: Video },
@@ -106,42 +108,40 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen }) => {
           })}
         </div>
 
-        {/* AI & Security Footer */}
-        <div className="p-4 mt-auto border-t border-slate-100 bg-white/0 space-y-3">
-          <div className={`overflow-hidden transition-all duration-500 rounded-[24px] cursor-default bg-slate-500/5 border border-slate-200/55 hover:border-green-500/20 group/ai ${isOpen ? 'p-4' : 'p-0 h-14 flex items-center justify-center'}`}>
-             <div className={`flex items-center ${isOpen ? 'gap-3 mb-3' : 'justify-center'}`}>
-                 <div className={`rounded-xl transition-all duration-500 flex items-center justify-center ${isOpen ? 'w-10 h-10 bg-slate-500/5 text-[#22c55e]' : 'w-12 h-12 bg-slate-500/5 text-[#22c55e] border border-slate-200/55 group-hover/ai:border-green-500/20'}`}>
-                    <Zap size={isOpen ? 20 : 24} className="animate-pulse" fill="currentColor" />
-                 </div>
-                {isOpen && (
-                  <div className="min-w-0">
-                    <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none mb-1">AI Guardian</p>
-                    <p className="text-[14px] font-black text-slate-800 truncate">Online</p>
-                  </div>
+        {/* Profile Footer */}
+        <div className="p-4 mt-auto border-t border-slate-100 bg-white/0">
+          <div className={`flex items-center justify-between ${isOpen ? 'gap-3' : 'justify-center'}`}>
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#0f0f0f] to-[#333] flex items-center justify-center text-white text-xs font-black shadow-md border border-white shrink-0 overflow-hidden">
+                {user?.profilePicture ? (
+                  <img src={user.profilePicture} className="w-full h-full object-cover" alt="" />
+                ) : (
+                  user?.name?.charAt(0).toUpperCase() || 'A'
                 )}
-             </div>
-             {isOpen && (
-                <div className="w-full h-1 bg-slate-200 rounded-full overflow-hidden">
-                   <motion.div 
-                    initial={{ x: '-100%' }}
-                    animate={{ x: '0%' }}
-                    transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
-                    className="h-full bg-[#22c55e] w-1/2 shadow-[0_0_10px_#22c55e]"
-                   />
+              </div>
+              {isOpen && (
+                <div className="min-w-0">
+                  <p className="text-[13px] font-black text-slate-800 truncate leading-none mb-1">
+                    {user?.name || 'Channelmate'}
+                  </p>
+                  <p className="text-[10px] font-black text-teal-600 uppercase tracking-wider leading-none">
+                    channelmate
+                  </p>
                 </div>
-             )}
-          </div>
-
-          <div className="px-1">
-            <button 
-              onClick={onLogout}
-              className={`flex items-center transition-all duration-300 rounded-[20px] border ${
-                isOpen ? 'w-full px-4 py-3 bg-slate-500/5 border-slate-200/55 text-slate-600 hover:bg-red-50 hover:text-red-600 hover:border-red-500/30 font-black text-xs uppercase tracking-widest' : 'h-14 w-full justify-center text-slate-400 hover:text-slate-900 hover:bg-slate-500/5 border-transparent hover:border-slate-200/55'
-              }`}
-            >
-              <LogOut size={20} />
-              {isOpen && <span className="ml-3">Logout</span>}
-            </button>
+              )}
+            </div>
+            {isOpen ? (
+              <button 
+                onClick={onLogout}
+                className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all"
+                title="Logout"
+              >
+                <LogOut size={18} />
+              </button>
+            ) : (
+              // When collapsed, user can click or hover, but we just display user avatar
+              null
+            )}
           </div>
         </div>
       </motion.aside>

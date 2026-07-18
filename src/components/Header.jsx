@@ -6,6 +6,7 @@ import {
   LogOut,
   Settings,
   ChevronDown,
+  ChevronRight,
   Sparkles,
   LayoutDashboard,
   MessageSquare,
@@ -121,9 +122,8 @@ const Header = ({ toggleSidebar, onSearch, setActiveTab, notifications = EMPTY_A
           className="flex items-center gap-2.5 cursor-pointer group select-none"
         >
           <img src="/logo.svg" className="w-9 h-9 object-contain" alt="Logo" />
-          <div className="hidden sm:flex flex-col -gap-1">
-            <span className="text-[17px] font-black tracking-tighter text-[#0f0f0f]">TECH VASEEGRAAH</span>
-            <span className="text-[10px] font-black text-[#22c55e] tracking-[0.2em] -mt-1 uppercase opacity-80">CREATOR AI</span>
+          <div className="hidden sm:flex flex-col">
+            <span className="text-[17px] font-black tracking-tighter text-[#0f0f0f]">CHANNELMATE</span>
           </div>
         </div>
 
@@ -290,14 +290,6 @@ const Header = ({ toggleSidebar, onSearch, setActiveTab, notifications = EMPTY_A
           </button>
         )}
 
-        <button 
-          onClick={() => setActiveTab('settings')}
-          className="p-2.5 hover:bg-[#f8f8f8] text-[#606060] rounded-2xl transition-all group lg:mr-2"
-          title="Settings"
-        >
-          <Settings size={20} className="group-hover:rotate-45 transition-transform duration-500" />
-        </button>
-
         <div className="h-8 w-px bg-[#f0f0f0] mx-2 hidden sm:block" />
 
         <div className="relative ml-2" ref={menuRef}>
@@ -305,17 +297,21 @@ const Header = ({ toggleSidebar, onSearch, setActiveTab, notifications = EMPTY_A
             onClick={() => setShowProfileMenu(!showProfileMenu)}
             className="flex items-center gap-3 p-1.5 hover:bg-[#f8f8f8] rounded-2xl transition-all group"
           >
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#0f0f0f] to-[#333] flex items-center justify-center text-white text-xs font-black shadow-md border border-white">
-              {user?.name?.charAt(0).toUpperCase() || 'A'}
-            </div>
-            <div className="hidden lg:flex flex-col items-start pr-1 max-w-[120px]">
-              <span className="text-[13px] font-black text-[#0f0f0f] truncate w-full">{user?.name || 'Admin'}</span>
-              <span className="text-[9px] font-black text-green-600 uppercase tracking-wider flex items-center gap-1">
-                <div className="w-1 h-1 bg-[#2ba640] rounded-full animate-pulse" />
-                {user?.role === 'admin' ? 'Admin' : ((user?.subscription?.status === 'active' || (user?.subscription?.status === 'cancelled' && user?.subscription?.currentEnd && new Date(user.subscription.currentEnd) > new Date())) ? (user?.subscription?.planType || 'Pro') : 'Free Plan')}
+            <div className="hidden lg:flex flex-col items-end pr-1 max-w-[120px]">
+              <span className="text-[13px] font-black text-[#0f0f0f] truncate w-full text-right">{user?.name || 'Channelmate'}</span>
+              <span className="text-[9px] font-black text-[#2ba640] uppercase tracking-wider flex items-center gap-1 justify-end w-full">
+                <div className="w-1.5 h-1.5 bg-[#2ba640] rounded-full animate-pulse" />
+                channelmate
               </span>
             </div>
-            <ChevronDown size={14} className={`text-[#909090] transition-transform ${showProfileMenu ? 'rotate-180' : ''}`} />
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#0f0f0f] to-[#333] flex items-center justify-center text-white text-xs font-black shadow-md border border-white shrink-0 overflow-hidden">
+              {user?.profilePicture ? (
+                <img src={user.profilePicture} className="w-full h-full object-cover" alt="" />
+              ) : (
+                user?.name?.charAt(0).toUpperCase() || 'A'
+              )}
+            </div>
+            <ChevronDown size={14} className={`text-[#2ba640] transition-transform ${showProfileMenu ? 'rotate-180' : ''}`} />
           </button>
 
           <AnimatePresence>
@@ -324,35 +320,57 @@ const Header = ({ toggleSidebar, onSearch, setActiveTab, notifications = EMPTY_A
                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                className="absolute right-0 mt-3 w-64 glass-panel !bg-white/70 rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.1)] border-white/50 overflow-hidden p-2 z-[200]"
+                className="absolute right-0 mt-3 w-72 bg-white rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-slate-100 overflow-hidden z-[200] flex flex-col"
               >
-                <div className="p-4 mb-2 bg-white/40 rounded-2xl border border-white/45 flex items-center gap-3">
-                   <div className="w-10 h-10 rounded-xl bg-[#22c55e] flex items-center justify-center text-white font-black text-lg">
-                     {user?.name?.charAt(0).toUpperCase() || 'A'}
+                {/* Dark Header */}
+                <div className="bg-[#0f172a] p-4 flex items-center gap-3 text-white text-left">
+                   <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-green-500 to-emerald-600 flex items-center justify-center text-white font-black text-lg border border-white/20 shrink-0 overflow-hidden">
+                     {user?.profilePicture ? (
+                       <img src={user.profilePicture} className="w-full h-full object-cover" alt="" />
+                     ) : (
+                       user?.name?.charAt(0).toUpperCase() || 'A'
+                     )}
                    </div>
-                   <div className="min-w-0">
-                      <p className="text-sm font-black text-[#0f0f0f] truncate">{user?.name || 'Administrator'}</p>
-                      <p className="text-[11px] text-[#909090] truncate font-medium">{user?.email}</p>
+                   <div className="min-w-0 flex-1">
+                      <p className="text-sm font-black truncate">{user?.name || 'Channelmate'} (Channel Owner)</p>
+                      <span className="text-[9px] font-black text-green-400 uppercase tracking-wider flex items-center gap-1 mt-0.5">
+                        <div className="w-1.5 h-1.5 bg-[#2ba640] rounded-full animate-pulse" />
+                        channelmate
+                      </span>
                    </div>
                 </div>
 
-                <div className="space-y-1">
-                  <button onClick={() => { setActiveTab('dashboard'); setShowProfileMenu(false); }} className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-[#f8f8f8] rounded-xl text-[13px] font-bold text-[#606060] transition-all">
-                    <LayoutDashboard size={18} /> Dashboard Overview
+                {/* Menu Options */}
+                <div className="p-3 space-y-1 bg-white">
+                  <button 
+                    onClick={() => { setActiveTab('settings'); setShowProfileMenu(false); }} 
+                    className="w-full flex items-center justify-between px-4 py-3 hover:bg-slate-50 rounded-xl transition-all group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Settings size={18} className="text-slate-400 group-hover:text-slate-900 transition-colors" />
+                      <span className="text-[13px] font-black text-slate-700 group-hover:text-slate-900 transition-colors">Account Settings</span>
+                    </div>
+                    <ChevronRight size={14} className="text-slate-400" />
                   </button>
-                  <button onClick={() => { setActiveTab('settings'); setShowProfileMenu(false); }} className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-[#f8f8f8] rounded-xl text-[13px] font-bold text-[#606060] transition-all">
-                    <Sparkles size={18} /> UI Preferences
+                  
+                  <button 
+                    onClick={logout}
+                    className="w-full flex items-center justify-between px-4 py-3 hover:bg-red-50 rounded-xl transition-all group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <LogOut size={18} className="text-red-500" />
+                      <span className="text-[13px] font-black text-red-600">Logout Session</span>
+                    </div>
+                    <ChevronRight size={14} className="text-red-400" />
                   </button>
                 </div>
 
-                <div className="h-px bg-[#f0f0f0] my-2 mx-2" />
-
-                <button 
-                  onClick={logout}
-                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[#fff1f0] text-[#d93025] rounded-xl text-[13px] font-bold transition-all"
-                >
-                  <LogOut size={18} /> Logout
-                </button>
+                {/* Footer */}
+                <div className="bg-[#f8fafc] py-3 text-center border-t border-slate-50">
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
+                    Security Core v2.4
+                  </span>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>

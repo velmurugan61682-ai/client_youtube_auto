@@ -16,13 +16,37 @@ import {
   Lock,
   ChevronRight,
   Sparkles,
-  Phone
+  Phone,
+  User,
+  Camera
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 const Settings = () => {
+  const { user, checkAuth } = useAuth();
   const [activeTab, setActiveTab] = useState('automation');
+  const [profileName, setProfileName] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [savingProfile, setSavingProfile] = useState(false);
+  const [profilePictureBase64, setProfilePictureBase64] = useState('');
+
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        alert('File size must be less than 2MB');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfilePictureBase64(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
   const [autoMod, setAutoMod] = useState(true);
   const [autoLike, setAutoLike] = useState(true);
   const [threshold, setThreshold] = useState(85);
@@ -50,6 +74,55 @@ const Settings = () => {
   useEffect(() => {
     loadSettings();
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      setProfileName(user.name || '');
+      setProfilePictureBase64('');
+    }
+  }, [user]);
+
+  const handleSaveProfile = async (e) => {
+    e.preventDefault();
+    if (!profileName.trim()) {
+      alert('Name is required');
+      return;
+    }
+    if (newPassword && newPassword !== confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
+
+    setSavingProfile(true);
+    setSuccessMessage('');
+    try {
+      const payload = {
+        name: profileName
+      };
+      if (newPassword) {
+        payload.password = newPassword;
+      }
+      if (profilePictureBase64) {
+        payload.profilePicture = profilePictureBase64;
+      }
+      
+      const res = await api.put('/auth/profile', payload);
+      if (res.data.success) {
+        setSuccessMessage('Profile updated successfully!');
+        setNewPassword('');
+        setConfirmPassword('');
+        await checkAuth();
+        setTimeout(() => {
+          setSuccessMessage('');
+        }, 3000);
+      }
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.error || 'Failed to update profile');
+    } finally {
+      setSavingProfile(false);
+    }
+  };
 
   const loadSettings = async () => {
     try {
@@ -128,10 +201,16 @@ const Settings = () => {
   const tabs = [
     { id: 'automation', label: 'Automation Rules', icon: Zap },
     { id: 'credentials', label: 'API Credentials', icon: Key },
+    { id: 'profile', label: 'Profile Settings', icon: User },
   ];
 
   return (
     <div className="w-full py-4 space-y-8 pb-16">
+      {/* Dummy inputs for Chrome Password Manager / Autofill Trap */}
+      <div style={{ position: 'absolute', top: '-1000px', left: '-1000px', width: '0px', height: '0px', overflow: 'hidden' }} aria-hidden="true">
+        <input type="text" name="chrome_autocomplete_trap_email" tabIndex="-1" autoComplete="username" />
+        <input type="password" name="chrome_autocomplete_trap_password" tabIndex="-1" autoComplete="current-password" />
+      </div>
       {/* Premium Tab Switcher */}
       <div className="flex flex-wrap bg-white p-1 rounded-[24px] border border-[#f0f0f0] w-full sm:w-fit shadow-sm gap-1">
         {tabs.map((tab) => (
@@ -150,11 +229,11 @@ const Settings = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="w-full">
         {/* Main Content Area */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="space-y-6">
           <AnimatePresence mode="wait">
-            {activeTab === 'automation' ? (
+            {activeTab === 'automation' && (
               <motion.div 
                 key="automation"
                 initial={{ opacity: 0, x: -20 }}
@@ -302,10 +381,12 @@ const Settings = () => {
                       <option value="all">All Linked Channels</option>
                       <option value="primary">Primary Channel Only</option>
                     </select>
-                  </div>
                 </div>
-              </motion.div>
-            ) : (
+              </div>
+            </motion.div>
+          )}
+
+            {activeTab === 'credentials' && (
               <motion.div 
                 key="credentials"
                 initial={{ opacity: 0, x: -20 }}
@@ -372,84 +453,164 @@ const Settings = () => {
                       </div>
                    </div>
 
-                   <div className="space-y-2 pt-4 border-t border-[#fcfcfc]">
-                      <label className="text-[11px] font-black uppercase text-[#909090] tracking-widest ml-1">Product/Service Destination Link</label>
-                      <input 
-                        type="text"
-                        value={credentials.productLink}
-                        onChange={(e) => setCredentials({...credentials, productLink: e.target.value})}
-                        className="w-full bg-[#f8f9fa] border border-[#f0f0f0] rounded-2xl px-5 py-3.5 text-sm font-semibold focus:bg-white focus:border-[#0f0f0f]/20 transition-all outline-none"
-                        placeholder="https://yourstore.com"
-                      />
-                      <p className="text-[10px] text-[#909090] ml-1">Used in automated WhatsApp responses and AI replies.</p>
-                   </div>
+                </div>
+              </motion.div>
+             )}
+
+           {activeTab === 'profile' && (
+              <motion.div 
+                key="profile"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                className="grid grid-cols-1 md:grid-cols-3 gap-6"
+              >
+                {/* Left Card: Info */}
+                <div className="md:col-span-1 bg-white border border-[#f0f0f0] rounded-[32px] p-6 text-center flex flex-col items-center justify-center shadow-sm">
+                  <div 
+                    onClick={() => document.getElementById('avatar-file-input').click()}
+                    className="relative w-32 h-32 rounded-3xl overflow-hidden shadow-lg border border-slate-100 mb-6 bg-slate-50 flex items-center justify-center group cursor-pointer"
+                    title="Click to choose profile picture"
+                  >
+                    <img 
+                      src={profilePictureBase64 || user?.profilePicture || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'Worker')}&background=0f172a&color=fff&size=128`}
+                      alt="Profile" 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1 text-white">
+                      <Camera size={18} />
+                      <span className="text-[9px] font-black uppercase tracking-wider">Choose Picture</span>
+                    </div>
+                  </div>
+                  <input 
+                    id="avatar-file-input"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleAvatarChange}
+                    className="hidden"
+                  />
+                  <h3 className="text-lg font-black text-slate-800 mb-1">{user?.name || 'Worker'}</h3>
+                  <p className="text-[12px] font-black text-teal-600 uppercase tracking-widest leading-none mb-1">
+                    client
+                  </p>
+                  <p className="text-[11px] font-bold text-slate-400">
+                    Channelmate
+                  </p>
+                </div>
+
+                {/* Right Card: Fields */}
+                <div className="md:col-span-2 bg-white border border-[#f0f0f0] rounded-[32px] p-6 md:p-8 space-y-6 shadow-sm text-left">
+                  <form onSubmit={handleSaveProfile} className="space-y-6">
+                    <h3 className="text-lg font-black text-slate-800 border-b border-slate-100 pb-3">Profile Settings</h3>
+                    
+                    {successMessage && (
+                      <div className="p-4 bg-green-50 border border-green-200 text-green-700 rounded-2xl text-xs font-semibold flex items-center gap-2">
+                        <CheckCircle2 size={16} className="text-green-600" />
+                        {successMessage}
+                      </div>
+                    )}
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <label className="text-[11px] font-black uppercase text-[#909090] tracking-widest ml-1">Name</label>
+                        <input 
+                          type="text"
+                          value={profileName}
+                          onChange={(e) => setProfileName(e.target.value)}
+                          className="w-full bg-[#f8f9fa] border border-[#f0f0f0] rounded-2xl px-5 py-3.5 text-sm font-semibold focus:bg-white focus:border-[#0f0f0f]/20 transition-all outline-none"
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[11px] font-black uppercase text-[#909090] tracking-widest ml-1">Email Address</label>
+                        <input 
+                          type="email"
+                          value={user?.email || ''}
+                          className="w-full bg-[#f4f5f6] border border-[#e8e9ea] text-slate-400 cursor-not-allowed rounded-2xl px-5 py-3.5 text-sm font-semibold outline-none"
+                          disabled
+                          readOnly
+                        />
+                      </div>
+                    </div>
+
+                    <div className="pt-4 border-t border-slate-100 space-y-4">
+                      <div>
+                        <h4 className="text-[12px] font-black text-slate-700 uppercase tracking-wider">Change Password</h4>
+                        <p className="text-[10px] text-blue-500 font-bold">Leave blank if you don't want to change it.</p>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <label className="text-[11px] font-black uppercase text-[#909090] tracking-widest ml-1">New Password</label>
+                          <input 
+                            type="password"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            className="w-full bg-[#f8f9fa] border border-[#f0f0f0] rounded-2xl px-5 py-3.5 text-sm font-semibold focus:bg-white focus:border-[#0f0f0f]/20 transition-all outline-none"
+                            placeholder="••••••••"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-[11px] font-black uppercase text-[#909090] tracking-widest ml-1">Confirm Password</label>
+                          <input 
+                            type="password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            className="w-full bg-[#f8f9fa] border border-[#f0f0f0] rounded-2xl px-5 py-3.5 text-sm font-semibold focus:bg-white focus:border-[#0f0f0f]/20 transition-all outline-none"
+                            placeholder="••••••••"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end pt-4 border-t border-slate-100">
+                      <button
+                        type="submit"
+                        disabled={savingProfile}
+                        className="flex items-center gap-2 px-8 py-3.5 bg-teal-600 hover:bg-teal-700 disabled:bg-teal-400 text-white rounded-2xl text-[13px] font-black uppercase tracking-widest shadow-lg shadow-teal-500/10 transition-all cursor-pointer"
+                      >
+                        {savingProfile ? (
+                          <>
+                            <Loader2 className="animate-spin" size={16} />
+                            Saving...
+                          </>
+                        ) : (
+                          <>
+                            Save Changes
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </form>
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
 
           {/* Footer Save Button */}
-          <div className="flex items-center justify-between p-4 bg-[#fcfcfc] border border-[#f0f0f0] rounded-[24px]">
-             <div className="flex items-center gap-3">
-                <div className={`w-2 h-2 rounded-full ${savingSettings ? 'bg-[#ff0000] animate-ping' : 'bg-[#2ba640]'}`} />
-                <AnimatePresence>
-                  {successMessage ? (
-                    <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-[12px] font-black text-[#2ba640] uppercase tracking-tight">
-                       {successMessage}
-                    </motion.span>
-                  ) : (
-                    <span className="text-[12px] font-black text-[#909090] uppercase tracking-tight">System Ready to Sync</span>
-                  )}
-                </AnimatePresence>
-             </div>
-             <button 
-              onClick={handleSave}
-              disabled={savingSettings}
-              className="px-8 py-3.5 bg-[#0f0f0f] hover:bg-[#222] text-white rounded-2xl text-[13px] font-black uppercase tracking-widest shadow-xl shadow-black/10 transition-all disabled:opacity-50"
-             >
-               {savingSettings ? 'Securing Data...' : 'Commit Configuration'}
-             </button>
-          </div>
-        </div>
-
-        {/* Info/Side Column */}
-        <div className="space-y-6">
-           <div className="bg-[#0f0f0f] rounded-[32px] p-4 sm:p-6 md:p-8 text-white relative overflow-hidden group">
-              <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:rotate-12 transition-transform">
-                 <Lock size={80} />
-              </div>
-              <h4 className="text-[14px] font-black uppercase tracking-widest mb-4 flex items-center gap-2">
-                 <Shield size={16} className="text-[#ff0000]" /> Security First
-              </h4>
-              <p className="text-[12px] text-white/60 leading-relaxed font-medium">
-                 All keys are encrypted at rest using AES-256 GCM. Once stored, they are masked in the UI and never shared with third parties except for the specified API calls.
-              </p>
-              <div className="mt-8 pt-6 border-t border-white/10">
-                 <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">Encryption Level</span>
-                    <span className="text-[10px] font-black text-[#2ba640] uppercase">Military Grade</span>
-                 </div>
-                 <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
-                    <div className="w-[100%] h-full bg-[#2ba640]" />
-                 </div>
-              </div>
-           </div>
-
-           <div className="bg-white border border-[#f0f0f0] rounded-[32px] p-4 sm:p-6 md:p-8 space-y-6">
-              <h4 className="text-[13px] font-black text-[#0f0f0f] uppercase tracking-widest">Why provide keys?</h4>
-              <div className="space-y-4">
-                 {[
-                   { icon: Youtube, label: 'Fetch Comments', color: 'text-red-500' },
-                   { icon: Sparkles, label: 'AI Sentiment Analysis', color: 'text-blue-500' },
-                   { icon: Database, label: 'Sync to Local Cloud', color: 'text-gray-500' }
-                 ].map((item, i) => (
-                   <div key={i} className="flex items-center gap-3">
-                      <div className={`p-2 bg-gray-50 rounded-lg ${item.color}`}><item.icon size={16} /></div>
-                      <span className="text-[12px] font-bold text-[#606060]">{item.label}</span>
-                   </div>
-                 ))}
-              </div>
-           </div>
+          {activeTab !== 'profile' && (
+            <div className="flex items-center justify-between p-4 bg-[#fcfcfc] border border-[#f0f0f0] rounded-[24px]">
+               <div className="flex items-center gap-3">
+                  <div className={`w-2 h-2 rounded-full ${savingSettings ? 'bg-[#ff0000] animate-ping' : 'bg-[#2ba640]'}`} />
+                  <AnimatePresence>
+                    {successMessage ? (
+                      <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-[12px] font-black text-[#2ba640] uppercase tracking-tight">
+                         {successMessage}
+                      </motion.span>
+                    ) : (
+                      <span className="text-[12px] font-black text-[#909090] uppercase tracking-tight">System Ready to Sync</span>
+                    )}
+                  </AnimatePresence>
+               </div>
+               <button 
+                onClick={handleSave}
+                disabled={savingSettings}
+                className="px-8 py-3.5 bg-[#0f0f0f] hover:bg-[#222] text-white rounded-2xl text-[13px] font-black uppercase tracking-widest shadow-xl shadow-black/10 transition-all disabled:opacity-50"
+               >
+                 {savingSettings ? 'Securing Data...' : 'Commit Configuration'}
+               </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
