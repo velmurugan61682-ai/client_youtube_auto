@@ -1,7 +1,7 @@
 import { useState, useEffect, lazy, Suspense, useCallback } from 'react';
 import api from './services/api';
 import { connectSocket, disconnectSocket } from './services/socket';
-import { 
+import {
   Loader2,
   WifiOff,
   LayoutDashboard,
@@ -69,6 +69,7 @@ const App = () => {
   });
   const [searchQuery, setSearchQuery] = useState('');
   const [profileSheetOpen, setProfileSheetOpen] = useState(false);
+  const [videoSubTab, setVideoSubTab] = useState('videos');
 
   const toggleSidebar = () => {
     setSidebarOpen(prev => {
@@ -96,7 +97,7 @@ const App = () => {
     } else if (queryParams.get('status') === 'error') {
       const errMsg = queryParams.get('error') || 'Failed to connect account.';
       setTimeout(() => {
-        alert(`❌ Connection Error: ${errMsg}`);
+
         if (errMsg.toLowerCase().includes('limit') || errMsg.toLowerCase().includes('free plan') || errMsg.toLowerCase().includes('pro')) {
           setActiveTab('subscription');
         }
@@ -157,7 +158,7 @@ const App = () => {
       return;
     }
     const url = selectedChannelId ? `/analytics?channelId=${selectedChannelId}` : '/analytics';
-    
+
     if (activeAnalyticsPromise && activeAnalyticsPromise.url === url) {
       return activeAnalyticsPromise.promise;
     }
@@ -186,7 +187,7 @@ const App = () => {
       console.log('Waiting for login...');
       return;
     }
-    
+
     if (activeChannelsPromise) {
       return activeChannelsPromise;
     }
@@ -194,7 +195,7 @@ const App = () => {
     activeChannelsPromise = api.get('/youtube/channels')
       .then(res => {
         setChannels(res.data);
-        
+
         // Auto-bypass plan gate if they already have 1 or more channels connected
         if (res.data.length >= 1) {
           setPlanSelected(true);
@@ -250,7 +251,7 @@ const App = () => {
       socket.on('live_activity', handleLiveActivity);
       socket.on('stats_updated', fetchAnalytics);
       socket.on('new_comment_analyzed', fetchAnalytics);
-      
+
       return () => {
         socket.off('live_activity', handleLiveActivity);
         socket.off('stats_updated', fetchAnalytics);
@@ -269,7 +270,7 @@ const App = () => {
   }, [selectedChannelId, user, planSelected, fetchAnalytics]);
 
   const disconnectChannel = async (id, name) => {
-    if(!window.confirm(`Are you sure you want to disconnect ${name}? All related comments and data will be removed.`)) return;
+    if (!window.confirm(`Are you sure you want to disconnect ${name}? All related comments and data will be removed.`)) return;
     try {
       setLoading(true);
       await api.delete(`/youtube/channels/${id}`);
@@ -290,9 +291,9 @@ const App = () => {
   const renderActiveTab = () => {
     switch (activeTab) {
       case 'dashboard':
-        return <DashboardPage 
-          stats={stats} 
-          channels={channels} 
+        return <DashboardPage
+          stats={stats}
+          channels={channels}
           selectedChannelId={selectedChannelId}
           setSelectedChannelId={setSelectedChannelId}
           fetchAnalytics={fetchAnalytics}
@@ -301,17 +302,19 @@ const App = () => {
           searchQuery={searchQuery}
         />;
       case 'videos':
-        return <VideosPage 
-          channels={channels} 
-          user={user} 
+        return <VideosPage
+          channels={channels}
+          user={user}
           selectedChannelId={selectedChannelId}
           setSelectedChannelId={setSelectedChannelId}
           fetchAnalytics={fetchAnalytics}
           searchQuery={searchQuery}
+          videoSubTab={videoSubTab}
+          setVideoSubTab={setVideoSubTab}
         />;
       case 'channels':
-        return <ChannelsPage 
-          channels={channels} 
+        return <ChannelsPage
+          channels={channels}
           onDisconnect={disconnectChannel}
           onAdd={async () => {
             try {
@@ -327,7 +330,7 @@ const App = () => {
               const isAdmin = userRole === 'admin';
 
               if (!isAdmin && !isSubActive && currentChannelsCount >= 1) {
-                alert("❌ Upgrade to Premium Pro to add more channels");
+
                 setActiveTab('subscription');
                 return;
               }
@@ -352,13 +355,13 @@ const App = () => {
       case 'leads':
         return <LeadsPage searchQuery={searchQuery} />;
       case 'autoschedule':
-        return <AutoSchedulePage 
+        return <AutoSchedulePage
           channels={channels}
           selectedChannelId={selectedChannelId}
           setSelectedChannelId={setSelectedChannelId}
         />;
       case 'autodm':
-        return <AutoDmPage 
+        return <AutoDmPage
           channels={channels}
           selectedChannelId={selectedChannelId}
           setSelectedChannelId={setSelectedChannelId}
@@ -392,161 +395,166 @@ const App = () => {
         </div>
       }>
         <Routes>
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/privacy" element={<PrivacyPage />} />
-      <Route path="/terms" element={<TermsPage />} />
-      <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <Login />} />
-      <Route path="/register" element={user ? <Navigate to="/dashboard" replace /> : <Register />} />
-      <Route path="/dashboard" element={
-        !user ? <Navigate to="/login" replace /> : (
-          !planSelected && loadingChannels ? (
-            <div className="h-screen w-full flex items-center justify-center bg-[#f9f9f9]">
-              <div className="flex flex-col items-center gap-4">
-                <Loader2 className="animate-spin text-[#ff0000]" size={48} />
-                <p className="text-[14px] font-bold text-[#606060] uppercase tracking-widest">Initialising Studio...</p>
-              </div>
-            </div>
-          ) : !planSelected ? (
-            <div className="h-screen w-full overflow-y-auto bg-[#f9f9f9] py-12 px-4 md:px-8 flex items-center justify-center">
-              <Suspense fallback={
-                <div className="h-full w-full flex items-center justify-center">
-                  <Loader2 className="animate-spin text-[#ff0000]" size={40} />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <Login />} />
+          <Route path="/register" element={user ? <Navigate to="/dashboard" replace /> : <Register />} />
+          <Route path="/dashboard" element={
+            !user ? <Navigate to="/login" replace /> : (
+              !planSelected && loadingChannels ? (
+                <div className="h-screen w-full flex items-center justify-center bg-[#f9f9f9]">
+                  <div className="flex flex-col items-center gap-4">
+                    <Loader2 className="animate-spin text-[#ff0000]" size={48} />
+                    <p className="text-[14px] font-bold text-[#606060] uppercase tracking-widest">Initialising Studio...</p>
+                  </div>
                 </div>
-              }>
-                <SubscriptionPage 
-                  isGate={true} 
-                  onSelectPlan={() => {
-                    sessionStorage.setItem('plan_acknowledged', 'true');
-                    setPlanSelected(true);
-                    setActiveTab('dashboard');
-                  }} 
-                />
-              </Suspense>
-            </div>
-          ) : (
-            <div className="min-h-screen lg:h-screen flex flex-col lg:overflow-hidden bg-[#f8fafc] relative selection:bg-green-500/20 selection:text-green-900 min-w-0 overflow-x-hidden">
-              {/* Dummy inputs for Chrome Password Manager / Autofill Trap */}
-              <div style={{ position: 'absolute', top: '-1000px', left: '-1000px', width: '0px', height: '0px', overflow: 'hidden' }} aria-hidden="true">
-                <input type="text" name="chrome_autocomplete_trap_email" tabIndex="-1" autoComplete="username" />
-                <input type="password" name="chrome_autocomplete_trap_password" tabIndex="-1" autoComplete="current-password" />
-              </div>
-              {!isEmbedded && (
-                <Header 
-                  toggleSidebar={toggleSidebar} 
-                  onSearch={setSearchQuery} 
-                  setActiveTab={setActiveTab}
-                  sidebarOpen={sidebarOpen}
-                />
-              )}
-              
-              <div className="flex flex-1 lg:overflow-hidden relative min-w-0 overflow-x-hidden">
-                {!isEmbedded && (
-                  <Sidebar 
-                    activeTab={activeTab} 
-                    setActiveTab={setActiveTab} 
-                    onLogout={logout} 
-                    isOpen={sidebarOpen}
-                    setIsOpen={setSidebarOpen}
-                  />
-                )}
-                
-                <main className={`flex-1 overflow-y-auto overflow-x-hidden min-w-0 ${isEmbedded ? 'p-0' : 'p-4 md:p-6 lg:p-8 pb-[calc(140px+env(safe-area-inset-bottom))] md:pb-6 lg:pb-8'} custom-scroll transition-all duration-300 ease-in-out`}>
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={activeTab}
-                      initial={{ opacity: 0, x: 10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -10 }}
-                      transition={{ duration: 0.2 }}
-                      className="h-full"
-                    >
-                      <Suspense fallback={
-                        <div className="h-full w-full flex items-center justify-center">
-                          <div className="flex flex-col items-center gap-4">
-                            <Loader2 className="animate-spin text-[#22c55e]" size={40} />
-                            <p className="text-[12px] font-bold text-[#909090] uppercase tracking-widest">Loading Module...</p>
+              ) : !planSelected ? (
+                <div className="h-screen w-full overflow-y-auto bg-[#f9f9f9] py-12 px-4 md:px-8 flex items-center justify-center">
+                  <Suspense fallback={
+                    <div className="h-full w-full flex items-center justify-center">
+                      <Loader2 className="animate-spin text-[#ff0000]" size={40} />
+                    </div>
+                  }>
+                    <SubscriptionPage
+                      isGate={true}
+                      onSelectPlan={() => {
+                        sessionStorage.setItem('plan_acknowledged', 'true');
+                        setPlanSelected(true);
+                        setActiveTab('dashboard');
+                      }}
+                    />
+                  </Suspense>
+                </div>
+              ) : (
+                <div className="min-h-screen lg:h-screen flex flex-col lg:overflow-hidden bg-[#f8fafc] relative selection:bg-green-500/20 selection:text-green-900 min-w-0 overflow-x-hidden">
+                  {/* Dummy inputs for Chrome Password Manager / Autofill Trap */}
+                  <div style={{ position: 'absolute', top: '-1000px', left: '-1000px', width: '0px', height: '0px', overflow: 'hidden' }} aria-hidden="true">
+                    <input type="text" name="chrome_autocomplete_trap_email" tabIndex="-1" autoComplete="username" />
+                    <input type="password" name="chrome_autocomplete_trap_password" tabIndex="-1" autoComplete="current-password" />
+                  </div>
+                  {!isEmbedded && (
+                    <Header
+                      toggleSidebar={toggleSidebar}
+                      onSearch={setSearchQuery}
+                      setActiveTab={setActiveTab}
+                      sidebarOpen={sidebarOpen}
+                      channels={channels}
+                      selectedChannelId={selectedChannelId}
+                      setSelectedChannelId={setSelectedChannelId}
+                      setVideoSubTab={setVideoSubTab}
+                      notifications={activities}
+                    />
+                  )}
+
+                  <div className="flex flex-1 lg:overflow-hidden relative min-w-0 overflow-x-hidden">
+                    {!isEmbedded && (
+                      <Sidebar
+                        activeTab={activeTab}
+                        setActiveTab={setActiveTab}
+                        onLogout={logout}
+                        isOpen={sidebarOpen}
+                        setIsOpen={setSidebarOpen}
+                      />
+                    )}
+
+                    <main className={`flex-1 overflow-y-auto overflow-x-hidden min-w-0 ${isEmbedded ? 'p-0' : 'p-4 md:p-6 lg:p-8 pb-[calc(140px+env(safe-area-inset-bottom))] md:pb-6 lg:pb-8'} custom-scroll transition-all duration-300 ease-in-out`}>
+                      <AnimatePresence mode="wait">
+                        <motion.div
+                          key={activeTab}
+                          initial={{ opacity: 0, x: 10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -10 }}
+                          transition={{ duration: 0.2 }}
+                          className="h-full"
+                        >
+                          <Suspense fallback={
+                            <div className="h-full w-full flex items-center justify-center">
+                              <div className="flex flex-col items-center gap-4">
+                                <Loader2 className="animate-spin text-[#22c55e]" size={40} />
+                                <p className="text-[12px] font-bold text-[#909090] uppercase tracking-widest">Loading Module...</p>
+                              </div>
+                            </div>
+                          }>
+                            {renderActiveTab()}
+                          </Suspense>
+                        </motion.div>
+                      </AnimatePresence>
+                    </main>
+                  </div>
+
+                  {/* Mobile Bottom Navigation */}
+                  {!isEmbedded && (
+                    <div className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-lg border-t border-slate-100 flex items-center justify-around px-4 z-40 pb-safe shadow-[0_-4px_20px_-4px_rgba(0,0,0,0.05)]">
+                      <button
+                        onClick={() => setActiveTab('dashboard')}
+                        className={`mobile-nav-item ${activeTab === 'dashboard' ? 'active' : ''}`}
+                      >
+                        <div className="mobile-nav-icon-container">
+                          <LayoutDashboard size={18} />
+                        </div>
+                        <span>Dashboard</span>
+                      </button>
+                      <button
+                        onClick={() => setActiveTab('videos')}
+                        className={`mobile-nav-item ${activeTab === 'videos' ? 'active' : ''}`}
+                      >
+                        <div className="mobile-nav-icon-container">
+                          <Video size={18} />
+                        </div>
+                        <span>Videos</span>
+                      </button>
+                      <button
+                        onClick={() => setActiveTab('autodm')}
+                        className={`mobile-nav-item ${activeTab === 'autodm' ? 'active' : ''}`}
+                      >
+                        <div className="mobile-nav-icon-container">
+                          <MessageCircle size={18} />
+                        </div>
+                        <span>Auto DM</span>
+                      </button>
+                      <button
+                        onClick={() => setActiveTab('settings')}
+                        className={`mobile-nav-item ${activeTab === 'settings' ? 'active' : ''}`}
+                      >
+                        <div className="mobile-nav-icon-container">
+                          <Settings size={18} />
+                        </div>
+                        <span>Settings</span>
+                      </button>
+                      <button
+                        onClick={() => setProfileSheetOpen(true)}
+                        className="mobile-nav-item"
+                      >
+                        <div className="mobile-nav-icon-container">
+                          <div className="w-5 h-5 rounded-full bg-slate-900 text-white flex items-center justify-center text-[10px] font-black">
+                            {user?.name?.charAt(0).toUpperCase() || 'A'}
                           </div>
                         </div>
-                      }>
-                        {renderActiveTab()}
-                      </Suspense>
-                    </motion.div>
-                  </AnimatePresence>
-                </main>
-              </div>
-
-              {/* Mobile Bottom Navigation */}
-              {!isEmbedded && (
-                <div className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-lg border-t border-slate-100 flex items-center justify-around px-4 z-40 pb-safe shadow-[0_-4px_20px_-4px_rgba(0,0,0,0.05)]">
-                  <button 
-                    onClick={() => setActiveTab('dashboard')} 
-                    className={`mobile-nav-item ${activeTab === 'dashboard' ? 'active' : ''}`}
-                  >
-                    <div className="mobile-nav-icon-container">
-                      <LayoutDashboard size={18} />
+                        <span>Profile</span>
+                      </button>
                     </div>
-                    <span>Dashboard</span>
-                  </button>
-                  <button 
-                    onClick={() => setActiveTab('videos')} 
-                    className={`mobile-nav-item ${activeTab === 'videos' ? 'active' : ''}`}
-                  >
-                    <div className="mobile-nav-icon-container">
-                      <Video size={18} />
-                    </div>
-                    <span>Videos</span>
-                  </button>
-                  <button 
-                    onClick={() => setActiveTab('autodm')} 
-                    className={`mobile-nav-item ${activeTab === 'autodm' ? 'active' : ''}`}
-                  >
-                    <div className="mobile-nav-icon-container">
-                      <MessageCircle size={18} />
-                    </div>
-                    <span>Auto DM</span>
-                  </button>
-                  <button 
-                    onClick={() => setActiveTab('settings')} 
-                    className={`mobile-nav-item ${activeTab === 'settings' ? 'active' : ''}`}
-                  >
-                    <div className="mobile-nav-icon-container">
-                      <Settings size={18} />
-                    </div>
-                    <span>Settings</span>
-                  </button>
-                  <button 
-                    onClick={() => setProfileSheetOpen(true)} 
-                    className="mobile-nav-item"
-                  >
-                    <div className="mobile-nav-icon-container">
-                      <div className="w-5 h-5 rounded-full bg-slate-900 text-white flex items-center justify-center text-[10px] font-black">
-                        {user?.name?.charAt(0).toUpperCase() || 'A'}
-                      </div>
-                    </div>
-                    <span>Profile</span>
-                  </button>
+                  )}
                 </div>
-              )}
-            </div>
-          )
-        )
-      } />
-      <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+              )
+            )
+          } />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </Suspense>
 
       {/* Profile Bottom Sheet */}
       <AnimatePresence>
         {profileSheetOpen && (
           <>
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setProfileSheetOpen(false)}
               className="bottom-sheet-overlay"
             />
-            <motion.div 
+            <motion.div
               initial={{ y: '100%' }}
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
@@ -555,7 +563,7 @@ const App = () => {
             >
               <div className="bottom-sheet-handle" />
               <h3 className="text-lg font-black text-slate-900 mb-4">User Profile</h3>
-              
+
               <div className="p-4 bg-slate-50 rounded-2xl flex items-center gap-3 border border-slate-100 mb-6">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-green-500 to-emerald-600 text-white flex items-center justify-center font-black text-lg shadow-sm">
                   {user?.name?.charAt(0).toUpperCase() || 'A'}
@@ -570,14 +578,14 @@ const App = () => {
               </div>
 
               <div className="space-y-2">
-                <button 
-                  onClick={() => { setActiveTab('settings'); setProfileSheetOpen(false); }} 
+                <button
+                  onClick={() => { setActiveTab('settings'); setProfileSheetOpen(false); }}
                   className="w-full flex items-center gap-3 px-4 py-3.5 hover:bg-slate-50 rounded-xl text-sm font-bold text-slate-700 transition-all text-left"
                 >
                   <Settings size={18} /> Settings & Billing
                 </button>
-                <button 
-                  onClick={() => { logout(); setProfileSheetOpen(false); }} 
+                <button
+                  onClick={() => { logout(); setProfileSheetOpen(false); }}
                   className="w-full flex items-center gap-3 px-4 py-3.5 hover:bg-red-50 text-red-600 rounded-xl text-sm font-bold transition-all text-left border border-transparent hover:border-red-100/50"
                 >
                   <LogOut size={18} /> Logout

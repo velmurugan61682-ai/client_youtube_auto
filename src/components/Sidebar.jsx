@@ -1,9 +1,9 @@
 import React from 'react';
-import { 
-  LayoutDashboard, 
-  Video, 
-  PlaySquare, 
-  ShieldCheck, 
+import {
+  LayoutDashboard,
+  Video,
+  PlaySquare,
+  ShieldCheck,
   Settings,
   LogOut,
   Zap,
@@ -34,7 +34,7 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen }) => {
     <>
       <AnimatePresence>
         {isOpen && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -44,9 +44,9 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen }) => {
         )}
       </AnimatePresence>
 
-      <motion.aside 
+      <motion.aside
         initial={false}
-        animate={{ 
+        animate={{
           width: isOpen ? '280px' : '88px',
           x: (typeof window !== 'undefined' && window.innerWidth >= 1024) ? 0 : (isOpen ? 0 : -280),
         }}
@@ -64,21 +64,20 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen }) => {
                     setActiveTab(item.id);
                     if (window.innerWidth < 1024) setIsOpen(false);
                   }}
-                  className={`relative w-full h-full flex items-center gap-4 rounded-2xl transition-all duration-300 group ${
-                    isMenuTabActive 
-                      ? 'bg-green-500/20 text-[#22c55e] border border-green-500/30 shadow-[0_0_15px_rgba(34,197,94,0.1)] font-black' 
+                  className={`relative w-full h-full flex items-center gap-4 rounded-2xl transition-all duration-300 group ${isMenuTabActive
+                      ? 'bg-green-500/20 text-[#22c55e] border border-green-500/30 shadow-[0_0_15px_rgba(34,197,94,0.1)] font-black'
                       : 'hover:bg-slate-500/10 text-slate-600 hover:text-slate-950 border border-transparent'
-                  } ${isOpen ? 'px-4' : 'justify-center'}`}
+                    } ${isOpen ? 'px-4' : 'justify-center'}`}
                 >
                   <div className="flex-shrink-0">
-                    <item.icon 
-                      size={20} 
-                      strokeWidth={isMenuTabActive ? 2.5 : 2} 
+                    <item.icon
+                      size={20}
+                      strokeWidth={isMenuTabActive ? 2.5 : 2}
                     />
                   </div>
-                  
+
                   {isOpen && (
-                    <motion.span 
+                    <motion.span
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       className="text-[14px] font-black tracking-tight"
@@ -101,7 +100,7 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen }) => {
                   )}
                 </button>
                 {isMenuTabActive && !isOpen && (
-                   <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-[#22c55e] rounded-l-full" />
+                  <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-[#22c55e] rounded-l-full" />
                 )}
               </div>
             );
@@ -109,40 +108,25 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen }) => {
         </div>
 
         {/* Profile Footer */}
-        <div className="p-4 mt-auto border-t border-slate-100 bg-white/0">
-          <div className={`flex items-center justify-between ${isOpen ? 'gap-3' : 'justify-center'}`}>
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#0f0f0f] to-[#333] flex items-center justify-center text-white text-xs font-black shadow-md border border-white shrink-0 overflow-hidden">
-                {user?.profilePicture ? (
-                  <img src={user.profilePicture} className="w-full h-full object-cover" alt="" />
-                ) : (
-                  user?.name?.charAt(0).toUpperCase() || 'A'
-                )}
-              </div>
-              {isOpen && (
-                <div className="min-w-0">
-                  <p className="text-[13px] font-black text-slate-800 truncate leading-none mb-1">
-                    {user?.name || 'Channelmate'}
-                  </p>
-                  <p className="text-[10px] font-black text-teal-600 uppercase tracking-wider leading-none">
-                    channelmate
-                  </p>
-                </div>
-              )}
-            </div>
-            {isOpen ? (
-              <button 
-                onClick={onLogout}
-                className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all"
-                title="Logout"
-              >
-                <LogOut size={18} />
-              </button>
-            ) : (
-              // When collapsed, user can click or hover, but we just display user avatar
-              null
-            )}
-          </div>
+        <div className="p-4 mt-auto border-t border-slate-100 bg-white/0 flex justify-center">
+          {isOpen ? (
+            <button
+              onClick={onLogout}
+              className="w-full flex items-center justify-center gap-3 py-2.5 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all font-black text-[13px]"
+              title="Logout"
+            >
+              <LogOut size={18} />
+              <span>Logout</span>
+            </button>
+          ) : (
+            <button
+              onClick={onLogout}
+              className="p-2.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all"
+              title="Logout"
+            >
+              <LogOut size={18} />
+            </button>
+          )}
         </div>
       </motion.aside>
     </>

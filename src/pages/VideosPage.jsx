@@ -10,7 +10,9 @@ const VideosPage = ({
   fetchAnalytics, 
   searchQuery,
   isEmbedded,
-  onLogout
+  onLogout,
+  videoSubTab,
+  setVideoSubTab
 }) => {
   return (
     <motion.div 
@@ -50,6 +52,8 @@ const VideosPage = ({
           selectedChannelId={selectedChannelId}
           setSelectedChannelId={setSelectedChannelId}
           onLogout={onLogout}
+          videoSubTab={videoSubTab}
+          setVideoSubTab={setVideoSubTab}
         />
       </div>
     </motion.div>

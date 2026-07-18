@@ -1,26 +1,26 @@
 import React from 'react';
-import { 
-  PieChart, Pie, Cell, 
-  ResponsiveContainer, Tooltip 
+import {
+  PieChart, Pie, Cell,
+  ResponsiveContainer, Tooltip
 } from 'recharts';
 import { motion } from 'framer-motion';
-import { 
-  Zap, 
-  Clock, 
-  ShieldCheck, 
-  Activity, 
+import {
+  Zap,
+  Clock,
+  ShieldCheck,
+  Activity,
   AlertTriangle,
   RefreshCw
 } from 'lucide-react';
 import StatsGrid from '../components/StatsGrid';
 import { SENTIMENT_COLORS, SENTIMENT_ORDER } from '../utils/constants/sentimentColors';
 
-const DashboardPage = ({ 
-  stats, 
-  channels, 
-  selectedChannelId, 
-  setSelectedChannelId, 
-  fetchAnalytics, 
+const DashboardPage = ({
+  stats,
+  channels,
+  selectedChannelId,
+  setSelectedChannelId,
+  fetchAnalytics,
   loading,
   activities,
   searchQuery
@@ -36,13 +36,13 @@ const DashboardPage = ({
     };
   }).filter(data => data.value > 0);
 
-  const filteredActivities = activities.filter(a => 
-    a.text.toLowerCase().includes(searchQuery.toLowerCase()) || 
+  const filteredActivities = activities.filter(a =>
+    a.text.toLowerCase().includes(searchQuery.toLowerCase()) ||
     a.author?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
@@ -52,12 +52,13 @@ const DashboardPage = ({
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-2">
         <div>
           <h1 className="text-xl md:text-2xl font-black text-[#0f0f0f] tracking-tighter">Channel Dashboard</h1>
-          <p className="text-[12px] md:text-[13px] text-[#606060] font-medium">Monitoring emotional engagement across your content.</p>
+
         </div>
+
         <div className="flex flex-wrap items-center gap-2">
           {channels.length > 1 && (
-            <select 
-              value={selectedChannelId || ''} 
+            <select
+              value={selectedChannelId || ''}
               onChange={(e) => setSelectedChannelId(e.target.value)}
               className="bg-white border border-[#e5e5e5] rounded-lg px-2 py-1.5 text-xs font-bold text-[#0f0f0f] shadow-sm outline-none cursor-pointer"
             >
@@ -71,7 +72,7 @@ const DashboardPage = ({
               <span>Last 30 Days</span>
               <span className="text-[10px] md:hidden ml-1">▼</span>
             </div>
-            <button 
+            <button
               onClick={fetchAnalytics}
               disabled={loading}
               className="yt-btn-primary !py-3 min-[400px]:!py-2.5 md:!py-1.5 !px-4 !text-sm md:!text-xs flex items-center justify-center gap-2 w-full min-[400px]:w-[55%] md:w-auto active:scale-95 transition-all min-h-[44px] md:min-h-0"
@@ -104,12 +105,12 @@ const DashboardPage = ({
               ))}
             </div>
           </div>
-          
+
           <div className="h-[300px] min-h-[300px] relative w-full flex items-center justify-center">
             <ResponsiveContainer width="99%" height="100%">
               <PieChart>
                 <Pie
-                  data={sentimentData.length > 0 ? sentimentData : [{name: 'Empty', value: 1}]}
+                  data={sentimentData.length > 0 ? sentimentData : [{ name: 'Empty', value: 1 }]}
                   cx="50%"
                   cy="50%"
                   innerRadius={75}
@@ -125,9 +126,9 @@ const DashboardPage = ({
                   ))}
                   {sentimentData.length === 0 && <Cell fill="#f2f2f2" />}
                 </Pie>
-                <Tooltip 
-                  contentStyle={{ 
-                    borderRadius: '16px', border: 'none', 
+                <Tooltip
+                  contentStyle={{
+                    borderRadius: '16px', border: 'none',
                     boxShadow: '0 10px 30px rgba(0,0,0,0.12)', padding: '12px 16px'
                   }}
                   itemStyle={{ fontWeight: '800', fontSize: '12px' }}
@@ -153,7 +154,7 @@ const DashboardPage = ({
               <span className="text-[10px] font-black text-[#ff0000] uppercase tracking-tighter">Live</span>
             </div>
           </div>
-          
+
           <div className="space-y-3 min-h-[200px] max-h-[300px] overflow-y-auto no-scrollbar">
             {filteredActivities.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-center opacity-40 py-8">
@@ -162,14 +163,14 @@ const DashboardPage = ({
               </div>
             ) : (
               filteredActivities.map((activity, index) => (
-                <div 
+                <div
                   key={activity._id || activity.id || index}
                   className="p-3 bg-[#f8f8f8] border border-[#f0f0f0] rounded-xl"
                 >
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-[10px] font-black uppercase text-[#606060]">
-                      {activity.type === 'delete' ? 'Auto-Deleted' : 
-                       activity.type === 'like' ? 'Auto-Liked' : 'Analyzed'}
+                      {activity.type === 'delete' ? 'Auto-Deleted' :
+                        activity.type === 'like' ? 'Auto-Liked' : 'Analyzed'}
                     </span>
                     <span className="text-[9px] font-bold text-[#606060] bg-white px-2 py-0.5 rounded-full border border-[#f0f0f0]">
                       {Math.round((activity.confidence || 0) * 100)}%
@@ -204,8 +205,8 @@ const DashboardPage = ({
                   <span className="text-[#0f0f0f]">{lang.count} comments</span>
                 </div>
                 <div className="h-1.5 w-full bg-[#f0f0f0] rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-[#22c55e]" 
+                  <div
+                    className="h-full bg-[#22c55e]"
                     style={{ width: `${(lang.count / (stats.totalComments || 1)) * 100}%` }}
                   />
                 </div>

@@ -5,6 +5,13 @@ import './styles/index.css'
 import App from './App.jsx'
 import { AuthProvider } from './context/AuthContext.jsx'
 
+// Globally mute/intercept native browser alerts so they do not show popups
+if (typeof window !== 'undefined') {
+  window.alert = (msg) => {
+    console.log('Intercepted alert:', msg);
+  };
+}
+
 // Cache-busting on new deployment
 const BUILD_TIME = import.meta.env.VITE_BUILD_TIME || 'dev';
 const lastBuildTime = localStorage.getItem('app_build_time');

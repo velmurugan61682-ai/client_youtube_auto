@@ -73,11 +73,15 @@ const VideosList = ({
   channels = [], 
   selectedChannelId, 
   setSelectedChannelId,
-  onLogout
+  onLogout,
+  videoSubTab,
+  setVideoSubTab
 }) => {
   const { user } = useAuth();
   const [videos, setVideos] = useState([]);
-  const [videoTab, setVideoTab] = useState('videos'); // 'videos', 'shorts', or 'posts'
+  const [localVideoTab, setLocalVideoTab] = useState('videos'); // 'videos', 'shorts', or 'posts'
+  const videoTab = videoSubTab !== undefined ? videoSubTab : localVideoTab;
+  const setVideoTab = setVideoSubTab !== undefined ? setVideoSubTab : setLocalVideoTab;
   const [loadingVideos, setLoadingVideos] = useState(true);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [comments, setComments] = useState([]);
