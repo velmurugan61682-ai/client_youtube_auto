@@ -6,12 +6,8 @@ import {
   ShieldCheck,
   Settings,
   LogOut,
-  Zap,
   UsersRound,
   ChevronRight,
-  ShieldAlert,
-  Clock,
-  MessageCircle,
   CreditCard
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -25,7 +21,6 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen }) => {
     { id: 'channels', label: 'Channels', icon: PlaySquare },
     { id: 'leads', label: 'Leads', icon: UsersRound },
     { id: 'moderation', label: 'Auto-Mod', icon: ShieldCheck },
-    { id: 'autodm', label: 'Auto DM', icon: MessageCircle },
     { id: 'subscription', label: 'Subscription', icon: CreditCard },
     { id: 'settings', label: 'Settings', icon: Settings },
   ];

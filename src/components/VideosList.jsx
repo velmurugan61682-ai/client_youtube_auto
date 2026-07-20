@@ -498,7 +498,7 @@ const VideosList = ({
                         <Clock size={10} /> {safeFormatDistanceToNow(video.publishedAt)} ago
                       </span>
                       <span>•</span>
-                      <span>{(video.viewCount || video.statistics?.viewCount || 1245).toLocaleString()} views</span>
+                      <span>{(video.viewCount || video.statistics?.viewCount || 0).toLocaleString()} views</span>
                     </div>
                   </div>
                   <div className="flex items-center gap-0.5 flex-shrink-0">

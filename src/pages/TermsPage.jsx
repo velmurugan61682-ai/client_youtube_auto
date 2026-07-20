@@ -15,7 +15,7 @@ const TermsPage = () => {
         <div className="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 select-none">
             <img src="/logo.svg" className="w-9 h-9 object-contain" alt="Logo" />
-            <span className="text-[17px] font-black tracking-tighter text-zinc-900 font-['Outfit']">TECH VASEEGRAAH CREATOR AI</span>
+            <span className="text-[17px] font-black tracking-tighter text-zinc-900 font-['Outfit']">CHANNELMATE AI</span>
           </Link>
           <Link 
             to="/" 
@@ -51,7 +51,7 @@ const TermsPage = () => {
                 1. Acceptance of Terms
               </h2>
               <p className="pl-3 text-zinc-650">
-                By accessing or using the Tech Vaseegraah Creator AI service, you agree to comply with and be bound by these Terms of Service. If you do not agree, you may not access or use the platform.
+                By accessing or using the Channelmate service, you agree to comply with and be bound by these Terms of Service. If you do not agree, you may not access or use the platform.
               </p>
             </section>
 
@@ -101,7 +101,7 @@ const TermsPage = () => {
                 4. Moderation & Automated Reply Rules
               </h2>
               <p className="pl-3 text-zinc-650">
-                Tech Vaseegraah Creator AI provides tools for automated sentiment tracking, category auditing, and automatic replies. You are fully responsible for the auto-replies generated and posted. You must ensure your automated responses do not violate YouTube's spam, harassment, or community guidelines.
+                Channelmate provides tools for automated sentiment tracking, category auditing, and automatic replies. You are fully responsible for the auto-replies generated and posted. You must ensure your automated responses do not violate YouTube's spam, harassment, or community guidelines.
               </p>
             </section>
 
@@ -111,9 +111,10 @@ const TermsPage = () => {
                 5. Limitation of Liability
               </h2>
               <p className="pl-3 text-zinc-650">
-                Under no circumstances shall Tech Vaseegraah Creator AI or its creators be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of channel access, suspension by YouTube, data loss, or content flag actions resulting from automated activities.
+                Under no circumstances shall Channelmate or its creators be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of channel access, suspension by YouTube, data loss, or content flag actions resulting from automated activities.
               </p>
             </section>
+
 
             <section className="space-y-3 pt-6 border-t border-zinc-200/50">
               <h2 className="text-base font-bold text-zinc-900">Contact</h2>

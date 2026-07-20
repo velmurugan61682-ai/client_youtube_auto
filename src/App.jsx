@@ -6,7 +6,7 @@ import {
   WifiOff,
   LayoutDashboard,
   Video,
-  MessageCircle,
+  ShieldCheck,
   Settings,
   LogOut
 } from 'lucide-react';
@@ -21,18 +21,31 @@ const ModerationPage = lazy(() => import('./pages/ModerationPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 const LeadsPage = lazy(() => import('./pages/LeadsPage'));
 const AutoSchedulePage = lazy(() => import('./pages/AutoSchedule'));
-const AutoDmPage = lazy(() => import('./pages/AutoDm'));
 const SubscriptionPage = lazy(() => import('./pages/SubscriptionPage'));
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
 const TermsPage = lazy(() => import('./pages/TermsPage'));
 const Login = lazy(() => import('./components/Login'));
 const Register = lazy(() => import('./components/Register'));
+const AdminPortal = lazy(() => import('./pages/AdminPortal'));
 
-// Components
+// SaaS Admin Panel Pages
+const AdminLogin = lazy(() => import('./pages/AdminLogin'));
+const AdminDashboardPage = lazy(() => import('./pages/AdminDashboardPage'));
+const AdminClientsPage = lazy(() => import('./pages/AdminClientsPage'));
+const AdminClientDetailPage = lazy(() => import('./pages/AdminClientDetailPage'));
+const AdminSubscriptionsPage = lazy(() => import('./pages/AdminSubscriptionsPage'));
+const AdminPaymentsPage = lazy(() => import('./pages/AdminPaymentsPage'));
+const AdminLayout = lazy(() => import('./layouts/AdminLayout'));
+
+
+import AdminRoute from './components/AdminRoute';
 import Header from './components/Header';
+
 import Sidebar from './components/Sidebar';
+import InstallAppPrompt from './components/InstallAppPrompt';
 import { Routes, Route, Navigate } from 'react-router-dom';
+
 
 let activeAnalyticsPromise = null;
 let activeChannelsPromise = null;
@@ -70,6 +83,11 @@ const App = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [profileSheetOpen, setProfileSheetOpen] = useState(false);
   const [videoSubTab, setVideoSubTab] = useState('videos');
+  const [dateRange, setDateRange] = useState({
+    startDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+    endDate: new Date().toISOString(),
+    label: 'Last 30 Days'
+  });
 
   const toggleSidebar = () => {
     setSidebarOpen(prev => {
@@ -157,7 +175,9 @@ const App = () => {
       console.log('Waiting for login...');
       return;
     }
-    const url = selectedChannelId ? `/analytics?channelId=${selectedChannelId}` : '/analytics';
+    let url = selectedChannelId ? `/analytics?channelId=${selectedChannelId}` : '/analytics';
+    const sep = url.includes('?') ? '&' : '?';
+    url += `${sep}startDate=${dateRange.startDate}&endDate=${dateRange.endDate}`;
 
     if (activeAnalyticsPromise && activeAnalyticsPromise.url === url) {
       return activeAnalyticsPromise.promise;
@@ -179,7 +199,7 @@ const App = () => {
 
     activeAnalyticsPromise = { url, promise };
     return promise;
-  }, [selectedChannelId]);
+  }, [selectedChannelId, dateRange]);
 
   const fetchChannels = useCallback(async () => {
     const token = localStorage.getItem('token');
@@ -300,6 +320,8 @@ const App = () => {
           loading={loading}
           activities={activities}
           searchQuery={searchQuery}
+          dateRange={dateRange}
+          setDateRange={setDateRange}
         />;
       case 'videos':
         return <VideosPage
@@ -351,7 +373,7 @@ const App = () => {
           setSelectedChannelId={setSelectedChannelId}
         />;
       case 'moderation':
-        return <ModerationPage channels={channels} onAction={fetchAnalytics} searchQuery={searchQuery} />;
+        return <ModerationPage channels={channels} onAction={fetchAnalytics} searchQuery={searchQuery} selectedChannelId={selectedChannelId} setSelectedChannelId={setSelectedChannelId} />;
       case 'leads':
         return <LeadsPage searchQuery={searchQuery} />;
       case 'autoschedule':
@@ -361,11 +383,8 @@ const App = () => {
           setSelectedChannelId={setSelectedChannelId}
         />;
       case 'autodm':
-        return <AutoDmPage
-          channels={channels}
-          selectedChannelId={selectedChannelId}
-          setSelectedChannelId={setSelectedChannelId}
-        />;
+        // Redirect old Comment Automation route to Auto-Mod > Auto Reply tab
+        return <ModerationPage channels={channels} onAction={fetchAnalytics} searchQuery={searchQuery} selectedChannelId={selectedChannelId} setSelectedChannelId={setSelectedChannelId} initialTab="auto-reply" />;
       case 'settings':
         return <SettingsPage />;
       case 'subscription':
@@ -400,6 +419,18 @@ const App = () => {
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <Login />} />
           <Route path="/register" element={user ? <Navigate to="/dashboard" replace /> : <Register />} />
+          
+          {/* Dedicated SaaS Admin Panel Routes */}
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/dashboard" element={<AdminRoute><AdminLayout><AdminDashboardPage /></AdminLayout></AdminRoute>} />
+          <Route path="/admin/clients" element={<AdminRoute><AdminLayout><AdminClientsPage /></AdminLayout></AdminRoute>} />
+          <Route path="/admin/clients/:id" element={<AdminRoute><AdminLayout><AdminClientDetailPage /></AdminLayout></AdminRoute>} />
+          <Route path="/admin/subscriptions" element={<AdminRoute><AdminLayout><AdminSubscriptionsPage /></AdminLayout></AdminRoute>} />
+          <Route path="/admin/payments" element={<AdminRoute><AdminLayout><AdminPaymentsPage /></AdminLayout></AdminRoute>} />
+
+
+          <Route path="/admin-portal" element={<AdminPortal />} />
+
           <Route path="/dashboard" element={
             !user ? <Navigate to="/login" replace /> : (
               !planSelected && loadingChannels ? (
@@ -505,13 +536,13 @@ const App = () => {
                         <span>Videos</span>
                       </button>
                       <button
-                        onClick={() => setActiveTab('autodm')}
-                        className={`mobile-nav-item ${activeTab === 'autodm' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('moderation')}
+                        className={`mobile-nav-item ${activeTab === 'moderation' || activeTab === 'autodm' ? 'active' : ''}`}
                       >
                         <div className="mobile-nav-icon-container">
-                          <MessageCircle size={18} />
+                          <ShieldCheck size={18} />
                         </div>
-                        <span>Auto DM</span>
+                        <span>Auto-Mod</span>
                       </button>
                       <button
                         onClick={() => setActiveTab('settings')}
@@ -610,8 +641,10 @@ const App = () => {
         )}
       </AnimatePresence>
 
+      <InstallAppPrompt />
     </>
   );
 };
+
 
 export default App;

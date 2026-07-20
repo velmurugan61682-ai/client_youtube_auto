@@ -53,6 +53,28 @@ const ChannelsPage = ({ channels, onDisconnect, onAdd, setActiveTab, setSelected
                      {channel.reconnectRequired ? 'Paused' : 'Scanning Live'}
                    </span>
                 </div>
+
+                {/* Channel Statistics */}
+                <div className="mt-4 grid grid-cols-3 gap-2">
+                  <div className="bg-[#f9f9f9] rounded-xl p-2 text-center">
+                    <p className="text-[14px] font-black text-[#0f0f0f]">
+                      {Number(channel.statistics?.subscriberCount || 0).toLocaleString()}
+                    </p>
+                    <p className="text-[9px] font-bold text-[#909090] uppercase tracking-wider mt-0.5">Subscribers</p>
+                  </div>
+                  <div className="bg-[#f9f9f9] rounded-xl p-2 text-center">
+                    <p className="text-[14px] font-black text-[#0f0f0f]">
+                      {Number(channel.statistics?.videoCount || 0).toLocaleString()}
+                    </p>
+                    <p className="text-[9px] font-bold text-[#909090] uppercase tracking-wider mt-0.5">Videos</p>
+                  </div>
+                  <div className="bg-[#f9f9f9] rounded-xl p-2 text-center">
+                    <p className="text-[14px] font-black text-[#0f0f0f]">
+                      {Number(channel.statistics?.viewCount || 0).toLocaleString()}
+                    </p>
+                    <p className="text-[9px] font-bold text-[#909090] uppercase tracking-wider mt-0.5">Views</p>
+                  </div>
+                </div>
               </div>
             </div>
             

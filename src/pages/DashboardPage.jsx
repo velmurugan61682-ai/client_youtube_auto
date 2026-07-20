@@ -23,7 +23,9 @@ const DashboardPage = ({
   fetchAnalytics,
   loading,
   activities,
-  searchQuery
+  searchQuery,
+  dateRange,
+  setDateRange
 }) => {
   const sentimentData = SENTIMENT_ORDER.map(sentimentKey => {
     const cat = stats?.categories?.find(c => c._id === sentimentKey);
@@ -67,10 +69,31 @@ const DashboardPage = ({
             </select>
           )}
           <div className="flex flex-col min-[400px]:flex-row items-stretch min-[400px]:items-center justify-between md:justify-start gap-3 md:gap-2 w-full md:w-auto">
-            <div className="bg-white border border-[#e5e5e5] rounded-lg px-3 py-3 min-[400px]:py-2.5 md:py-1.5 flex items-center justify-center min-[400px]:justify-start gap-2 shadow-sm w-full min-[400px]:w-[45%] md:w-auto text-[14px] min-[400px]:text-[13px] md:text-[12px] font-bold text-[#0f0f0f] cursor-pointer min-h-[44px] md:min-h-0">
-              <Clock size={14} className="text-[#909090] shrink-0" />
-              <span>Last 30 Days</span>
-              <span className="text-[10px] md:hidden ml-1">▼</span>
+            <div className="relative flex items-center bg-white border border-[#e5e5e5] rounded-lg px-3 py-3 min-[400px]:py-2.5 md:py-1.5 shadow-sm w-full min-[400px]:w-[45%] md:w-auto min-h-[44px] md:min-h-0">
+              <Clock size={14} className="text-[#909090] shrink-0 pointer-events-none" />
+              <select
+                value={dateRange?.label || 'Last 30 Days'}
+                onChange={(e) => {
+                  const label = e.target.value;
+                  let days = 30;
+                  if (label === 'Last 24 Hours') days = 1;
+                  if (label === 'Last 7 Days') days = 7;
+                  if (label === 'Last 30 Days') days = 30;
+                  if (label === 'Last 90 Days') days = 90;
+                  setDateRange({
+                    startDate: new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString(),
+                    endDate: new Date().toISOString(),
+                    label
+                  });
+                }}
+                className="bg-transparent pl-2 pr-4 text-[14px] min-[400px]:text-[13px] md:text-[12px] font-bold text-[#0f0f0f] cursor-pointer outline-none appearance-none w-full"
+              >
+                <option value="Last 24 Hours">Last 24 Hours</option>
+                <option value="Last 7 Days">Last 7 Days</option>
+                <option value="Last 30 Days">Last 30 Days</option>
+                <option value="Last 90 Days">Last 90 Days</option>
+              </select>
+              <span className="text-[10px] pointer-events-none text-[#909090] ml-1">▼</span>
             </div>
             <button
               onClick={fetchAnalytics}
@@ -83,6 +106,18 @@ const DashboardPage = ({
           </div>
         </div>
       </div>
+
+
+
+      {stats?.aiStatus === 'Unavailable' && (
+        <div className="p-4 bg-red-50 border border-red-200 text-red-800 text-sm font-semibold rounded-2xl flex items-center gap-3 shadow-sm mb-4">
+          <AlertTriangle className="text-red-650 shrink-0" size={20} />
+          <div>
+            <p className="font-bold text-red-900">AI Service is currently unavailable</p>
+            <p className="text-xs text-red-750 font-medium">DeepSeek API returned an Insufficient Balance error. Automation features will fallback to keyword rules until the balance is recharged.</p>
+          </div>
+        </div>
+      )}
 
       {/* Main Stats Grid */}
       <StatsGrid stats={stats} />
@@ -198,33 +233,48 @@ const DashboardPage = ({
         <div className="yt-card !p-5">
           <h3 className="text-base font-bold text-[#0f0f0f] mb-4">Language Breakdown</h3>
           <div className="space-y-4">
-            {stats?.languages?.map((lang) => (
-              <div key={lang._id} className="space-y-1.5">
-                <div className="flex justify-between text-[11px] font-bold">
-                  <span className="text-[#606060] uppercase tracking-wider">{lang._id}</span>
-                  <span className="text-[#0f0f0f]">{lang.count} comments</span>
-                </div>
-                <div className="h-1.5 w-full bg-[#f0f0f0] rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-[#22c55e]"
-                    style={{ width: `${(lang.count / (stats.totalComments || 1)) * 100}%` }}
-                  />
-                </div>
+            {stats?.languages && stats.languages.length > 0 ? (
+              stats.languages.map((lang, i) => {
+                const pct = Math.round((lang.count / (stats.totalComments || 1)) * 100);
+                const colors = ['#22c55e', '#065fd4', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
+                return (
+                  <div key={lang._id} className="space-y-1.5">
+                    <div className="flex justify-between text-[11px] font-bold">
+                      <span className="text-[#606060] uppercase tracking-wider">{lang._id}</span>
+                      <span className="text-[#0f0f0f]">{lang.count} comments ({pct}%)</span>
+                    </div>
+                    <div className="h-2 w-full bg-[#f0f0f0] rounded-full overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all duration-700"
+                        style={{ width: `${pct}%`, backgroundColor: colors[i % colors.length] }}
+                      />
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="flex flex-col items-center justify-center py-8 gap-2">
+                <span className="text-3xl">🌐</span>
+                <p className="text-[11px] text-[#909090] italic text-center">Language data loads as new comments are processed by DeepSeek AI</p>
               </div>
-            ))}
+            )}
           </div>
         </div>
 
         <div className="yt-card !p-5">
           <h3 className="text-base font-bold text-[#0f0f0f] mb-4">Top Word Categories</h3>
           <div className="flex flex-wrap gap-3">
-            {stats?.topCategories?.map((cat) => (
-              <div key={cat._id} className="flex flex-col items-center gap-1 bg-[#f9f9f9] border border-[#f0f0f0] p-4 rounded-2xl min-w-[100px] flex-1">
-                <span className="text-[20px] font-black text-[#22c55e]">{cat.count}</span>
-                <span className="text-[10px] font-black text-[#909090] uppercase tracking-tighter">{cat._id}</span>
-              </div>
-            ))}
-            {(!stats?.topCategories || stats.topCategories.length === 0) && (
+            {stats?.topCategories && stats.topCategories.length > 0 ? (
+              stats.topCategories.map((cat, i) => {
+                const catColors = ['text-[#22c55e] bg-[#e6f4ea]', 'text-[#065fd4] bg-[#e8f0fe]', 'text-[#d93025] bg-[#fce8e6]', 'text-[#f59e0b] bg-[#fff8e1]', 'text-[#8b5cf6] bg-[#f3e8ff]', 'text-[#ec4899] bg-[#fce7f3]'];
+                return (
+                  <div key={cat._id} className={`flex flex-col items-center gap-1 border border-[#f0f0f0] p-4 rounded-2xl min-w-[90px] flex-1 ${catColors[i % catColors.length].split(' ')[1]}`}>
+                    <span className={`text-[20px] font-black ${catColors[i % catColors.length].split(' ')[0]}`}>{cat.count}</span>
+                    <span className="text-[10px] font-black text-[#909090] uppercase tracking-tighter text-center">{cat._id}</span>
+                  </div>
+                );
+              })
+            ) : (
               <p className="text-[11px] text-[#909090] italic">Awaiting more comment data for categorization...</p>
             )}
           </div>

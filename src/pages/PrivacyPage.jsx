@@ -15,7 +15,7 @@ const PrivacyPage = () => {
         <div className="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 select-none">
             <img src="/logo.svg" className="w-9 h-9 object-contain" alt="Logo" />
-            <span className="text-[17px] font-black tracking-tighter text-zinc-900 font-['Outfit']">TECH VASEEGRAAH CREATOR AI</span>
+            <span className="text-[17px] font-black tracking-tighter text-zinc-900 font-['Outfit']">CHANNELMATE AI</span>
           </Link>
           <Link 
             to="/" 
@@ -51,9 +51,10 @@ const PrivacyPage = () => {
                 1. Overview
               </h2>
               <p className="pl-3 text-zinc-650">
-                Tech Vaseegraah Creator AI ("we", "our", or "us") provides comment analytics, toxic comment moderation, and auto-reply tools for creators. This Privacy Policy details how we access, collect, store, and process your personal and channel data when you use our website and services, specifically through Google APIs.
+                Channelmate ("we", "our", or "us") provides comment analytics, toxic comment moderation, and auto-reply tools for creators. This Privacy Policy details how we access, collect, store, and process your personal and channel data when you use our website and services, specifically through Google APIs.
               </p>
             </section>
+
 
             <section className="space-y-3">
               <h2 className="text-base font-bold text-zinc-900 flex items-center gap-2">

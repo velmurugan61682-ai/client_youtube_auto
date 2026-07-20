@@ -37,15 +37,21 @@ const Login = ({ onSwitchToRegister }) => {
       setLoading(true);
       setError('');
       try {
-        await login(email, password);
-        console.log("Login successful");
-        console.log("Navigating to dashboard...");
-        navigate('/dashboard');
+        const userData = await login(email, password);
+        console.log("Login successful:", userData);
+        if (userData?.role === 'admin' || email.toLowerCase() === 'admin@channelmate.ai') {
+          const token = localStorage.getItem('token');
+          if (token) localStorage.setItem('adminToken', token);
+          navigate('/admin/dashboard');
+        } else {
+          navigate('/dashboard');
+        }
       } catch (err) {
         setError(err.response?.data?.error || 'Invalid credentials. Please try again.');
       } finally {
         setLoading(false);
       }
+
     }
   };
 
@@ -79,10 +85,11 @@ const Login = ({ onSwitchToRegister }) => {
           <div className="flex flex-col items-center text-center mb-8">
             <Link to="/" className="flex flex-col items-center">
               <img src="/logo.svg" className="w-12 h-12 object-contain mb-3" alt="Logo" />
-              <h1 className="text-[24px] font-black text-zinc-900 leading-tight mb-1 tracking-tighter">Tech Vaseegraah Creator AI</h1>
+              <h1 className="text-[24px] font-black text-zinc-900 leading-tight mb-1 tracking-tighter">Channelmate AI</h1>
               <p className="text-zinc-500 text-[13px] font-semibold">Sign in to your AI moderation centre</p>
             </Link>
           </div>
+
 
           {/* Error Message */}
           <AnimatePresence>
@@ -115,7 +122,8 @@ const Login = ({ onSwitchToRegister }) => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full bg-white/40 border border-zinc-200/80 text-zinc-900 rounded-xl py-3 pl-12 pr-4 text-[14px] font-semibold focus:outline-none focus:border-red-500/50 focus:bg-white focus:ring-4 focus:ring-red-500/5 transition-all placeholder-zinc-400"
-                  placeholder="admin@youtubeai.test"
+                  placeholder="admin@channelmate.ai"
+
                 />
               </div>
             </div>
@@ -192,8 +200,9 @@ const Login = ({ onSwitchToRegister }) => {
               <span className="flex items-center gap-2"><Zap size={14}/> AI Core v4.2</span>
            </div>
            <p className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.4em]">
-             &copy; 2026 Tech Vaseegraah Creator AI &bull; Global Systems LLC
+             &copy; 2026 Channelmate AI &bull; Global Systems LLC
            </p>
+
         </div>
       </motion.div>
     </div>

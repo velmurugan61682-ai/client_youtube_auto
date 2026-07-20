@@ -51,7 +51,18 @@ api.interceptors.response.use(
   async (error) => {
     const config = error.config;
     
-    // Check if it's already a retry or if it's a 4xx error (which we shouldn't retry, e.g. 401/403/404)
+    // Handle 401 Unauthenticated errors
+    if (error.response && error.response.status === 401) {
+      const currentPath = window.location.pathname;
+      if (currentPath !== '/login' && currentPath !== '/register' && currentPath !== '/') {
+        console.warn('⚠️ [API Interceptor] 401 Unauthenticated error received. Clearing token...');
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+      }
+      return Promise.reject(error);
+    }
+
+    // Check if it's already a retry or if it's a 4xx error (which we shouldn't retry, e.g. 403/404)
     if (!config || config._retry || (error.response && error.response.status < 500)) {
       return Promise.reject(error);
     }
@@ -63,6 +74,7 @@ api.interceptors.response.use(
     await new Promise(resolve => setTimeout(resolve, 1000));
     return api(config);
   }
+
 );
 
 export default api;

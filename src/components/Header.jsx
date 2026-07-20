@@ -153,10 +153,10 @@ const Header = ({
     { id: 'videos', label: 'Video Library', path: 'Videos', icon: Video },
     { id: 'channels', label: 'Connected Channels', path: 'Channels', icon: PlaySquare },
     { id: 'leads', label: 'WhatsApp Leads', path: 'Leads', icon: UsersRound },
-    { id: 'moderation', label: 'Smart Moderation (Auto-Mod)', path: 'Auto-Mod', icon: ShieldCheck },
-    { id: 'autodm', label: 'Auto DM Automations', path: 'Auto DM', icon: MessageCircle },
-    { id: 'subscription', label: 'Subscription & Billing', path: 'Subscription', icon: CreditCard },
-    { id: 'settings', label: 'System Settings', path: 'Settings', icon: Settings },
+    { id: 'moderation', label: 'Auto-Mod', path: 'Auto-Mod', icon: ShieldCheck },
+
+    { id: 'subscription', label: 'Subscription', path: 'Subscription', icon: CreditCard },
+    { id: 'settings', label: 'Settings', path: 'Settings', icon: Settings },
   ];
 
   useEffect(() => {

@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
-const SubscriptionPage = ({ isGate = false }) => {
+const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
   const { logout } = useAuth();
   const [subData, setSubData] = useState(null);
   const [invoices, setInvoices] = useState([]);
@@ -92,6 +92,7 @@ const SubscriptionPage = ({ isGate = false }) => {
         if (res.data.success) {
           await fetchStatus();
           alert('Downgraded to Free Plan successfully.');
+          if (onSelectPlan) onSelectPlan();
         }
         return;
       }
@@ -104,9 +105,10 @@ const SubscriptionPage = ({ isGate = false }) => {
       if (!razorpayKeyId || !subscriptionId || subscriptionId.includes('mock') || shortUrl === '#') {
         setMessage('Running in developer sandbox mode.');
         if (subscriptionId) {
-          await api.post('/subscription/verify', { razorpay_subscription_id: subscriptionId });
+          await api.post('/subscription/verify', { razorpay_subscription_id: subscriptionId, planType });
           await fetchStatus();
-          alert('Mock subscription activated successfully.');
+          alert('Subscription activated successfully.');
+          if (onSelectPlan) onSelectPlan();
         }
         return;
       }
@@ -120,21 +122,22 @@ const SubscriptionPage = ({ isGate = false }) => {
 
       // Open Razorpay Standard Checkout Modal
       const options = {
-        key: razorpayKeyId,
-        subscription_id: subscriptionId,
-        name: "Tech Vaseegraah",
-        description: "Premium Pro Plan Subscription",
+        name: "Channelmate",
+        description: "Plan Subscription",
+
         handler: async function (response) {
           try {
             setPurchasingPlan(planType);
             const verifyRes = await api.post('/subscription/verify', {
               razorpay_subscription_id: response.razorpay_subscription_id,
               razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature
+              razorpay_signature: response.razorpay_signature,
+              planType
             });
             if (verifyRes.data.success) {
               await fetchStatus();
               alert('Subscription activated successfully!');
+              if (onSelectPlan) onSelectPlan();
             }
           } catch (err) {
             console.error(err);
@@ -200,9 +203,12 @@ const SubscriptionPage = ({ isGate = false }) => {
   const planDisplayNames = {
     free: 'Free Plan',
     one_rupee: 'One Rupee Trial',
-    monthly_345: 'Monthly Basic',
+    monthly: 'Monthly Plan',
+    monthly_345: 'Monthly Plan',
     two_months_600: 'Standard Duo',
+    quarterly: 'Quarterly Pro',
     three_months_999: 'Quarterly Pro',
+    yearly: 'Yearly Plan',
     professional: 'Premium Pro'
   };
 
@@ -220,78 +226,32 @@ const SubscriptionPage = ({ isGate = false }) => {
       features: [
         "Connect 1 YouTube Channel",
         "AI Autopilot Comment Moderation",
-        "Auto DM WhatsApp Automations",
+        "Comment Automation Engine",
         "Basic Analytics Dashboard"
       ],
       color: "text-zinc-500",
       bgClass: "border-zinc-200"
     },
     {
-      type: "one_rupee",
-      name: "TRIAL PACK",
-      displayName: "One Rupee Trial",
-      price: "₹1",
-      period: "/ day",
-      desc: "Single day access for quick testing.",
-      features: [
-        "Connect 1 YouTube Channel",
-        "AI Autopilot Comment Moderation",
-        "Auto DM WhatsApp Automations",
-        "Basic Analytics Dashboard"
-      ],
-      color: "text-purple-600",
-      bgClass: "border-purple-200"
-    },
-    {
-      type: "monthly_345",
-      name: "BASIC MONTHLY",
-      displayName: "Monthly Basic",
-      price: "₹345",
-      period: "/ month",
-      desc: "Ideal for growing creators with multiple channels.",
-      features: [
-        "Connect up to 5 YouTube Channels",
-        "AI Autopilot Comment Moderation",
-        "Auto DM WhatsApp Automations",
-        "Standard Channel Sync Workers"
-      ],
-      color: "text-blue-600",
-      bgClass: "border-blue-200"
-    },
-    {
-      type: "two_months_600",
-      name: "VALUE PACK",
-      displayName: "Standard Duo",
-      price: "₹600",
-      period: "/ 2 months",
-      desc: "Cost-effective 2-month plan for small teams.",
-      features: [
-        "Connect up to 10 YouTube Channels",
-        "AI Autopilot Comment Moderation",
-        "Fast Channel Sync Workers",
-        "Advanced Analytics Dashboard"
-      ],
-      color: "text-indigo-650",
-      bgClass: "border-indigo-300"
-    },
-    {
-      type: "three_months_999",
+      type: "quarterly",
       name: "BEST VALUE",
       displayName: "Quarterly Pro",
       price: "₹999",
       period: "/ 3 months",
       desc: "Quarterly saver for professional creators.",
       features: [
-        "Connect Unlimited YouTube Channels",
-        "Dedicated Channel Sync Workers",
-        "Advanced Multi-Account Analytics",
+        "Connect Unlimited Channels",
+        "AI Autopilot Comment Moderation",
+        "Auto Reply & Smart Auto-Like",
+        "Advanced Audience Analytics",
         "24/7 Priority Support"
       ],
-      color: "text-orange-650",
+      color: "text-orange-600",
       bgClass: "border-orange-300 ring-2 ring-orange-400/10",
       recommended: true
     }
   ];
+
 
   return (
     <div className={`max-w-6xl mx-auto w-full transition-all duration-500 ${isGate ? 'max-w-4xl py-6' : 'py-2'}`}>
@@ -401,7 +361,7 @@ const SubscriptionPage = ({ isGate = false }) => {
           )}
 
           {/* Pricing Grid */}
-          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mt-8">
+          <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-8">
             {plans.map((plan) => {
               const isActive = plan.type === 'free' ? !hasAnyActiveSub : isPlanActive(plan.type);
               
