@@ -133,7 +133,7 @@ const LandingPage = () => {
 
   const pricingPlans = [
     {
-      name: "Trial Plan",
+      name: "Free Plan",
       price: "₹0",
       period: "Free 14 Days",
       desc: "Perfect for exploring AI comment moderation.",
@@ -142,31 +142,13 @@ const LandingPage = () => {
       highlight: false
     },
     {
-      name: "Monthly Plan",
-      price: "₹345",
-      period: "per month",
-      desc: "Ideal for growing individual content creators.",
-      features: ["1 YouTube Channel", "Unlimited AI Auto-Replies", "Real-time Toxic Comment Shield", "WhatsApp Lead Capture", "Priority Support"],
-      cta: "Subscribe Now",
-      highlight: true
-    },
-    {
-      name: "Quarterly Plan",
+      name: "Pro Plan",
       price: "₹999",
       period: "per 3 months",
-      desc: "Save 15% with quarterly billing.",
+      desc: "Complete AI comment moderation & lead capture for growing channels.",
       features: ["Up to 3 YouTube Channels", "Unlimited AI Auto-Replies", "Advanced Auto-Liking", "Lead Export to CSV/CRM", "24/7 Priority Support"],
       cta: "Subscribe Now",
-      highlight: false
-    },
-    {
-      name: "Premium Plan",
-      price: "₹2,999",
-      period: "per year",
-      desc: "Best value for agencies and top creators.",
-      features: ["Unlimited YouTube Channels", "Multi-tenant Access", "Custom AI Prompt Tuning", "Dedicated Account Manager", "Custom Integrations"],
-      cta: "Subscribe Now",
-      highlight: false
+      highlight: true
     }
   ];
 
@@ -189,14 +171,8 @@ const LandingPage = () => {
       {/* 1. Sticky Floating Glass Navbar */}
       <header className="sticky top-4 z-50 max-w-7xl mx-auto px-4 sm:px-6">
         <div className="floating-glass-nav rounded-full px-6 h-18 flex items-center justify-between">
-          <div className="flex items-center gap-3 select-none cursor-pointer" onClick={() => scrollToSection('home')}>
-            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-emerald-500 to-green-600 flex items-center justify-center text-white shadow-md shadow-emerald-500/20">
-              <Bot size={22} />
-            </div>
-            <div className="flex flex-col -gap-1">
-              <span className="text-[17px] font-black tracking-tighter text-slate-900">CHANNELMATE</span>
-              <span className="text-[9px] font-black text-emerald-600 tracking-[0.25em] -mt-1 uppercase">AI AUTOMATION</span>
-            </div>
+          <div className="flex items-center select-none cursor-pointer" onClick={() => scrollToSection('home')}>
+            <img src="/channelmate_logo.svg" className="h-10 sm:h-11 w-auto object-contain" alt="Channelmate Logo" />
           </div>
 
           {/* Navigation Links */}
@@ -440,7 +416,7 @@ const LandingPage = () => {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto gap-8">
           {pricingPlans.map((p, i) => (
             <div 
               key={i} 
@@ -577,7 +553,6 @@ const LandingPage = () => {
           <div className="flex items-center gap-6 text-xs font-bold text-slate-500">
             <Link to="/privacy" className="hover:text-emerald-700 transition-colors">Privacy Policy</Link>
             <Link to="/terms" className="hover:text-emerald-700 transition-colors">Terms of Service</Link>
-            <Link to="/admin/login" className="hover:text-emerald-700 transition-colors">Admin Console</Link>
           </div>
         </div>
       </footer>

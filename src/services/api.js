@@ -29,10 +29,15 @@ const api = axios.create({
   },
 });
 
-// Request interceptor to attach Bearer Token
+// Request interceptor to attach appropriate Bearer Token (Admin vs Client)
 api.interceptors.request.use((config) => {
+  const isAdminRoute = config.url && config.url.includes('/admin');
+  const adminToken = localStorage.getItem('adminToken');
   const token = localStorage.getItem('token');
-  if (token && token !== 'null' && token !== 'undefined') {
+
+  if (isAdminRoute && adminToken && adminToken !== 'null' && adminToken !== 'undefined') {
+    config.headers.Authorization = `Bearer ${adminToken}`;
+  } else if (token && token !== 'null' && token !== 'undefined') {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
@@ -51,11 +56,15 @@ api.interceptors.response.use(
   async (error) => {
     const config = error.config;
     
-    // Handle 401 Unauthenticated errors
+    // Handle 401 Unauthenticated errors separately for Admin vs Client
     if (error.response && error.response.status === 401) {
       const currentPath = window.location.pathname;
-      if (currentPath !== '/login' && currentPath !== '/register' && currentPath !== '/') {
-        console.warn('⚠️ [API Interceptor] 401 Unauthenticated error received. Clearing token...');
+      if (currentPath.startsWith('/admin') && currentPath !== '/admin/login') {
+        console.warn('⚠️ [API Interceptor] 401 Unauthenticated error received on Admin route. Clearing adminToken...');
+        localStorage.removeItem('adminToken');
+        window.location.href = '/admin/login';
+      } else if (!currentPath.startsWith('/admin') && currentPath !== '/login' && currentPath !== '/register' && currentPath !== '/') {
+        console.warn('⚠️ [API Interceptor] 401 Unauthenticated error received on Client route. Clearing token...');
         localStorage.removeItem('token');
         window.location.href = '/login';
       }
@@ -74,7 +83,6 @@ api.interceptors.response.use(
     await new Promise(resolve => setTimeout(resolve, 1000));
     return api(config);
   }
-
 );
 
 export default api;

@@ -247,12 +247,20 @@ const Settings = () => {
                           <p className="text-[14px] font-black text-[#0f0f0f] mb-0.5">Smart Moderation</p>
                           <p className="text-[11px] text-[#909090] font-semibold leading-relaxed">Automatically purge or hide toxic, abusive, or spam comments using neural analysis.</p>
                         </div>
-                        <button
-                          onClick={() => setAutoMod(!autoMod)}
-                          className={`ios-toggle ${autoMod ? 'active' : ''}`}
-                        >
-                          <div className="ios-toggle-thumb" />
-                        </button>
+                        <div className="flex items-center gap-3">
+                          <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md ${
+                            autoMod ? 'bg-green-500/10 text-green-600' : 'bg-slate-100 text-slate-400'
+                          }`}>
+                            {autoMod ? 'ON' : 'OFF'}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => setAutoMod(!autoMod)}
+                            className={`ios-toggle ${autoMod ? 'active' : ''}`}
+                          >
+                            <div className="ios-toggle-thumb" />
+                          </button>
+                        </div>
                       </div>
 
                       <div className="ios-list-item">
@@ -260,12 +268,20 @@ const Settings = () => {
                           <p className="text-[14px] font-black text-[#0f0f0f] mb-0.5">Smart AI Reply</p>
                           <p className="text-[11px] text-[#909090] font-semibold leading-relaxed">Automatically generate replies based on the comment sentiment using AI.</p>
                         </div>
-                        <button
-                          onClick={() => setSmartAiReply(!smartAiReply)}
-                          className={`ios-toggle ${smartAiReply ? 'active' : ''}`}
-                        >
-                          <div className="ios-toggle-thumb" />
-                        </button>
+                        <div className="flex items-center gap-3">
+                          <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md ${
+                            smartAiReply ? 'bg-green-500/10 text-green-600' : 'bg-slate-100 text-slate-400'
+                          }`}>
+                            {smartAiReply ? 'ON' : 'OFF'}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => setSmartAiReply(!smartAiReply)}
+                            className={`ios-toggle ${smartAiReply ? 'active' : ''}`}
+                          >
+                            <div className="ios-toggle-thumb" />
+                          </button>
+                        </div>
                       </div>
 
                       <div className="ios-list-item">
@@ -273,12 +289,20 @@ const Settings = () => {
                           <p className="text-[14px] font-black text-[#0f0f0f] mb-0.5">Auto-Engagement (Like)</p>
                           <p className="text-[11px] text-[#909090] font-semibold leading-relaxed">Automatically "Like" positive and appreciative comments to boost SEO performance.</p>
                         </div>
-                        <button
-                          onClick={() => setAutoLike(!autoLike)}
-                          className={`ios-toggle ${autoLike ? 'active' : ''}`}
-                        >
-                          <div className="ios-toggle-thumb" />
-                        </button>
+                        <div className="flex items-center gap-3">
+                          <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md ${
+                            autoLike ? 'bg-green-500/10 text-green-600' : 'bg-slate-100 text-slate-400'
+                          }`}>
+                            {autoLike ? 'ON' : 'OFF'}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => setAutoLike(!autoLike)}
+                            className={`ios-toggle ${autoLike ? 'active' : ''}`}
+                          >
+                            <div className="ios-toggle-thumb" />
+                          </button>
+                        </div>
                       </div>
 
                       <div className="ios-list-item">
@@ -286,12 +310,20 @@ const Settings = () => {
                           <p className="text-[14px] font-black text-[#0f0f0f] mb-0.5">Archive Comments</p>
                           <p className="text-[11px] text-[#909090] font-semibold leading-relaxed">Automatically archive comments once they have been approved or replied to.</p>
                         </div>
-                        <button
-                          onClick={() => setArchiveComments(!archiveComments)}
-                          className={`ios-toggle ${archiveComments ? 'active' : ''}`}
-                        >
-                          <div className="ios-toggle-thumb" />
-                        </button>
+                        <div className="flex items-center gap-3">
+                          <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md ${
+                            archiveComments ? 'bg-green-500/10 text-green-600' : 'bg-slate-100 text-slate-400'
+                          }`}>
+                            {archiveComments ? 'ON' : 'OFF'}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => setArchiveComments(!archiveComments)}
+                            className={`ios-toggle ${archiveComments ? 'active' : ''}`}
+                          >
+                            <div className="ios-toggle-thumb" />
+                          </button>
+                        </div>
                       </div>
 
                       {/* Confidence Slider inside a list item */}

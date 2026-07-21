@@ -37,21 +37,24 @@ const Login = ({ onSwitchToRegister }) => {
       setLoading(true);
       setError('');
       try {
-        const userData = await login(email, password);
-        console.log("Login successful:", userData);
-        if (userData?.role === 'admin' || email.toLowerCase() === 'admin@channelmate.ai') {
-          const token = localStorage.getItem('token');
-          if (token) localStorage.setItem('adminToken', token);
-          navigate('/admin/dashboard');
-        } else {
-          navigate('/dashboard');
+        const responseData = await login(email, password);
+        const loggedUser = responseData?.user || responseData;
+
+        // Admin accounts must use /admin/login — block them here
+        if (loggedUser?.role === 'admin' || loggedUser?.role === 'superadmin') {
+          // Clear this wrongly-set client session
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          setError('Admin accounts must use the Admin Portal. Go to /admin/login');
+          return;
         }
+
+        navigate('/dashboard');
       } catch (err) {
         setError(err.response?.data?.error || 'Invalid credentials. Please try again.');
       } finally {
         setLoading(false);
       }
-
     }
   };
 
@@ -84,8 +87,7 @@ const Login = ({ onSwitchToRegister }) => {
           {/* Top Logo Container */}
           <div className="flex flex-col items-center text-center mb-8">
             <Link to="/" className="flex flex-col items-center">
-              <img src="/logo.svg" className="w-12 h-12 object-contain mb-3" alt="Logo" />
-              <h1 className="text-[24px] font-black text-zinc-900 leading-tight mb-1 tracking-tighter">Channelmate AI</h1>
+              <img src="/channelmate_logo.svg" className="h-12 sm:h-14 w-auto object-contain mb-3" alt="Channelmate Logo" />
               <p className="text-zinc-500 text-[13px] font-semibold">Sign in to your AI moderation centre</p>
             </Link>
           </div>
@@ -147,7 +149,7 @@ const Login = ({ onSwitchToRegister }) => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full bg-white/40 border border-zinc-200/80 text-zinc-900 rounded-xl py-3 pl-12 pr-4 text-[14px] font-semibold focus:outline-none focus:border-red-500/50 focus:bg-white focus:ring-4 focus:ring-red-500/5 transition-all placeholder-zinc-400"
-                  placeholder="••••••••"
+                  placeholder="Enter your password"
                 />
               </div>
             </div>
@@ -189,6 +191,12 @@ const Login = ({ onSwitchToRegister }) => {
                     Create Now
                   </Link>
                 )}
+              </p>
+              <p className="text-[11px] font-bold text-zinc-400 mt-2">
+                Admin?{' '}
+                <Link to="/admin/login" className="text-emerald-600 hover:underline font-black">
+                  Go to Admin Portal →
+                </Link>
               </p>
           </div>
         </div>

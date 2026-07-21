@@ -299,3 +299,65 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* --- iOS List Group & iOS Toggle Switch --- */
+
+.ios-list-group {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px 0 rgba(34, 197, 94, 0.05), 0 1px 3px 0 rgba(0, 0, 0, 0.02);
+}
+
+.ios-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  transition: background 0.2s ease;
+}
+
+.ios-list-item:last-child {
+  border-bottom: none;
+}
+
+/* iOS Toggle Switch */
+.ios-toggle {
+  position: relative;
+  width: 52px;
+  height: 30px;
+  background-color: #cbd5e1; /* Off color - Light Slate */
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 2px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  outline: none;
+}
+
+.ios-toggle.active {
+  background-color: #22c55e; /* Vibrant Green ON state */
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.35);
+}
+
+.ios-toggle-thumb {
+  width: 26px;
+  height: 26px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(0);
+}
+
+.ios-toggle.active .ios-toggle-thumb {
+  transform: translateX(22px);
+}
+

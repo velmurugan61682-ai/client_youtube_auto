@@ -417,8 +417,18 @@ const App = () => {
           <Route path="/" element={<LandingPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/terms" element={<TermsPage />} />
-          <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <Login />} />
-          <Route path="/register" element={user ? <Navigate to="/dashboard" replace /> : <Register />} />
+          {/* Client Login — only redirect if a CLIENT is already logged in.
+              If admin session exists in localStorage, ignore it so a client can still log in. */}
+          <Route path="/login" element={
+            (user && user.role !== 'admin' && user.role !== 'superadmin')
+              ? <Navigate to="/dashboard" replace />
+              : <Login />
+          } />
+          <Route path="/register" element={
+            (user && user.role !== 'admin' && user.role !== 'superadmin')
+              ? <Navigate to="/dashboard" replace />
+              : <Register />
+          } />
           
           {/* Dedicated SaaS Admin Panel Routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
@@ -432,7 +442,7 @@ const App = () => {
           <Route path="/admin-portal" element={<AdminPortal />} />
 
           <Route path="/dashboard" element={
-            !user ? <Navigate to="/login" replace /> : (
+            !user ? <Navigate to="/login" replace /> : (user.role === 'admin' || user.role === 'superadmin') ? <Navigate to="/admin/dashboard" replace /> : (
               !planSelected && loadingChannels ? (
                 <div className="h-screen w-full flex items-center justify-center bg-[#f9f9f9]">
                   <div className="flex flex-col items-center gap-4">

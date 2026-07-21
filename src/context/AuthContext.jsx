@@ -8,7 +8,6 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     const token = localStorage.getItem('token');
-    console.log('INITIAL TOKEN:', token);
     return !!token && token !== 'null' && token !== 'undefined';
   });
   const [user, setUser] = useState(() => {
@@ -71,7 +70,6 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated(false);
       setUser(null);
       if (error.response?.status === 401) {
-        console.log('TOKEN REMOVED: checkAuth failed');
         localStorage.removeItem('token');
         localStorage.removeItem('user');
       }
@@ -87,11 +85,13 @@ export const AuthProvider = ({ children }) => {
       (response) => response,
       (error) => {
         if (error.response?.status === 401) {
-          setIsAuthenticated(false);
-          setUser(null);
-          console.log('TOKEN REMOVED: response interceptor 401');
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
+          const isReqAdmin = error.config?.url?.includes('/admin') || window.location.pathname.startsWith('/admin');
+          if (!isReqAdmin) {
+            setIsAuthenticated(false);
+            setUser(null);
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+          }
         }
         return Promise.reject(error);
       }
@@ -105,7 +105,6 @@ export const AuthProvider = ({ children }) => {
       const response = await api.post('/auth/login', { email, password });
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
-        console.log('TOKEN AFTER LOGIN:', localStorage.getItem('token'));
       }
       if (response.data.user) {
         localStorage.setItem('user', JSON.stringify(response.data.user));
@@ -117,7 +116,6 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated(false);
       setUser(null);
       if (error.response?.status === 401) {
-        console.log('TOKEN REMOVED: login failed');
         localStorage.removeItem('token');
         localStorage.removeItem('user');
       }
@@ -139,7 +137,6 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setIsAuthenticated(false);
       setUser(null);
-      console.log('TOKEN REMOVED: user logged out');
       localStorage.removeItem('token');
       localStorage.removeItem('user');
     }

@@ -13,9 +13,8 @@ const PrivacyPage = () => {
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white/15 backdrop-blur-2xl border-b border-white/30">
         <div className="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3 select-none">
-            <img src="/logo.svg" className="w-9 h-9 object-contain" alt="Logo" />
-            <span className="text-[17px] font-black tracking-tighter text-zinc-900 font-['Outfit']">CHANNELMATE AI</span>
+          <Link to="/" className="flex items-center select-none">
+            <img src="/channelmate_logo.svg" className="h-9 w-auto object-contain" alt="Channelmate Logo" />
           </Link>
           <Link 
             to="/" 

@@ -34,9 +34,7 @@ const AdminLayout = ({ children }) => {
         <div>
           {/* Logo */}
           <div className="flex items-center gap-3 px-2 mb-8 select-none">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-emerald-500 to-green-600 flex items-center justify-center text-white shadow-md shadow-emerald-500/20">
-              <Bot size={22} />
-            </div>
+            <img src="/logo_icon.svg" className="w-10 h-10 object-contain drop-shadow-sm" alt="Channelmate Logo" />
             <div>
               <span className="text-[17px] font-black tracking-tighter text-slate-900 block leading-none">CHANNELMATE</span>
               <span className="text-[9px] font-black text-emerald-600 tracking-[0.2em] uppercase mt-1 block">ADMIN SaaS</span>

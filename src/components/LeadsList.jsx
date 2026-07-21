@@ -87,62 +87,144 @@ const LeadsList = ({ searchQuery: globalSearch }) => {
   );
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div />
-        
-        <div className="flex items-center gap-2">
-          <button 
-            onClick={handleExport}
-            className="flex items-center gap-2 bg-white border border-[#e5e5e5] rounded-lg px-4 py-2 text-xs font-bold text-[#0f0f0f] shadow-sm hover:bg-[#f9f9f9] transition-colors"
-          >
-            <Download size={14} />
-            Export CSV
-          </button>
-          <button 
-            onClick={fetchLeads}
-            className="yt-btn-primary !py-2 !px-4 !text-xs"
-          >
-            Refresh
-          </button>
-        </div>
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex items-center justify-end gap-2">
+        <button 
+          onClick={handleExport}
+          className="flex items-center gap-1.5 bg-white border border-[#e5e5e5] rounded-xl px-3 sm:px-4 py-2 text-xs font-bold text-[#0f0f0f] shadow-sm hover:bg-[#f9f9f9] transition-colors"
+        >
+          <Download size={14} />
+          <span>Export CSV</span>
+        </button>
+        <button 
+          onClick={fetchLeads}
+          className="yt-btn-primary !py-2 !px-4 !text-xs !rounded-xl"
+        >
+          Refresh
+        </button>
       </div>
 
-      <div className="yt-card !p-4 flex flex-wrap items-center gap-4">
+      <div className="yt-card !p-3 sm:!p-4 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3">
         <div className="flex-1 min-w-[200px] relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#909090]" size={16} />
           <input 
             type="text" 
-            placeholder="Search leads..."
+            placeholder="Search leads by name, comment, phone..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-[#f9f9f9] border border-[#e5e5e5] rounded-xl pl-10 pr-4 py-2 text-sm focus:outline-none focus:border-[#ff0000]/30 transition-all font-medium"
+            className="w-full bg-[#f9f9f9] border border-[#e5e5e5] rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:border-[#ff0000]/30 transition-all font-medium"
           />
         </div>
         
-        <select 
-          value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value)}
-          className="bg-white border border-[#e5e5e5] rounded-xl px-4 py-2 text-sm font-bold text-[#0f0f0f] shadow-sm outline-none cursor-pointer"
-        >
-          <option value="">All Statuses</option>
-          <option value="sent">Sent</option>
-          <option value="pending">Pending</option>
-          <option value="failed">Failed</option>
-          <option value="duplicate">Duplicate</option>
-        </select>
+        <div className="flex items-center gap-2">
+          <select 
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="flex-1 sm:flex-initial bg-white border border-[#e5e5e5] rounded-xl px-3 py-2 text-xs sm:text-sm font-bold text-[#0f0f0f] shadow-sm outline-none cursor-pointer"
+          >
+            <option value="">All Statuses</option>
+            <option value="sent">Sent</option>
+            <option value="pending">Pending</option>
+            <option value="failed">Failed</option>
+            <option value="duplicate">Duplicate</option>
+          </select>
 
-        <select 
-          value={selectedChannel}
-          onChange={(e) => setSelectedChannel(e.target.value)}
-          className="bg-white border border-[#e5e5e5] rounded-xl px-4 py-2 text-sm font-bold text-[#0f0f0f] shadow-sm outline-none cursor-pointer"
-        >
-          <option value="">All Channels</option>
-          {channels.map(c => <option key={c.channelId} value={c.channelId}>{c.title}</option>)}
-        </select>
+          <select 
+            value={selectedChannel}
+            onChange={(e) => setSelectedChannel(e.target.value)}
+            className="flex-1 sm:flex-initial bg-white border border-[#e5e5e5] rounded-xl px-3 py-2 text-xs sm:text-sm font-bold text-[#0f0f0f] shadow-sm outline-none cursor-pointer"
+          >
+            <option value="">All Channels</option>
+            {channels.map(c => <option key={c.channelId} value={c.channelId}>{c.title}</option>)}
+          </select>
+        </div>
       </div>
 
-      <div className="yt-card !p-0 overflow-hidden border-[#e5e5e5]">
+      {/* Mobile Card List (Visible on Small Screens) */}
+      <div className="block md:hidden space-y-3">
+        {loading ? (
+          Array(3).fill(0).map((_, i) => (
+            <div key={i} className="yt-card p-4 animate-pulse space-y-3">
+              <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+              <div className="h-3 bg-gray-100 rounded w-2/3"></div>
+            </div>
+          ))
+        ) : filteredLeads.length === 0 ? (
+          <div className="yt-card p-8 text-center text-slate-400">
+            <User size={36} className="mx-auto mb-2 opacity-40" />
+            <p className="text-xs font-bold">No leads found matching your filters.</p>
+          </div>
+        ) : (
+          filteredLeads.map((lead) => (
+            <div key={lead._id} className="yt-card !p-4 space-y-3 border-[#e5e5e5] bg-white rounded-2xl shadow-sm">
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-9 h-9 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600 font-bold shrink-0">
+                    <User size={16} />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-black text-[#0f0f0f] truncate">{lead.authorName}</p>
+                    <p className="text-[10px] font-semibold text-[#909090] flex items-center gap-1">
+                      <Youtube size={10} />
+                      {channels.find(c => c.channelId === lead.channelId)?.title || 'Channel'}
+                    </p>
+                  </div>
+                </div>
+
+                <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter ${getStatusColor(lead.status)}`}>
+                  {lead.status}
+                </span>
+              </div>
+
+              {lead.whatsappNumber && lead.whatsappNumber !== 'None' ? (
+                <div className="bg-emerald-50/60 border border-emerald-100/80 rounded-xl p-2.5 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Phone size={14} className="text-emerald-600" />
+                    <span className="text-xs font-black text-slate-900">{lead.whatsappNumber}</span>
+                  </div>
+                  <a 
+                    href={`https://wa.me/${lead.whatsappNumber}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="px-3 py-1 bg-[#25D366] text-white text-[11px] font-black rounded-lg shadow-sm hover:bg-[#20bd5a] flex items-center gap-1"
+                  >
+                    Chat
+                  </a>
+                </div>
+              ) : (
+                <div className="bg-slate-50 border border-slate-100 rounded-xl p-2 text-xs font-bold text-slate-400">
+                  No WhatsApp Number
+                </div>
+              )}
+
+              {lead.originalComment && (
+                <p className="text-xs text-slate-600 bg-slate-50 p-2.5 rounded-xl italic line-clamp-2">
+                  "{lead.originalComment}"
+                </p>
+              )}
+
+              <div className="flex items-center justify-between pt-1 text-[10px] font-medium text-slate-400">
+                <span className="flex items-center gap-1">
+                  <Clock size={11} /> {new Date(lead.createdAt).toLocaleDateString()}
+                </span>
+                {lead.videoId && (
+                  <a 
+                    href={`https://www.youtube.com/watch?v=${lead.videoId}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-red-600 font-bold flex items-center gap-1 hover:underline"
+                  >
+                    <Youtube size={12} /> View Video
+                  </a>
+                )}
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Desktop Table View (Visible on Medium+ Screens) */}
+      <div className="hidden md:block yt-card !p-0 overflow-hidden border-[#e5e5e5]">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse min-w-[800px]">
             <thead>

@@ -71,8 +71,8 @@ const Register = ({ onSwitchToLogin }) => {
           {/* Header */}
           <div className="flex flex-col items-center text-center mb-8">
             <Link to="/" className="flex flex-col items-center">
-              <img src="/logo.svg" className="w-12 h-12 object-contain mb-3" alt="Logo" />
-              <h2 className="text-[24px] font-black text-zinc-900 leading-tight mb-1 tracking-tighter">Create Creator Account</h2>
+              <img src="/channelmate_logo.svg" className="h-12 sm:h-14 w-auto object-contain mb-3" alt="Channelmate Logo" />
+              <h2 className="text-[20px] font-black text-zinc-900 leading-tight mb-1 tracking-tighter">Create Creator Account</h2>
               <p className="text-zinc-500 text-[13px] font-semibold">Join the elite AI moderation community</p>
             </Link>
           </div>

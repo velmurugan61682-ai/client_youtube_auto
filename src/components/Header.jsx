@@ -263,12 +263,9 @@ const Header = ({
 
         <div
           onClick={() => setActiveTab && setActiveTab('dashboard')}
-          className="flex items-center gap-2.5 cursor-pointer group select-none"
+          className="flex items-center cursor-pointer group select-none py-1"
         >
-          <img src="/logo.svg" className="w-9 h-9 object-contain" alt="Logo" />
-          <div className="hidden sm:flex flex-col">
-            <span className="text-[17px] font-black tracking-tighter text-[#0f0f0f]">CHANNELMATE</span>
-          </div>
+          <img src="/channelmate_logo.svg" className="h-10 sm:h-11 w-auto object-contain drop-shadow-sm transition-transform group-hover:scale-[1.02]" alt="Channelmate Logo" />
         </div>
 
         {user && user.role === 'admin' && orgs.length > 0 && (
@@ -678,21 +675,21 @@ const Header = ({
         <div className="relative ml-2" ref={menuRef}>
           <button
             onClick={() => setShowProfileMenu(!showProfileMenu)}
-            className="flex items-center gap-3 p-1.5 hover:bg-[#f8f8f8] rounded-2xl transition-all group"
+            className="flex items-center gap-2.5 p-1.5 hover:bg-[#f8f8f8] rounded-2xl transition-all group"
           >
-            <div className="hidden lg:flex flex-col items-end pr-1 max-w-[120px]">
-              <span className="text-[13px] font-black text-[#0f0f0f] truncate w-full text-right">{user?.name || 'Channelmate'}</span>
-              <span className="text-[9px] font-black text-[#2ba640] uppercase tracking-wider flex items-center gap-1 justify-end w-full">
-                <div className="w-1.5 h-1.5 bg-[#2ba640] rounded-full animate-pulse" />
-                channelmate
-              </span>
-            </div>
             <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#0f0f0f] to-[#333] flex items-center justify-center text-white text-xs font-black shadow-md border border-white shrink-0 overflow-hidden">
               {user?.profilePicture ? (
                 <img src={user.profilePicture} className="w-full h-full object-cover" alt="" />
               ) : (
                 user?.name?.charAt(0).toUpperCase() || 'A'
               )}
+            </div>
+            <div className="hidden lg:flex flex-col items-start pl-0.5 max-w-[140px]">
+              <span className="text-[13px] font-black text-[#0f0f0f] truncate w-full text-left">{user?.name || 'Client'}</span>
+              <span className="text-[9px] font-black text-[#2ba640] uppercase tracking-wider flex items-center gap-1 justify-start w-full">
+                <div className="w-1.5 h-1.5 bg-[#2ba640] rounded-full animate-pulse" />
+                {user?.organization || 'ONLINE'}
+              </span>
             </div>
             <ChevronDown size={14} className={`text-[#2ba640] transition-transform ${showProfileMenu ? 'rotate-180' : ''}`} />
           </button>
@@ -715,10 +712,10 @@ const Header = ({
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-black truncate">{user?.name || 'Channelmate'} (Channel Owner)</p>
+                    <p className="text-sm font-black truncate">{user?.name || 'Client'} (Channel Owner)</p>
                     <span className="text-[9px] font-black text-green-400 uppercase tracking-wider flex items-center gap-1 mt-0.5">
                       <div className="w-1.5 h-1.5 bg-[#2ba640] rounded-full animate-pulse" />
-                      channelmate
+                      {user?.organization || 'ONLINE'}
                     </span>
                   </div>
                 </div>

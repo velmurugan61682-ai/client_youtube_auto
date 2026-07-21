@@ -99,19 +99,10 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
 
       // Otherwise, handle paid subscription
       const res = await api.post('/subscription/create', { planType });
-      const { subscriptionId, razorpayKeyId, shortUrl } = res.data;
+      const { orderId, subscriptionId, razorpayKeyId, amount, currency } = res.data;
 
-      // If we are in mock mode (no Key ID, mock ID, or shortUrl is '#' or missing)
-      if (!razorpayKeyId || !subscriptionId || subscriptionId.includes('mock') || shortUrl === '#') {
-        setMessage('Running in developer sandbox mode.');
-        if (subscriptionId) {
-          await api.post('/subscription/verify', { razorpay_subscription_id: subscriptionId, planType });
-          await fetchStatus();
-          alert('Subscription activated successfully.');
-          if (onSelectPlan) onSelectPlan();
-        }
-        return;
-      }
+      const activeKey = razorpayKeyId || 'rzp_test_SnyBwTTmMiaZjY';
+      const activeOrderId = orderId || subscriptionId;
 
       // Load Razorpay script for standard checkout
       const scriptLoaded = await loadRazorpayScript();
@@ -122,21 +113,25 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
 
       // Open Razorpay Standard Checkout Modal
       const options = {
+        key: activeKey,
+        amount: amount || 99900,
+        currency: currency || "INR",
         name: "Channelmate",
-        description: "Plan Subscription",
-
+        description: "Quarterly Pro Subscription (₹999)",
+        order_id: activeOrderId,
         handler: async function (response) {
           try {
             setPurchasingPlan(planType);
             const verifyRes = await api.post('/subscription/verify', {
-              razorpay_subscription_id: response.razorpay_subscription_id,
+              razorpay_order_id: response.razorpay_order_id || activeOrderId,
+              razorpay_subscription_id: response.razorpay_subscription_id || activeOrderId,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
               planType
             });
             if (verifyRes.data.success) {
               await fetchStatus();
-              alert('Subscription activated successfully!');
+              alert('🎉 Subscription activated successfully!');
               if (onSelectPlan) onSelectPlan();
             }
           } catch (err) {
@@ -194,22 +189,26 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
   }
 
   const isPlanActive = (planType) => {
-    if (!subData || subData.planType !== planType) return false;
-    const isStatusActive = subData.status === 'active';
-    const isCancelledButNotExpired = subData.status === 'cancelled' && subData.currentEnd && new Date(subData.currentEnd) > new Date();
-    return isStatusActive || isCancelledButNotExpired;
+    if (!subData) return planType === 'free';
+    const currentPlan = (subData.planType || subData.planId || 'free').toLowerCase();
+    const isPaidActive = subData.status === 'active' || (subData.status === 'cancelled' && subData.currentEnd && new Date(subData.currentEnd) > new Date());
+
+    if (planType === 'free') {
+      return !isPaidActive || currentPlan === 'free' || currentPlan === 'none' || currentPlan.includes('free');
+    }
+
+    if (planType === 'quarterly') {
+      return isPaidActive && (currentPlan === 'quarterly' || currentPlan.includes('pro') || currentPlan.includes('999') || currentPlan.includes('quarterly'));
+    }
+
+    return isPaidActive && currentPlan === planType;
   };
 
   const planDisplayNames = {
     free: 'Free Plan',
-    one_rupee: 'One Rupee Trial',
-    monthly: 'Monthly Plan',
-    monthly_345: 'Monthly Plan',
-    two_months_600: 'Standard Duo',
-    quarterly: 'Quarterly Pro',
-    three_months_999: 'Quarterly Pro',
-    yearly: 'Yearly Plan',
-    professional: 'Premium Pro'
+    quarterly: 'Pro Plan (₹999)',
+    quarterly_pro: 'Pro Plan (₹999)',
+    three_months_999: 'Pro Plan (₹999)'
   };
 
   const hasAnyActiveSub = subData && (subData.status === 'active' || 
@@ -264,17 +263,10 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
 
       {/* Header Panel */}
       <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6 pb-4 border-b border-zinc-200/50 mb-8">
-        <div className="space-y-1">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-50 text-red-650 rounded-full border border-red-100 mb-2">
-            <Zap size={14} className="fill-current" />
-            <span className="text-[10px] font-black uppercase tracking-widest">SaaS Plans & Billing</span>
-          </div>
-          <h1 className="text-3xl md:text-4xl font-black text-zinc-900 tracking-tight leading-none">
-            Choose Your AI Engine
+        <div>
+          <h1 className="text-3xl font-black text-zinc-900 tracking-tight">
+            Subscription
           </h1>
-          <p className="text-[14px] text-zinc-500 font-medium max-w-xl">
-            Upgrade your organization's subscription to link multiple channels, scale AI operations, and download invoices.
-          </p>
         </div>
         
         {isGate ? (
@@ -363,7 +355,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
           {/* Pricing Grid */}
           <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-8">
             {plans.map((plan) => {
-              const isActive = plan.type === 'free' ? !hasAnyActiveSub : isPlanActive(plan.type);
+              const isActive = isPlanActive(plan.type);
               
               return (
                 <div 
@@ -414,29 +406,19 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
                   </div>
 
                   <button
-                    disabled={
-                      (purchasingPlan === plan.type) || 
-                      isActive ||
-                      (plan.type === 'free' && trialExpired)
-                    }
+                    disabled={purchasingPlan === plan.type || isActive}
                     onClick={() => handleSubscribe(plan.type)}
                     className={`w-full py-3 text-xs font-black uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-1.5 ${
-                      (plan.type === 'free' && isActive) || (plan.type === 'free' && trialExpired)
-                        ? 'bg-zinc-100 text-zinc-400 cursor-default border border-zinc-200'
-                        : isActive
+                      isActive
                         ? 'bg-[#00c853] text-white cursor-default shadow-[0_4px_12px_rgba(0,200,83,0.2)]'
                         : 'bg-zinc-900 hover:bg-zinc-800 text-white active:scale-98'
                     }`}
                   >
                     {purchasingPlan === plan.type ? (
                       <Loader2 className="animate-spin" size={14} />
-                    ) : plan.type === 'free' && isActive ? (
-                      'FREE TIER'
-                    ) : plan.type === 'free' && trialExpired ? (
-                      'TRIAL EXPIRED'
                     ) : isActive ? (
                       <>
-                        <UserCheck size={14} /> ACTIVE SESSION
+                        <UserCheck size={14} /> ACTIVE PLAN
                       </>
                     ) : (
                       <>

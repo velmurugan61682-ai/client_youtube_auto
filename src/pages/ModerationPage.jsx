@@ -504,7 +504,15 @@ const ModerationPage = ({
         followersOnly,
         replyCommentText,
         automatedDmContent,
-        carouselCards: replyType === 'Carousel' ? carouselCards : [],
+        carouselCards: replyType === 'Carousel' ? carouselCards.map(c => ({
+          imageUrl: c.imageUrl || '',
+          title: c.title || '',
+          description: c.description || '',
+          btnLabel: c.btnLabel || c.buttonText || 'View Detail',
+          buttonText: c.btnLabel || c.buttonText || 'View Detail',
+          link: c.link || c.buttonUrl || '',
+          buttonUrl: c.link || c.buttonUrl || ''
+        })) : [],
         publicReplyEnabled,
         replyTemplates: publicReplyEnabled && !aiReplyEnabled ? (replyCommentText ? [replyCommentText] : replyTemplates) : [],
         templateSelectionMode,
@@ -650,9 +658,6 @@ const ModerationPage = ({
           </div>
           <div>
             <h1 className="text-2xl md:text-3xl font-black text-[#0f0f0f] tracking-tighter">Auto-Mod</h1>
-            <p className="text-xs md:text-sm text-[#606060] font-semibold mt-0.5">
-              Moderation rules, auto-replies, and comment history in one place.
-            </p>
           </div>
         </div>
 
@@ -1517,11 +1522,43 @@ const ModerationPage = ({
 
                         {/* Type-specific content */}
                         {log.type === 'replied' && log.replyText && (
-                          <div className="bg-[#f0f9ff] border border-[#bae6fd] rounded-xl p-3.5 text-xs text-slate-700 font-semibold">
-                            <p className="font-bold text-[#0284c7] mb-1 flex items-center gap-1">
-                              <Sparkles size={11} /> AI Reply:
+                          <div className="bg-[#f0f9ff] border border-[#bae6fd] rounded-xl p-3.5 text-xs text-slate-700 font-semibold space-y-3">
+                            <p className="font-bold text-[#0284c7] flex items-center gap-1">
+                              <Sparkles size={11} /> {log.replyType === 'Carousel' ? 'Carousel Reply:' : 'AI Reply:'}
                             </p>
-                            <p className="whitespace-pre-line leading-relaxed">{log.replyText}</p>
+                            {log.replyType === 'Carousel' && log.carouselCards && log.carouselCards.length > 0 ? (
+                              <div className="flex gap-3 overflow-x-auto pb-2 pt-1 max-w-full scrollbar-thin">
+                                {log.carouselCards.map((card, cIdx) => (
+                                  <div key={cIdx} className="w-[200px] shrink-0 bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between">
+                                    {card.imageUrl && (
+                                      <img src={card.imageUrl} alt={card.title} className="w-full h-24 object-cover border-b border-slate-100" />
+                                    )}
+                                    <div className="p-3 space-y-1.5 flex-1 flex flex-col justify-between">
+                                      <div>
+                                        <h4 className="text-xs font-black text-slate-900 truncate">{card.title || 'Untitled Card'}</h4>
+                                        <p className="text-[10px] text-slate-500 line-clamp-2 mt-0.5 leading-relaxed font-semibold">{card.description || 'No description provided.'}</p>
+                                      </div>
+                                      {card.link || card.buttonUrl ? (
+                                        <a
+                                          href={card.link || card.buttonUrl}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="block w-full py-1.5 text-center bg-orange-50 hover:bg-orange-100 text-orange-600 border border-orange-200 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all mt-2"
+                                        >
+                                          {card.btnLabel || card.buttonText || 'View Detail'}
+                                        </a>
+                                      ) : (
+                                        <span className="block w-full py-1.5 text-center bg-slate-50 text-slate-400 border border-slate-200 rounded-lg text-[10px] font-black uppercase tracking-wider mt-2">
+                                          {card.btnLabel || card.buttonText || 'View Detail'}
+                                        </span>
+                                      )}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              <p className="whitespace-pre-line leading-relaxed">{log.replyText}</p>
+                            )}
                           </div>
                         )}
 

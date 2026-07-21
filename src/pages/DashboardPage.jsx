@@ -53,7 +53,7 @@ const DashboardPage = ({
       {/* Welcome Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-2">
         <div>
-          <h1 className="text-xl md:text-2xl font-black text-[#0f0f0f] tracking-tighter">Channel Dashboard</h1>
+          <h1 className="text-xl md:text-2xl font-black text-[#0f0f0f] tracking-tighter"> Dashboard</h1>
 
         </div>
 

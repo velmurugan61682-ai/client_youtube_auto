@@ -21,7 +21,6 @@ const AdminLogin = () => {
       const res = await api.post('/admin/login', { email, password });
       if (res.data.token) {
         localStorage.setItem('adminToken', res.data.token);
-        localStorage.setItem('token', res.data.token);
         navigate('/admin/dashboard');
       }
     } catch (err) {
