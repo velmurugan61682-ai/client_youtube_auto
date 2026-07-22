@@ -33,7 +33,7 @@ const AdminPaymentsPage = () => {
       <div className="glass-garden-card p-0 rounded-[28px] overflow-hidden">
         {loading ? (
           <div className="py-20 flex justify-center">
-            <Loader2 className="animate-spin text-emerald-600" size={32} />
+            <Loader2 className="animate-spin text-[#ff0000]" size={32} />
           </div>
         ) : payments.length === 0 ? (
           <div className="py-16 text-center text-slate-400 font-bold text-xs">
@@ -61,7 +61,7 @@ const AdminPaymentsPage = () => {
                       <p className="font-bold text-slate-900">{p.userId?.name || 'Client Account'}</p>
                       <p className="text-[10px] text-slate-400">{p.userId?.email || 'N/A'}</p>
                     </td>
-                    <td className="py-4 px-4 font-black text-emerald-600 text-sm">
+                    <td className="py-4 px-4 font-black text-[#ff0000] text-sm">
                       ₹{p.amount || 345}
                     </td>
                     <td className="py-4 px-4">

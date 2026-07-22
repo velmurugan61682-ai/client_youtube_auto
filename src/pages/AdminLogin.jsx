@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Mail, Lock, ShieldCheck, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
+﻿import React, { useState } from 'react';
+import { Mail, Lock, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
 import { motion } from 'framer-motion';
@@ -31,21 +31,15 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F0FFF8] text-slate-900 flex items-center justify-center p-4 relative font-['Outfit'] overflow-hidden">
-      {/* Soft Green Orbs */}
-      <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-gradient-to-tr from-emerald-300/30 to-green-200/40 rounded-full blur-[130px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-gradient-to-br from-teal-200/30 to-emerald-300/30 rounded-full blur-[130px] pointer-events-none" />
-
-      <motion.div 
+    <div className="min-h-screen bg-white text-slate-900 flex items-center justify-center p-4 relative font-['Outfit'] overflow-hidden">
+<motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="w-full max-w-[440px] z-10"
       >
-        <div className="glass-garden-card p-8 sm:p-10 rounded-[32px] border-emerald-500/20 shadow-xl relative text-left">
+        <div className="bg-white p-8 sm:p-10 rounded-[28px] border border-[#e5e5e5] shadow-xl relative text-left">
           <div className="flex flex-col items-center text-center mb-8">
-            <div className="w-14 h-14 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600 mb-3">
-              <ShieldCheck size={28} />
-            </div>
+            <img src="/logo_icon.png" className="w-20 h-20 object-contain mb-3 drop-shadow-sm" alt="Channelmate Logo" />
             <h1 className="text-2xl font-black text-slate-900 tracking-tight">ChannelMate Admin Console</h1>
             <p className="text-xs font-semibold text-slate-500 mt-1">Single-Admin System Security Portal</p>
           </div>
@@ -69,7 +63,7 @@ const AdminLogin = () => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@channelmate.ai"
+                  placeholder="admin@example.com"
                   className="w-full glass-input py-3 pl-11 pr-4 text-xs font-bold outline-none"
                 />
               </div>
@@ -86,7 +80,7 @@ const AdminLogin = () => {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder="Password"
                   className="w-full glass-input py-3 pl-11 pr-4 text-xs font-bold outline-none"
                 />
               </div>
@@ -120,3 +114,5 @@ const AdminLogin = () => {
 };
 
 export default AdminLogin;
+
+

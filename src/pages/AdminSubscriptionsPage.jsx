@@ -171,7 +171,7 @@ const AdminSubscriptionsPage = () => {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="bg-white/80 border border-emerald-500/20 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-700 outline-none cursor-pointer"
+              className="bg-white/80 border border-red-500/20 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-700 outline-none cursor-pointer"
             >
               <option value="all">All Statuses</option>
               <option value="active">Active</option>
@@ -185,7 +185,7 @@ const AdminSubscriptionsPage = () => {
           <select
             value={planFilter}
             onChange={(e) => setPlanFilter(e.target.value)}
-            className="bg-white/80 border border-emerald-500/20 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-700 outline-none cursor-pointer"
+            className="bg-white/80 border border-red-500/20 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-700 outline-none cursor-pointer"
           >
             <option value="all">All Plans</option>
             <option value="free">Free Plan (₹0)</option>
@@ -198,7 +198,7 @@ const AdminSubscriptionsPage = () => {
       <div className="glass-garden-card rounded-[28px] overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <Loader2 className="animate-spin text-emerald-600" size={32} />
+            <Loader2 className="animate-spin text-[#ff0000]" size={32} />
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-16 px-4">
@@ -221,7 +221,7 @@ const AdminSubscriptionsPage = () => {
               </thead>
               <tbody className="divide-y divide-slate-100 text-xs font-bold text-slate-700">
                 {filtered.map((sub) => (
-                  <tr key={sub._id} className="hover:bg-emerald-500/[0.02] transition-colors">
+                  <tr key={sub._id} className="hover:bg-red-500/[0.02] transition-colors">
                     <td className="py-4 px-6">
                       <p className="font-black text-slate-900">{sub.clientName}</p>
                       <p className="text-[11px] text-slate-500 font-semibold">{sub.email}</p>
@@ -233,23 +233,23 @@ const AdminSubscriptionsPage = () => {
 
                     <td className="py-4 px-4">
                       <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${
-                        sub.plan === 'annual_pro' ? 'bg-purple-100 text-purple-700 border border-purple-200' :
-                        sub.plan === 'quarterly_pro' ? 'bg-emerald-100 text-emerald-700 border border-emerald-200' :
+                        sub.plan === 'annual_pro' ? 'bg-[#f7f7f7] text-[#0f0f0f] border border-[#e5e5e5]' :
+                        sub.plan === 'quarterly_pro' ? 'bg-[#fff1f1] text-[#0f0f0f] border border-red-100' :
                         'bg-slate-100 text-slate-600 border border-slate-200'
                       }`}>
                         {sub.plan?.replace('_', ' ')}
                       </span>
                     </td>
 
-                    <td className="py-4 px-4 font-black text-emerald-700">
+                    <td className="py-4 px-4 font-black text-[#0f0f0f]">
                       ₹{sub.amount || 0}
                     </td>
 
                     <td className="py-4 px-4">
                       <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${
-                        sub.status === 'active' ? 'bg-emerald-100 text-emerald-700 border border-emerald-200' :
+                        sub.status === 'active' ? 'bg-[#fff1f1] text-[#0f0f0f] border border-red-100' :
                         sub.status === 'cancelled' || sub.status === 'expired' ? 'bg-red-100 text-red-700 border border-red-200' :
-                        'bg-amber-100 text-amber-700 border border-amber-200'
+                        'bg-[#fff1f1] text-[#ff0000] border border-red-100'
                       }`}>
                         {sub.status}
                       </span>
@@ -264,7 +264,7 @@ const AdminSubscriptionsPage = () => {
                         <button
                           onClick={() => handleEditOpen(sub)}
                           title="Edit Subscription Plan & Status"
-                          className="p-1.5 hover:bg-emerald-50 text-emerald-600 rounded-lg transition-colors flex items-center gap-1 text-[11px] font-bold"
+                          className="p-1.5 hover:bg-[#fff1f1] text-[#ff0000] rounded-lg transition-colors flex items-center gap-1 text-[11px] font-bold"
                         >
                           <Edit3 size={15} /> Edit
                         </button>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import api from '../services/api';
 import { 
   Search, 
@@ -72,7 +72,7 @@ const LeadsList = ({ searchQuery: globalSearch }) => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'sent': return 'text-[#2ba640] bg-[#e6f4ea]';
+      case 'sent': return 'text-[#ff0000] bg-[#e6f4ea]';
       case 'pending': return 'text-[#065fd4] bg-[#e8f0fe]';
       case 'failed': return 'text-[#d93025] bg-[#fce8e6]';
       case 'duplicate': return 'text-[#f9ab00] bg-[#fff8e1]';
@@ -177,9 +177,9 @@ const LeadsList = ({ searchQuery: globalSearch }) => {
               </div>
 
               {lead.whatsappNumber && lead.whatsappNumber !== 'None' ? (
-                <div className="bg-emerald-50/60 border border-emerald-100/80 rounded-xl p-2.5 flex items-center justify-between">
+                <div className="bg-[#fff1f1] border border-red-100 rounded-xl p-2.5 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Phone size={14} className="text-emerald-600" />
+                    <Phone size={14} className="text-[#ff0000]" />
                     <span className="text-xs font-black text-slate-900">{lead.whatsappNumber}</span>
                   </div>
                   <a 
@@ -282,7 +282,7 @@ const LeadsList = ({ searchQuery: globalSearch }) => {
                         <div className="flex flex-col">
                           <span className="text-sm font-black text-[#0f0f0f]">{lead.whatsappNumber}</span>
                           {lead.whatsappSent && (
-                            <span className="text-[10px] font-bold text-[#2ba640] flex items-center gap-1">
+                            <span className="text-[10px] font-bold text-[#ff0000] flex items-center gap-1">
                               <CheckCircle2 size={10} /> WhatsApp Sent
                             </span>
                           )}
@@ -356,3 +356,4 @@ const LeadsList = ({ searchQuery: globalSearch }) => {
 };
 
 export default LeadsList;
+

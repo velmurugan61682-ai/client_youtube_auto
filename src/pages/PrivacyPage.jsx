@@ -1,20 +1,17 @@
-import React from 'react';
+﻿import React from 'react';
 import { Link } from 'react-router-dom';
 import { ShieldCheck, ArrowLeft, ExternalLink } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const PrivacyPage = () => {
   return (
-    <div className="min-h-screen bg-slate-50 text-zinc-900 font-['Outfit'] relative overflow-x-hidden selection:bg-red-500/20 selection:text-red-900">
-      {/* Highly Vibrant Background Mesh for beautiful Glassmorphism visibility */}
-      <div className="absolute top-[-5%] left-[-5%] w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-[#0055ff] to-[#00f2fe] opacity-20 blur-[130px] pointer-events-none" />
-      <div className="absolute bottom-[10%] right-[-5%] w-[600px] h-[600px] rounded-full bg-gradient-to-br from-[#3b82f6] to-[#6366f1] opacity-20 blur-[130px] pointer-events-none" />
+    <div className="min-h-screen bg-[#f7f7f7] text-zinc-900 font-['Outfit'] relative overflow-x-hidden selection:bg-red-500/20 selection:text-red-900">
 
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white/15 backdrop-blur-2xl border-b border-white/30">
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-[#e5e5e5]">
         <div className="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link to="/" className="flex items-center select-none">
-            <img src="/channelmate_logo.svg" className="h-9 w-auto object-contain" alt="Channelmate Logo" />
+            <img src="/channelmate_logo.png" className="h-9 w-auto object-contain" alt="Channelmate Logo" />
           </Link>
           <Link 
             to="/" 
@@ -31,7 +28,7 @@ const PrivacyPage = () => {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-white/25 border border-white/45 rounded-[32px] p-8 sm:p-12 backdrop-blur-2xl shadow-[0_24px_80px_rgba(0,0,0,0.02)] text-zinc-800"
+          className="bg-white border border-[#e5e5e5] rounded-[22px] p-6 sm:p-10 shadow-sm text-zinc-800"
         >
           <div className="flex items-center gap-3 mb-8 pb-6 border-b border-zinc-200/50">
             <div className="w-10 h-10 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-500 border border-red-500/20 shadow-sm">
@@ -57,7 +54,7 @@ const PrivacyPage = () => {
 
             <section className="space-y-3">
               <h2 className="text-base font-bold text-zinc-900 flex items-center gap-2">
-                <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
+                <span className="w-1.5 h-1.5 bg-red-500 rounded-full"></span>
                 2. Data We Access & Collect
               </h2>
               <p className="pl-3 text-zinc-650">
@@ -73,7 +70,7 @@ const PrivacyPage = () => {
 
             <section className="space-y-3">
               <h2 className="text-base font-bold text-zinc-900 flex items-center gap-2">
-                <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
+                <span className="w-1.5 h-1.5 bg-red-500 rounded-full"></span>
                 3. How We Use Your Data
               </h2>
               <p className="pl-3 text-zinc-650">
@@ -89,7 +86,7 @@ const PrivacyPage = () => {
 
             <section className="space-y-3">
               <h2 className="text-base font-bold text-zinc-900 flex items-center gap-2">
-                <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
+                <span className="w-1.5 h-1.5 bg-red-500 rounded-full"></span>
                 4. Data Storage & Encryption
               </h2>
               <p className="pl-3 text-zinc-650">
@@ -99,14 +96,14 @@ const PrivacyPage = () => {
 
             <section className="space-y-3">
               <h2 className="text-base font-bold text-zinc-900 flex items-center gap-2">
-                <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
+                <span className="w-1.5 h-1.5 bg-red-500 rounded-full"></span>
                 5. User Control & Access Revocation
               </h2>
               <p className="pl-3 text-zinc-650">
                 You retain absolute ownership and control over your YouTube channel and data. You can disconnect your YouTube channels or delete your account at any time in the settings tab, which will purge all stored data from our database.
               </p>
               <p className="pl-3 text-zinc-650">
-                Additionally, you can instantly revoke our application's access rights directly through the <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline inline-flex items-center gap-0.5">Google Security Permissions Page <ExternalLink size={11} /></a>.
+                Additionally, you can instantly revoke our application's access rights directly through the <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] hover:underline inline-flex items-center gap-0.5">Google Security Permissions Page <ExternalLink size={11} /></a>.
               </p>
             </section>
 
@@ -124,3 +121,4 @@ const PrivacyPage = () => {
 };
 
 export default PrivacyPage;
+

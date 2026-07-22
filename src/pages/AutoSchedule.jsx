@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import api from '../services/api';
 import { 
   Clock, 
@@ -249,10 +249,10 @@ const AutoSchedule = ({ channels = [], selectedChannelId, setSelectedChannelId }
       {/* 4 Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* Card 1: Queued */}
-        <div className="bg-white rounded-[32px] border border-[#f0f0f0] p-6 shadow-sm hover:shadow-xl hover:translate-y-[-4px] transition-all duration-500 group relative overflow-hidden">
-          <div className="absolute -right-4 -bottom-4 w-24 h-24 rounded-full blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-700 bg-blue-50" />
+        <div className="bg-white rounded-[22px] border border-[#f0f0f0] p-6 shadow-sm hover:shadow-xl hover:translate-y-[-4px] transition-all duration-500 group relative overflow-hidden">
+          <div className="absolute -right-4 -bottom-4 w-24 h-24 rounded-full blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-700 bg-[#fff1f1]" />
           <div className="flex justify-between items-start mb-6 relative z-10">
-            <div className="w-12 h-12 rounded-[14px] bg-blue-50 text-blue-600 flex items-center justify-center transition-transform group-hover:scale-110 duration-500">
+            <div className="w-12 h-12 rounded-[14px] bg-[#fff1f1] text-[#ff0000] flex items-center justify-center transition-transform group-hover:scale-110 duration-500">
               <Clock size={22} strokeWidth={2.5} />
             </div>
           </div>
@@ -264,36 +264,36 @@ const AutoSchedule = ({ channels = [], selectedChannelId, setSelectedChannelId }
           </div>
           <div className="mt-6 pt-5 border-t border-[#f8f8f8] flex items-center justify-between relative z-10">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-[#2ba640] animate-pulse" />
+              <div className="w-2 h-2 rounded-full bg-[#ff0000] animate-pulse" />
               <span className="text-[10px] font-bold text-[#aaaaaa]">Real-time Track</span>
             </div>
           </div>
         </div>
 
         {/* Card 2: Published */}
-        <div className="bg-white rounded-[32px] border border-[#f0f0f0] p-6 shadow-sm hover:shadow-xl hover:translate-y-[-4px] transition-all duration-500 group relative overflow-hidden">
-          <div className="absolute -right-4 -bottom-4 w-24 h-24 rounded-full blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-700 bg-green-50" />
+        <div className="bg-white rounded-[22px] border border-[#f0f0f0] p-6 shadow-sm hover:shadow-xl hover:translate-y-[-4px] transition-all duration-500 group relative overflow-hidden">
+          <div className="absolute -right-4 -bottom-4 w-24 h-24 rounded-full blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-700 bg-[#fff1f1]" />
           <div className="flex justify-between items-start mb-6 relative z-10">
-            <div className="w-12 h-12 rounded-[14px] bg-green-50 text-[#2ba640] flex items-center justify-center transition-transform group-hover:scale-110 duration-500">
+            <div className="w-12 h-12 rounded-[14px] bg-[#fff1f1] text-[#ff0000] flex items-center justify-center transition-transform group-hover:scale-110 duration-500">
               <CheckCircle2 size={22} strokeWidth={2.5} />
             </div>
           </div>
           <div className="space-y-1 relative z-10">
-            <h3 className="text-[28px] font-black text-green-600 tracking-tighter leading-none">
+            <h3 className="text-[28px] font-black text-[#ff0000] tracking-tighter leading-none">
               {publishedCount}
             </h3>
             <p className="text-[10px] font-black text-[#909090] uppercase tracking-[0.2em]">Published</p>
           </div>
           <div className="mt-6 pt-5 border-t border-[#f8f8f8] flex items-center justify-between relative z-10">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-[#2ba640] animate-pulse" />
+              <div className="w-2 h-2 rounded-full bg-[#ff0000] animate-pulse" />
               <span className="text-[10px] font-bold text-[#aaaaaa]">Real-time Track</span>
             </div>
           </div>
         </div>
 
         {/* Card 3: Failed */}
-        <div className="bg-white rounded-[32px] border border-[#f0f0f0] p-6 shadow-sm hover:shadow-xl hover:translate-y-[-4px] transition-all duration-500 group relative overflow-hidden">
+        <div className="bg-white rounded-[22px] border border-[#f0f0f0] p-6 shadow-sm hover:shadow-xl hover:translate-y-[-4px] transition-all duration-500 group relative overflow-hidden">
           <div className="absolute -right-4 -bottom-4 w-24 h-24 rounded-full blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-700 bg-red-50" />
           <div className="flex justify-between items-start mb-6 relative z-10">
             <div className="w-12 h-12 rounded-[14px] bg-red-50 text-[#d93025] flex items-center justify-center transition-transform group-hover:scale-110 duration-500">
@@ -315,12 +315,12 @@ const AutoSchedule = ({ channels = [], selectedChannelId, setSelectedChannelId }
         </div>
 
         {/* Card 4: Next Publish (Dark) */}
-        <div className="bg-[#0f0f0f] rounded-[32px] p-6 shadow-xl shadow-black/10 relative overflow-hidden group col-span-1 min-h-[160px] flex flex-col justify-between">
+        <div className="bg-[#0f0f0f] rounded-[22px] p-6 shadow-xl shadow-black/10 relative overflow-hidden group col-span-1 min-h-[160px] flex flex-col justify-between">
           <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:rotate-12 transition-transform duration-700">
             <Clock size={100} className="text-white" fill="white" />
           </div>
           <div className="relative z-10 h-full flex flex-col justify-between">
-            <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-white">
+            <div className="w-10 h-10 bg-[#f2f2f2] rounded-xl flex items-center justify-center text-white">
               <Clock size={20} />
             </div>
             <div className="mt-4">
@@ -333,7 +333,7 @@ const AutoSchedule = ({ channels = [], selectedChannelId, setSelectedChannelId }
                   : 'None Scheduled'}
               </p>
               {nextPublishItem && (
-                <span className="inline-block mt-2 text-[9px] font-black text-white uppercase bg-white/10 px-2 py-0.5 rounded tracking-tighter">
+                <span className="inline-block mt-2 text-[9px] font-black text-white uppercase bg-[#f2f2f2] px-2 py-0.5 rounded tracking-tighter">
                   {nextPublishItem.mode} Mode
                 </span>
               )}
@@ -422,7 +422,7 @@ const AutoSchedule = ({ channels = [], selectedChannelId, setSelectedChannelId }
                     </div>
                   )}
                   {videoId && (
-                    <p className="text-[11px] text-green-600 font-bold mt-1">
+                    <p className="text-[11px] text-[#ff0000] font-bold mt-1">
                       YouTube Video ID: {videoId}
                     </p>
                   )}
@@ -441,7 +441,7 @@ const AutoSchedule = ({ channels = [], selectedChannelId, setSelectedChannelId }
                   <Loader2 className="animate-spin text-[#ff0000]" size={20} />
                 )}
                 {videoId && (
-                  <div className="w-8 h-8 rounded-full bg-green-50 text-green-600 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-full bg-[#fff1f1] text-[#ff0000] flex items-center justify-center">
                     <CheckCircle2 size={18} strokeWidth={2.5} />
                   </div>
                 )}
@@ -557,12 +557,12 @@ const AutoSchedule = ({ channels = [], selectedChannelId, setSelectedChannelId }
                   exit={{ opacity: 0, scale: 0.95 }}
                   className="space-y-4"
                 >
-                  <div className="p-4 bg-green-50 border border-green-100 rounded-2xl">
-                    <h4 className="text-xs font-black text-green-700 uppercase tracking-widest mb-1">Upload Scheduled</h4>
-                    <p className="text-[12px] text-green-800 font-semibold leading-relaxed">
+                  <div className="p-4 bg-[#fff1f1] border border-red-100 rounded-2xl">
+                    <h4 className="text-xs font-black text-[#ff0000] uppercase tracking-widest mb-1">Upload Scheduled</h4>
+                    <p className="text-[12px] text-[#ff0000] font-semibold leading-relaxed">
                       Scheduled for {new Date(scheduleResult.scheduledTime).toLocaleString()}
                     </p>
-                    <span className="text-[10px] text-green-600 block mt-1 font-medium">
+                    <span className="text-[10px] text-[#ff0000] block mt-1 font-medium">
                       Deepseek will publish this automatically.
                     </span>
                   </div>
@@ -663,14 +663,14 @@ const AutoSchedule = ({ channels = [], selectedChannelId, setSelectedChannelId }
                     </td>
                     <td className="py-6 px-6 align-top">
                       <div className={`inline-flex items-center gap-2 py-1.5 px-3 rounded-xl border ${
-                        item.status === 'published' ? 'bg-green-50 text-green-600 border-green-100' : 
-                        item.status === 'scheduled' ? 'bg-amber-50 text-amber-600 border-amber-100' :
+                        item.status === 'published' ? 'bg-[#fff1f1] text-[#ff0000] border-red-100' : 
+                        item.status === 'scheduled' ? 'bg-[#f7f7f7] text-[#606060] border-[#e5e5e5]' :
                         item.status === 'failed' ? 'bg-red-50 text-red-600 border-red-100' : 
                         'bg-gray-50 text-[#909090] border-gray-100'
                       }`}>
                         <div className={`w-1.5 h-1.5 rounded-full ${
-                          item.status === 'published' ? 'bg-green-500' : 
-                          item.status === 'scheduled' ? 'bg-amber-500' :
+                          item.status === 'published' ? 'bg-[#ff0000]' : 
+                          item.status === 'scheduled' ? 'bg-[#606060]' :
                           item.status === 'failed' ? 'bg-red-500' : 
                           'bg-gray-400'
                         }`} />
@@ -696,3 +696,4 @@ const AutoSchedule = ({ channels = [], selectedChannelId, setSelectedChannelId }
 };
 
 export default AutoSchedule;
+

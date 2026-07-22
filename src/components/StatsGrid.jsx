@@ -4,18 +4,36 @@ import {
   Smile,
   ShieldAlert,
   ThumbsUp,
-  TrendingUp,
-  TrendingDown,
   Trash2,
   AlertTriangle,
   Users,
-  Zap,
   Send
 } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { SENTIMENT_COLORS } from '../utils/constants/sentimentColors.js';
 
-const StatsGrid = React.memo(({ stats }) => {
+const StatCard = ({ card, isDark }) => {
+  const Icon = card.icon;
+  return (
+    <div className={`min-w-0 rounded-[22px] border p-4 sm:p-5 shadow-sm transition-colors ${isDark ? 'bg-[#181818] border-[#2a2a2a]' : 'bg-white border-white/80'}`}>
+      <div className="flex items-start justify-between gap-4">
+        <div className={`flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-2xl ${card.iconBg} ${card.iconColor}`}>
+          <Icon size={18} strokeWidth={2.5} />
+        </div>
+        <span className={`rounded-full border px-2.5 py-1 text-[10px] font-black ${card.isUp ? 'bg-[#fff1f1] text-[#ff0000] border-red-100' : 'bg-red-50 text-[#d93025] border-red-100'}`}>
+          {card.trend}
+        </span>
+      </div>
+      <div className="mt-4 sm:mt-5">
+        <p className={`text-2xl sm:text-4xl font-black leading-none tracking-tight ${isDark ? 'text-white' : card.color}`}>
+          {card.value.toLocaleString()}
+        </p>
+        <p className={`mt-2 text-[11px] font-black uppercase tracking-[0.16em] ${isDark ? 'text-[#aaaaaa]' : 'text-[#606060]'}`}>{card.label}</p>
+        <p className={`mt-2 sm:mt-3 text-[11px] sm:text-xs font-semibold leading-relaxed ${isDark ? 'text-[#888888]' : 'text-[#777777]'}`}>{card.description}</p>
+      </div>
+    </div>
+  );
+};
+
+const StatsGrid = React.memo(({ stats, isDark = false }) => {
   const cards = [
     {
       label: 'Engagement',
@@ -25,7 +43,8 @@ const StatsGrid = React.memo(({ stats }) => {
       iconBg: 'bg-[#f8f9fa]',
       iconColor: 'text-[#0f0f0f]',
       trend: '+12%',
-      isUp: true
+      isUp: true,
+      description: 'All tracked comments and interactions in the selected window.'
     },
     {
       label: 'Positive',
@@ -35,7 +54,8 @@ const StatsGrid = React.memo(({ stats }) => {
       iconBg: 'bg-[#e6f4ea]',
       iconColor: 'text-[#2ba640]',
       trend: '+5%',
-      isUp: true
+      isUp: true,
+      description: 'Healthy comments that can be liked or used for lead signals.'
     },
     {
       label: 'Toxic',
@@ -45,7 +65,8 @@ const StatsGrid = React.memo(({ stats }) => {
       iconBg: 'bg-[#fce8e6]',
       iconColor: 'text-[#d93025]',
       trend: '-18%',
-      isUp: false
+      isUp: false,
+      description: 'Risky comments that need moderation or automated shielding.'
     },
     {
       label: 'Moderate',
@@ -55,17 +76,19 @@ const StatsGrid = React.memo(({ stats }) => {
       iconBg: 'bg-[#fff8e1]',
       iconColor: 'text-[#f9ab00]',
       trend: '-2%',
-      isUp: false
+      isUp: false,
+      description: 'Comments worth reviewing before taking automatic action.'
     },
     {
       label: 'Auto Shield',
       value: stats?.toxicDeleted || 0,
       icon: Trash2,
       color: 'text-[#0f0f0f]',
-      iconBg: 'bg-[#f8f9fa]',
-      iconColor: 'text-[#d93025]',
+      iconBg: 'bg-[#fff1f1]',
+      iconColor: 'text-[#ff0000]',
       trend: '+8%',
-      isUp: true
+      isUp: true,
+      description: 'Comments handled by delete or hide protection rules.'
     },
     {
       label: 'Auto Likes',
@@ -73,19 +96,21 @@ const StatsGrid = React.memo(({ stats }) => {
       icon: ThumbsUp,
       color: 'text-[#0f0f0f]',
       iconBg: 'bg-[#f8f9fa]',
-      iconColor: 'text-[#065fd4]',
+      iconColor: 'text-[#0f0f0f]',
       trend: '+24%',
-      isUp: true
+      isUp: true,
+      description: 'Positive comments automatically acknowledged.'
     },
     {
-      label: 'Auto reply',
+      label: 'Auto Reply',
       value: stats?.autoDm?.total || 0,
       icon: Send,
       color: 'text-[#0f0f0f]',
-      iconBg: 'bg-[#f3e5f5]',
-      iconColor: 'text-[#9c27b0]',
+      iconBg: 'bg-[#fff1f1]',
+      iconColor: 'text-[#ff0000]',
       trend: (stats?.autoDm?.changePercentage >= 0) ? `+${stats?.autoDm?.changePercentage}%` : `${stats?.autoDm?.changePercentage || 0}%`,
-      isUp: (stats?.autoDm?.changePercentage || 0) >= 0
+      isUp: (stats?.autoDm?.changePercentage || 0) >= 0,
+      description: 'Automated replies sent through active comment rules.'
     },
     {
       label: 'Captured Leads',
@@ -93,59 +118,17 @@ const StatsGrid = React.memo(({ stats }) => {
       icon: Users,
       color: 'text-[#0f0f0f]',
       iconBg: 'bg-[#0f0f0f]',
-      iconColor: 'text-[#ffffff]',
+      iconColor: 'text-white',
       trend: '+42%',
-      isUp: true
+      isUp: true,
+      description: 'Comments converted into actionable lead records.'
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      {cards.map((card, i) => (
-        <motion.div
-          key={i}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: i * 0.05 }}
-          className={`bg-white border border-slate-100 rounded-[20px] p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group relative overflow-hidden ${card.label === 'Engagement'
-              ? 'sm:col-span-2 lg:col-span-1'
-              : card.label === 'Captured Leads'
-                ? 'sm:col-span-2 lg:col-span-2 xl:col-span-1'
-                : ''
-            }`}
-        >
-          {/* Subtle Accent Glow */}
-          <div className={`absolute -right-4 -bottom-4 w-24 h-24 rounded-full blur-3xl opacity-0 group-hover:opacity-10 transition-opacity duration-700 ${card.iconBg}`} />
-
-          <div className="flex justify-between items-start mb-6 relative z-10">
-            <div className={`w-10 h-10 rounded-[12px] ${card.iconBg} ${card.iconColor} flex items-center justify-center transition-transform group-hover:scale-105 duration-500`}>
-              <card.icon size={18} strokeWidth={2.5} />
-            </div>
-            <div className={`flex items-center gap-1 text-[9px] font-black tracking-wider uppercase py-1 px-2.5 rounded-full border ${card.isUp ? 'bg-green-50 text-[#22c55e] border-green-100' : 'bg-red-50 text-[#d93025] border-red-100'}`}>
-              {card.trend}
-            </div>
-          </div>
-
-          <div className="space-y-1 relative z-10">
-            <h3 className={`text-[26px] font-black ${card.color} tracking-tighter leading-none`}>
-              {card.value.toLocaleString()}
-            </h3>
-            <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.15em]">{card.label}</p>
-          </div>
-
-          <div className="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between relative z-10">
-            <div className="flex items-center gap-2">
-              <div className={`w-1.5 h-1.5 rounded-full ${card.isUp ? 'bg-[#22c55e]' : 'bg-[#d93025]'} animate-pulse`} />
-              <span className="text-[9px] font-semibold text-slate-400">Real-time Track</span>
-            </div>
-            <motion.div
-              whileHover={{ x: 2 }}
-              className="w-7 h-7 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 cursor-pointer hover:bg-slate-100 transition-colors border border-slate-100"
-            >
-              <TrendingUp size={12} className={card.isUp ? '' : 'rotate-180'} />
-            </motion.div>
-          </div>
-        </motion.div>
+    <div className="grid grid-cols-1 gap-4 min-[481px]:grid-cols-2 min-[1025px]:grid-cols-4">
+      {cards.map((card) => (
+        <StatCard key={card.label} card={card} isDark={isDark} />
       ))}
     </div>
   );

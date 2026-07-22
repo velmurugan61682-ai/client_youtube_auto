@@ -260,7 +260,7 @@ const AdminPortal = () => {
       {/* Header Bar */}
       <header className="border-b border-slate-900 bg-slate-950/80 backdrop-blur-md px-6 py-4 flex items-center justify-between z-10 sticky top-0">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-teal-500/10 text-teal-400 border border-teal-500/25 flex items-center justify-center font-black">
+          <div className="w-9 h-9 rounded-xl bg-red-500/10 text-red-300 border border-red-500/25 flex items-center justify-center font-black">
             A
           </div>
           <div>
@@ -291,10 +291,10 @@ const AdminPortal = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.4 }}
-              className="w-full max-w-md bg-slate-900/50 border border-slate-800 rounded-[32px] p-8 shadow-2xl backdrop-blur-md"
+              className="w-full max-w-md bg-slate-900/50 border border-slate-800 rounded-[22px] p-8 shadow-2xl backdrop-blur-md"
             >
               <div className="text-center space-y-2 mb-8">
-                <div className="mx-auto w-12 h-12 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-2xl flex items-center justify-center">
+                <div className="mx-auto w-12 h-12 bg-red-500/10 text-red-300 border border-red-500/20 rounded-2xl flex items-center justify-center">
                   <Lock size={20} />
                 </div>
                 <h2 className="text-xl font-black tracking-tight text-white uppercase">Owner Login</h2>
@@ -318,7 +318,7 @@ const AdminPortal = () => {
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                       placeholder="Enter admin username"
-                      className="w-full bg-slate-950/80 border border-slate-800 rounded-2xl pl-11 pr-4 py-3.5 text-xs text-slate-200 font-semibold focus:outline-none focus:border-teal-500/50 focus:bg-slate-950 transition-all outline-none shadow-inner"
+                      className="w-full bg-slate-950/80 border border-slate-800 rounded-2xl pl-11 pr-4 py-3.5 text-xs text-slate-200 font-semibold focus:outline-none focus:border-red-500/50 focus:bg-slate-950 transition-all outline-none shadow-inner"
                       required
                     />
                   </div>
@@ -333,7 +333,7 @@ const AdminPortal = () => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="w-full bg-slate-950/80 border border-slate-800 rounded-2xl pl-11 pr-4 py-3.5 text-xs text-slate-200 font-semibold focus:outline-none focus:border-teal-500/50 focus:bg-slate-950 transition-all outline-none shadow-inner"
+                      className="w-full bg-slate-950/80 border border-slate-800 rounded-2xl pl-11 pr-4 py-3.5 text-xs text-slate-200 font-semibold focus:outline-none focus:border-red-500/50 focus:bg-slate-950 transition-all outline-none shadow-inner"
                       required
                     />
                   </div>
@@ -342,7 +342,7 @@ const AdminPortal = () => {
                 <button
                   type="submit"
                   disabled={loginLoading}
-                  className="w-full py-4 bg-teal-500 hover:bg-teal-400 disabled:bg-slate-800 text-slate-950 font-black rounded-2xl text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-2 shadow-lg shadow-teal-500/10 cursor-pointer mt-6"
+                  className="w-full py-4 bg-[#ff0000] hover:bg-[#cc0000] disabled:bg-slate-800 text-white font-black rounded-2xl text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-2 shadow-lg shadow-red-500/10 cursor-pointer mt-6"
                 >
                   {loginLoading ? (
                     <>
@@ -371,7 +371,7 @@ const AdminPortal = () => {
                   onClick={() => setActiveTab('keys')}
                   className={`px-4 py-2.5 text-xs font-black uppercase tracking-wider border-b-2 transition-all cursor-pointer ${
                     activeTab === 'keys' 
-                      ? 'border-teal-500 text-white font-black' 
+                      ? 'border-red-500 text-white font-black' 
                       : 'border-transparent text-slate-500 hover:text-slate-300'
                   }`}
                 >
@@ -382,7 +382,7 @@ const AdminPortal = () => {
                   onClick={() => setActiveTab('users')}
                   className={`px-4 py-2.5 text-xs font-black uppercase tracking-wider border-b-2 transition-all cursor-pointer ${
                     activeTab === 'users' 
-                      ? 'border-teal-500 text-white font-black' 
+                      ? 'border-red-500 text-white font-black' 
                       : 'border-transparent text-slate-500 hover:text-slate-300'
                   }`}
                 >
@@ -393,7 +393,7 @@ const AdminPortal = () => {
                   onClick={() => setActiveTab('subscriptions')}
                   className={`px-4 py-2.5 text-xs font-black uppercase tracking-wider border-b-2 transition-all cursor-pointer ${
                     activeTab === 'subscriptions' 
-                      ? 'border-teal-500 text-white font-black' 
+                      ? 'border-red-500 text-white font-black' 
                       : 'border-transparent text-slate-500 hover:text-slate-300'
                   }`}
                 >
@@ -404,7 +404,7 @@ const AdminPortal = () => {
                   onClick={() => setActiveTab('payments')}
                   className={`px-4 py-2.5 text-xs font-black uppercase tracking-wider border-b-2 transition-all cursor-pointer ${
                     activeTab === 'payments' 
-                      ? 'border-teal-500 text-white font-black' 
+                      ? 'border-red-500 text-white font-black' 
                       : 'border-transparent text-slate-500 hover:text-slate-300'
                   }`}
                 >
@@ -415,24 +415,24 @@ const AdminPortal = () => {
 
               {/* Generated Key Warning Alert */}
               {generatedKey && (
-                <div className="bg-amber-950/20 border border-amber-500/25 rounded-[28px] p-6 shadow-2xl mb-2 animate-in fade-in slide-in-from-top-4 duration-300">
+                <div className="bg-red-950/20 border border-red-500/25 rounded-[28px] p-6 shadow-2xl mb-2 animate-in fade-in slide-in-from-top-4 duration-300">
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center shrink-0">
+                    <div className="w-10 h-10 rounded-xl bg-red-500/10 text-red-300 border border-red-500/20 flex items-center justify-center shrink-0">
                       <AlertCircle size={20} />
                     </div>
                     <div className="flex-1 space-y-3 text-left">
-                      <h4 className="text-xs font-black text-amber-400 uppercase tracking-wider">New API Key Created!</h4>
+                      <h4 className="text-xs font-black text-red-300 uppercase tracking-wider">New API Key Created!</h4>
                       <p className="text-xs font-semibold text-slate-300 leading-relaxed">
-                        For security reasons, this key will only be shown to you <span className="font-bold underline text-amber-400">once</span>. Copy it now and store it in a safe place. If lost, you will need to generate a new key.
+                        For security reasons, this key will only be shown to you <span className="font-bold underline text-red-300">once</span>. Copy it now and store it in a safe place. If lost, you will need to generate a new key.
                       </p>
                       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 max-w-xl">
-                        <div className="flex-1 bg-slate-950 border border-amber-500/20 px-4 py-2.5 rounded-xl font-mono text-xs select-all break-all text-slate-200 font-semibold shadow-inner">
+                        <div className="flex-1 bg-slate-950 border border-red-500/20 px-4 py-2.5 rounded-xl font-mono text-xs select-all break-all text-slate-200 font-semibold shadow-inner">
                           {generatedKey.key}
                         </div>
                         <button
                           type="button"
                           onClick={() => handleCopyKey(generatedKey.key, 'generated')}
-                          className="px-4 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-md shadow-amber-500/10 cursor-pointer"
+                          className="px-4 py-2.5 bg-[#ff0000] hover:bg-[#cc0000] text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-md shadow-red-500/10 cursor-pointer"
                         >
                           {copiedKeyId === 'generated' ? (
                             <>
@@ -450,7 +450,7 @@ const AdminPortal = () => {
                       <button
                         type="button"
                         onClick={() => setGeneratedKey(null)}
-                        className="text-[10px] font-black text-amber-400 hover:text-amber-300 uppercase tracking-widest pt-2 flex items-center gap-1 hover:underline cursor-pointer"
+                        className="text-[10px] font-black text-red-300 hover:text-red-200 uppercase tracking-widest pt-2 flex items-center gap-1 hover:underline cursor-pointer"
                       >
                         I have copied the key, close warning
                       </button>
@@ -464,9 +464,9 @@ const AdminPortal = () => {
                   {/* API Keys Table & Generator */}
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Key Generator Card */}
-                    <div className="lg:col-span-1 bg-slate-900/35 border border-slate-900 rounded-[32px] p-6 shadow-xl backdrop-blur-md">
+                    <div className="lg:col-span-1 bg-slate-900/35 border border-slate-900 rounded-[22px] p-6 shadow-xl backdrop-blur-md">
                       <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-900">
-                        <div className="w-10 h-10 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-xl flex items-center justify-center shrink-0">
+                        <div className="w-10 h-10 bg-red-500/10 text-red-300 border border-red-500/20 rounded-xl flex items-center justify-center shrink-0">
                           <Plus size={18} />
                         </div>
                         <div className="text-left">
@@ -483,14 +483,14 @@ const AdminPortal = () => {
                             value={newKeyName}
                             onChange={(e) => setNewKeyName(e.target.value)}
                             placeholder="e.g. Sales Team integration..."
-                            className="w-full bg-slate-950/80 border border-slate-800 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-200 focus:outline-none focus:border-teal-500/30 transition-all outline-none"
+                            className="w-full bg-slate-950/80 border border-slate-800 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-200 focus:outline-none focus:border-red-500/30 transition-all outline-none"
                             required
                           />
                         </div>
                         <button
                           type="submit"
                           disabled={creatingKey}
-                          className="w-full py-3 bg-teal-505 hover:bg-teal-400 disabled:bg-slate-800 text-slate-950 font-black rounded-xl text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-2 cursor-pointer"
+                          className="w-full py-3 bg-[#ff0000] hover:bg-[#cc0000] disabled:bg-slate-800 text-white font-black rounded-xl text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-2 cursor-pointer"
                         >
                           {creatingKey ? (
                             <>
@@ -508,9 +508,9 @@ const AdminPortal = () => {
                     </div>
 
                     {/* Keys List Card */}
-                    <div className="lg:col-span-2 bg-slate-900/35 border border-slate-900 rounded-[32px] p-6 shadow-xl backdrop-blur-md">
+                    <div className="lg:col-span-2 bg-slate-900/35 border border-slate-900 rounded-[22px] p-6 shadow-xl backdrop-blur-md">
                       <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-900">
-                        <div className="w-10 h-10 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-xl flex items-center justify-center shrink-0">
+                        <div className="w-10 h-10 bg-red-500/10 text-red-300 border border-red-500/20 rounded-xl flex items-center justify-center shrink-0">
                           <Key size={18} />
                         </div>
                         <div className="text-left">
@@ -521,7 +521,7 @@ const AdminPortal = () => {
 
                       {loadingKeys ? (
                         <div className="py-12 flex flex-col items-center justify-center gap-2">
-                          <Loader2 className="animate-spin text-teal-400" size={24} />
+                          <Loader2 className="animate-spin text-red-300" size={24} />
                           <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Syncing keys...</span>
                         </div>
                       ) : apiKeys.length === 0 ? (
@@ -580,9 +580,9 @@ const AdminPortal = () => {
                   </div>
 
                   {/* Developer Integration Docs */}
-                  <div className="bg-slate-900/35 border border-slate-900 rounded-[32px] p-6 md:p-8 shadow-xl backdrop-blur-md text-left">
+                  <div className="bg-slate-900/35 border border-slate-900 rounded-[22px] p-6 md:p-8 shadow-xl backdrop-blur-md text-left">
                     <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-900">
-                      <div className="w-10 h-10 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-xl flex items-center justify-center shrink-0">
+                      <div className="w-10 h-10 bg-red-500/10 text-red-300 border border-red-500/20 rounded-xl flex items-center justify-center shrink-0">
                         <Code size={18} />
                       </div>
                       <div>
@@ -598,7 +598,7 @@ const AdminPortal = () => {
                         <p className="text-slate-400 leading-relaxed">
                           All system integration requests require your generated Global API Key passed in the header:
                         </p>
-                        <pre className="bg-slate-900/50 border border-slate-850 text-teal-400 p-3.5 rounded-xl font-mono text-[10px] overflow-x-auto shadow-inner leading-relaxed">
+                        <pre className="bg-slate-900/50 border border-slate-850 text-red-300 p-3.5 rounded-xl font-mono text-[10px] overflow-x-auto shadow-inner leading-relaxed">
                           {"x-api-key: your_global_key_here\n// OR\nAuthorization: Bearer your_global_key_here"}
                         </pre>
                       </div>
@@ -633,7 +633,7 @@ const AdminPortal = () => {
                             className="w-full flex items-center justify-between p-4 bg-slate-900/30 hover:bg-slate-900/50 transition-colors text-xs font-black text-white cursor-pointer"
                           >
                             <div className="flex items-center gap-2">
-                              <span className="px-2 py-0.5 rounded text-[8px] uppercase font-black tracking-wider bg-teal-500/10 text-teal-400 border border-teal-500/15">{doc.method}</span>
+                              <span className="px-2 py-0.5 rounded text-[8px] uppercase font-black tracking-wider bg-red-500/10 text-red-300 border border-red-500/15">{doc.method}</span>
                               <span>{doc.title}</span>
                             </div>
                             <ChevronDown size={14} className={`text-slate-500 transition-transform ${openDocSection === doc.id ? 'rotate-180' : ''}`} />
@@ -670,11 +670,11 @@ const AdminPortal = () => {
                 </>
               ) : activeTab === 'users' ? (
                 /* Connected Clients Tab */
-                <div className="bg-slate-900/35 border border-slate-900 rounded-[32px] p-6 shadow-xl backdrop-blur-md">
+                <div className="bg-slate-900/35 border border-slate-900 rounded-[22px] p-6 shadow-xl backdrop-blur-md">
 
                   <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-900">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-xl flex items-center justify-center shrink-0">
+                      <div className="w-10 h-10 bg-red-500/10 text-red-300 border border-red-500/20 rounded-xl flex items-center justify-center shrink-0">
                         <Database size={18} />
                       </div>
                       <div className="text-left">
@@ -694,7 +694,7 @@ const AdminPortal = () => {
 
                   {loadingUsers ? (
                     <div className="py-20 flex flex-col items-center justify-center gap-2">
-                      <Loader2 className="animate-spin text-teal-400" size={24} />
+                      <Loader2 className="animate-spin text-red-300" size={24} />
                       <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Loading client profiles...</span>
                     </div>
                   ) : users.length === 0 ? (
@@ -735,7 +735,7 @@ const AdminPortal = () => {
                               </td>
                               <td className="py-3.5 text-left">
                                 {u.subscription?.status === 'active' ? (
-                                  <span className="bg-green-500/10 text-green-400 border border-green-500/15 px-2.5 py-0.5 rounded-full text-[8px] uppercase tracking-wider font-black">
+                                  <span className="bg-red-500/10 text-red-300 border border-red-500/15 px-2.5 py-0.5 rounded-full text-[8px] uppercase tracking-wider font-black">
                                     Active (Pro)
                                   </span>
                                 ) : (
@@ -744,7 +744,7 @@ const AdminPortal = () => {
                                   </span>
                                 )}
                               </td>
-                              <td className="py-3.5 text-center font-bold text-teal-400">
+                              <td className="py-3.5 text-center font-bold text-red-300">
                                 {u.channelCount}
                               </td>
                               <td className="py-3.5 text-center font-bold text-slate-300">
@@ -772,10 +772,10 @@ const AdminPortal = () => {
                 </div>
               ) : activeTab === 'subscriptions' ? (
                 /* Subscriptions Management Tab */
-                <div className="bg-slate-900/35 border border-slate-900 rounded-[32px] p-6 shadow-xl backdrop-blur-md">
+                <div className="bg-slate-900/35 border border-slate-900 rounded-[22px] p-6 shadow-xl backdrop-blur-md">
                   <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-900">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-xl flex items-center justify-center shrink-0">
+                      <div className="w-10 h-10 bg-red-500/10 text-red-300 border border-red-500/20 rounded-xl flex items-center justify-center shrink-0">
                         <Database size={18} />
                       </div>
                       <div className="text-left">
@@ -795,7 +795,7 @@ const AdminPortal = () => {
 
                   {loadingSubscriptions ? (
                     <div className="py-20 flex flex-col items-center justify-center gap-2">
-                      <Loader2 className="animate-spin text-teal-400" size={24} />
+                      <Loader2 className="animate-spin text-red-300" size={24} />
                       <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Loading subscriptions...</span>
                     </div>
                   ) : subscriptions.length === 0 ? (
@@ -826,12 +826,12 @@ const AdminPortal = () => {
                               <td className="py-3.5 text-left text-slate-400 text-xs">
                                 {s.email}
                               </td>
-                              <td className="py-3.5 text-left font-bold text-teal-400 uppercase text-[10px]">
+                              <td className="py-3.5 text-left font-bold text-red-300 uppercase text-[10px]">
                                 {s.plan}
                               </td>
                               <td className="py-3.5 text-left">
                                 {s.status === 'active' ? (
-                                  <span className="bg-green-500/10 text-green-400 border border-green-500/20 px-2.5 py-0.5 rounded-full text-[8px] uppercase tracking-wider font-black">
+                                  <span className="bg-red-500/10 text-red-300 border border-red-500/20 px-2.5 py-0.5 rounded-full text-[8px] uppercase tracking-wider font-black">
                                     {s.paymentStatus || 'Active'}
                                   </span>
                                 ) : (
@@ -850,14 +850,14 @@ const AdminPortal = () => {
                                 <button
                                   type="button"
                                   onClick={() => handleActivateSub(s.userId, s.email)}
-                                  className="px-2 py-1 text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 rounded-md font-bold uppercase transition-all cursor-pointer"
+                                  className="px-2 py-1 text-[9px] bg-red-500/10 text-red-300 border border-red-500/20 hover:bg-red-500/20 rounded-md font-bold uppercase transition-all cursor-pointer"
                                 >
                                   Activate
                                 </button>
                                 <button
                                   type="button"
                                   onClick={() => handleExtendSub(s.userId, s.email)}
-                                  className="px-2 py-1 text-[9px] bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20 rounded-md font-bold uppercase transition-all cursor-pointer"
+                                  className="px-2 py-1 text-[9px] bg-red-500/10 text-red-300 border border-red-500/20 hover:bg-red-500/20 rounded-md font-bold uppercase transition-all cursor-pointer"
                                 >
                                   Extend
                                 </button>
@@ -878,10 +878,10 @@ const AdminPortal = () => {
                 </div>
               ) : (
                 /* Payments History Tab */
-                <div className="bg-slate-900/35 border border-slate-900 rounded-[32px] p-6 shadow-xl backdrop-blur-md">
+                <div className="bg-slate-900/35 border border-slate-900 rounded-[22px] p-6 shadow-xl backdrop-blur-md">
                   <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-900">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-xl flex items-center justify-center shrink-0">
+                      <div className="w-10 h-10 bg-red-500/10 text-red-300 border border-red-500/20 rounded-xl flex items-center justify-center shrink-0">
                         <Database size={18} />
                       </div>
                       <div className="text-left">
@@ -901,7 +901,7 @@ const AdminPortal = () => {
 
                   {loadingPayments ? (
                     <div className="py-20 flex flex-col items-center justify-center gap-2">
-                      <Loader2 className="animate-spin text-teal-400" size={24} />
+                      <Loader2 className="animate-spin text-red-300" size={24} />
                       <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Loading payments...</span>
                     </div>
                   ) : payments.length === 0 ? (
@@ -935,12 +935,12 @@ const AdminPortal = () => {
                               <td className="py-3.5 font-mono text-[10px] text-slate-400 select-all text-left">
                                 {p.razorpaySubscriptionId || p.subscriptionId || 'N/A'}
                               </td>
-                              <td className="py-3.5 text-left font-bold text-emerald-400">
+                              <td className="py-3.5 text-left font-bold text-red-300">
                                 ₹{(p.amount / 100).toFixed(2)} {p.currency}
                               </td>
                               <td className="py-3.5 text-left">
                                 <span className={`px-2.5 py-0.5 rounded-full text-[8px] uppercase tracking-wider font-black ${
-                                  p.status === 'captured' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'
+                                  p.status === 'captured' ? 'bg-red-500/10 text-red-300 border border-red-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'
                                 }`}>
                                   {p.status}
                                 </span>

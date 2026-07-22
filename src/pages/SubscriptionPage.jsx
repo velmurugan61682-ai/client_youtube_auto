@@ -117,7 +117,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
         amount: amount || 99900,
         currency: currency || "INR",
         name: "Channelmate",
-        description: "Quarterly Pro Subscription (₹999)",
+        description: "Quarterly Pro Subscription (-999)",
         order_id: activeOrderId,
         handler: async function (response) {
           try {
@@ -131,7 +131,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
             });
             if (verifyRes.data.success) {
               await fetchStatus();
-              alert('🎉 Subscription activated successfully!');
+              alert('Subscription activated successfully!');
               if (onSelectPlan) onSelectPlan();
             }
           } catch (err) {
@@ -206,9 +206,9 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
 
   const planDisplayNames = {
     free: 'Free Plan',
-    quarterly: 'Pro Plan (₹999)',
-    quarterly_pro: 'Pro Plan (₹999)',
-    three_months_999: 'Pro Plan (₹999)'
+    quarterly: 'Pro Plan (-999)',
+    quarterly_pro: 'Pro Plan (-999)',
+    three_months_999: 'Pro Plan (-999)'
   };
 
   const hasAnyActiveSub = subData && (subData.status === 'active' || 
@@ -219,7 +219,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
       type: "free",
       name: "STARTER PACK",
       displayName: "Free Plan",
-      price: "₹0",
+      price: "-0",
       period: "/ forever",
       desc: "Perfect for single creators starting out.",
       features: [
@@ -235,7 +235,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
       type: "quarterly",
       name: "BEST VALUE",
       displayName: "Quarterly Pro",
-      price: "₹999",
+      price: "-999",
       period: "/ 3 months",
       desc: "Quarterly saver for professional creators.",
       features: [
@@ -253,16 +253,10 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
 
 
   return (
-    <div className={`max-w-6xl mx-auto w-full transition-all duration-500 ${isGate ? 'max-w-4xl py-6' : 'py-2'}`}>
+    <div className={`w-full transition-all duration-500 ${isGate ? 'max-w-4xl mx-auto py-6' : 'h-[calc(100vh-2.5rem)] min-h-[760px] overflow-hidden rounded-[28px] bg-[#eef3f5] p-4 sm:p-5 text-[#0f0f0f]'}`}>
       
-      {/* Background Decorative Blobs */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[400px] h-[400px] rounded-full bg-blue-500/5 blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[450px] h-[450px] rounded-full bg-cyan-500/5 blur-[120px]" />
-      </div>
-
       {/* Header Panel */}
-      <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6 pb-4 border-b border-zinc-200/50 mb-8">
+      <div className="relative z-10 rounded-[22px] bg-white border border-[#e5e5e5] shadow-sm px-5 sm:px-7 py-5 flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
         <div>
           <h1 className="text-3xl font-black text-zinc-900 tracking-tight">
             Subscription
@@ -309,16 +303,16 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
       )}
 
       {activeSubTab === 'plans' ? (
-        <div className="space-y-8 relative z-10">
+        <div className="custom-scroll h-[calc(100%-112px)] overflow-y-auto pr-1 space-y-8 relative z-10">
           
           {/* Active Subscription Banner */}
           {!isGate && (
-            <div className="bg-white/60 backdrop-blur-xl rounded-[32px] border border-white/50 p-6 md:p-8 shadow-[0_12px_40px_rgba(0,0,0,0.02)] flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="bg-white rounded-[22px] border border-[#e5e5e5] p-6 md:p-8 shadow-[0_12px_40px_rgba(0,0,0,0.02)] flex flex-col md:flex-row md:items-center justify-between gap-6">
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <span className={`px-3 py-1 text-[10px] font-black uppercase rounded-full tracking-widest border ${
                     hasAnyActiveSub 
-                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
+                      ? 'bg-[#fff1f1] text-[#ff0000] border-red-100' 
                       : 'bg-zinc-100 text-zinc-650 border-zinc-200'
                   }`}>
                     {hasAnyActiveSub ? `Active: ${planDisplayNames[subData.planType] || subData.planType}` : 'Free Tier Active'}
@@ -328,9 +322,9 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
                 
                 <p className="text-sm text-zinc-800 font-black">
                   {hasAnyActiveSub ? (
-                    `Premium Active — Connected channels share organization limits under the ${planDisplayNames[subData.planType] || subData.planType} tier.`
+                    `Premium Active - Connected channels share organization limits under the ${planDisplayNames[subData.planType] || subData.planType} tier.`
                   ) : (
-                    'Free Plan Active — Enforcing a 1-channel connection limit.'
+                    'Free Plan Active - Enforcing a 1-channel connection limit.'
                   )}
                 </p>
                 {hasAnyActiveSub && subData.currentEnd && (
@@ -360,16 +354,16 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
               return (
                 <div 
                   key={plan.type}
-                  className={`bg-white/45 backdrop-blur-xl rounded-[28px] border p-6 flex flex-col justify-between transition-all duration-300 hover:shadow-xl relative overflow-hidden ${
+                  className={`bg-white rounded-[22px] border p-6 flex flex-col justify-between transition-all duration-300 hover:shadow-xl relative overflow-hidden ${
                     isActive 
-                      ? 'border-green-400 ring-2 ring-green-400/20' 
+                      ? 'border-[#ff0000] ring-2 ring-[#ff0000]/10' 
                       : plan.recommended 
                       ? 'border-orange-300 ring-2 ring-orange-400/10' 
                       : 'border-white/50'
                   }`}
                 >
                   {isActive && (
-                    <div className="absolute top-0 right-0 bg-[#00c853] text-white text-[8px] font-black uppercase tracking-widest py-1.5 px-4 rounded-bl-2xl flex items-center gap-1">
+                    <div className="absolute top-0 right-0 bg-[#ff0000] text-white text-[8px] font-black uppercase tracking-widest py-1.5 px-4 rounded-bl-2xl flex items-center gap-1">
                       <Star size={8} fill="white" /> Active Plan
                     </div>
                   )}
@@ -398,7 +392,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
                     <ul className="space-y-3 mb-6">
                       {plan.features.map((feat, idx) => (
                         <li key={idx} className="flex items-start gap-2.5 text-xs font-bold text-zinc-600">
-                          <Check size={14} className="text-green-600 shrink-0 mt-0.5" />
+                          <Check size={14} className="text-[#ff0000] shrink-0 mt-0.5" />
                           <span>{feat}</span>
                         </li>
                       ))}
@@ -410,7 +404,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
                     onClick={() => handleSubscribe(plan.type)}
                     className={`w-full py-3 text-xs font-black uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-1.5 ${
                       isActive
-                        ? 'bg-[#00c853] text-white cursor-default shadow-[0_4px_12px_rgba(0,200,83,0.2)]'
+                        ? 'bg-[#ff0000] text-white cursor-default shadow-[0_4px_12px_rgba(255,0,0,0.18)]'
                         : 'bg-zinc-900 hover:bg-zinc-800 text-white active:scale-98'
                     }`}
                   >
@@ -433,7 +427,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
         </div>
       ) : (
         /* Billing History Table */
-        <div className="relative z-10 bg-white/60 backdrop-blur-xl rounded-[32px] border border-white/50 p-6 md:p-8 shadow-[0_12px_40px_rgba(0,0,0,0.02)] text-zinc-800">
+        <div className="relative z-10 bg-white rounded-[22px] border border-[#e5e5e5] p-6 md:p-8 shadow-[0_12px_40px_rgba(0,0,0,0.02)] text-zinc-800">
           <div className="flex items-center gap-2 mb-6">
             <History size={18} className="text-zinc-650" />
             <h2 className="text-lg font-black text-zinc-900">Payment Invoice Logs</h2>
@@ -474,7 +468,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
                       <td className="py-4">
                         <span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider ${
                           inv.status === 'paid' || inv.status === 'issued'
-                            ? 'bg-green-50 text-green-700 border border-green-200'
+                            ? 'bg-[#fff1f1] text-[#ff0000] border border-red-100'
                             : 'bg-red-50 text-red-700 border border-red-200'
                         }`}>
                           {inv.status}
@@ -501,3 +495,6 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
 };
 
 export default SubscriptionPage;
+
+
+

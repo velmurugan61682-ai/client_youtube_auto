@@ -230,16 +230,16 @@ const ModerationQueue = ({ onAction, searchQuery }) => {
                           <p className="text-[13.5px] text-[#222] font-medium leading-relaxed mb-4 max-w-[500px]">"{comment.text}"</p>
                            
                            {comment.replyText && (comment.replyStatus === 'sent' || comment.hasReplied) && (
-                             <div className="mt-3 ml-4 pl-4 border-l-2 border-green-500/40 space-y-2 bg-green-50/20 p-3 rounded-2xl border border-green-500/10 text-left max-w-[500px]">
+                             <div className="mt-3 ml-4 pl-4 border-l-2 border-red-500/30 space-y-2 bg-[#fff1f1]/50 p-3 rounded-2xl border border-red-500/10 text-left max-w-[500px]">
                                <div className="flex items-center justify-between">
                                  <div className="flex items-center gap-2">
-                                   <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-[9px] font-bold">
+                                   <div className="w-5 h-5 rounded-full bg-[#fff1f1] flex items-center justify-center text-[#ff0000] text-[9px] font-bold">
                                      AI
                                    </div>
                                    <div className="flex items-center gap-1">
                                      <span className="font-extrabold text-[10px] text-[#0f0f0f]">Channel Owner (AI Auto-Reply)</span>
-                                     <span className="text-[8px] font-black uppercase bg-[#2ba640]/10 text-[#2ba640] px-1.5 py-0.5 rounded-md border border-[#2ba640]/20 flex items-center gap-1">
-                                       <span className="w-1 h-1 rounded-full bg-[#2ba640] animate-pulse" />
+                                     <span className="text-[8px] font-black uppercase bg-[#fff1f1] text-[#ff0000] px-1.5 py-0.5 rounded-md border border-red-100 flex items-center gap-1">
+                                       <span className="w-1 h-1 rounded-full bg-[#ff0000] animate-pulse" />
                                        DeepSeek Sent
                                      </span>
                                    </div>
@@ -284,12 +284,12 @@ const ModerationQueue = ({ onAction, searchQuery }) => {
                                   <span 
                                     key={idx} 
                                     className={`text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-lg border flex items-center gap-1.5 shadow-sm transition-transform hover:scale-105 ${
-                                      isPositive ? 'bg-green-50 text-green-700 border-green-100' :
+                                      isPositive ? 'bg-[#fff1f1] text-[#ff0000] border-red-100' :
                                       isNegative ? 'bg-red-50 text-red-700 border-red-100' :
-                                      'bg-blue-50 text-blue-700 border-blue-100'
+                                      'bg-[#f7f7f7] text-[#606060] border-[#e5e5e5]'
                                     }`}
                                   >
-                                    <div className={`w-1 h-1 rounded-full ${isPositive ? 'bg-green-500' : isNegative ? 'bg-red-500' : 'bg-blue-500'}`} />
+                                    <div className={`w-1 h-1 rounded-full ${isPositive ? 'bg-[#ff0000]' : isNegative ? 'bg-red-500' : 'bg-[#606060]'}`} />
                                     {item.word}
                                   </span>
                                 );
@@ -358,8 +358,8 @@ const ModerationQueue = ({ onAction, searchQuery }) => {
                         <div className="flex flex-col items-start gap-3">
                           <div className={`flex items-center gap-2.5 py-1.5 px-3 rounded-xl border ${
                             comment.status === 'deleted' ? 'bg-red-50 text-red-600 border-red-100' : 
-                            comment.status === 'approved' ? 'bg-green-50 text-green-600 border-green-100' :
-                            comment.status === 'flagged' ? 'bg-amber-50 text-amber-600 border-amber-100' : 'bg-gray-50 text-[#909090] border-gray-100'
+                            comment.status === 'approved' ? 'bg-[#fff1f1] text-[#ff0000] border-red-100' :
+                            comment.status === 'flagged' ? 'bg-[#f7f7f7] text-[#606060] border-[#e5e5e5]' : 'bg-gray-50 text-[#909090] border-gray-100'
                           }`}>
                             {comment.status === 'deleted' ? <ShieldAlert size={14} /> : 
                              comment.status === 'approved' ? <ShieldCheck size={14} /> :
@@ -376,7 +376,7 @@ const ModerationQueue = ({ onAction, searchQuery }) => {
                               </div>
                             )}
                             {comment.autoLiked && (
-                              <div className="text-[9px] font-black text-[#065fd4] uppercase tracking-widest flex items-center gap-1.5 bg-blue-50 px-2 py-0.5 rounded-lg border border-blue-100">
+                              <div className="text-[9px] font-black text-[#ff0000] uppercase tracking-widest flex items-center gap-1.5 bg-[#fff1f1] px-2 py-0.5 rounded-lg border border-red-100">
                                  <Zap size={10} fill="currentColor" /> Autonomous Like
                               </div>
                             )}
@@ -403,8 +403,8 @@ const ModerationQueue = ({ onAction, searchQuery }) => {
                             </div>
                            ) : (
                             <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                              <button onClick={() => handleAction(comment._id, 'like')} className="p-2.5 bg-white/45 border border-white/50 hover:bg-white/65 hover:border-blue-500/20 text-[#606060] hover:text-[#065fd4] rounded-xl transition-all shadow-sm" title="Force Like"><Heart size={16} /></button>
-                              <button onClick={() => handleAction(comment._id, 'approve')} className="p-2.5 bg-white/45 border border-white/50 hover:bg-white/65 hover:border-green-500/20 text-[#606060] hover:text-[#2ba640] rounded-xl transition-all shadow-sm" title="Approve"><CheckCircle2 size={16} /></button>
+                              <button onClick={() => handleAction(comment._id, 'like')} className="p-2.5 bg-white/45 border border-white/50 hover:bg-white/65 hover:border-blue-500/20 text-[#606060] hover:text-[#ff0000] rounded-xl transition-all shadow-sm" title="Force Like"><Heart size={16} /></button>
+                              <button onClick={() => handleAction(comment._id, 'approve')} className="p-2.5 bg-white/45 border border-white/50 hover:bg-white/65 hover:border-red-500/20 text-[#606060] hover:text-[#ff0000] rounded-xl transition-all shadow-sm" title="Approve"><CheckCircle2 size={16} /></button>
                               <button onClick={() => startEdit(comment)} className="p-2.5 bg-white/45 border border-white/50 hover:bg-white/65 hover:border-[#0f0f0f] text-[#606060] hover:text-[#0f0f0f] rounded-xl transition-all shadow-sm" title="Edit Properties"><Edit3 size={16} /></button>
                               <button onClick={() => handleAction(comment._id, 'delete')} className="p-2.5 bg-white/45 border border-white/50 hover:bg-white/65 hover:border-red-500/20 text-[#606060] hover:text-[#d93025] rounded-xl transition-all shadow-sm" title="Erase Permanently"><Trash2 size={16} /></button>
                             </div>

@@ -82,13 +82,13 @@ const ChannelConnection = ({ channels, setChannels }) => {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-2">
-             <div className="w-1.5 h-1.5 bg-[#22c55e] rounded-full" />
+             <div className="w-1.5 h-1.5 bg-[#ff0000] rounded-full" />
              <span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#909090]">Global Connectivity</span>
           </div>
           <h2 className="text-3xl font-black text-[#0f0f0f] tracking-tight">Channel Hub</h2>
         </div>
         <div className="flex items-center gap-3 bg-white border border-[#f0f0f0] p-1.5 rounded-2xl shadow-sm">
-           <div className={`px-4 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${channels.length > 0 ? 'bg-green-50 text-green-600' : 'bg-gray-50 text-gray-400'}`}>
+           <div className={`px-4 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${channels.length > 0 ? 'bg-[#fff1f1] text-[#ff0000]' : 'bg-gray-50 text-gray-400'}`}>
               {channels.length} Profiles Active
            </div>
            <div className="h-4 w-px bg-[#f0f0f0]" />
@@ -104,13 +104,13 @@ const ChannelConnection = ({ channels, setChannels }) => {
         <motion.div 
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="relative bg-[#0f0f0f] rounded-[32px] p-8 shadow-2xl shadow-black/10 overflow-hidden flex flex-col md:flex-row items-center gap-8 group"
+          className="relative bg-[#0f0f0f] rounded-[22px] p-8 shadow-2xl shadow-black/10 overflow-hidden flex flex-col md:flex-row items-center gap-8 group"
         >
           <div className="absolute top-0 right-0 p-10 opacity-10 pointer-events-none group-hover:scale-110 transition-transform duration-700">
              <Youtube size={140} className="text-white" />
           </div>
           
-          <div className="w-20 h-20 bg-white rounded-[24px] flex items-center justify-center text-[#22c55e] shadow-xl shrink-0 rotate-3 group-hover:rotate-0 transition-transform">
+          <div className="w-20 h-20 bg-white rounded-[24px] flex items-center justify-center text-[#ff0000] shadow-xl shrink-0 rotate-3 group-hover:rotate-0 transition-transform">
             <Youtube size={44} fill="currentColor" />
           </div>
 
@@ -126,7 +126,7 @@ const ChannelConnection = ({ channels, setChannels }) => {
             </p>
             <button 
               onClick={handleOAuthConnect}
-              className="w-full md:w-auto bg-[#22c55e] hover:bg-[#16a34a] text-white py-3 px-8 rounded-xl font-black text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-2 group/btn"
+              className="w-full md:w-auto bg-[#ff0000] hover:bg-[#cc0000] text-white py-3 px-8 rounded-xl font-black text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-2 group/btn"
             >
               Link Now <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
             </button>
@@ -138,7 +138,7 @@ const ChannelConnection = ({ channels, setChannels }) => {
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.05 }}
-          className="bg-white rounded-[32px] border border-[#f0f0f0] p-8 shadow-sm flex flex-col gap-6"
+          className="bg-white rounded-[22px] border border-[#f0f0f0] p-8 shadow-sm flex flex-col gap-6"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -199,7 +199,7 @@ const ChannelConnection = ({ channels, setChannels }) => {
         </div>
 
         {channels.length === 0 ? (
-          <div className="py-24 flex flex-col items-center justify-center text-center bg-[#fcfcfc] border-2 border-dashed border-[#f0f0f0] rounded-[40px] group hover:border-[#22c55e]/20 transition-colors">
+          <div className="py-24 flex flex-col items-center justify-center text-center bg-[#fcfcfc] border-2 border-dashed border-[#f0f0f0] rounded-[22px] group hover:border-[#ff0000]/20 transition-colors">
             <div className="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center text-[#cccccc] mb-6 group-hover:scale-110 transition-transform">
                <Globe size={32} />
             </div>
@@ -216,13 +216,13 @@ const ChannelConnection = ({ channels, setChannels }) => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.9 }}
-                  className="bg-white border border-[#f0f0f0] rounded-[32px] p-6 hover:shadow-2xl hover:shadow-black/5 hover:-translate-y-1 transition-all group relative overflow-hidden"
+                  className="bg-white border border-[#f0f0f0] rounded-[22px] p-6 hover:shadow-2xl hover:shadow-black/5 hover:-translate-y-1 transition-all group relative overflow-hidden"
                 >
                   <div className="flex items-center gap-5">
                     <div className="relative shrink-0">
                       <img src={channel.thumbnailUrl} className="w-16 h-16 rounded-[22px] border-2 border-white shadow-md bg-[#f8f8f8]" alt="" />
                       <div className="absolute -bottom-1 -right-1 p-1.5 bg-white rounded-full shadow-lg border border-[#f0f0f0]">
-                        {channel.apiKey ? <Key size={12} className="text-[#909090]" /> : <ShieldCheck size={12} className="text-[#22c55e]" />}
+                        {channel.apiKey ? <Key size={12} className="text-[#909090]" /> : <ShieldCheck size={12} className="text-[#ff0000]" />}
                       </div>
                     </div>
 
@@ -243,7 +243,7 @@ const ChannelConnection = ({ channels, setChannels }) => {
                         <a 
                           href={`https://youtube.com/channel/${channel.channelId}`} 
                           target="_blank" 
-                          className="flex items-center gap-2 px-3 py-1.5 bg-[#f8f9fa] hover:bg-green-50 text-[#606060] hover:text-[#22c55e] rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
+                          className="flex items-center gap-2 px-3 py-1.5 bg-[#f8f9fa] hover:bg-[#fff1f1] text-[#606060] hover:text-[#ff0000] rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
                         >
                           <ExternalLink size={14} /> Open Studio
                         </a>
@@ -263,10 +263,10 @@ const ChannelConnection = ({ channels, setChannels }) => {
       </div>
 
       {/* Security Footer Banner */}
-      <div className="p-8 bg-gradient-to-tr from-[#0f0f0f] to-[#333] rounded-[40px] text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl shadow-black/10">
+      <div className="p-8 bg-[#0f0f0f] rounded-[22px] text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl shadow-black/10">
          <div className="flex items-center gap-6">
             <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center">
-               <ShieldCheck size={28} className="text-[#2ba640]" />
+               <ShieldCheck size={28} className="text-[#ff0000]" />
             </div>
             <div>
                <h3 className="text-xl font-black tracking-tight">Enterprise Infrastructure</h3>

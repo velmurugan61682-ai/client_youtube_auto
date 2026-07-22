@@ -6,6 +6,7 @@ import {
   Clock, 
   RefreshCw, 
   Loader2,
+  ChevronLeft,
   ChevronRight,
   Filter,
   Trash2,
@@ -87,6 +88,15 @@ const VideosList = ({
   const [comments, setComments] = useState([]);
   const [loadingComments, setLoadingComments] = useState(false);
   const [filter, setFilter] = useState('all');
+  const [isMobileDetail, setIsMobileDetail] = useState(false);
+  const [isMobileViewport, setIsMobileViewport] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobileViewport(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const processedVideos = (videos || []).map(v => {
     if (v.isPost) {
@@ -111,12 +121,17 @@ const VideosList = ({
     if (activeVideosList.length > 0) {
       const isCurrentSelectedInTab = activeVideosList.some(v => v.videoId === selectedVideo);
       if (!isCurrentSelectedInTab) {
-        handleVideoSelect(activeVideosList[0].videoId);
+        handleVideoSelect(activeVideosList[0].videoId, false);
       }
     } else {
       setSelectedVideo(null);
+      setIsMobileDetail(false);
     }
   }, [videoTab, videos]);
+
+  useEffect(() => {
+    setIsMobileDetail(false);
+  }, [videoTab, channelId]);
 
   // Analytics and Interactive Tabs
   const [activePanelTab, setActivePanelTab] = useState('comments'); // 'comments' or 'analytics'
@@ -171,7 +186,7 @@ const VideosList = ({
             : [];
       setVideos(fetchedVideos);
       if (fetchedVideos.length > 0 && !selectedVideo) {
-        handleVideoSelect(fetchedVideos[0].videoId);
+        handleVideoSelect(fetchedVideos[0].videoId, false);
       }
     } catch (err) {
       console.error('Error fetching videos:', err);
@@ -181,9 +196,10 @@ const VideosList = ({
     }
   };
 
-  const handleVideoSelect = async (videoId) => {
+  const handleVideoSelect = async (videoId, openDetail = true) => {
     try {
       setSelectedVideo(videoId);
+      if (openDetail && isMobileViewport) setIsMobileDetail(true);
       setLoadingComments(true);
       setLoadingAnalytics(true);
       
@@ -392,11 +408,11 @@ const VideosList = ({
   }
 
   return (
-    <div className={`flex flex-col lg:flex-row lg:h-full w-full ${isEmbedded ? 'gap-2 lg:gap-4 bg-[#f9f9f9]' : 'gap-4 md:gap-6'} overflow-y-auto lg:overflow-hidden`}>
+    <div className={`flex flex-col md:flex-row lg:h-full w-full ${isEmbedded ? 'gap-2 lg:gap-4 bg-[#f9f9f9]' : 'gap-4 md:gap-5 lg:gap-6'} overflow-visible lg:overflow-hidden`}>
       {/* Left Pane: Videos List */}
-      <div className="w-full lg:w-[320px] flex flex-col gap-4 shrink-0 h-[350px] lg:h-full overflow-hidden">
+      <div className={`${isMobileDetail ? 'hidden md:flex' : 'flex'} w-full md:w-[280px] lg:w-[320px] flex-col gap-4 shrink-0 h-[calc(100vh-220px)] min-h-[420px] md:h-full overflow-hidden`}>
         <div className={`yt-card !p-0 flex flex-col h-full overflow-hidden ${isEmbedded ? '!rounded-none !border-y-0 !border-l-0 !shadow-none' : ''}`}>
-           <div className="p-4 md:p-5 border-b border-white/40 flex items-center justify-between bg-white/20 sticky top-0 z-10 backdrop-blur-md">
+           <div className="p-4 md:p-5 border-b border-[#e5e5e5] flex items-center justify-between bg-white sticky top-0 z-10 ">
               <div className="flex items-center gap-2 min-w-0 flex-1">
                 <h3 className="text-base md:text-lg font-black text-[#0f0f0f] tracking-tight truncate">Channel Videos</h3>
                 {isEmbedded && channels.length > 1 && (
@@ -410,7 +426,7 @@ const VideosList = ({
                 )}
               </div>
               <div className="flex items-center gap-1 flex-shrink-0">
-                <button onClick={fetchVideos} className="p-2 hover:bg-[#f2f2f2] rounded-full text-[#909090] transition-colors" title="Refresh videos">
+                <button onClick={fetchVideos} className="h-11 w-11 flex items-center justify-center hover:bg-[#f2f2f2] rounded-full text-[#909090] transition-colors" title="Refresh videos">
                    <RefreshCw size={16} className={loadingVideos ? 'animate-spin' : ''} />
                 </button>
                 {isEmbedded && onLogout && (
@@ -427,12 +443,12 @@ const VideosList = ({
             </div>
             
             {/* Tab Selector */}
-            <div className="px-4 py-2 border-b border-white/40 bg-white/10 flex gap-1">
+            <div className="px-4 py-2 border-b border-[#e5e5e5] bg-[#f2f2f2] flex gap-2 overflow-x-auto no-scrollbar">
               <button
                 onClick={() => setVideoTab('videos')}
-                className={`flex-1 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-xl transition-all border ${
+                className={`min-h-[44px] min-w-max px-4 py-2 text-[10px] font-black uppercase tracking-wider rounded-xl transition-all border ${
                   videoTab === 'videos'
-                    ? 'bg-green-500/10 text-green-600 border-green-500/20 shadow-sm'
+                    ? 'bg-[#fff1f1] text-[#ff0000] border-red-100 shadow-sm'
                     : 'text-[#909090] hover:text-[#0f0f0f] border-transparent'
                 }`}
               >
@@ -440,9 +456,9 @@ const VideosList = ({
               </button>
               <button
                 onClick={() => setVideoTab('shorts')}
-                className={`flex-1 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-xl transition-all border ${
+                className={`min-h-[44px] min-w-max px-4 py-2 text-[10px] font-black uppercase tracking-wider rounded-xl transition-all border ${
                   videoTab === 'shorts'
-                    ? 'bg-green-500/10 text-green-600 border-green-500/20 shadow-sm'
+                    ? 'bg-[#fff1f1] text-[#ff0000] border-red-100 shadow-sm'
                     : 'text-[#909090] hover:text-[#0f0f0f] border-transparent'
                 }`}
               >
@@ -450,9 +466,9 @@ const VideosList = ({
               </button>
               <button
                 onClick={() => setVideoTab('posts')}
-                className={`flex-1 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-xl transition-all border ${
+                className={`min-h-[44px] min-w-max px-4 py-2 text-[10px] font-black uppercase tracking-wider rounded-xl transition-all border ${
                   videoTab === 'posts'
-                    ? 'bg-green-500/10 text-green-600 border-green-500/20 shadow-sm'
+                    ? 'bg-[#fff1f1] text-[#ff0000] border-red-100 shadow-sm'
                     : 'text-[#909090] hover:text-[#0f0f0f] border-transparent'
                 }`}
               >
@@ -465,8 +481,8 @@ const VideosList = ({
                 <button
                   key={video.videoId}
                   onClick={() => handleVideoSelect(video.videoId)}
-                  className={`w-full flex gap-3 p-3 rounded-2xl transition-all text-left mb-1.5 border group items-center ${
-                    selectedVideo === video.videoId ? 'bg-green-500/10 border-green-500/20 text-[#22c55e] shadow-sm' : 'hover:bg-slate-50 border-transparent text-slate-500'
+                  className={`w-full min-h-[72px] flex gap-3 p-3 rounded-2xl transition-all text-left mb-1.5 border group items-center ${
+                    selectedVideo === video.videoId ? 'bg-[#fff1f1] border-red-100 text-[#ff0000] shadow-sm' : 'hover:bg-slate-50 border-transparent text-slate-500'
                   }`}
                 >
                   <div className="relative flex-shrink-0 w-20 h-12 rounded-xl overflow-hidden bg-slate-100 shadow-sm">
@@ -480,7 +496,7 @@ const VideosList = ({
                       }}
                     />
                     {video.isPost ? (
-                      <span className="absolute bottom-1 right-1 bg-[#22c55e]/90 text-white text-[9px] font-black px-1.5 py-0.5 rounded-md">
+                      <span className="absolute bottom-1 right-1 bg-[#ff0000]/90 text-white text-[9px] font-black px-1.5 py-0.5 rounded-md">
                         POST
                       </span>
                     ) : (
@@ -490,7 +506,7 @@ const VideosList = ({
                     )}
                   </div>
                   <div className="min-w-0 flex-1 flex flex-col justify-center gap-0.5">
-                    <h4 className={`text-[12px] font-black line-clamp-1 group-hover:text-slate-900 transition-colors leading-snug ${selectedVideo === video.videoId ? 'text-[#22c55e]' : 'text-slate-900'}`}>
+                    <h4 className={`text-[12px] font-black line-clamp-1 group-hover:text-slate-900 transition-colors leading-snug ${selectedVideo === video.videoId ? 'text-[#ff0000]' : 'text-slate-900'}`}>
                       {video.title}
                     </h4>
                     <div className="flex items-center flex-wrap gap-x-2 gap-y-0.5 text-[10px] text-slate-400 font-semibold">
@@ -511,7 +527,7 @@ const VideosList = ({
                     >
                       <MoreVertical size={16} />
                     </span>
-                    {selectedVideo === video.videoId && <ChevronRight size={16} className="text-[#22c55e] hidden md:block" />}
+                    {selectedVideo === video.videoId && <ChevronRight size={16} className="text-[#ff0000] hidden md:block" />}
                   </div>
                 </button>
               ))}
@@ -520,14 +536,19 @@ const VideosList = ({
       </div>
 
       {/* Right Pane: Analysis & Comments */}
-      <div className="flex-1 flex flex-col gap-4 lg:overflow-hidden h-auto lg:h-full">
+      <div className={`${isMobileDetail ? 'flex' : 'hidden md:flex'} flex-1 flex-col gap-4 lg:overflow-hidden h-auto md:h-full`}>
         <div className={`yt-card !p-0 flex flex-col h-auto lg:h-full overflow-visible lg:overflow-hidden ${isEmbedded ? '!rounded-none !border-y-0 !border-l-0 !shadow-none' : ''}`}>
           {/* Header & Panel Tabs */}
-          <div className="p-4 md:p-6 border-b border-white/40 bg-white/20 sticky top-0 z-20 backdrop-blur-md">
+          <div className="p-4 md:p-6 border-b border-[#e5e5e5] bg-white sticky top-0 z-20 ">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-               <div>
-                  <h3 className="text-lg md:text-xl font-black text-[#0f0f0f] tracking-tight">Video Workspace</h3>
+               <div className="flex items-center gap-3 min-w-0">
+                  <button type="button" onClick={() => setIsMobileDetail(false)} className="md:hidden h-11 w-11 rounded-2xl border border-[#e5e5e5] bg-white text-[#0f0f0f] flex items-center justify-center shrink-0" title="Back to videos">
+                    <ChevronLeft size={20} />
+                  </button>
+                  <div className="min-w-0">
+                  <h3 className="text-lg md:text-xl font-black text-[#0f0f0f] tracking-tight truncate">Video Workspace</h3>
                   <p className="text-[11px] md:text-xs text-[#909090] font-medium mt-1">Analyze and moderate your content</p>
+                  </div>
                </div>
                <div className="flex items-center gap-2">
                   {activePanelTab === 'comments' && (
@@ -539,30 +560,30 @@ const VideosList = ({
                     href={`https://youtube.com/watch?v=${selectedVideo}`} 
                     target="_blank" 
                     rel="noreferrer"
-                    className="p-2.5 bg-white/40 border border-white/50 rounded-xl hover:bg-white/60 transition-colors"
+                    className="h-11 w-11 flex items-center justify-center bg-white border border-[#e5e5e5] rounded-xl hover:bg-white transition-colors shrink-0"
                   >
                     <ExternalLink size={18} />
                   </a>
                </div>
             </div>
              {/* Tab Toggle buttons */}
-            <div className="flex gap-2 border-b border-white/40 pb-3 mb-3">
+            <div className="flex gap-2 border-b border-[#e5e5e5] pb-3 mb-3 overflow-x-auto no-scrollbar">
               <button 
                 onClick={() => setActivePanelTab('comments')} 
-                className={`py-2 px-4 text-xs font-black uppercase tracking-wider rounded-xl transition-all border ${
+                className={`min-h-[44px] min-w-max py-2 px-4 text-xs font-black uppercase tracking-wider rounded-xl transition-all border ${
                   activePanelTab === 'comments' 
-                    ? 'bg-green-500/10 text-green-600 border-green-500/20 shadow-sm' 
-                    : 'text-[#909090] hover:text-[#0f0f0f] bg-white/40 border-transparent hover:bg-white/60'
+                    ? 'bg-[#fff1f1] text-[#ff0000] border-red-100 shadow-sm' 
+                    : 'text-[#909090] hover:text-[#0f0f0f] bg-white border-transparent hover:bg-white'
                 }`}
               >
                 Comments & Moderation
               </button>
               <button 
                 onClick={() => setActivePanelTab('analytics')} 
-                className={`py-2 px-4 text-xs font-black uppercase tracking-wider rounded-xl transition-all border ${
+                className={`min-h-[44px] min-w-max py-2 px-4 text-xs font-black uppercase tracking-wider rounded-xl transition-all border ${
                   activePanelTab === 'analytics' 
-                    ? 'bg-gradient-to-r from-green-500/15 to-green-500/5 text-green-600 border-green-500/20 shadow-sm' 
-                    : 'text-[#909090] hover:text-[#0f0f0f] bg-white/40 border-transparent hover:bg-white/60'
+                    ? 'bg-[#fff1f1] text-[#ff0000] border-red-100 shadow-sm' 
+                    : 'text-[#909090] hover:text-[#0f0f0f] bg-white border-transparent hover:bg-white'
                 }`}
               >
                 Dashboard & Analytics
@@ -571,17 +592,17 @@ const VideosList = ({
 
             {/* Comment Filters (only visible when comments tab is active) */}
             {activePanelTab === 'comments' && (
-              <div className="flex flex-wrap gap-1.5 md:gap-2">
+              <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
                  {filters.map(f => (
                    <button
                      key={f.id}
                      onClick={() => setFilter(f.id)}
-                     className={`flex items-center gap-1.5 px-3 py-1.5 md:px-4 md:py-2 rounded-xl text-[11px] md:text-xs font-bold transition-all border ${
-                       filter === f.id ? 'bg-[#22c55e] text-white border-white/20 shadow-md scale-105' : `bg-white/40 border-white/50 ${f.color.split(' ')[1]} hover:bg-white/60 hover:border-white/70`
+                     className={`min-h-[44px] shrink-0 flex items-center gap-1.5 px-3 py-1.5 md:px-4 md:py-2 rounded-xl text-[11px] md:text-xs font-bold transition-all border ${
+                       filter === f.id ? 'bg-[#ff0000] text-white border-white/20 shadow-md scale-105' : `bg-white border-[#e5e5e5] ${f.color.split(' ')[1]} hover:bg-white hover:border-[#d9d9d9]`
                      }`}
                    >
                      {f.label}
-                     <span className={`px-1.5 py-0.5 rounded-md text-[9px] md:text-[10px] ${filter === f.id ? 'bg-white/20 text-white' : 'bg-white/50 text-[#606060]'}`}>
+                     <span className={`px-1.5 py-0.5 rounded-md text-[9px] md:text-[10px] ${filter === f.id ? 'bg-white text-[#ff0000]' : 'bg-white text-[#606060]'}`}>
                        {getStatsForFilter(f.id)}
                      </span>
                    </button>
@@ -591,7 +612,7 @@ const VideosList = ({
           </div>
 
           {/* Conditional Content Rendering */}
-          <div className="flex-1 overflow-y-auto custom-scroll p-3 md:p-6 bg-white/20" onScroll={handleCommentsScroll}>
+          <div className="flex-1 overflow-y-auto overflow-x-hidden custom-scroll p-3 md:p-6 bg-white" onScroll={handleCommentsScroll}>
              {selectedVideoData && selectedVideoData.isPost ? (
                <div className="max-w-[900px] mx-auto mb-6 p-6 bg-white border border-[#f0f0f0] rounded-2xl shadow-md text-left">
                  <div className="flex items-center gap-3 mb-4">
@@ -610,7 +631,7 @@ const VideosList = ({
                    <img 
                      src={selectedVideoData.thumbnail} 
                      alt="Post Attachment" 
-                     className="w-full max-h-[400px] object-cover rounded-xl border border-slate-100"
+                     className="w-full max-h-[260px] sm:max-h-[400px] object-cover rounded-xl border border-slate-100"
                    />
                  )}
                </div>
@@ -630,7 +651,7 @@ const VideosList = ({
                 // Comments Tab Content
                 loadingComments ? (
                   <div className="h-full flex flex-col items-center justify-center gap-4 text-[#909090]">
-                    <Loader2 className="animate-spin text-[#22c55e]" size={32} />
+                    <Loader2 className="animate-spin text-[#ff0000]" size={32} />
                     <p className="text-[11px] md:text-sm font-bold uppercase tracking-widest">Analysing Feedback...</p>
                   </div>
                 ) : filteredComments.length === 0 ? (
@@ -677,16 +698,16 @@ const VideosList = ({
                               <p className="text-[13px] md:text-[14px] text-[#222] leading-relaxed mb-3 md:mb-4">{comment.text}</p>
                               
                               {comment.replyText && (comment.replyStatus === 'sent' || comment.hasReplied) && (
-                                <div className="mt-4 ml-4 md:ml-6 pl-4 border-l-2 border-green-500/40 space-y-3 bg-green-50/20 p-3 rounded-2xl border border-green-500/10 text-left">
+                                <div className="mt-4 ml-4 md:ml-6 pl-4 border-l-2 border-red-200 space-y-3 bg-[#fff1f1] p-3 rounded-2xl border border-red-100 text-left">
                                   <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-2">
-                                      <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-[10px] font-bold">
+                                      <div className="w-6 h-6 rounded-full bg-[#fff1f1] flex items-center justify-center text-[#ff0000] text-[10px] font-bold">
                                         AI
                                       </div>
                                       <div className="flex items-center gap-1.5">
                                         <span className="font-extrabold text-[11px] md:text-xs text-[#0f0f0f]">Channel Owner (AI Auto-Reply)</span>
-                                        <span className="text-[9px] font-black uppercase bg-[#2ba640]/10 text-[#2ba640] px-1.5 py-0.5 rounded-md border border-[#2ba640]/20 flex items-center gap-1">
-                                          <span className="w-1 h-1 rounded-full bg-[#2ba640] animate-pulse" />
+                                        <span className="text-[9px] font-black uppercase bg-[#ff0000]/10 text-[#ff0000] px-1.5 py-0.5 rounded-md border border-red-100 flex items-center gap-1">
+                                          <span className="w-1 h-1 rounded-full bg-[#ff0000] animate-pulse" />
                                           Sent via DeepSeek
                                         </span>
                                       </div>
@@ -697,7 +718,7 @@ const VideosList = ({
                                       </span>
                                     )}
                                   </div>
-                                  <p className="text-[12px] md:text-[13px] text-[#333] font-medium leading-relaxed bg-white/60 p-3 rounded-xl border border-white/80">
+                                  <p className="text-[12px] md:text-[13px] text-[#333] font-medium leading-relaxed bg-white p-3 rounded-xl border border-[#e5e5e5]">
                                     {comment.replyText}
                                   </p>
                                 </div>
@@ -726,9 +747,9 @@ const VideosList = ({
                               )}
 
                               {comment.replyStatus === 'pending' && (
-                                <div className="mt-4 ml-4 md:ml-6 pl-4 border-l-2 border-amber-500/40 space-y-2 bg-amber-50/20 p-3 rounded-2xl border border-amber-500/10 text-left">
+                                <div className="mt-4 ml-4 md:ml-6 pl-4 border-l-2 border-red-500/30 space-y-2 bg-[#fff1f1]/50 p-3 rounded-2xl border border-red-500/10 text-left">
                                   <div className="flex items-center gap-2">
-                                    <div className="w-6 h-6 rounded-full bg-amber-100 flex items-center justify-center text-amber-700 text-[10px] font-bold">
+                                    <div className="w-6 h-6 rounded-full bg-[#fff1f1] flex items-center justify-center text-[#ff0000] text-[10px] font-bold">
                                       AI
                                     </div>
                                     <div className="flex items-center gap-1.5">
@@ -748,7 +769,7 @@ const VideosList = ({
                                       <button 
                                          onClick={() => handleAction(comment._id, 'approve')} 
                                          disabled={processingId === comment._id}
-                                         className={`flex items-center gap-1.5 hover:text-[#2ba640] transition-colors text-[11px] md:text-xs font-bold ${processingId === comment._id ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                         className={`flex items-center gap-1.5 hover:text-[#ff0000] transition-colors text-[11px] md:text-xs font-bold ${processingId === comment._id ? 'opacity-50 cursor-not-allowed' : ''}`}
                                        >
                                           {processingId === comment._id ? <Loader2 size={12} className="animate-spin" /> : <ShieldCheck size={14} />} 
                                           <span className="hidden xs:inline">Approve</span>
@@ -756,7 +777,7 @@ const VideosList = ({
                                       <button 
                                          onClick={() => handleAction(comment._id, 'like')} 
                                          disabled={processingId === comment._id || comment.autoLiked || comment.likeStatus === 'not_supported'}
-                                         className={`flex items-center gap-1.5 hover:text-[#065fd4] transition-colors text-[11px] md:text-xs font-bold ${processingId === comment._id || comment.autoLiked || comment.likeStatus === 'not_supported' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                         className={`flex items-center gap-1.5 hover:text-[#ff0000] transition-colors text-[11px] md:text-xs font-bold ${processingId === comment._id || comment.autoLiked || comment.likeStatus === 'not_supported' ? 'opacity-50 cursor-not-allowed' : ''}`}
                                        >
                                           {processingId === comment._id ? <Loader2 size={12} className="animate-spin" /> : <ThumbsUp size={14} className={comment.autoLiked ? 'fill-[#065fd4]' : ''} />} 
                                           <span className="hidden xs:inline">
@@ -798,12 +819,12 @@ const VideosList = ({
                 // Analytics Dashboard Tab Content
                 loadingAnalytics ? (
                   <div className="h-full flex flex-col items-center justify-center gap-4 text-[#909090] py-12">
-                    <Loader2 className="animate-spin text-[#22c55e]" size={32} />
+                    <Loader2 className="animate-spin text-[#ff0000]" size={32} />
                     <p className="text-[11px] md:text-sm font-bold uppercase tracking-widest">Loading Analytics...</p>
                   </div>
                 ) : !videoAnalytics ? (
                   <div className="h-full flex flex-col items-center justify-center text-[#909090] opacity-50 py-12">
-                    <RefreshCw size={48} className="mb-4 animate-spin text-[#22c55e]" />
+                    <RefreshCw size={48} className="mb-4 animate-spin text-[#ff0000]" />
                     <p className="text-base md:text-lg font-bold">Synchronizing Video Statistics...</p>
                   </div>
                 ) : (
@@ -811,10 +832,10 @@ const VideosList = ({
                     {/* Interactive Widgets Row */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {/* Like Tracking Widget */}
-                      <div className="bg-[#f0fdf4] border border-[#22c55e]/10 p-5 rounded-2xl flex flex-col justify-between relative overflow-hidden group">
-                        <div className="absolute -right-4 -bottom-4 w-20 h-20 bg-[#22c55e]/5 rounded-full blur-xl group-hover:scale-125 transition-all duration-500" />
+                      <div className="bg-[#f0fdf4] border border-[#ff0000]/10 p-5 rounded-2xl flex flex-col justify-between relative overflow-hidden group">
+                        <div className="absolute -right-4 -bottom-4 w-20 h-20 bg-[#ff0000]/5 rounded-full blur-xl group-hover:scale-125 transition-all duration-500" />
                         <div className="relative z-10">
-                          <span className="text-[10px] font-black text-[#22c55e] uppercase tracking-wider block mb-1">Interactive Action</span>
+                          <span className="text-[10px] font-black text-[#ff0000] uppercase tracking-wider block mb-1">Interactive Action</span>
                           <h4 className="text-sm font-black text-[#0f0f0f] leading-snug">Dashboard Like System</h4>
                           <p className="text-[11px] text-[#606060] font-medium mt-1 leading-relaxed">
                             Increment the internal video analytics tracking counters. Safe from YouTube spam filters.
@@ -834,21 +855,21 @@ const VideosList = ({
                                   disabled={isDisabled}
                                   className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-300 ${
                                     isAlreadyLiked 
-                                      ? 'bg-green-500/10 text-[#22c55e] border border-green-500/20 cursor-default animate-none' 
+                                      ? 'bg-[#fff1f1] text-[#ff0000] border border-red-100 cursor-default animate-none' 
                                       : submittingLike
                                         ? 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed'
-                                        : 'bg-[#22c55e] text-white hover:bg-[#16a34a] hover:scale-[1.03] shadow-md hover:shadow-lg'
+                                        : 'bg-[#ff0000] text-white hover:bg-[#cc0000] hover:scale-[1.03] shadow-md hover:shadow-lg'
                                   }`}
                                 >
                                   {submittingLike ? (
                                     <Loader2 size={14} className="animate-spin" />
                                   ) : (
-                                    <ThumbsUp size={14} className={isAlreadyLiked ? 'fill-[#22c55e]' : ''} />
+                                    <ThumbsUp size={14} className={isAlreadyLiked ? 'fill-[#ff0000]' : ''} />
                                   )}
                                   <span>{isAlreadyLiked ? 'Liked on Dashboard' : submittingLike ? 'Submitting...' : 'Like Video'}</span>
                                 </button>
                                 {isAlreadyLiked && (
-                                  <span className="text-[10px] font-bold text-[#22c55e] italic">Duplicate prevented</span>
+                                  <span className="text-[10px] font-bold text-[#ff0000] italic">Duplicate prevented</span>
                                 )}
                               </>
                             );
@@ -858,9 +879,9 @@ const VideosList = ({
 
                       {/* Engagement Widget */}
                       <div className="bg-white border border-[#f0f0f0] p-5 rounded-2xl flex flex-col justify-between relative overflow-hidden group">
-                        <div className="absolute -right-4 -bottom-4 w-20 h-20 bg-blue-50 rounded-full blur-xl group-hover:scale-125 transition-all duration-500" />
+                        <div className="absolute -right-4 -bottom-4 w-20 h-20 bg-[#fff1f1] rounded-full blur-xl group-hover:scale-125 transition-all duration-500" />
                         <div className="relative z-10">
-                          <span className="text-[10px] font-black text-[#065fd4] uppercase tracking-wider block mb-1">Performance Meter</span>
+                          <span className="text-[10px] font-black text-[#ff0000] uppercase tracking-wider block mb-1">Performance Meter</span>
                           <h4 className="text-sm font-black text-[#0f0f0f] leading-snug">Engagement Quality</h4>
                           <p className="text-[11px] text-[#606060] font-medium mt-1 leading-relaxed">
                             Calculated emotional resonance based on views, likes, and comment volume.
@@ -873,7 +894,7 @@ const VideosList = ({
                               style={{ width: `${Math.min(100, (videoAnalytics?.engagementRate || 0) * 10)}%` }}
                             />
                           </div>
-                          <span className="text-xs font-black text-[#065fd4] whitespace-nowrap">
+                          <span className="text-xs font-black text-[#ff0000] whitespace-nowrap">
                             {videoAnalytics?.engagementRate || 0}%
                           </span>
                         </div>
@@ -920,8 +941,8 @@ const VideosList = ({
                             <AreaChart data={videoAnalytics.likesHistory}>
                               <defs>
                                 <linearGradient id="colorLikes" x1="0" y1="0" x2="0" y2="1">
-                                  <stop offset="5%" stopColor="#22c55e" stopOpacity={0.2}/>
-                                  <stop offset="95%" stopColor="#22c55e" stopOpacity={0}/>
+                                  <stop offset="5%" stopColor="#ff0000" stopOpacity={0.2}/>
+                                  <stop offset="95%" stopColor="#ff0000" stopOpacity={0}/>
                                 </linearGradient>
                               </defs>
                               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
@@ -943,9 +964,9 @@ const VideosList = ({
                                   borderRadius: '12px', border: 'none', 
                                   boxShadow: '0 8px 24px rgba(0,0,0,0.08)', padding: '10px 14px'
                                 }}
-                                itemStyle={{ fontWeight: '800', fontSize: '11px', color: '#22c55e' }}
+                                itemStyle={{ fontWeight: '800', fontSize: '11px', color: '#ff0000' }}
                               />
-                              <Area type="monotone" dataKey="likeCount" stroke="#22c55e" strokeWidth={2.5} fillOpacity={1} fill="url(#colorLikes)" />
+                              <Area type="monotone" dataKey="likeCount" stroke="#ff0000" strokeWidth={2.5} fillOpacity={1} fill="url(#colorLikes)" />
                             </AreaChart>
                           </ResponsiveContainer>
                         ) : (
@@ -966,3 +987,5 @@ const VideosList = ({
 };
 
 export default VideosList;
+
+

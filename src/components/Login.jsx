@@ -40,7 +40,7 @@ const Login = ({ onSwitchToRegister }) => {
         const responseData = await login(email, password);
         const loggedUser = responseData?.user || responseData;
 
-        // Admin accounts must use /admin/login — block them here
+        // Admin accounts must use /admin/login  block them here
         if (loggedUser?.role === 'admin' || loggedUser?.role === 'superadmin') {
           // Clear this wrongly-set client session
           localStorage.removeItem('token');
@@ -59,10 +59,7 @@ const Login = ({ onSwitchToRegister }) => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-zinc-900 flex items-center justify-center p-4 relative font-['Outfit'] overflow-hidden selection:bg-red-500/20 selection:text-red-900">
-      {/* Background Decorative Gradients */}
-      <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-gradient-to-tr from-[#ff0055]/10 to-[#0055ff]/15 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-gradient-to-br from-[#7000ff]/10 to-[#ff5e00]/10 rounded-full blur-[100px] pointer-events-none" />
+    <div className="min-h-screen bg-[#f7f7f7] text-zinc-900 flex items-center justify-center p-4 relative font-['Outfit'] overflow-hidden selection:bg-red-500/20 selection:text-red-900">
 
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
@@ -71,23 +68,23 @@ const Login = ({ onSwitchToRegister }) => {
       >
         {/* Embedded switch-account banner */}
         {isEmbedded && (
-          <div className="mb-4 flex items-center gap-2.5 bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 shadow-sm">
-            <div className="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <div className="mb-4 flex items-center gap-2.5 bg-[#fff1f1] border border-red-100 rounded-xl px-4 py-3 shadow-sm">
+            <div className="w-7 h-7 rounded-full bg-white flex items-center justify-center flex-shrink-0 text-[#ff0000]">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M13.8 12H3" />
               </svg>
             </div>
-            <p className="text-[11px] font-bold text-blue-600 leading-snug">
+            <p className="text-[11px] font-bold text-[#cc0000] leading-snug">
               Sign in to a different YouTube account to view its comments.
             </p>
           </div>
         )}
 
-        <div className="bg-white/60 backdrop-blur-xl border border-white/50 rounded-[28px] p-6 sm:p-8 md:p-10 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] relative text-zinc-800">
+        <div className="bg-white border border-[#e5e5e5] rounded-[22px] p-6 sm:p-8 md:p-10 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.08)] relative text-zinc-800">
           {/* Top Logo Container */}
           <div className="flex flex-col items-center text-center mb-8">
             <Link to="/" className="flex flex-col items-center">
-              <img src="/channelmate_logo.svg" className="h-12 sm:h-14 w-auto object-contain mb-3" alt="Channelmate Logo" />
+              <img src="/channelmate_logo.png" className="h-12 sm:h-14 w-auto object-contain mb-3" alt="Channelmate Logo" />
               <p className="text-zinc-500 text-[13px] font-semibold">Sign in to your AI moderation centre</p>
             </Link>
           </div>
@@ -135,7 +132,7 @@ const Login = ({ onSwitchToRegister }) => {
                 <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">
                   Secure Password
                 </label>
-                <button type="button" className="text-[9px] font-black text-blue-500 uppercase tracking-widest hover:underline">
+                <button type="button" className="text-[9px] font-black text-[#ff0000] uppercase tracking-widest hover:underline">
                   Reset?
                 </button>
               </div>
@@ -194,8 +191,8 @@ const Login = ({ onSwitchToRegister }) => {
               </p>
               <p className="text-[11px] font-bold text-zinc-400 mt-2">
                 Admin?{' '}
-                <Link to="/admin/login" className="text-emerald-600 hover:underline font-black">
-                  Go to Admin Portal →
+                <Link to="/admin/login" className="text-[#ff0000] hover:underline font-black">
+                  Go to Admin Portal 
                 </Link>
               </p>
           </div>

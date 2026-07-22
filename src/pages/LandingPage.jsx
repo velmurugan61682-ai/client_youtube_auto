@@ -28,7 +28,10 @@ import {
   Loader2
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import HumanAiAutomationShowcase from '../components/HumanAiAutomationShowcase';
 
+
+// Landing page
 const LandingPage = () => {
   const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState('home');
@@ -38,7 +41,8 @@ const LandingPage = () => {
 
   // Handle active section on scroll
   useEffect(() => {
-    const sections = ['home', 'about', 'use-cases', 'features', 'testimonials', 'pricing', 'contact'];
+    const sections = ['home', 'automation-showcase', 'about', 'use-cases', 'features', 'testimonials', 'pricing', 'contact'];
+
     const handleScroll = () => {
       const scrollPosition = window.scrollY + 200;
       for (const sectionId of sections) {
@@ -154,6 +158,7 @@ const LandingPage = () => {
 
   const navLinks = [
     { id: 'home', label: 'Home' },
+    { id: 'automation-showcase', label: 'Human + AI Workflow' },
     { id: 'about', label: 'About' },
     { id: 'use-cases', label: 'Use Cases' },
     { id: 'features', label: 'Features' },
@@ -162,29 +167,27 @@ const LandingPage = () => {
     { id: 'contact', label: 'Contact' }
   ];
 
+
   return (
-    <div className="min-h-screen bg-[#F0FFF8] text-slate-900 font-['Outfit'] relative overflow-x-hidden selection:bg-emerald-500/20 selection:text-emerald-900 scroll-smooth">
-      {/* Background Soft Green Glass Orbs */}
-      <div className="fixed top-[-5%] left-[-5%] w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-emerald-300/30 to-green-200/40 blur-[140px] pointer-events-none" />
-      <div className="fixed top-[30%] right-[-5%] w-[650px] h-[650px] rounded-full bg-gradient-to-br from-teal-200/30 to-emerald-200/40 blur-[150px] pointer-events-none" />
+    <div className="min-h-screen bg-[#f9f9f9] text-[#0f0f0f] font-['Outfit'] relative overflow-x-hidden selection:bg-red-500/20 selection:text-red-900 scroll-smooth">
 
       {/* 1. Sticky Floating Glass Navbar */}
-      <header className="sticky top-4 z-50 max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="floating-glass-nav rounded-full px-6 h-18 flex items-center justify-between">
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-[#e5e5e5]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center select-none cursor-pointer" onClick={() => scrollToSection('home')}>
-            <img src="/channelmate_logo.svg" className="h-10 sm:h-11 w-auto object-contain" alt="Channelmate Logo" />
+            <img src="/channelmate_logo.png" className="h-10 sm:h-11 w-auto object-contain" alt="Channelmate Logo" />
           </div>
 
           {/* Navigation Links */}
-          <nav className="hidden md:flex items-center gap-1 bg-white/60 p-1.5 rounded-full border border-emerald-500/15">
+          <nav className="hidden md:flex items-center gap-1 bg-[#f2f2f2] p-1 rounded-full border border-[#e5e5e5]">
             {navLinks.map((link) => (
               <button
                 key={link.id}
                 onClick={() => scrollToSection(link.id)}
                 className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
                   activeSection === link.id
-                    ? 'bg-emerald-500 text-white shadow-sm'
-                    : 'text-slate-600 hover:text-emerald-700 hover:bg-emerald-50/50'
+                    ? 'bg-[#0f0f0f] text-white shadow-sm'
+                    : 'text-[#606060] hover:text-[#0f0f0f] hover:bg-white'
                 }`}
               >
                 {link.label}
@@ -195,13 +198,13 @@ const LandingPage = () => {
           <div className="flex items-center gap-3">
             <Link 
               to="/login" 
-              className="text-xs font-bold text-slate-700 hover:text-emerald-700 transition-colors px-3 py-2"
+              className="text-xs font-bold text-[#0f0f0f] hover:text-[#ff0000] transition-colors px-3 py-2"
             >
               Sign In
             </Link>
             <Link 
               to="/register" 
-              className="btn-glass-primary text-xs px-5 py-2.5 shadow-emerald-500/25 active:scale-95"
+              className="btn-glass-primary text-xs px-5 py-2.5 shadow-red-500/25 active:scale-95"
             >
               Get Started
             </Link>
@@ -210,46 +213,68 @@ const LandingPage = () => {
       </header>
 
       {/* SECTION 1: HOME (HERO) */}
-      <section id="home" className="relative z-10 max-w-7xl mx-auto px-6 pt-16 pb-20 text-center">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-4xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/80 border border-emerald-500/20 text-emerald-800 rounded-full mb-8 shadow-sm backdrop-blur-md">
-            <Sparkles size={14} className="animate-pulse text-emerald-600" />
-            <span className="text-[11px] font-black uppercase tracking-widest">Next-Gen Glass Garden SaaS</span>
+      <section id="home" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-14 pb-16 text-center">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-5xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white border border-[#e5e5e5] text-[#0f0f0f] rounded-full mb-7 shadow-sm">
+            <Sparkles size={14} className="animate-pulse text-[#ff0000]" />
+            <span className="text-[11px] font-black uppercase tracking-widest">YouTube Creator Automation Studio</span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-[1.12] mb-6 text-slate-900">
+          <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-[1.08] mb-6 text-[#0f0f0f]">
             Automate, Moderate & Grow Your YouTube Channel with{' '}
-            <span className="bg-gradient-to-r from-emerald-600 via-green-500 to-teal-600 bg-clip-text text-transparent">
+            <span className="text-[#ff0000]">
               Channelmate
             </span>
           </h1>
 
-          <p className="text-[16px] sm:text-[18px] text-slate-600 font-semibold leading-relaxed mb-10 max-w-2xl mx-auto">
+          <p className="text-[16px] sm:text-[18px] text-[#606060] font-semibold leading-relaxed mb-10 max-w-2xl mx-auto">
             Channelmate is an AI-powered platform that helps YouTube creators automatically moderate comments, detect spam, generate intelligent AI replies, analyze audience sentiment, and securely manage their channels.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
             <Link to="/register" className="btn-glass-primary w-full sm:w-auto text-[15px] px-8 py-3.5 shadow-lg group">
               Start Free Trial
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </Link>
-            <button onClick={() => scrollToSection('about')} className="btn-glass-secondary w-full sm:w-auto text-[15px] px-8 py-3.5">
-              Explore Platform
+            <button onClick={() => scrollToSection('automation-showcase')} className="btn-glass-secondary w-full sm:w-auto text-[15px] px-8 py-3.5">
+              Watch AI & Creator Demo
             </button>
           </div>
         </motion.div>
 
+        {/* AI Generated Talking Hero Image Showcase Banner */}
+        <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.7 }} className="max-w-5xl mx-auto mb-10 rounded-2xl overflow-hidden border border-[#e5e5e5] shadow-sm relative group bg-white">
+          <img src="/yt_human_male_ai_talking.png" alt="Male YouTube Creator Talking with AI Co-Pilot" className="w-full h-[320px] sm:h-[420px] object-cover group-hover:scale-105 transition-transform duration-700" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f0f]/90 via-[#0f0f0f]/30 to-transparent p-6 sm:p-10 flex flex-col justify-end text-left">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="px-3 py-1 rounded-full bg-[#ff0000] text-white border border-[#ff0000] text-[10px] font-black uppercase tracking-widest backdrop-blur-md">
+                AI Generated Visual Showcase
+              </span>
+              <span className="px-3 py-1 rounded-full bg-white/20 text-white text-[10px] font-black uppercase tracking-widest backdrop-blur-md">
+                Male Creator &amp; AI Co-Pilot
+              </span>
+            </div>
+            <h3 className="text-2xl sm:text-4xl font-black text-white max-w-2xl leading-tight">
+              Human Strategy Meets 24/7 AI YouTube Channel Automation
+            </h3>
+            <p className="text-xs sm:text-sm font-medium text-slate-200 mt-2 max-w-xl">
+              Talk directly with Channelmate AI Co-Pilot to automatically answer viewer comments, purge spam, and turn video interactions into WhatsApp leads.
+            </p>
+          </div>
+        </motion.div>
+
+
         {/* Dashboard Preview */}
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.2 }} className="max-w-5xl mx-auto glass-garden-card p-6 sm:p-8 rounded-[32px] text-left border-emerald-500/20 shadow-2xl relative overflow-hidden">
+        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.2 }} className="max-w-5xl mx-auto glass-garden-card p-5 sm:p-6 rounded-2xl text-left border-[#e5e5e5] shadow-sm relative overflow-hidden">
           <div className="flex items-center justify-between border-b border-slate-100 pb-5 mb-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-600 border border-emerald-500/20">
+              <div className="w-10 h-10 rounded-2xl bg-[#fff1f1] flex items-center justify-center text-[#ff0000] border border-red-100">
                 <PlaySquare size={20} />
               </div>
               <div>
                 <h3 className="text-base font-bold text-slate-900">Tech Channel Creator Hub</h3>
-                <p className="text-xs font-semibold text-emerald-600 flex items-center gap-1.5 mt-0.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <p className="text-xs font-semibold text-[#ff0000] flex items-center gap-1.5 mt-0.5">
+                  <span className="w-2 h-2 rounded-full bg-[#ff0000] animate-pulse" />
                   YouTube Connected & Verified
                 </p>
               </div>
@@ -258,63 +283,69 @@ const LandingPage = () => {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-white/90 p-4 rounded-2xl border border-emerald-500/10 shadow-sm">
+            <div className="bg-[#f9f9f9] p-4 rounded-xl border border-[#e5e5e5] shadow-sm">
               <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Subscribers</p>
               <p className="text-2xl font-black text-slate-900 mt-1">45,820</p>
-              <span className="text-[11px] font-bold text-emerald-600 flex items-center gap-0.5 mt-1"><TrendingUp size={12} /> +12% this month</span>
+              <span className="text-[11px] font-bold text-[#ff0000] flex items-center gap-0.5 mt-1"><TrendingUp size={12} /> +12% this month</span>
             </div>
-            <div className="bg-white/90 p-4 rounded-2xl border border-emerald-500/10 shadow-sm">
+            <div className="bg-[#f9f9f9] p-4 rounded-xl border border-[#e5e5e5] shadow-sm">
               <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">AI Replies Sent</p>
               <p className="text-2xl font-black text-slate-900 mt-1">3,420</p>
-              <span className="text-[11px] font-bold text-emerald-600 flex items-center gap-0.5 mt-1"><CheckCircle size={12} /> 99.4% Accuracy</span>
+              <span className="text-[11px] font-bold text-[#ff0000] flex items-center gap-0.5 mt-1"><CheckCircle size={12} /> 99.4% Accuracy</span>
             </div>
-            <div className="bg-white/90 p-4 rounded-2xl border border-emerald-500/10 shadow-sm">
+            <div className="bg-[#f9f9f9] p-4 rounded-xl border border-[#e5e5e5] shadow-sm">
               <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Spam Purged</p>
               <p className="text-2xl font-black text-slate-900 mt-1">890</p>
-              <span className="text-[11px] font-bold text-emerald-600 flex items-center gap-0.5 mt-1"><ShieldCheck size={12} /> Zero False Positives</span>
+              <span className="text-[11px] font-bold text-[#ff0000] flex items-center gap-0.5 mt-1"><ShieldCheck size={12} /> Zero False Positives</span>
             </div>
-            <div className="bg-white/90 p-4 rounded-2xl border border-emerald-500/10 shadow-sm">
+            <div className="bg-[#f9f9f9] p-4 rounded-xl border border-[#e5e5e5] shadow-sm">
               <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">WhatsApp Leads</p>
               <p className="text-2xl font-black text-slate-900 mt-1">540</p>
-              <span className="text-[11px] font-bold text-emerald-600 flex items-center gap-0.5 mt-1"><Users size={12} /> High Value</span>
+              <span className="text-[11px] font-bold text-[#ff0000] flex items-center gap-0.5 mt-1"><Users size={12} /> High Value</span>
             </div>
           </div>
         </motion.div>
       </section>
 
+      {/* SECTION: HUMAN + AI AUTOMATION SHOWCASE */}
+      <section id="automation-showcase" className="relative z-10 py-8 border-t border-[#e5e5e5]">
+        <HumanAiAutomationShowcase />
+      </section>
+
       {/* SECTION 2: ABOUT */}
-      <section id="about" className="relative z-10 max-w-7xl mx-auto px-6 py-20 border-t border-emerald-500/10">
-        <div className="max-w-4xl mx-auto text-center space-y-4 mb-16">
-          <span className="text-xs font-black text-emerald-600 uppercase tracking-widest bg-emerald-100/70 px-4 py-1.5 rounded-full">
+
+      <section id="about" className="relative z-10 max-w-7xl mx-auto px-6 py-20 border-t border-[#e5e5e5]">
+        <div className="max-w-5xl mx-auto text-center space-y-4 mb-16">
+          <span className="text-xs font-black text-[#ff0000] uppercase tracking-widest bg-[#fff1f1] px-4 py-1.5 rounded-full">
             About ChannelMate
           </span>
-          <h2 className="text-3xl sm:text-5xl font-black text-slate-900">
+          <h2 className="text-3xl sm:text-5xl font-black text-[#0f0f0f]">
             Intelligent Automation Built for Creators & Brands
           </h2>
-          <p className="text-slate-600 font-semibold text-base sm:text-lg leading-relaxed">
+          <p className="text-[#606060] font-semibold text-base sm:text-lg leading-relaxed">
             Our mission is to empower YouTube creators by eliminating manual comment moderation, capturing valuable audience leads, and maintaining positive viewer communities automatically.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="glass-garden-card p-8 rounded-[28px] space-y-3">
+          <div className="glass-garden-card p-8 rounded-2xl space-y-3">
             <div className="icon-badge-green"><Bot size={24} /></div>
             <h3 className="text-lg font-bold text-slate-900">DeepSeek AI Engine</h3>
-            <p className="text-xs text-slate-600 font-semibold leading-relaxed">
+            <p className="text-xs text-[#606060] font-semibold leading-relaxed">
               Trained on Millions of YouTube comment threads to generate authentic, context-aware responses tailored to your brand voice.
             </p>
           </div>
-          <div className="glass-garden-card p-8 rounded-[28px] space-y-3">
+          <div className="glass-garden-card p-8 rounded-2xl space-y-3">
             <div className="icon-badge-green"><ShieldCheck size={24} /></div>
             <h3 className="text-lg font-bold text-slate-900">Real-Time Shielding</h3>
-            <p className="text-xs text-slate-600 font-semibold leading-relaxed">
+            <p className="text-xs text-[#606060] font-semibold leading-relaxed">
               Detects toxic remarks, hate speech, external spam links, and competitor promos before they damage your video reach.
             </p>
           </div>
-          <div className="glass-garden-card p-8 rounded-[28px] space-y-3">
+          <div className="glass-garden-card p-8 rounded-2xl space-y-3">
             <div className="icon-badge-green"><TrendingUp size={24} /></div>
             <h3 className="text-lg font-bold text-slate-900">Automated Growth</h3>
-            <p className="text-xs text-slate-600 font-semibold leading-relaxed">
+            <p className="text-xs text-[#606060] font-semibold leading-relaxed">
               Converts video interactions into CRM leads while auto-liking positive comments to boost algorithmic engagement.
             </p>
           </div>
@@ -322,12 +353,12 @@ const LandingPage = () => {
       </section>
 
       {/* SECTION 3: USE CASES */}
-      <section id="use-cases" className="relative z-10 max-w-7xl mx-auto px-6 py-20 border-t border-emerald-500/10">
+      <section id="use-cases" className="relative z-10 max-w-7xl mx-auto px-6 py-20 border-t border-[#e5e5e5]">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-xs font-black text-emerald-600 uppercase tracking-widest bg-emerald-100/70 px-4 py-1.5 rounded-full">
+          <span className="text-xs font-black text-[#ff0000] uppercase tracking-widest bg-[#fff1f1] px-4 py-1.5 rounded-full">
             Tailored Solutions
           </span>
-          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 mt-4">
+          <h2 className="text-3xl sm:text-5xl font-black text-[#0f0f0f] mt-4">
             Designed for Every Creator Workflow
           </h2>
         </div>
@@ -340,12 +371,12 @@ const LandingPage = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="glass-garden-card p-8 rounded-[28px] flex gap-6"
+              className="glass-garden-card p-8 rounded-2xl flex gap-6"
             >
               <div className="icon-badge-green shrink-0">{uc.icon}</div>
               <div className="space-y-2">
                 <h3 className="text-lg font-bold text-slate-900">{uc.title}</h3>
-                <p className="text-xs text-slate-600 font-semibold leading-relaxed">{uc.desc}</p>
+                <p className="text-xs text-[#606060] font-semibold leading-relaxed">{uc.desc}</p>
               </div>
             </motion.div>
           ))}
@@ -353,19 +384,19 @@ const LandingPage = () => {
       </section>
 
       {/* SECTION 4: FEATURES */}
-      <section id="features" className="relative z-10 max-w-7xl mx-auto px-6 py-20 border-t border-emerald-500/10">
+      <section id="features" className="relative z-10 max-w-7xl mx-auto px-6 py-20 border-t border-[#e5e5e5]">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-xs font-black text-emerald-600 uppercase tracking-widest bg-emerald-100/70 px-4 py-1.5 rounded-full">
+          <span className="text-xs font-black text-[#ff0000] uppercase tracking-widest bg-[#fff1f1] px-4 py-1.5 rounded-full">
             Complete Feature Suite
           </span>
-          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 mt-4">
+          <h2 className="text-3xl sm:text-5xl font-black text-[#0f0f0f] mt-4">
             Everything You Need to Scale
           </h2>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {features.map((f, i) => (
-            <div key={i} className="glass-garden-card p-6 rounded-[24px] space-y-3 hover:border-emerald-500/30 transition-all">
+            <div key={i} className="glass-garden-card p-6 rounded-xl space-y-3 hover:border-[#d9d9d9] transition-all">
               <div className="icon-badge-green !w-10 !h-10">{f.icon}</div>
               <h3 className="text-sm font-bold text-slate-900">{f.title}</h3>
               <p className="text-xs text-slate-500 font-semibold leading-relaxed">{f.desc}</p>
@@ -375,19 +406,19 @@ const LandingPage = () => {
       </section>
 
       {/* SECTION 5: TESTIMONIALS */}
-      <section id="testimonials" className="relative z-10 max-w-7xl mx-auto px-6 py-20 border-t border-emerald-500/10">
+      <section id="testimonials" className="relative z-10 max-w-7xl mx-auto px-6 py-20 border-t border-[#e5e5e5]">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-xs font-black text-emerald-600 uppercase tracking-widest bg-emerald-100/70 px-4 py-1.5 rounded-full">
+          <span className="text-xs font-black text-[#ff0000] uppercase tracking-widest bg-[#fff1f1] px-4 py-1.5 rounded-full">
             Testimonials
           </span>
-          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 mt-4">
+          <h2 className="text-3xl sm:text-5xl font-black text-[#0f0f0f] mt-4">
             Loved by 5,000+ Creators & Agencies
           </h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {testimonials.map((t, i) => (
-            <div key={i} className="glass-garden-card p-8 rounded-[28px] flex flex-col justify-between space-y-4">
+            <div key={i} className="glass-garden-card p-8 rounded-2xl flex flex-col justify-between space-y-4">
               <div>
                 <div className="flex items-center gap-1 text-amber-400 mb-3">
                   {[...Array(t.rating)].map((_, idx) => (
@@ -398,7 +429,7 @@ const LandingPage = () => {
               </div>
               <div className="pt-4 border-t border-slate-100">
                 <p className="text-xs font-black text-slate-900">{t.name}</p>
-                <p className="text-[10px] font-bold text-emerald-600">{t.role}</p>
+                <p className="text-[10px] font-bold text-[#ff0000]">{t.role}</p>
               </div>
             </div>
           ))}
@@ -406,26 +437,26 @@ const LandingPage = () => {
       </section>
 
       {/* SECTION 6: PRICING */}
-      <section id="pricing" className="relative z-10 max-w-7xl mx-auto px-6 py-20 border-t border-emerald-500/10">
+      <section id="pricing" className="relative z-10 max-w-7xl mx-auto px-6 py-20 border-t border-[#e5e5e5]">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-xs font-black text-emerald-600 uppercase tracking-widest bg-emerald-100/70 px-4 py-1.5 rounded-full">
+          <span className="text-xs font-black text-[#ff0000] uppercase tracking-widest bg-[#fff1f1] px-4 py-1.5 rounded-full">
             Transparent Pricing
           </span>
-          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 mt-4">
+          <h2 className="text-3xl sm:text-5xl font-black text-[#0f0f0f] mt-4">
             Simple, Transparent Subscription Plans
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 max-w-5xl mx-auto gap-8">
           {pricingPlans.map((p, i) => (
             <div 
               key={i} 
-              className={`glass-garden-card p-8 rounded-[28px] flex flex-col justify-between relative ${
-                p.highlight ? 'border-2 border-emerald-500 shadow-xl bg-white' : ''
+              className={`glass-garden-card p-8 rounded-2xl flex flex-col justify-between relative ${
+                p.highlight ? 'border-2 border-[#ff0000] shadow-sm bg-white' : ''
               }`}
             >
               {p.highlight && (
-                <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full">
+                <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#ff0000] text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full">
                   Most Popular
                 </span>
               )}
@@ -441,7 +472,7 @@ const LandingPage = () => {
                 <ul className="space-y-2.5 mb-8">
                   {p.features.map((feat, fIdx) => (
                     <li key={fIdx} className="flex items-center gap-2 text-xs font-semibold text-slate-700">
-                      <Check size={14} className="text-emerald-600 shrink-0" />
+                      <Check size={14} className="text-[#ff0000] shrink-0" />
                       <span>{feat}</span>
                     </li>
                   ))}
@@ -462,17 +493,17 @@ const LandingPage = () => {
       </section>
 
       {/* SECTION 7: CONTACT */}
-      <section id="contact" className="relative z-10 max-w-7xl mx-auto px-6 py-20 border-t border-emerald-500/10">
-        <div className="max-w-4xl mx-auto glass-garden-card p-8 sm:p-12 rounded-[36px] shadow-2xl">
+      <section id="contact" className="relative z-10 max-w-7xl mx-auto px-6 py-20 border-t border-[#e5e5e5]">
+        <div className="max-w-5xl mx-auto glass-garden-card p-8 sm:p-12 rounded-2xl shadow-sm">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-4">
-              <span className="text-xs font-black text-emerald-600 uppercase tracking-widest bg-emerald-100/70 px-4 py-1.5 rounded-full">
+              <span className="text-xs font-black text-[#ff0000] uppercase tracking-widest bg-[#fff1f1] px-4 py-1.5 rounded-full">
                 Get In Touch
               </span>
               <h2 className="text-2xl sm:text-4xl font-black text-slate-900">
                 Have Questions? Reach Out To Us
               </h2>
-              <p className="text-xs text-slate-600 font-semibold leading-relaxed">
+              <p className="text-xs text-[#606060] font-semibold leading-relaxed">
                 Our support team is available 24/7 to assist with channel setup, custom agency integrations, or billing inquiries.
               </p>
 
@@ -491,7 +522,7 @@ const LandingPage = () => {
             {/* Contact Form */}
             <form onSubmit={handleContactSubmit} className="space-y-4">
               {contactSubmitted && (
-                <div className="p-3 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl text-xs font-bold">
+                <div className="p-3 bg-[#fff1f1] text-[#cc0000] border border-red-100 rounded-xl text-xs font-bold">
                   Thank you! Your message has been sent successfully.
                 </div>
               )}
@@ -544,15 +575,15 @@ const LandingPage = () => {
       </section>
 
       {/* FOOTER */}
-      <footer className="relative z-10 border-t border-emerald-500/10 bg-white/50 backdrop-blur-xl py-12 text-slate-600">
+      <footer className="relative z-10 border-t border-[#e5e5e5] bg-white/50 backdrop-blur-xl py-12 text-[#606060]">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-2 text-xs font-semibold">
             <span>&copy; {new Date().getFullYear()} Channelmate AI.</span>
             <span>All rights reserved.</span>
           </div>
           <div className="flex items-center gap-6 text-xs font-bold text-slate-500">
-            <Link to="/privacy" className="hover:text-emerald-700 transition-colors">Privacy Policy</Link>
-            <Link to="/terms" className="hover:text-emerald-700 transition-colors">Terms of Service</Link>
+            <Link to="/privacy" className="hover:text-[#ff0000] transition-colors">Privacy Policy</Link>
+            <Link to="/terms" className="hover:text-[#ff0000] transition-colors">Terms of Service</Link>
           </div>
         </div>
       </footer>
@@ -561,3 +592,6 @@ const LandingPage = () => {
 };
 
 export default LandingPage;
+
+
+

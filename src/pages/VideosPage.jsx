@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import VideosList from '../components/VideosList';
 import { PlaySquare } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -19,9 +19,9 @@ const VideosPage = ({
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -20 }}
-      className="h-full flex flex-col space-y-6"
+      className="min-h-[calc(100vh-2.5rem)] lg:h-[calc(100vh-2.5rem)] lg:min-h-[760px] overflow-visible lg:overflow-hidden rounded-[22px] sm:rounded-[28px] bg-[#eef3f5] p-3 sm:p-5 text-[#0f0f0f] flex flex-col"
     >
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="rounded-[22px] bg-white border border-[#e5e5e5] shadow-sm px-4 sm:px-7 py-4 sm:py-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-black text-[#0f0f0f] tracking-tighter">Video Library</h1>
         </div>
@@ -32,7 +32,7 @@ const VideosPage = ({
             <select
               value={selectedChannelId || ''}
               onChange={(e) => setSelectedChannelId(e.target.value)}
-              className="bg-white border border-[#e5e5e5] rounded-xl px-4 py-2 text-sm font-bold text-[#0f0f0f] shadow-sm outline-none cursor-pointer hover:border-[#ff0000]/30 transition-all"
+              className="min-h-[44px] w-full md:w-auto bg-white border border-[#e5e5e5] rounded-xl px-4 py-2 text-sm font-bold text-[#0f0f0f] shadow-sm outline-none cursor-pointer hover:border-[#ff0000]/30 transition-all"
             >
               <option value="" disabled>Select a Channel</option>
               {channels.map(c => <option key={c.channelId} value={c.channelId}>{c.title}</option>)}
@@ -41,7 +41,7 @@ const VideosPage = ({
         )}
       </div>
 
-      <div className="flex-1 min-h-0">
+      <div className="custom-scroll mt-4 flex-1 min-h-0 overflow-visible lg:overflow-y-auto pr-0 lg:pr-1">
         <VideosList
           channelId={selectedChannelId || channels[0]?.channelId}
           onAction={fetchAnalytics}
@@ -60,3 +60,5 @@ const VideosPage = ({
 };
 
 export default VideosPage;
+
+

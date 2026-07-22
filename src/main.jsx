@@ -12,6 +12,35 @@ if (typeof window !== 'undefined') {
   };
 }
 
+
+// Dev-only cleanup for stale PWA assets. Old service workers can keep serving a
+// cached bundle on localhost and leave the landing page blank after UI edits.
+const DEV_CACHE_CLEANUP_KEY = 'channelmate_dev_cache_cleanup_v3';
+if (typeof window !== 'undefined' && import.meta.env.DEV && !sessionStorage.getItem(DEV_CACHE_CLEANUP_KEY)) {
+  sessionStorage.setItem(DEV_CACHE_CLEANUP_KEY, '1');
+
+  Promise.resolve().then(async () => {
+    let cleaned = false;
+
+    if ('serviceWorker' in navigator) {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(registrations.map((registration) => registration.unregister()));
+      cleaned = cleaned || registrations.length > 0;
+    }
+
+    if ('caches' in window) {
+      const keys = await caches.keys();
+      await Promise.all(keys.map((key) => caches.delete(key)));
+      cleaned = cleaned || keys.length > 0;
+    }
+
+    if (cleaned) {
+      window.location.reload();
+    }
+  }).catch((error) => {
+    console.warn('[PWA] Dev cache cleanup failed:', error);
+  });
+}
 // Cache-busting on new deployment
 const BUILD_TIME = import.meta.env.VITE_BUILD_TIME || 'dev';
 const lastBuildTime = localStorage.getItem('app_build_time');
@@ -99,3 +128,4 @@ const manifestEl = document.querySelector('link[rel="manifest"]');
 if (manifestEl) {
   console.log('✓ Manifest Loaded:', manifestEl.getAttribute('href'));
 }
+

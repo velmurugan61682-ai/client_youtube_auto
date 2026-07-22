@@ -45,7 +45,7 @@ const AdminClientDetailPage = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="animate-spin text-emerald-600" size={32} />
+        <Loader2 className="animate-spin text-[#ff0000]" size={32} />
       </div>
     );
   }
@@ -81,7 +81,7 @@ const AdminClientDetailPage = () => {
         </div>
 
         <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider ${
-          status === 'active' ? 'bg-emerald-100 text-emerald-700 border border-emerald-200' : 'bg-red-100 text-red-700 border border-red-200'
+          status === 'active' ? 'bg-[#fff1f1] text-[#0f0f0f] border border-red-100' : 'bg-red-100 text-red-700 border border-red-200'
         }`}>
           {status}
         </span>
@@ -92,7 +92,7 @@ const AdminClientDetailPage = () => {
         <button
           onClick={() => setActiveTab('profile')}
           className={`px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-2 ${
-            activeTab === 'profile' ? 'bg-emerald-500 text-white shadow-sm' : 'text-slate-600 hover:bg-white'
+            activeTab === 'profile' ? 'bg-[#ff0000] text-white shadow-sm' : 'text-slate-600 hover:bg-white'
           }`}
         >
           <User size={15} /> Client Profile
@@ -100,7 +100,7 @@ const AdminClientDetailPage = () => {
         <button
           onClick={() => setActiveTab('subscription')}
           className={`px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-2 ${
-            activeTab === 'subscription' ? 'bg-emerald-500 text-white shadow-sm' : 'text-slate-600 hover:bg-white'
+            activeTab === 'subscription' ? 'bg-[#ff0000] text-white shadow-sm' : 'text-slate-600 hover:bg-white'
           }`}
         >
           <CreditCard size={15} /> Subscription History
@@ -108,7 +108,7 @@ const AdminClientDetailPage = () => {
         <button
           onClick={() => setActiveTab('channels')}
           className={`px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-2 ${
-            activeTab === 'channels' ? 'bg-emerald-500 text-white shadow-sm' : 'text-slate-600 hover:bg-white'
+            activeTab === 'channels' ? 'bg-[#ff0000] text-white shadow-sm' : 'text-slate-600 hover:bg-white'
           }`}
         >
           <PlaySquare size={15} /> Connected Channels ({youtubeChannelsConnected.length})
@@ -116,7 +116,7 @@ const AdminClientDetailPage = () => {
         <button
           onClick={() => setActiveTab('audit')}
           className={`px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-2 ${
-            activeTab === 'audit' ? 'bg-emerald-500 text-white shadow-sm' : 'text-slate-600 hover:bg-white'
+            activeTab === 'audit' ? 'bg-[#ff0000] text-white shadow-sm' : 'text-slate-600 hover:bg-white'
           }`}
         >
           <History size={15} /> Audit Log ({auditLogs.length})
@@ -137,7 +137,7 @@ const AdminClientDetailPage = () => {
               <div className="space-y-2 text-xs font-semibold text-slate-700">
                 <div className="flex justify-between">
                   <span className="text-slate-400">Account Status:</span>
-                  <span className="font-bold uppercase text-emerald-600">{status}</span>
+                  <span className="font-bold uppercase text-[#ff0000]">{status}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-400">Organization:</span>
@@ -166,11 +166,11 @@ const AdminClientDetailPage = () => {
               <div className="space-y-2 text-xs font-semibold text-slate-700">
                 <div className="flex justify-between">
                   <span className="text-slate-400">Active Plan:</span>
-                  <span className="font-bold text-emerald-600 uppercase">{subscription.plan?.replace('_', ' ') || 'Free'}</span>
+                  <span className="font-bold text-[#ff0000] uppercase">{subscription.plan?.replace('_', ' ') || 'Free'}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-400">Status:</span>
-                  <span className="font-bold text-emerald-600 uppercase">{subscription.status}</span>
+                  <span className="font-bold text-[#ff0000] uppercase">{subscription.status}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-400">Renewal Date:</span>
@@ -193,7 +193,7 @@ const AdminClientDetailPage = () => {
                 </div>
                 <div className="bg-white/80 p-2.5 rounded-xl border border-slate-100">
                   <p className="text-[10px] text-slate-400">AI Replies Sent</p>
-                  <p className="text-lg font-black text-emerald-600 mt-0.5">{metrics.aiRepliesSent || 0}</p>
+                  <p className="text-lg font-black text-[#ff0000] mt-0.5">{metrics.aiRepliesSent || 0}</p>
                 </div>
                 <div className="bg-white/80 p-2.5 rounded-xl border border-slate-100">
                   <p className="text-[10px] text-slate-400">Toxic Flagged</p>
@@ -201,7 +201,7 @@ const AdminClientDetailPage = () => {
                 </div>
                 <div className="bg-white/80 p-2.5 rounded-xl border border-slate-100">
                   <p className="text-[10px] text-slate-400">Leads Captured</p>
-                  <p className="text-lg font-black text-teal-600 mt-0.5">{metrics.leadsGenerated || 0}</p>
+                  <p className="text-lg font-black text-[#ff0000] mt-0.5">{metrics.leadsGenerated || 0}</p>
                 </div>
               </div>
             </div>
@@ -232,9 +232,9 @@ const AdminClientDetailPage = () => {
                   {history.map(h => (
                     <tr key={h._id}>
                       <td className="py-3 font-mono text-[11px] text-slate-900">{h.subscriptionId || h._id}</td>
-                      <td className="py-3 font-bold uppercase text-emerald-700">{h.plan?.replace('_', ' ')}</td>
+                      <td className="py-3 font-bold uppercase text-[#0f0f0f]">{h.plan?.replace('_', ' ')}</td>
                       <td className="py-3 font-bold">₹{h.amount || 0}</td>
-                      <td className="py-3"><span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-black">{h.status}</span></td>
+                      <td className="py-3"><span className="px-2 py-0.5 rounded-full bg-[#fff1f1] text-[#0f0f0f] text-[10px] font-black">{h.status}</span></td>
                       <td className="py-3 text-slate-500">{new Date(h.startDate || h.createdAt).toLocaleDateString()}</td>
                       <td className="py-3 text-slate-500">{h.renewalDate ? new Date(h.renewalDate).toLocaleDateString() : 'N/A'}</td>
                     </tr>
@@ -286,7 +286,7 @@ const AdminClientDetailPage = () => {
               {auditLogs.map((log) => (
                 <div key={log._id} className="p-3 bg-white/80 rounded-xl border border-slate-100 flex items-center justify-between text-xs">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-[10px]">
+                    <div className="w-8 h-8 rounded-lg bg-[#fff1f1] text-[#ff0000] flex items-center justify-center font-bold text-[10px]">
                       <Activity size={16} />
                     </div>
                     <div>

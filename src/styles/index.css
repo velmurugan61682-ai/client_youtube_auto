@@ -1,40 +1,40 @@
 @import "tailwindcss";
 
 :root {
-  /* Glass Garden Theme - Modern Light SaaS Design System */
-  --bg-app: #f0fff8; /* Soft Light Mint Background */
-  --bg-card: rgba(255, 255, 255, 0.75);
+  /* YouTube Studio Theme - Clean creator dashboard system */
+  --bg-app: #f9f9f9;
+  --bg-card: #ffffff;
   --bg-sidebar: rgba(255, 255, 255, 0.65);
   
-  --primary: #22c55e; /* Fresh Green */
-  --primary-hover: #16a34a;
-  --primary-soft: rgba(34, 197, 94, 0.1);
-  --primary-dark: #166534; /* Dark Green Text */
+  --primary: #ff0000;
+  --primary-hover: #cc0000;
+  --primary-soft: rgba(255, 0, 0, 0.08);
+  --primary-dark: #cc0000;
   
   --text-main: #0f172a;
-  --text-sub: #166534; /* Dark Green Subtext for Glass Garden */
+  --text-sub: #606060;
   --text-muted: #64748b;
   
   --border-main: rgba(255, 255, 255, 0.8);
-  --border-soft: rgba(34, 197, 94, 0.15);
+  --border-soft: rgba(255, 0, 0, 0.15);
   
-  --success: #22c55e;
+  --success: #ff0000;
   --success-soft: #dcfce7;
   --error: #ef4444;
   --error-soft: #fef2f2;
   --warning: #f59e0b;
   --warning-soft: #fefbeb;
   
-  --radius-card: 24px;
+  --radius-card: 12px;
   --radius-pill: 9999px;
-  --radius-button: 9999px; /* Pill shape for Glass Garden */
-  --radius-input: 16px;
+  --radius-button: 9999px;
+  --radius-input: 12px;
   
   --header-h: 76px;
   --sidebar-w: 280px;
   
-  --shadow-card: 0 10px 30px 0 rgba(34, 197, 94, 0.05), 0 1px 3px 0 rgba(0, 0, 0, 0.02);
-  --shadow-hover: 0 20px 40px -10px rgba(34, 197, 94, 0.12), 0 4px 6px -4px rgba(0, 0, 0, 0.03);
+  --shadow-card: 0 1px 2px rgba(15, 15, 15, 0.06), 0 8px 24px rgba(15, 15, 15, 0.04);
+  --shadow-hover: 0 2px 6px rgba(15, 15, 15, 0.08), 0 12px 32px rgba(15, 15, 15, 0.06);
 }
 
 @layer base {
@@ -47,7 +47,7 @@
     overflow-y: auto;
   }
   body {
-    background: radial-gradient(100% 100% at 50% 0%, #f0fff8 0%, #ffffff 100%);
+    background: #f9f9f9;
     color: var(--text-main);
     font-family: 'Outfit', 'Inter', -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -56,7 +56,7 @@
 
   /* Responsive Typography */
   h1 { font-size: 1.5rem; font-weight: 800; color: #0f172a; }
-  h2 { font-size: 1.25rem; font-weight: 800; color: #166534; }
+  h2 { font-size: 1.25rem; font-weight: 800; color: #0f0f0f; }
   h3 { font-size: 1.125rem; font-weight: 700; color: #0f172a; }
 
   @media (min-width: 768px) {
@@ -102,13 +102,13 @@
   }
 }
 
-/* --- Glass Garden UI Components --- */
+/* --- YouTube Studio UI Components --- */
 
 .glass-garden-card, .yt-card {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  background: #ffffff;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: 1px solid #e5e5e5;
   border-radius: var(--radius-card);
   padding: 1.25rem;
   box-shadow: var(--shadow-card);
@@ -123,26 +123,26 @@
 
 .glass-garden-card:hover, .yt-card:hover {
   background: rgba(255, 255, 255, 0.9);
-  border-color: rgba(34, 197, 94, 0.25);
+  border-color: #d9d9d9;
   box-shadow: var(--shadow-hover);
-  transform: translateY(-3px);
+  transform: translateY(-1px);
 }
 
 /* Floating Glass Navbar */
 .floating-glass-nav {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(24px) saturate(150%);
-  -webkit-backdrop-filter: blur(24px) saturate(150%);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  box-shadow: 0 10px 30px rgba(34, 197, 94, 0.06);
+  background: #ffffff;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 1px 2px rgba(15, 15, 15, 0.04);
 }
 
 .glass-panel {
   background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  box-shadow: 0 8px 32px 0 rgba(34, 197, 94, 0.04);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 8px 32px 0 rgba(255, 0, 0, 0.04);
   border-radius: 24px;
 }
 
@@ -150,27 +150,27 @@
   background: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(34, 197, 94, 0.2);
-  border-radius: 16px;
+  border: 1px solid #d9d9d9;
+  border-radius: 12px;
   color: #0f172a;
   transition: all 0.2s ease-in-out;
 }
 
 .glass-input:focus {
   background: rgba(255, 255, 255, 0.95);
-  border-color: #22c55e;
-  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.12);
+  border-color: #0f0f0f;
+  box-shadow: 0 0 0 3px rgba(15, 15, 15, 0.08);
 }
 
 /* --- Buttons --- */
 
 .btn-glass-primary, .yt-btn-primary {
-  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  background: #ff0000;
   color: #ffffff;
   font-weight: 700;
   padding: 0.75rem 1.75rem;
   border-radius: 9999px; /* Pill Shape */
-  box-shadow: 0 8px 20px -4px rgba(34, 197, 94, 0.4);
+  box-shadow: 0 8px 18px -8px rgba(255, 0, 0, 0.7);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   display: inline-flex;
   align-items: center;
@@ -182,8 +182,8 @@
 }
 
 .btn-glass-primary:hover, .yt-btn-primary:hover {
-  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
-  box-shadow: 0 12px 28px -4px rgba(34, 197, 94, 0.5);
+  background: #cc0000;
+  box-shadow: 0 12px 24px -10px rgba(255, 0, 0, 0.75);
   transform: translateY(-2px);
 }
 
@@ -194,12 +194,12 @@
 .btn-glass-secondary {
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
-  color: #166534;
+  color: #0f0f0f;
   font-weight: 700;
   padding: 0.75rem 1.75rem;
   border-radius: 9999px;
-  border: 1px solid rgba(34, 197, 94, 0.3);
-  box-shadow: 0 4px 15px rgba(34, 197, 94, 0.05);
+  border: 1px solid #e5e5e5;
+  box-shadow: none;
   transition: all 0.25s ease;
   display: inline-flex;
   align-items: center;
@@ -211,9 +211,9 @@
 
 .btn-glass-secondary:hover {
   background: rgba(255, 255, 255, 1);
-  border-color: #22c55e;
-  color: #15803d;
-  box-shadow: 0 8px 20px rgba(34, 197, 94, 0.1);
+  border-color: #0f0f0f;
+  color: #0f0f0f;
+  box-shadow: none;
   transform: translateY(-2px);
 }
 
@@ -224,7 +224,7 @@
   gap: 0.875rem;
   padding: 0.875rem 1.25rem;
   margin: 0.25rem 0.5rem;
-  border-radius: 16px;
+  border-radius: 12px;
   font-size: 14px;
   font-weight: 600;
   color: #475569;
@@ -233,15 +233,15 @@
 }
 
 .sidebar-item:hover {
-  background: rgba(34, 197, 94, 0.08);
-  color: #166534;
+  background: rgba(255, 0, 0, 0.08);
+  color: #0f0f0f;
 }
 
 .sidebar-item.active {
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(22, 163, 74, 0.12) 100%);
-  color: #15803d;
+  background: linear-gradient(135deg, rgba(255, 0, 0, 0.15) 0%, rgba(22, 163, 74, 0.12) 100%);
+  color: #0f0f0f;
   font-weight: 800;
-  border: 1px solid rgba(34, 197, 94, 0.25);
+  border: 1px solid rgba(255, 0, 0, 0.16);
 }
 
 /* --- Badges --- */
@@ -258,7 +258,7 @@
   white-space: nowrap;
 }
 
-.yt-badge-success { background: #dcfce7; color: #15803d; border: 1px solid rgba(34, 197, 94, 0.2); }
+.yt-badge-success { background: #dcfce7; color: #0f0f0f; border: 1px solid #d9d9d9; }
 .yt-badge-danger { background: #fee2e2; color: #991b1b; border: 1px solid rgba(239, 68, 68, 0.2); }
 .yt-badge-warning { background: #fef3c7; color: #92400e; border: 1px solid rgba(245, 158, 11, 0.2); }
 .yt-badge-neutral { background: #f1f5f9; color: #475569; border: 1px solid rgba(148, 163, 184, 0.2); }
@@ -268,12 +268,12 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(34, 197, 94, 0.2) 0%, rgba(34, 197, 94, 0.08) 100%);
-  border: 1px solid rgba(34, 197, 94, 0.25);
+  background: #fff1f1;
+  border: 1px solid rgba(255, 0, 0, 0.16);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #166534;
+  color: #0f0f0f;
 }
 
 /* Custom Scrollbar */
@@ -283,12 +283,12 @@
 }
 
 .custom-scroll::-webkit-scrollbar-thumb {
-  background: rgba(34, 197, 94, 0.25);
+  background: rgba(255, 0, 0, 0.25);
   border-radius: 9999px;
 }
 
 .custom-scroll::-webkit-scrollbar-thumb:hover {
-  background: rgba(34, 197, 94, 0.4);
+  background: rgba(255, 0, 0, 0.4);
 }
 
 .no-scrollbar::-webkit-scrollbar {
@@ -304,12 +304,12 @@
 
 .ios-list-group {
   background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   border: 1px solid rgba(255, 255, 255, 0.9);
   border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 10px 30px 0 rgba(34, 197, 94, 0.05), 0 1px 3px 0 rgba(0, 0, 0, 0.02);
+  box-shadow: 0 10px 30px 0 rgba(255, 0, 0, 0.05), 0 1px 3px 0 rgba(0, 0, 0, 0.02);
 }
 
 .ios-list-item {
@@ -343,8 +343,8 @@
 }
 
 .ios-toggle.active {
-  background-color: #22c55e; /* Vibrant Green ON state */
-  box-shadow: 0 0 12px rgba(34, 197, 94, 0.35);
+  background-color: #ff0000;
+  box-shadow: 0 0 12px rgba(255, 0, 0, 0.28);
 }
 
 .ios-toggle-thumb {
@@ -361,3 +361,161 @@
   transform: translateX(22px);
 }
 
+
+.mobile-nav-item {
+  min-width: 0;
+  height: 68px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  color: #606060;
+  font-size: 10px;
+  font-weight: 900;
+  line-height: 1;
+  text-align: center;
+  transition: color 0.18s ease, background 0.18s ease;
+}
+
+.mobile-nav-item span {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0 2px;
+}
+
+.mobile-nav-icon-container {
+  width: 32px;
+  height: 30px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.mobile-nav-item.active {
+  color: #ff0000;
+}
+
+.mobile-nav-item.active .mobile-nav-icon-container {
+  background: #fff1f1;
+  color: #ff0000;
+}
+
+.bottom-sheet-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 220;
+  background: rgba(15, 15, 15, 0.35);
+}
+
+.bottom-sheet-content {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 230;
+  max-height: min(78vh, 620px);
+  overflow-y: auto;
+  border-radius: 24px 24px 0 0;
+  background: #ffffff;
+  padding: 12px 18px calc(20px + env(safe-area-inset-bottom));
+  box-shadow: 0 -18px 50px rgba(0, 0, 0, 0.16);
+}
+
+.bottom-sheet-handle {
+  width: 44px;
+  height: 4px;
+  border-radius: 999px;
+  background: #d9d9d9;
+  margin: 0 auto 16px;
+}
+
+
+.client-profile-dark {
+  background: #0f0f0f;
+  color: #ffffff;
+  border: 1px solid #2a2a2a;
+}
+
+.client-profile-dark .bottom-sheet-handle {
+  background: #3a3a3a;
+}
+
+
+/* Scoped app-wide theme normalization */
+.admin-dark main,
+.client-dark main {
+  background: #0f0f0f;
+  color: #ffffff;
+}
+
+.admin-dark main [class*="bg-white"],
+.client-dark main [class*="bg-white"] {
+  background-color: #181818 !important;
+  border-color: #2a2a2a !important;
+}
+
+.admin-dark main [class*="bg-[#eef3f5]"],
+.client-dark main [class*="bg-[#eef3f5]"] {
+  background-color: #0f0f0f !important;
+}
+
+.admin-dark main [class*="text-[#0f0f0f]"],
+.admin-dark main [class*="text-slate-900"],
+.admin-dark main [class*="text-zinc-900"],
+.client-dark main [class*="text-[#0f0f0f]"],
+.client-dark main [class*="text-slate-900"],
+.client-dark main [class*="text-zinc-900"] {
+  color: #ffffff !important;
+}
+
+.admin-dark main [class*="text-[#606060]"],
+.admin-dark main [class*="text-slate-500"],
+.admin-dark main [class*="text-slate-600"],
+.admin-dark main [class*="text-slate-700"],
+.client-dark main [class*="text-[#606060]"],
+.client-dark main [class*="text-slate-500"],
+.client-dark main [class*="text-slate-600"],
+.client-dark main [class*="text-slate-700"] {
+  color: #aaaaaa !important;
+}
+
+.admin-dark main input,
+.admin-dark main select,
+.admin-dark main textarea,
+.client-dark main input,
+.client-dark main select,
+.client-dark main textarea {
+  background-color: #202020 !important;
+  border-color: #2a2a2a !important;
+  color: #ffffff !important;
+}
+
+.admin-dark main table thead tr,
+.client-dark main table thead tr {
+  background-color: #202020 !important;
+  color: #aaaaaa !important;
+}
+
+.admin-dark main tr,
+.client-dark main tr {
+  border-color: #2a2a2a !important;
+}
+
+.admin-dark main .glass-garden-card,
+.admin-dark main .yt-card,
+.client-dark main .glass-garden-card,
+.client-dark main .yt-card {
+  background: #181818 !important;
+  border-color: #2a2a2a !important;
+  color: #ffffff !important;
+}
+
+.admin-shell a,
+.client-shell a {
+  text-decoration-thickness: 2px;
+}

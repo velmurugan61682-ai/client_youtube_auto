@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import {
   Settings as SettingsIcon,
   Shield,
@@ -191,7 +191,7 @@ const Settings = () => {
     return (
       <div className="h-[400px] w-full flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <Loader2 className="animate-spin text-[#22c55e]" size={40} strokeWidth={2.5} />
+          <Loader2 className="animate-spin text-[#ff0000]" size={40} strokeWidth={2.5} />
           <p className="text-[10px] font-black text-[#909090] uppercase tracking-[0.2em]">Authenticating Core...</p>
         </div>
       </div>
@@ -249,7 +249,7 @@ const Settings = () => {
                         </div>
                         <div className="flex items-center gap-3">
                           <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md ${
-                            autoMod ? 'bg-green-500/10 text-green-600' : 'bg-slate-100 text-slate-400'
+                            autoMod ? 'bg-[#fff1f1] text-[#ff0000]' : 'bg-slate-100 text-slate-400'
                           }`}>
                             {autoMod ? 'ON' : 'OFF'}
                           </span>
@@ -270,7 +270,7 @@ const Settings = () => {
                         </div>
                         <div className="flex items-center gap-3">
                           <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md ${
-                            smartAiReply ? 'bg-green-500/10 text-green-600' : 'bg-slate-100 text-slate-400'
+                            smartAiReply ? 'bg-[#fff1f1] text-[#ff0000]' : 'bg-slate-100 text-slate-400'
                           }`}>
                             {smartAiReply ? 'ON' : 'OFF'}
                           </span>
@@ -291,7 +291,7 @@ const Settings = () => {
                         </div>
                         <div className="flex items-center gap-3">
                           <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md ${
-                            autoLike ? 'bg-green-500/10 text-green-600' : 'bg-slate-100 text-slate-400'
+                            autoLike ? 'bg-[#fff1f1] text-[#ff0000]' : 'bg-slate-100 text-slate-400'
                           }`}>
                             {autoLike ? 'ON' : 'OFF'}
                           </span>
@@ -312,7 +312,7 @@ const Settings = () => {
                         </div>
                         <div className="flex items-center gap-3">
                           <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md ${
-                            archiveComments ? 'bg-green-500/10 text-green-600' : 'bg-slate-100 text-slate-400'
+                            archiveComments ? 'bg-[#fff1f1] text-[#ff0000]' : 'bg-slate-100 text-slate-400'
                           }`}>
                             {archiveComments ? 'ON' : 'OFF'}
                           </span>
@@ -333,7 +333,7 @@ const Settings = () => {
                             <p className="text-[14px] font-black text-[#0f0f0f] mb-0.5">Decision Confidence Threshold</p>
                             <p className="text-[11px] text-[#909090] font-semibold leading-relaxed">Minimum AI confidence percentage required for auto moderation actions.</p>
                           </div>
-                          <span className="text-[12px] font-black text-[#22c55e] bg-green-500/10 px-2.5 py-1 rounded-lg h-fit">{threshold}%</span>
+                          <span className="text-[12px] font-black text-[#ff0000] bg-[#fff1f1] px-2.5 py-1 rounded-lg h-fit">{threshold}%</span>
                         </div>
                         <input
                           type="range"
@@ -341,7 +341,7 @@ const Settings = () => {
                           max="99"
                           value={threshold}
                           onChange={(e) => setThreshold(Number(e.target.value))}
-                          className="w-full accent-[#22c55e] h-1 bg-slate-100 rounded-full appearance-none cursor-pointer"
+                          className="w-full accent-[#ff0000] h-1 bg-slate-100 rounded-full appearance-none cursor-pointer"
                         />
                       </div>
                     </div>
@@ -350,7 +350,7 @@ const Settings = () => {
                     <div className="ios-list-group">
                       <div className="ios-list-item text-left flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 md:gap-2 p-5 md:p-4.5 pr-12 md:pr-5 relative w-full">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 bg-green-500/10 text-[#22c55e] rounded-xl flex items-center justify-center shrink-0 md:hidden">
+                          <div className="w-8 h-8 bg-[#fff1f1] text-[#ff0000] rounded-xl flex items-center justify-center shrink-0 md:hidden">
                             <Phone size={16} />
                           </div>
                           <div>
@@ -364,7 +364,7 @@ const Settings = () => {
                             value={whatsappNumber}
                             onChange={(e) => setWhatsappNumber(e.target.value)}
                             placeholder="e.g. +919999999999"
-                            className="w-full md:w-48 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-semibold focus:outline-none focus:border-[#22c55e]/30 text-left md:text-right pr-8 md:pr-2 text-wrap break-all"
+                            className="w-full md:w-48 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-semibold focus:outline-none focus:border-[#ff0000]/30 text-left md:text-right pr-8 md:pr-2 text-wrap break-all"
                           />
                           <ChevronRight size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#909090] md:hidden" />
                         </div>
@@ -378,7 +378,7 @@ const Settings = () => {
                         <select
                           value={delay}
                           onChange={(e) => setDelay(Number(e.target.value))}
-                          className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-semibold focus:outline-none focus:border-[#22c55e]/30 cursor-pointer"
+                          className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-semibold focus:outline-none focus:border-[#ff0000]/30 cursor-pointer"
                         >
                           <option value={1}>1 Minute</option>
                           <option value={5}>5 Minutes</option>
@@ -396,7 +396,7 @@ const Settings = () => {
                         <select
                           value={channelFilter}
                           onChange={(e) => setChannelFilter(e.target.value)}
-                          className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-semibold focus:outline-none focus:border-[#22c55e]/30 cursor-pointer"
+                          className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-semibold focus:outline-none focus:border-[#ff0000]/30 cursor-pointer"
                         >
                           <option value="all">All Linked Channels</option>
                           <option value="primary">Primary Channel Only</option>
@@ -415,7 +415,7 @@ const Settings = () => {
                       className="yt-card p-4 sm:p-6 md:p-8"
                     >
                       <div className="flex items-center gap-4 mb-8 pb-5 border-b border-[#f8f8f8]">
-                        <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center">
+                        <div className="w-12 h-12 bg-[#fff1f1] text-[#ff0000] rounded-2xl flex items-center justify-center">
                           <Key size={24} />
                         </div>
                         <div>
@@ -445,7 +445,7 @@ const Settings = () => {
                             type="password"
                             value={credentials.openaiApiKey}
                             onChange={(e) => setCredentials({ ...credentials, openaiApiKey: e.target.value })}
-                            className="w-full bg-[#f8f9fa] border border-[#f0f0f0] rounded-2xl px-5 py-3.5 text-sm font-semibold focus:bg-white focus:border-blue-600/20 transition-all outline-none"
+                            className="w-full bg-[#f8f9fa] border border-[#f0f0f0] rounded-2xl px-5 py-3.5 text-sm font-semibold focus:bg-white focus:border-[#ff0000]/20 transition-all outline-none"
                             placeholder="sk-..."
                           />
                         </div>
@@ -457,7 +457,7 @@ const Settings = () => {
                               type="password"
                               value={credentials.gowhatsApiKey}
                               onChange={(e) => setCredentials({ ...credentials, gowhatsApiKey: e.target.value })}
-                              className="w-full bg-[#f8f9fa] border border-[#f0f0f0] rounded-2xl px-5 py-3.5 text-sm font-semibold focus:bg-white focus:border-green-600/20 transition-all outline-none"
+                              className="w-full bg-[#f8f9fa] border border-[#f0f0f0] rounded-2xl px-5 py-3.5 text-sm font-semibold focus:bg-white focus:border-[#ff0000]/30 transition-all outline-none"
                               placeholder="Token..."
                             />
                           </div>
@@ -467,7 +467,7 @@ const Settings = () => {
                               type="text"
                               value={credentials.gowhatsUrl}
                               onChange={(e) => setCredentials({ ...credentials, gowhatsUrl: e.target.value })}
-                              className="w-full bg-[#f8f9fa] border border-[#f0f0f0] rounded-2xl px-5 py-3.5 text-sm font-semibold focus:bg-white focus:border-green-600/20 transition-all outline-none"
+                              className="w-full bg-[#f8f9fa] border border-[#f0f0f0] rounded-2xl px-5 py-3.5 text-sm font-semibold focus:bg-white focus:border-[#ff0000]/30 transition-all outline-none"
                               placeholder="https://..."
                             />
                           </div>
@@ -486,10 +486,10 @@ const Settings = () => {
                       className="grid grid-cols-1 md:grid-cols-3 gap-6"
                     >
                       {/* Left Card: Info */}
-                      <div className="md:col-span-1 bg-white border border-[#f0f0f0] rounded-[32px] p-6 text-center flex flex-col items-center justify-center shadow-sm">
+                      <div className="md:col-span-1 bg-white border border-[#f0f0f0] rounded-[22px] p-6 text-center flex flex-col items-center justify-center shadow-sm">
                         <div
                           onClick={() => document.getElementById('avatar-file-input').click()}
-                          className="relative w-32 h-32 rounded-3xl overflow-hidden shadow-lg border border-slate-100 mb-6 bg-slate-50 flex items-center justify-center group cursor-pointer"
+                          className="relative w-32 h-32 rounded-[22px] overflow-hidden shadow-lg border border-slate-100 mb-6 bg-slate-50 flex items-center justify-center group cursor-pointer"
                           title="Click to choose profile picture"
                         >
                           <img
@@ -515,13 +515,13 @@ const Settings = () => {
                       </div>
 
                       {/* Right Card: Fields */}
-                      <div className="md:col-span-2 bg-white border border-[#f0f0f0] rounded-[32px] p-6 md:p-8 space-y-6 shadow-sm text-left">
+                      <div className="md:col-span-2 bg-white border border-[#f0f0f0] rounded-[22px] p-6 md:p-8 space-y-6 shadow-sm text-left">
                         <form onSubmit={handleSaveProfile} className="space-y-6">
                           <h3 className="text-lg font-black text-slate-800 border-b border-slate-100 pb-3">Profile Settings</h3>
 
                           {successMessage && (
-                            <div className="p-4 bg-green-50 border border-green-200 text-green-700 rounded-2xl text-xs font-semibold flex items-center gap-2">
-                              <CheckCircle2 size={16} className="text-green-600" />
+                            <div className="p-4 bg-[#fff1f1] border border-red-100 text-[#ff0000] rounded-2xl text-xs font-semibold flex items-center gap-2">
+                              <CheckCircle2 size={16} className="text-[#ff0000]" />
                               {successMessage}
                             </div>
                           )}
@@ -552,7 +552,7 @@ const Settings = () => {
                           <div className="pt-4 border-t border-slate-100 space-y-4">
                             <div>
                               <h4 className="text-[12px] font-black text-slate-700 uppercase tracking-wider">Change Password</h4>
-                              <p className="text-[10px] text-blue-500 font-bold">Leave blank if you don't want to change it.</p>
+                              <p className="text-[10px] text-[#606060] font-bold">Leave blank if you don't want to change it.</p>
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -563,7 +563,7 @@ const Settings = () => {
                                   value={newPassword}
                                   onChange={(e) => setNewPassword(e.target.value)}
                                   className="w-full bg-[#f8f9fa] border border-[#f0f0f0] rounded-2xl px-5 py-3.5 text-sm font-semibold focus:bg-white focus:border-[#0f0f0f]/20 transition-all outline-none"
-                                  placeholder="••••••••"
+                                  placeholder="New password"
                                 />
                               </div>
                               <div className="space-y-2">
@@ -573,7 +573,7 @@ const Settings = () => {
                                   value={confirmPassword}
                                   onChange={(e) => setConfirmPassword(e.target.value)}
                                   className="w-full bg-[#f8f9fa] border border-[#f0f0f0] rounded-2xl px-5 py-3.5 text-sm font-semibold focus:bg-white focus:border-[#0f0f0f]/20 transition-all outline-none"
-                                  placeholder="••••••••"
+                                  placeholder="Confirm password"
                                 />
                               </div>
                             </div>
@@ -583,7 +583,7 @@ const Settings = () => {
                             <button
                               type="submit"
                               disabled={savingProfile}
-                              className="flex items-center gap-2 px-8 py-3.5 bg-teal-600 hover:bg-teal-700 disabled:bg-teal-400 text-white rounded-2xl text-[13px] font-black uppercase tracking-widest shadow-lg shadow-teal-500/10 transition-all cursor-pointer"
+                              className="flex items-center gap-2 px-8 py-3.5 bg-[#ff0000] hover:bg-[#cc0000] disabled:bg-red-200 text-white rounded-2xl text-[13px] font-black uppercase tracking-widest shadow-lg shadow-red-500/10 transition-all cursor-pointer"
                             >
                               {savingProfile ? (
                                 <>
@@ -607,10 +607,10 @@ const Settings = () => {
                 {activeTab !== 'profile' && (
                   <div className="flex items-center justify-between p-4 bg-[#fcfcfc] border border-[#f0f0f0] rounded-[24px]">
                     <div className="flex items-center gap-3">
-                      <div className={`w-2 h-2 rounded-full ${savingSettings ? 'bg-[#ff0000] animate-ping' : 'bg-[#2ba640]'}`} />
+                      <div className={`w-2 h-2 rounded-full ${savingSettings ? 'bg-[#ff0000] animate-ping' : 'bg-[#ff0000]'}`} />
                       <AnimatePresence>
                         {successMessage ? (
-                          <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-[12px] font-black text-[#2ba640] uppercase tracking-tight">
+                          <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-[12px] font-black text-[#ff0000] uppercase tracking-tight">
                             {successMessage}
                           </motion.span>
                         ) : (
@@ -646,3 +646,4 @@ const Settings = () => {
         <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
       </svg>
       );
+

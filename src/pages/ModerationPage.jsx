@@ -53,7 +53,7 @@ import {
 } from '../services/api/autoDmApi';
 import ModerationQueue from '../components/ModerationQueue';
 
-// ─── Toast utility ────────────────────────────────────────────────────────────
+//  Toast utility 
 const Toast = ({ toasts }) => (
   <div className="fixed top-6 right-6 z-[9999] flex flex-col gap-2 pointer-events-none">
     <AnimatePresence>
@@ -63,13 +63,13 @@ const Toast = ({ toasts }) => (
           initial={{ opacity: 0, y: -16, scale: 0.92 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, scale: 0.92 }}
-          className={`px-4 py-3 rounded-2xl shadow-xl border flex items-center gap-3 font-semibold text-xs uppercase tracking-wider backdrop-blur-md pointer-events-auto ${t.type === 'error'
+          className={`px-4 py-3 rounded-2xl shadow-xl border flex items-center gap-3 font-semibold text-xs uppercase tracking-wider  pointer-events-auto ${t.type === 'error'
               ? 'bg-red-500/10 border-red-500/20 text-red-500'
               : t.type === 'warning'
                 ? 'bg-yellow-500/10 border-yellow-500/20 text-yellow-500'
                 : t.type === 'info'
-                  ? 'bg-blue-500/10 border-blue-500/20 text-blue-500'
-                  : 'bg-green-500/10 border-green-500/20 text-green-500'
+                  ? 'bg-[#fff1f1] border-red-100 text-[#ff0000]'
+                  : 'bg-[#fff1f1] border-red-100 text-[#ff0000]'
             }`}
         >
           {t.type === 'error' ? <AlertCircle size={15} /> : t.type === 'warning' ? <AlertTriangle size={15} /> : <CheckCircle size={15} />}
@@ -80,7 +80,7 @@ const Toast = ({ toasts }) => (
   </div>
 );
 
-// ─── Moderation Rule Toggle Row ───────────────────────────────────────────────
+//  Moderation Rule Toggle Row 
 const RuleToggle = ({ label, description, enabled, onChange }) => (
   <div className="flex items-center justify-between gap-4 py-3 border-b border-slate-100 last:border-0">
     <div className="min-w-0">
@@ -89,7 +89,7 @@ const RuleToggle = ({ label, description, enabled, onChange }) => (
     </div>
     <button
       onClick={() => onChange(!enabled)}
-      className={`relative w-12 h-6 rounded-full transition-all duration-300 shrink-0 focus:outline-none ${enabled ? 'bg-[#22c55e]' : 'bg-slate-200'
+      className={`relative w-12 h-6 rounded-full transition-all duration-300 shrink-0 focus:outline-none ${enabled ? 'bg-[#ff0000]' : 'bg-slate-200'
         }`}
       aria-pressed={enabled}
     >
@@ -101,7 +101,7 @@ const RuleToggle = ({ label, description, enabled, onChange }) => (
   </div>
 );
 
-// ─── Main Component ───────────────────────────────────────────────────────────
+//  Main Component 
 const ModerationPage = ({
   channels = [],
   onAction,
@@ -138,7 +138,7 @@ const ModerationPage = ({
   // Sync initialTab prop changes
   useEffect(() => { setMainTab(initialTab); }, [initialTab]);
 
-  // ── Moderation Rules State ─────────────────────────────────────────────────
+  //  Moderation Rules State 
   const [modRules, setModRules] = useState({
     toxicDetection: true,
     spamDetection: true,
@@ -185,7 +185,7 @@ const ModerationPage = ({
 
   useEffect(() => { if (mainTab === 'moderation-rules') fetchModSettings(); }, [mainTab]);
 
-  // ── Auto Reply State ───────────────────────────────────────────────────────
+  //  Auto Reply State 
   const [videos, setVideos] = useState([]);
   const [loadingVideos, setLoadingVideos] = useState(false);
   const [stats, setStats] = useState({ totalRules: 0, totalTriggers: 0, totalSuccess: 0, totalFailed: 0 });
@@ -227,7 +227,7 @@ const ModerationPage = ({
   const [testingInProgress, setTestingInProgress] = useState(false);
   const [testResult, setTestResult] = useState(null);
 
-  // ── Comment History State ──────────────────────────────────────────────
+  //  Comment History State 
   const [historyType, setHistoryType] = useState('all');
   const [historySummary, setHistorySummary] = useState({ total: 0, replied: 0, deleted: 0, hidden: 0, failed: 0, successRate: 0 });
   const [historyLogs, setHistoryLogs] = useState([]);
@@ -265,7 +265,7 @@ const ModerationPage = ({
   const [loadingMod, setLoadingMod] = useState(false);
   const [executingModId, setExecutingModId] = useState(null);
 
-  // ── Comment Chat State ──────────────────────────────────────────────────
+  //  Comment Chat State 
   const [chatSearch, setChatSearch] = useState('');
   const [selectedChatId, setSelectedChatId] = useState('');
   const [chatReplyInput, setChatReplyInput] = useState('');
@@ -331,7 +331,7 @@ const ModerationPage = ({
     setChatReplyInput('');
   };
 
-  // ── Data Fetching ──────────────────────────────────────────────────────────
+  //  Data Fetching 
   const fetchVideosForChannel = async (channelId) => {
     try {
       setLoadingVideos(true);
@@ -413,7 +413,7 @@ const ModerationPage = ({
     }
   }, [selectedChannelId, mainTab, historyType]);
 
-  // ── Auto-suggest rule name ─────────────────────────────────────────────────
+  //  Auto-suggest rule name 
   useEffect(() => {
     if (editingRuleId) return;
     const videoTitle = selectedVideoId === 'all_videos'
@@ -425,7 +425,7 @@ const ModerationPage = ({
     setRuleName(`${triggerDesc} reply for ${videoTitle}`);
   }, [selectedVideoId, triggerType, keywords, videos, editingRuleId]);
 
-  // ── Keyword chips ──────────────────────────────────────────────────────────
+  //  Keyword chips 
   const addKeywordChip = () => {
     const term = keywordInput.trim().toLowerCase();
     if (!term) return;
@@ -484,7 +484,7 @@ const ModerationPage = ({
     setCarouselCards(prev => prev.filter((_, i) => i !== index));
   };
 
-  // ── Save/Deploy Rule ───────────────────────────────────────────────────────
+  //  Save/Deploy Rule 
   const handleDeployRule = async () => {
     if (!selectedChannelId) { showToast('Please select a channel', 'error'); return; }
     if (triggerType !== 'any_comment' && triggerType !== 'ai_intent' && keywords.length === 0) {
@@ -613,7 +613,7 @@ const ModerationPage = ({
 
   const livePreview = useMemo(() => {
     if (!publicReplyEnabled) return 'Public reply disabled';
-    if (aiReplyEnabled) return `🤖 [AI reply in ${aiTone} tone]`;
+    if (aiReplyEnabled) return ` [AI reply in ${aiTone} tone]`;
     if (replyTemplates.length === 0) return 'Add a template to preview.';
     const ch = channels.find(c => c.channelId === selectedChannelId);
     const vid = videos.find(v => v.videoId === selectedVideoId);
@@ -641,19 +641,19 @@ const ModerationPage = ({
     { id: 'moderation-queue', label: 'Moderation Actions', icon: Filter },
   ];
 
-  // ── Render ─────────────────────────────────────────────────────────────────
+  //  Render 
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-6 max-w-7xl mx-auto pb-16 relative min-w-0"
+      className="h-[calc(100vh-2.5rem)] min-h-[760px] overflow-hidden rounded-[28px] bg-[#eef3f5] p-4 sm:p-5 text-[#0f0f0f] relative min-w-0"
     >
       <Toast toasts={toasts} />
 
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="rounded-[22px] bg-white border border-[#e5e5e5] shadow-sm px-5 sm:px-7 py-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <div className="p-3.5 bg-green-500/10 text-[#22c55e] rounded-[22px] shrink-0 border border-green-500/10">
+          <div className="p-3.5 bg-[#fff1f1] text-[#ff0000] rounded-[22px] shrink-0 border border-red-100">
             <ShieldCheck size={28} />
           </div>
           <div>
@@ -663,7 +663,7 @@ const ModerationPage = ({
 
         {/* Channel Selector */}
         <div className="flex items-center gap-3 bg-white border border-slate-100 rounded-2xl px-4 py-2.5 shadow-sm max-w-xs w-full md:w-auto">
-          <Sliders size={16} className="text-[#22c55e]" />
+          <Sliders size={16} className="text-[#ff0000]" />
           <select
             value={selectedChannelId || ''}
             onChange={(e) => setSelectedChannelId(e.target.value)}
@@ -678,7 +678,7 @@ const ModerationPage = ({
       </div>
 
       {/* Main Tabs */}
-      <div className="flex items-center border-b border-slate-200 gap-1 overflow-x-auto no-scrollbar pb-1">
+      <div className="mt-4 flex items-center rounded-[22px] bg-white border border-[#e5e5e5] shadow-sm gap-1 overflow-x-auto no-scrollbar p-2">
         {[
           { id: 'auto-reply', label: 'Auto Reply', icon: MessageSquare },
           { id: 'comment-chat', label: 'Comment Chat', icon: MessageCircle },
@@ -688,7 +688,7 @@ const ModerationPage = ({
             key={tab.id}
             onClick={() => setMainTab(tab.id)}
             className={`flex items-center gap-2 px-5 py-3 border-b-2 font-bold text-xs uppercase tracking-wider transition-all rounded-t-xl shrink-0 ${mainTab === tab.id
-                ? 'border-[#22c55e] text-[#22c55e] bg-green-500/5 font-black'
+                ? 'border-[#ff0000] text-[#ff0000] bg-[#fff1f1] font-black'
                 : 'border-transparent text-slate-500 hover:text-slate-900 hover:bg-slate-50'
               }`}
           >
@@ -706,9 +706,10 @@ const ModerationPage = ({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.18 }}
+          className="custom-scroll mt-4 h-[calc(100%-178px)] overflow-y-auto pr-1"
         >
 
-          {/* ─── TAB: AUTO REPLY ───────────────────────────────────────── */}
+          {/*  TAB: AUTO REPLY  */}
           {mainTab === 'auto-reply' && (
             <div className="space-y-6">
               {/* Stats */}
@@ -730,7 +731,7 @@ const ModerationPage = ({
               {!showRuleForm && (
                 <button
                   onClick={() => { resetRuleForm(); setShowRuleForm(true); }}
-                  className="flex items-center gap-2 px-5 py-3 bg-[#22c55e] hover:bg-[#16a34a] text-white rounded-2xl font-black text-xs uppercase tracking-wider transition-all shadow-sm"
+                  className="flex items-center gap-2 px-5 py-3 bg-[#ff0000] hover:bg-[#cc0000] text-white rounded-2xl font-black text-xs uppercase tracking-wider transition-all shadow-sm"
                 >
                   <Plus size={15} /> Deploy New Rule
                 </button>
@@ -766,7 +767,7 @@ const ModerationPage = ({
                             </label>
                             <div
                               onClick={() => setContentPickerOpen(true)}
-                              className="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex items-center justify-between cursor-pointer hover:border-orange-400 transition-all group"
+                              className="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex items-center justify-between cursor-pointer hover:border-[#ff0000] transition-all group"
                             >
                               <div className="flex items-center gap-3 min-w-0">
                                 {selectedVideoId !== 'all_videos' && videos.find(v => v.videoId === selectedVideoId)?.thumbnail ? (
@@ -776,7 +777,7 @@ const ModerationPage = ({
                                     className="w-12 h-12 rounded-xl object-cover shrink-0 border border-slate-200"
                                   />
                                 ) : (
-                                  <div className="w-12 h-12 rounded-xl bg-orange-500/10 text-orange-600 flex items-center justify-center shrink-0">
+                                  <div className="w-12 h-12 rounded-xl bg-[#ff0000]/10 text-[#ff0000] flex items-center justify-center shrink-0">
                                     <VideoIcon size={20} />
                                   </div>
                                 )}
@@ -789,7 +790,7 @@ const ModerationPage = ({
                                   </p>
                                 </div>
                               </div>
-                              <span className="px-3 py-1.5 bg-white border border-slate-200 text-slate-700 text-xs font-bold rounded-xl group-hover:border-orange-500 group-hover:text-orange-600 transition-all">
+                              <span className="px-3 py-1.5 bg-white border border-slate-200 text-slate-700 text-xs font-bold rounded-xl group-hover:border-[#ff0000] group-hover:text-[#ff0000] transition-all">
                                 Choose Content
                               </span>
                             </div>
@@ -802,7 +803,7 @@ const ModerationPage = ({
                             </label>
                             <div className="flex gap-2 items-stretch">
                               {/* Input + inline Add button */}
-                              <div className="flex flex-1 bg-slate-50 border border-slate-200 rounded-xl overflow-hidden focus-within:border-orange-500 transition-colors">
+                              <div className="flex flex-1 bg-slate-50 border border-slate-200 rounded-xl overflow-hidden focus-within:border-[#ff0000] transition-colors">
                                 <input
                                   type="text"
                                   placeholder="Type keyword then click + or press Enter"
@@ -820,7 +821,7 @@ const ModerationPage = ({
                                   type="button"
                                   onClick={addKeywordChip}
                                   disabled={!keywordInput.trim()}
-                                  className="px-4 py-2 bg-orange-500 text-white text-xs font-black uppercase tracking-wider hover:bg-orange-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                                  className="px-4 py-2 bg-[#ff0000] text-white text-xs font-black uppercase tracking-wider hover:bg-[#ff0000] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                                 >
                                   + Add
                                 </button>
@@ -835,7 +836,7 @@ const ModerationPage = ({
                                   showToast('Set to trigger on ANY comment', 'info');
                                 }}
                                 className={`px-4 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all border whitespace-nowrap ${triggerType === 'any_comment' || (keywords.length === 1 && keywords[0] === '*')
-                                    ? 'bg-orange-500 text-white border-orange-500'
+                                    ? 'bg-[#ff0000] text-white border-[#ff0000]'
                                     : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200'
                                   }`}
                               >
@@ -850,7 +851,7 @@ const ModerationPage = ({
                           {keywords.length > 0 && (
                             <div className="flex flex-wrap gap-2 pt-1">
                               {keywords.map((kw, idx) => (
-                                <span key={idx} className="flex items-center gap-1.5 px-3 py-1 bg-orange-500/10 text-orange-600 rounded-full text-xs font-black">
+                                <span key={idx} className="flex items-center gap-1.5 px-3 py-1 bg-[#ff0000]/10 text-[#ff0000] rounded-full text-xs font-black">
                                   {kw === '*' ? 'ANY Comment (*)' : kw}
                                   <button onClick={() => setKeywords(keywords.filter((_, j) => j !== idx))} className="hover:text-red-500">
                                     <X size={11} />
@@ -869,7 +870,7 @@ const ModerationPage = ({
                                 <button
                                   type="button"
                                   onClick={() => setReplyType('Text')}
-                                  className={`px-4 py-1.5 rounded-lg text-xs font-black transition-all ${replyType === 'Text' ? 'bg-orange-500 text-white shadow-sm' : 'text-slate-500 hover:text-slate-900'
+                                  className={`px-4 py-1.5 rounded-lg text-xs font-black transition-all ${replyType === 'Text' ? 'bg-[#ff0000] text-white shadow-sm' : 'text-slate-500 hover:text-slate-900'
                                     }`}
                                 >
                                   Text
@@ -877,7 +878,7 @@ const ModerationPage = ({
                                 <button
                                   type="button"
                                   onClick={() => setReplyType('Carousel')}
-                                  className={`px-4 py-1.5 rounded-lg text-xs font-black transition-all ${replyType === 'Carousel' ? 'bg-orange-500 text-white shadow-sm' : 'text-slate-500 hover:text-slate-900'
+                                  className={`px-4 py-1.5 rounded-lg text-xs font-black transition-all ${replyType === 'Carousel' ? 'bg-[#ff0000] text-white shadow-sm' : 'text-slate-500 hover:text-slate-900'
                                     }`}
                                 >
                                   Carousel
@@ -890,7 +891,7 @@ const ModerationPage = ({
                               <button
                                 type="button"
                                 onClick={() => setFollowersOnly(!followersOnly)}
-                                className={`relative w-11 h-6 rounded-full transition-all ${followersOnly ? 'bg-orange-500' : 'bg-slate-300'}`}
+                                className={`relative w-11 h-6 rounded-full transition-all ${followersOnly ? 'bg-[#ff0000]' : 'bg-slate-300'}`}
                               >
                                 <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${followersOnly ? 'translate-x-5' : ''}`} />
                               </button>
@@ -904,10 +905,10 @@ const ModerationPage = ({
                             </label>
                             <input
                               type="text"
-                              placeholder="e.g. 'Just sent you a DM! 💌'"
+                              placeholder="e.g. 'Just sent you a DM! '"
                               value={replyCommentText}
                               onChange={e => setReplyCommentText(e.target.value)}
-                              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs font-semibold text-slate-900 focus:outline-none focus:border-orange-500"
+                              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs font-semibold text-slate-900 focus:outline-none focus:border-[#ff0000]"
                             />
                           </div>
 
@@ -922,7 +923,7 @@ const ModerationPage = ({
                                 placeholder="Enter the private message users will receive..."
                                 value={automatedDmContent}
                                 onChange={e => setAutomatedDmContent(e.target.value)}
-                                className="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs font-semibold text-slate-900 focus:outline-none focus:border-orange-500"
+                                className="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs font-semibold text-slate-900 focus:outline-none focus:border-[#ff0000]"
                               />
                             </div>
                           ) : (
@@ -934,7 +935,7 @@ const ModerationPage = ({
                                 <button
                                   type="button"
                                   onClick={addCarouselCard}
-                                  className="text-xs font-black text-orange-600 hover:text-orange-700 flex items-center gap-1 bg-orange-50 px-3 py-1.5 rounded-xl border border-orange-200"
+                                  className="text-xs font-black text-[#ff0000] hover:text-[#cc0000] flex items-center gap-1 bg-[#fff1f1] px-3 py-1.5 rounded-xl border border-red-100"
                                 >
                                   <Plus size={13} /> Add Card +
                                 </button>
@@ -942,9 +943,9 @@ const ModerationPage = ({
 
                               <div className="space-y-4 max-h-[400px] overflow-y-auto pr-1">
                                 {carouselCards.map((card, idx) => (
-                                  <div key={idx} className="bg-slate-50 border border-orange-200 rounded-2xl p-4 space-y-3 relative">
+                                  <div key={idx} className="bg-slate-50 border border-red-100 rounded-2xl p-4 space-y-3 relative">
                                     <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-                                      <span className="text-xs font-black text-orange-600">Card #{idx + 1}</span>
+                                      <span className="text-xs font-black text-[#ff0000]">Card #{idx + 1}</span>
                                       {carouselCards.length > 1 && (
                                         <button onClick={() => removeCarouselCard(idx)} className="text-red-500 hover:text-red-700 p-1">
                                           <Trash2 size={14} />
@@ -990,7 +991,7 @@ const ModerationPage = ({
                                         placeholder="Link (https://...)"
                                         value={card.link}
                                         onChange={e => updateCarouselCard(idx, 'link', e.target.value)}
-                                        className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-blue-600"
+                                        className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-[#ff0000]"
                                       />
                                     </div>
                                   </div>
@@ -1004,7 +1005,7 @@ const ModerationPage = ({
                             type="button"
                             onClick={handleDeployRule}
                             disabled={savingRule}
-                            className="w-full py-4 bg-orange-600 hover:bg-orange-700 text-white rounded-2xl font-black text-sm uppercase tracking-widest transition-all shadow-lg hover:shadow-orange-500/25 active:scale-98 flex items-center justify-center gap-2"
+                            className="w-full py-4 bg-[#ff0000] hover:bg-[#cc0000] text-white rounded-2xl font-black text-sm uppercase tracking-widest transition-all shadow-lg hover:shadow-red-500/25 active:scale-98 flex items-center justify-center gap-2"
                           >
                             {savingRule ? <RefreshCw size={18} className="animate-spin" /> : <Zap size={18} />}
                             {savingRule ? 'Deploying...' : editingRuleId ? 'Update Automation' : 'Deploy Automation'}
@@ -1015,8 +1016,8 @@ const ModerationPage = ({
                         {/* Right Column: Live Phone Mockup */}
                         <div className="lg:col-span-5 flex flex-col items-center justify-start">
                           <div className="text-center mb-3">
-                            <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500 flex items-center justify-center gap-1">
-                              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> Live Preview
+                            <span className="text-[10px] font-black uppercase tracking-widest text-[#ff0000] flex items-center justify-center gap-1">
+                              <span className="w-2 h-2 rounded-full bg-[#ff0000] animate-pulse" /> Live Preview
                             </span>
                           </div>
 
@@ -1024,17 +1025,17 @@ const ModerationPage = ({
                             {/* Phone Header */}
                             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
                               <div className="flex items-center gap-2">
-                                <div className="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center text-xs font-black">
+                                <div className="w-8 h-8 rounded-full bg-[#ff0000] text-white flex items-center justify-center text-xs font-black">
                                   {selectedChannelId ? channels.find(c => c.channelId === selectedChannelId)?.title?.charAt(0) || 'Y' : 'Y'}
                                 </div>
                                 <div>
                                   <p className="text-xs font-bold truncate max-w-[130px]">
                                     {channels.find(c => c.channelId === selectedChannelId)?.title || 'Your Channel'}
                                   </p>
-                                  <p className="text-[9px] text-emerald-400 font-semibold">Active now</p>
+                                  <p className="text-[9px] text-red-200 font-semibold">Active now</p>
                                 </div>
                               </div>
-                              <span className="text-slate-600 text-xs">•••</span>
+                              <span className="text-slate-600 text-xs"></span>
                             </div>
 
                             {/* Chat Messages */}
@@ -1049,7 +1050,7 @@ const ModerationPage = ({
                               {/* Automated Reply */}
                               <div className="flex justify-end w-full">
                                 {replyType === 'Text' ? (
-                                  <div className="bg-blue-600 text-white px-3.5 py-2 rounded-2xl rounded-tr-none text-xs max-w-[85%] font-medium leading-relaxed">
+                                  <div className="bg-[#ff0000] text-white px-3.5 py-2 rounded-2xl rounded-tr-none text-xs max-w-[85%] font-medium leading-relaxed">
                                     {automatedDmContent || replyCommentText || 'Your automated reply will appear here...'}
                                   </div>
                                 ) : (
@@ -1082,7 +1083,7 @@ const ModerationPage = ({
                                                 showToast('Enter a Link URL in the card editor to test redirect', 'info');
                                               }
                                             }}
-                                            className="w-full py-1.5 bg-orange-500 hover:bg-orange-600 active:scale-95 transition-all text-white text-[10px] font-black uppercase tracking-wider rounded-xl shadow-md flex items-center justify-center gap-1"
+                                            className="w-full py-1.5 bg-[#ff0000] hover:bg-[#ff0000] active:scale-95 transition-all text-white text-[10px] font-black uppercase tracking-wider rounded-xl shadow-md flex items-center justify-center gap-1"
                                           >
                                             <span>{card.btnLabel || 'View Detail'}</span>
                                             {card.link && <ExternalLink size={10} />}
@@ -1100,7 +1101,7 @@ const ModerationPage = ({
                               <div className="flex-1 bg-slate-900 rounded-full px-3 py-1.5 text-[10px] text-slate-500 font-medium">
                                 Message...
                               </div>
-                              <span className="text-slate-600 text-xs">❤️</span>
+                              <span className="text-slate-600 text-xs"></span>
                             </div>
                           </div>
                         </div>
@@ -1121,8 +1122,8 @@ const ModerationPage = ({
                 </div>
                 {loadingRules ? (
                   <div className="flex items-center justify-center p-12 gap-3">
-                    <RefreshCw size={20} className="animate-spin text-[#22c55e]" />
-                    <p className="text-sm font-bold text-slate-400">Loading rules…</p>
+                    <RefreshCw size={20} className="animate-spin text-[#ff0000]" />
+                    <p className="text-sm font-bold text-slate-400">Loading rules</p>
                   </div>
                 ) : rulesList.length === 0 ? (
                   <div className="flex flex-col items-center justify-center p-12 gap-3 text-slate-400">
@@ -1137,18 +1138,18 @@ const ModerationPage = ({
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
                             <p className="text-sm font-black text-slate-800 truncate">{rule.name}</p>
-                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wide ${rule.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500'
+                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wide ${rule.status === 'Active' ? 'bg-[#fff1f1] text-[#ff0000]' : 'bg-slate-100 text-slate-500'
                               }`}>{rule.status}</span>
                           </div>
                           <p className="text-xs text-slate-400 font-medium mt-0.5">
                             {rule.triggerType === 'any_comment' ? 'Any comment' : `Keywords: ${(rule.keywords || []).join(', ')}`}
-                            {' • '}Triggers: {rule.triggeredCount || 0}
+                            {'  '}Triggers: {rule.triggeredCount || 0}
                           </p>
                         </div>
                         <div className="flex items-center gap-1.5 shrink-0">
                           <button
                             onClick={() => handleToggleStatus(rule)}
-                            className={`p-2 rounded-xl transition-colors ${rule.status === 'Active' ? 'text-amber-500 hover:bg-amber-50' : 'text-green-600 hover:bg-green-50'}`}
+                            className={`p-2 rounded-xl transition-colors ${rule.status === 'Active' ? 'text-[#f9ab00] hover:bg-[#fff8e1]' : 'text-[#ff0000] hover:bg-[#fff1f1]'}`}
                             title={rule.status === 'Active' ? 'Pause' : 'Activate'}
                           >
                             {rule.status === 'Active' ? <Pause size={15} /> : <Play size={15} />}
@@ -1158,7 +1159,7 @@ const ModerationPage = ({
                           </button>
                           <button
                             onClick={() => { setTestingRule(rule); setTestModalOpen(true); }}
-                            className="p-2 rounded-xl text-blue-400 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                            className="p-2 rounded-xl text-[#ff0000] hover:bg-[#fff1f1] hover:text-[#ff0000] transition-colors"
                             title="Test"
                           >
                             <Eye size={15} />
@@ -1175,7 +1176,7 @@ const ModerationPage = ({
             </div>
           )}
 
-          {/* ─── TAB 2: COMMENT CHAT HISTORY ───────────────────────── */}
+          {/*  TAB 2: COMMENT CHAT HISTORY  */}
           {mainTab === 'comment-chat' && (() => {
             const filteredTriggers = channelChatItems.filter(t => {
               const matchesSearch = t.trigger.toLowerCase().includes(chatSearch.toLowerCase()) ||
@@ -1190,7 +1191,7 @@ const ModerationPage = ({
                 <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                   <div>
                     <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
-                      <MessageCircle className="text-orange-500" size={24} /> Comment Chat History
+                      <MessageCircle className="text-[#ff0000]" size={24} /> Comment Chat History
                     </h2>
                     <p className="text-xs text-slate-400 font-semibold mt-1">
                       Track user comments and automated replies across your channel videos and posts
@@ -1206,7 +1207,7 @@ const ModerationPage = ({
 
                     {/* Header Label */}
                     <div className="flex items-center gap-2 px-1 text-xs font-black text-slate-800 uppercase tracking-wider">
-                      <MessageSquare size={15} className="text-orange-500" /> Channel Video Comments
+                      <MessageSquare size={15} className="text-[#ff0000]" /> Channel Video Comments
                     </div>
 
                     {/* Search Input */}
@@ -1217,7 +1218,7 @@ const ModerationPage = ({
                         placeholder="Search channel videos..."
                         value={chatSearch}
                         onChange={e => setChatSearch(e.target.value)}
-                        className="w-full pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:border-orange-500"
+                        className="w-full pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:border-[#ff0000]"
                       />
                     </div>
 
@@ -1240,7 +1241,7 @@ const ModerationPage = ({
                               key={item.id}
                               onClick={() => setSelectedChatId(item.id)}
                               className={`p-3.5 rounded-2xl border cursor-pointer transition-all ${isSelected
-                                  ? 'bg-white border-orange-500 ring-2 ring-orange-500/20 shadow-md'
+                                  ? 'bg-white border-[#ff0000] ring-2 ring-red-500/20 shadow-md'
                                   : 'bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50'
                                 }`}
                             >
@@ -1293,7 +1294,7 @@ const ModerationPage = ({
                                 {selectedTriggerItem.caption}
                               </p>
                               <p className="text-[11px] font-bold text-slate-400">
-                                {selectedTriggerItem.totalComments} recent comments • {selectedTriggerItem.ruleType}
+                                {selectedTriggerItem.totalComments} recent comments  {selectedTriggerItem.ruleType}
                               </p>
                             </div>
                           </div>
@@ -1310,7 +1311,7 @@ const ModerationPage = ({
                             {selectedTriggerItem.comments.map(c => (
                               <div key={c.id} className="space-y-2 border-b border-slate-100 pb-4 last:border-0">
                                 <div className="flex items-center justify-between text-xs font-black">
-                                  <span className="text-blue-600 hover:underline cursor-pointer">{c.username}</span>
+                                  <span className="text-[#ff0000] hover:underline cursor-pointer">{c.username}</span>
                                   <span className="text-[11px] text-slate-400 font-medium">{c.time}</span>
                                 </div>
 
@@ -1318,8 +1319,8 @@ const ModerationPage = ({
                                   "{c.userComment}"
                                 </div>
 
-                                <div className="bg-[#f0f9ff] border border-[#bae6fd] rounded-2xl p-4 space-y-2 ml-4">
-                                  <div className="flex items-center gap-1.5 text-xs font-black text-[#0284c7]">
+                                <div className="bg-[#fff1f1] border border-red-100 rounded-2xl p-4 space-y-2 ml-4">
+                                  <div className="flex items-center gap-1.5 text-xs font-black text-[#ff0000]">
                                     <Sparkles size={14} /> Automated Reply:
                                   </div>
                                   <p className="text-xs text-slate-700 font-semibold leading-relaxed whitespace-pre-line">
@@ -1330,7 +1331,7 @@ const ModerationPage = ({
                                       href={c.link}
                                       target="_blank"
                                       rel="noreferrer"
-                                      className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0284c7] hover:underline bg-white px-3 py-1.5 rounded-xl border border-[#bae6fd] shadow-sm mt-1"
+                                      className="inline-flex items-center gap-1.5 text-xs font-bold text-[#ff0000] hover:underline bg-white px-3 py-1.5 rounded-xl border border-red-100 shadow-sm mt-1"
                                     >
                                       <ExternalLink size={12} /> {c.link}
                                     </a>
@@ -1353,11 +1354,11 @@ const ModerationPage = ({
                                 handleSendChatReply();
                               }
                             }}
-                            className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-orange-500"
+                            className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-[#ff0000]"
                           />
                           <button
                             onClick={handleSendChatReply}
-                            className="px-4 py-2.5 bg-[#22c55e] hover:bg-[#16a34a] text-white text-xs font-black rounded-xl transition-all flex items-center gap-1.5 cursor-pointer"
+                            className="px-4 py-2.5 bg-[#ff0000] hover:bg-[#cc0000] text-white text-xs font-black rounded-xl transition-all flex items-center gap-1.5 cursor-pointer"
                           >
                             <Send size={14} /> Send
                           </button>
@@ -1375,7 +1376,7 @@ const ModerationPage = ({
             );
           })()}
 
-          {/* ─── TAB 3: COMMENT HISTORY ─────────────────────────────────────── */}
+          {/*  TAB 3: COMMENT HISTORY  */}
           {mainTab === 'comment-history' && (
             <div className="space-y-5">
               <div className="bg-white border border-slate-100 rounded-[28px] p-6 shadow-sm space-y-6">
@@ -1384,7 +1385,7 @@ const ModerationPage = ({
                 <div className="flex items-center justify-between">
                   <div>
                     <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
-                      <Clock className="text-orange-500" size={24} /> Comment History
+                      <Clock className="text-[#ff0000]" size={24} /> Comment History
                     </h2>
                     <p className="text-xs text-slate-400 font-semibold mt-1">
                       All AI replies, deleted toxic comments, held-for-review, and failed actions
@@ -1401,12 +1402,12 @@ const ModerationPage = ({
                 {/* 6 Summary Cards */}
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
                   {[
-                    { label: 'Total Actions', value: historySummary.total, color: 'text-blue-600', bg: 'bg-blue-50 border-blue-100' },
-                    { label: 'AI Replies', value: historySummary.replied, color: 'text-green-600', bg: 'bg-green-50 border-green-100' },
+                    { label: 'Total Actions', value: historySummary.total, color: 'text-[#ff0000]', bg: 'bg-[#fff1f1] border-red-100' },
+                    { label: 'AI Replies', value: historySummary.replied, color: 'text-[#ff0000]', bg: 'bg-[#fff1f1] border-red-100' },
                     { label: 'Deleted', value: historySummary.deleted, color: 'text-red-600', bg: 'bg-red-50 border-red-100' },
-                    { label: 'Hidden', value: historySummary.hidden, color: 'text-amber-600', bg: 'bg-amber-50 border-amber-100' },
+                    { label: 'Hidden', value: historySummary.hidden, color: 'text-[#b06000]', bg: 'bg-[#fff8e1] border-[#f9ab00]/20' },
                     { label: 'Failed', value: historySummary.failed, color: 'text-rose-600', bg: 'bg-rose-50 border-rose-100' },
-                    { label: 'Success Rate', value: `${historySummary.successRate}%`, color: 'text-emerald-600', bg: 'bg-emerald-50 border-emerald-100' }
+                    { label: 'Success Rate', value: `${historySummary.successRate}%`, color: 'text-[#ff0000]', bg: 'bg-[#fff1f1] border-red-100' }
                   ].map(card => (
                     <div key={card.label} className={`border rounded-2xl p-3.5 ${card.bg}`}>
                       <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{card.label}</p>
@@ -1426,7 +1427,7 @@ const ModerationPage = ({
                         value={historySearch}
                         onChange={e => setHistorySearch(e.target.value)}
                         onKeyDown={e => e.key === 'Enter' && fetchHistoryLogs(1)}
-                        className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:border-orange-500"
+                        className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:border-[#ff0000]"
                       />
                     </div>
                   </div>
@@ -1435,17 +1436,17 @@ const ModerationPage = ({
                   <div className="flex items-center gap-2 flex-wrap">
                     {[
                       { id: 'all',     label: 'All',     color: 'slate' },
-                      { id: 'replied', label: 'Replied', color: 'green'  },
-                      { id: 'deleted', label: 'Deleted', color: 'red'    },
+                      { id: 'replied', label: 'Replied', color: 'red'  },
+                      { id: 'deleted', label: 'Deleted', color: 'danger'    },
                       { id: 'hidden',  label: 'Hidden',  color: 'amber'  },
                       { id: 'failed',  label: 'Failed',  color: 'rose'   }
                     ].map(f => {
                       const isActive = historyType === f.id;
                       const activeStyles = {
                         slate: 'bg-slate-900 text-white border-slate-900',
-                        green: 'bg-green-600 text-white border-green-600',
-                        red:   'bg-red-600 text-white border-red-600',
-                        amber: 'bg-amber-500 text-white border-amber-500',
+                        red: 'bg-[#ff0000] text-white border-[#ff0000]',
+                        danger: 'bg-[#cc0000] text-white border-[#cc0000]',
+                        amber: 'bg-[#0f0f0f] text-white border-[#0f0f0f]',
                         rose:  'bg-rose-600 text-white border-rose-600'
                       };
                       return (
@@ -1477,7 +1478,7 @@ const ModerationPage = ({
                   </div>
                 ) : historyLogs.length === 0 ? (
                   <div className="flex flex-col items-center justify-center p-12 text-center text-slate-400 space-y-3 border border-dashed border-slate-200 rounded-2xl">
-                    <Clock size={36} className="opacity-30 text-orange-500" />
+                    <Clock size={36} className="opacity-30 text-[#ff0000]" />
                     <div>
                       <p className="text-sm font-black text-slate-700">No records found</p>
                       <p className="text-xs text-slate-400 font-medium mt-1 max-w-sm">
@@ -1505,7 +1506,7 @@ const ModerationPage = ({
                             </span>
                           </div>
                           <span className="text-[11px] text-slate-400 font-semibold">
-                            {log.actionDate ? new Date(log.actionDate).toLocaleString() : '—'}
+                            {log.actionDate ? new Date(log.actionDate).toLocaleString() : ''}
                           </span>
                         </div>
 
@@ -1522,8 +1523,8 @@ const ModerationPage = ({
 
                         {/* Type-specific content */}
                         {log.type === 'replied' && log.replyText && (
-                          <div className="bg-[#f0f9ff] border border-[#bae6fd] rounded-xl p-3.5 text-xs text-slate-700 font-semibold space-y-3">
-                            <p className="font-bold text-[#0284c7] flex items-center gap-1">
+                          <div className="bg-[#fff1f1] border border-red-100 rounded-xl p-3.5 text-xs text-slate-700 font-semibold space-y-3">
+                            <p className="font-bold text-[#ff0000] flex items-center gap-1">
                               <Sparkles size={11} /> {log.replyType === 'Carousel' ? 'Carousel Reply:' : 'AI Reply:'}
                             </p>
                             {log.replyType === 'Carousel' && log.carouselCards && log.carouselCards.length > 0 ? (
@@ -1543,7 +1544,7 @@ const ModerationPage = ({
                                           href={card.link || card.buttonUrl}
                                           target="_blank"
                                           rel="noopener noreferrer"
-                                          className="block w-full py-1.5 text-center bg-orange-50 hover:bg-orange-100 text-orange-600 border border-orange-200 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all mt-2"
+                                          className="block w-full py-1.5 text-center bg-[#fff1f1] hover:bg-red-100 text-[#ff0000] border border-red-100 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all mt-2"
                                         >
                                           {card.btnLabel || card.buttonText || 'View Detail'}
                                         </a>
@@ -1569,7 +1570,7 @@ const ModerationPage = ({
                               <span className="capitalize font-semibold text-red-800">{log.category}</span>
                               {log.confidence != null && (
                                 <>
-                                  <span className="text-slate-400">•</span>
+                                  <span className="text-slate-400"></span>
                                   <span className="font-bold text-slate-600">
                                     Confidence: {log.confidence > 1
                                       ? `${Math.round(log.confidence)}%`
@@ -1598,7 +1599,7 @@ const ModerationPage = ({
                         <div className="flex items-center gap-2 flex-wrap border-t border-slate-100 pt-3">
                           {/* Type badge */}
                           {log.type === 'replied' && (
-                            <span className="px-2.5 py-0.5 text-[10px] font-black rounded-md uppercase bg-blue-100 text-blue-700 flex items-center gap-1">
+                            <span className="px-2.5 py-0.5 text-[10px] font-black rounded-md uppercase bg-[#fff1f1] text-[#ff0000] flex items-center gap-1">
                               <Send size={9} /> Replied
                             </span>
                           )}
@@ -1608,7 +1609,7 @@ const ModerationPage = ({
                             </span>
                           )}
                           {log.type === 'hidden' && (
-                            <span className="px-2.5 py-0.5 text-[10px] font-black rounded-md uppercase bg-amber-100 text-amber-700 flex items-center gap-1">
+                            <span className="px-2.5 py-0.5 text-[10px] font-black rounded-md uppercase bg-[#fff8e1] text-[#b06000] flex items-center gap-1">
                               <Eye size={9} /> Hidden
                             </span>
                           )}
@@ -1616,7 +1617,7 @@ const ModerationPage = ({
                           {/* Status badge */}
                           <span className={`px-2.5 py-0.5 text-[10px] font-black rounded-md uppercase flex items-center gap-1 ${
                             log.status === 'success'
-                              ? 'bg-green-100 text-green-700'
+                              ? 'bg-[#fff1f1] text-[#ff0000]'
                               : 'bg-rose-100 text-rose-700'
                           }`}>
                             {log.status === 'success'
@@ -1626,7 +1627,7 @@ const ModerationPage = ({
 
                           {/* Trigger keyword if replied */}
                           {log.triggerKeyword && log.type === 'replied' && (
-                            <span className="px-2.5 py-0.5 bg-purple-50 text-purple-600 text-[10px] font-black rounded-md">
+                            <span className="px-2.5 py-0.5 bg-[#fff1f1] text-[#ff0000] text-[10px] font-black rounded-md">
                               Keyword: {log.triggerKeyword}
                             </span>
                           )}
@@ -1666,14 +1667,14 @@ const ModerationPage = ({
         </motion.div>
       </AnimatePresence>
 
-      {/* ── Test Rule Modal ─────────────────────────────────────────────────── */}
+      {/*  Test Rule Modal  */}
       <AnimatePresence>
         {testModalOpen && testingRule && (
           <>
             <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => { setTestModalOpen(false); setTestResult(null); }}
-              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[200]"
+              className="fixed inset-0 bg-black/40  z-[200]"
             />
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -1690,22 +1691,22 @@ const ModerationPage = ({
               <textarea
                 value={testCommentText}
                 onChange={e => setTestCommentText(e.target.value)}
-                placeholder="Enter a sample comment to test…"
+                placeholder="Enter a sample comment to test"
                 rows={3}
                 className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-[#0f0f0f] focus:outline-none resize-none"
               />
               <button
                 onClick={handleRunTest}
                 disabled={testingInProgress}
-                className="w-full py-3 bg-[#22c55e] hover:bg-[#16a34a] text-white rounded-2xl font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 disabled:opacity-60"
+                className="w-full py-3 bg-[#ff0000] hover:bg-[#cc0000] text-white rounded-2xl font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 disabled:opacity-60"
               >
                 {testingInProgress ? <RefreshCw size={14} className="animate-spin" /> : <Zap size={14} />}
-                {testingInProgress ? 'Running…' : 'Run Test'}
+                {testingInProgress ? 'Running' : 'Run Test'}
               </button>
               {testResult && (
-                <div className={`p-4 rounded-2xl border text-sm font-medium ${testResult.matched ? 'bg-green-50 border-green-200 text-green-800' : 'bg-slate-50 border-slate-200 text-slate-600'
+                <div className={`p-4 rounded-2xl border text-sm font-medium ${testResult.matched ? 'bg-[#fff1f1] border-red-100 text-[#ff0000]' : 'bg-slate-50 border-slate-200 text-slate-600'
                   }`}>
-                  <p className="font-black mb-1">{testResult.matched ? '✅ Rule Matched!' : '❌ No Match'}</p>
+                  <p className="font-black mb-1">{testResult.matched ? 'Rule Matched' : 'No Match'}</p>
                   {testResult.generatedReply && <p className="text-xs leading-relaxed">Reply: {testResult.generatedReply}</p>}
                   {testResult.reason && <p className="text-xs text-slate-500 mt-1">{testResult.reason}</p>}
                 </div>
@@ -1715,20 +1716,20 @@ const ModerationPage = ({
         )}
       </AnimatePresence>
 
-      {/* ── Content Picker Modal ───────────────────────────────────────── */}
+      {/*  Content Picker Modal  */}
       <AnimatePresence>
         {contentPickerOpen && (
           <>
             <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setContentPickerOpen(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200]"
+              className="fixed inset-0 bg-black/60  z-[200]"
             />
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[201] w-full max-w-2xl bg-white rounded-[32px] p-6 md:p-8 shadow-2xl space-y-6 max-h-[85vh] flex flex-col"
+              className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[201] w-full max-w-2xl bg-white rounded-[22px] p-6 md:p-8 shadow-2xl space-y-6 max-h-[85vh] flex flex-col"
             >
               <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                 <div>
@@ -1750,11 +1751,11 @@ const ModerationPage = ({
                       showToast('Target set to All Videos (Channel-wide)', 'info');
                     }}
                     className={`rounded-2xl border-2 p-3 flex flex-col items-center justify-center text-center cursor-pointer transition-all aspect-square ${selectedVideoId === 'all_videos'
-                        ? 'border-orange-500 bg-orange-500/10 text-orange-600 font-black'
-                        : 'border-slate-200 hover:border-orange-300 text-slate-600 bg-slate-50'
+                        ? 'border-[#ff0000] bg-[#ff0000]/10 text-[#ff0000] font-black'
+                        : 'border-slate-200 hover:border-red-200 text-slate-600 bg-slate-50'
                       }`}
                   >
-                    <VideoIcon size={32} className="mb-2 text-orange-500" />
+                    <VideoIcon size={32} className="mb-2 text-[#ff0000]" />
                     <p className="text-xs font-black">All Videos & Shorts</p>
                     <p className="text-[10px] opacity-70 font-semibold mt-1">Channel-wide</p>
                   </div>
@@ -1769,8 +1770,8 @@ const ModerationPage = ({
                         showToast(`Target set to: ${v.title?.substring(0, 20)}...`, 'info');
                       }}
                       className={`rounded-2xl border-2 overflow-hidden cursor-pointer transition-all relative group flex flex-col ${selectedVideoId === v.videoId
-                          ? 'border-orange-500 ring-2 ring-orange-500/20'
-                          : 'border-slate-200 hover:border-orange-300'
+                          ? 'border-[#ff0000] ring-2 ring-red-500/20'
+                          : 'border-slate-200 hover:border-red-200'
                         }`}
                     >
                       <div className="h-28 bg-slate-900 relative overflow-hidden">
@@ -1782,7 +1783,7 @@ const ModerationPage = ({
                           </div>
                         )}
                         {selectedVideoId === v.videoId && (
-                          <div className="absolute top-2 right-2 bg-orange-500 text-white p-1 rounded-full shadow">
+                          <div className="absolute top-2 right-2 bg-[#ff0000] text-white p-1 rounded-full shadow">
                             <Check size={12} />
                           </div>
                         )}
@@ -1798,7 +1799,7 @@ const ModerationPage = ({
               <div className="flex items-center justify-end border-t border-slate-100 pt-4 gap-3">
                 <button
                   onClick={() => setContentPickerOpen(false)}
-                  className="px-6 py-2.5 bg-orange-600 text-white font-black text-xs uppercase tracking-wider rounded-xl hover:bg-orange-700 transition-all"
+                  className="px-6 py-2.5 bg-[#ff0000] text-white font-black text-xs uppercase tracking-wider rounded-xl hover:bg-[#cc0000] transition-all"
                 >
                   Done
                 </button>
@@ -1812,3 +1813,8 @@ const ModerationPage = ({
 };
 
 export default ModerationPage;
+
+
+
+
+

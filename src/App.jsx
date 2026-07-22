@@ -8,7 +8,8 @@ import {
   Video,
   ShieldCheck,
   Settings,
-  LogOut
+  LogOut,
+  Menu
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from './context/AuthContext';
@@ -22,7 +23,7 @@ const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 const LeadsPage = lazy(() => import('./pages/LeadsPage'));
 const AutoSchedulePage = lazy(() => import('./pages/AutoSchedule'));
 const SubscriptionPage = lazy(() => import('./pages/SubscriptionPage'));
-const LandingPage = lazy(() => import('./pages/LandingPage'));
+
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
 const TermsPage = lazy(() => import('./pages/TermsPage'));
 const Login = lazy(() => import('./components/Login'));
@@ -40,11 +41,10 @@ const AdminLayout = lazy(() => import('./layouts/AdminLayout'));
 
 
 import AdminRoute from './components/AdminRoute';
-import Header from './components/Header';
-
 import Sidebar from './components/Sidebar';
 import InstallAppPrompt from './components/InstallAppPrompt';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import LandingPage from './pages/LandingPage';
 
 
 let activeAnalyticsPromise = null;
@@ -59,7 +59,7 @@ const App = () => {
     const queryParams = new URLSearchParams(window.location.search);
     if (queryParams.get('status') === 'success') {
       // Small alert to confirm success
-      setTimeout(() => alert('✅ YouTube Channel Connected Successfully!'), 500);
+      setTimeout(() => alert('YouTube Channel Connected Successfully!'), 500);
       return 'channels';
     }
     return queryParams.get('redirect') === 'comments' ? 'videos' : 'dashboard';
@@ -77,27 +77,27 @@ const App = () => {
   const [loading, setLoading] = useState(true);
   const [activities, setActivities] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(() => {
+    if (typeof window !== 'undefined' && window.innerWidth <= 1024) return false;
     const saved = localStorage.getItem('sidebarOpen');
     return saved !== null ? JSON.parse(saved) : true;
   });
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery] = useState('');
   const [profileSheetOpen, setProfileSheetOpen] = useState(false);
+  const [clientDark, setClientDark] = useState(() => localStorage.getItem('clientTheme') === 'dark');
   const [videoSubTab, setVideoSubTab] = useState('videos');
-  const [dateRange, setDateRange] = useState({
-    startDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-    endDate: new Date().toISOString(),
-    label: 'Last 30 Days'
-  });
-
-  const toggleSidebar = () => {
-    setSidebarOpen(prev => {
-      const newState = !prev;
-      localStorage.setItem('sidebarOpen', JSON.stringify(newState));
-      return newState;
-    });
-  };
-
   useEffect(() => {
+    localStorage.setItem('clientTheme', clientDark ? 'dark' : 'light');
+  }, [clientDark]);
+
+  const [dateRange, setDateRange] = useState(() => {
+    const now = Date.now();
+    return {
+      startDate: new Date(now - 30 * 24 * 60 * 60 * 1000).toISOString(),
+      endDate: new Date(now).toISOString(),
+      label: 'Last 30 Days'
+    };
+  });
+useEffect(() => {
     const handleOnline = () => setIsOffline(false);
     const handleOffline = () => setIsOffline(true);
     window.addEventListener('online', handleOnline);
@@ -125,15 +125,24 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
-      Promise.resolve().then(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 1024) {
         setSidebarOpen(false);
-      });
-    }
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+    if (typeof window !== 'undefined' && window.innerWidth > 1024) {
+      localStorage.setItem('sidebarOpen', JSON.stringify(sidebarOpen));
+    }
+  }, [sidebarOpen]);
+
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.innerWidth <= 1024) {
       if (sidebarOpen) {
         document.body.style.overflow = "hidden";
       } else {
@@ -147,7 +156,7 @@ const App = () => {
 
   useEffect(() => {
     const handleUpdate = () => {
-      if (window.confirm('🔄 A new version of the app is available. Click OK to reload and update.')) {
+      if (window.confirm('A new version of the app is available. Click OK to reload and update.')) {
         window.location.reload();
       }
     };
@@ -322,6 +331,7 @@ const App = () => {
           searchQuery={searchQuery}
           dateRange={dateRange}
           setDateRange={setDateRange}
+          isDark={clientDark}
         />;
       case 'videos':
         return <VideosPage
@@ -363,7 +373,7 @@ const App = () => {
               }
             } catch (err) {
               const errMsg = err.response?.data?.error || 'Failed to initiate secure connection';
-              alert(`❌ ${errMsg}`);
+              alert(errMsg);
               if (err.response?.status === 403) {
                 setActiveTab('subscription'); // Redirect to subscription plans to upgrade
               }
@@ -417,7 +427,7 @@ const App = () => {
           <Route path="/" element={<LandingPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/terms" element={<TermsPage />} />
-          {/* Client Login — only redirect if a CLIENT is already logged in.
+          {/* Client Login  only redirect if a CLIENT is already logged in.
               If admin session exists in localStorage, ignore it so a client can still log in. */}
           <Route path="/login" element={
             (user && user.role !== 'admin' && user.role !== 'superadmin')
@@ -468,27 +478,14 @@ const App = () => {
                   </Suspense>
                 </div>
               ) : (
-                <div className="min-h-screen lg:h-screen flex flex-col lg:overflow-hidden bg-[#f8fafc] relative selection:bg-green-500/20 selection:text-green-900 min-w-0 overflow-x-hidden">
+                <div className={`client-shell ${clientDark ? 'client-dark' : 'client-light'} min-h-screen min-[1025px]:h-screen flex min-[1025px]:overflow-hidden relative selection:bg-[#ff0000]/20 min-w-0 overflow-x-hidden transition-colors ${clientDark ? 'bg-[#0f0f0f] selection:text-white' : 'bg-white selection:text-[#0f0f0f]'}`}> 
                   {/* Dummy inputs for Chrome Password Manager / Autofill Trap */}
                   <div style={{ position: 'absolute', top: '-1000px', left: '-1000px', width: '0px', height: '0px', overflow: 'hidden' }} aria-hidden="true">
                     <input type="text" name="chrome_autocomplete_trap_email" tabIndex="-1" autoComplete="username" />
                     <input type="password" name="chrome_autocomplete_trap_password" tabIndex="-1" autoComplete="current-password" />
                   </div>
-                  {!isEmbedded && (
-                    <Header
-                      toggleSidebar={toggleSidebar}
-                      onSearch={setSearchQuery}
-                      setActiveTab={setActiveTab}
-                      sidebarOpen={sidebarOpen}
-                      channels={channels}
-                      selectedChannelId={selectedChannelId}
-                      setSelectedChannelId={setSelectedChannelId}
-                      setVideoSubTab={setVideoSubTab}
-                      notifications={activities}
-                    />
-                  )}
 
-                  <div className="flex flex-1 lg:overflow-hidden relative min-w-0 overflow-x-hidden">
+                  <div className="flex flex-1 min-[1025px]:overflow-hidden relative min-w-0 overflow-x-hidden">
                     {!isEmbedded && (
                       <Sidebar
                         activeTab={activeTab}
@@ -496,10 +493,38 @@ const App = () => {
                         onLogout={logout}
                         isOpen={sidebarOpen}
                         setIsOpen={setSidebarOpen}
+                        user={user}
+                        onProfileClick={() => setProfileSheetOpen(true)}
+                        isDark={clientDark}
+                        onToggleTheme={() => setClientDark(prev => !prev)}
                       />
                     )}
 
-                    <main className={`flex-1 overflow-y-auto overflow-x-hidden min-w-0 ${isEmbedded ? 'p-0' : 'p-4 md:p-6 lg:p-8 pb-[calc(140px+env(safe-area-inset-bottom))] md:pb-6 lg:pb-8'} custom-scroll transition-all duration-300 ease-in-out`}>
+                    <main className={`flex-1 overflow-y-auto overflow-x-hidden min-w-0 ${isEmbedded ? 'p-0' : 'p-3 sm:p-4 min-[1025px]:p-5 pt-[76px] min-[1025px]:pt-5 pb-[calc(96px+env(safe-area-inset-bottom))] min-[1025px]:pb-5'} custom-scroll transition-all duration-300 ease-in-out ${clientDark ? 'bg-[#0f0f0f]' : 'bg-white'}`}>
+                      {!isEmbedded && (
+                        <div className={`min-[1025px]:hidden fixed top-0 left-0 right-0 z-[90] h-[64px] border-b px-3 flex items-center justify-between shadow-sm ${clientDark ? 'bg-[#0f0f0f] border-[#2a2a2a]' : 'bg-white border-[#e5e5e5]'}`}>
+                          <button
+                            type="button"
+                            onClick={() => setSidebarOpen(true)}
+                            className={`h-11 w-11 rounded-2xl flex items-center justify-center border ${clientDark ? 'bg-[#181818] border-[#2a2a2a] text-white' : 'bg-[#fff1f1] border-red-100 text-[#ff0000]'}`}
+                            title="Open navigation"
+                          >
+                            <Menu size={20} />
+                          </button>
+                          <div className="min-w-0 flex items-center gap-2">
+                            <img src="/logo_icon.png" className="h-8 w-8 object-contain shrink-0" alt="Channelmate Logo" />
+                            <span className={`text-sm font-black truncate ${clientDark ? 'text-white' : 'text-[#0f0f0f]'}`}>Channelmate</span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setClientDark(prev => !prev)}
+                            className={`h-11 w-11 rounded-2xl flex items-center justify-center border ${clientDark ? 'bg-[#181818] border-[#2a2a2a] text-white' : 'bg-white border-[#e5e5e5] text-[#606060]'}`}
+                            title={clientDark ? 'Light mode' : 'Dark mode'}
+                          >
+                            {clientDark ? <Settings size={18} className="text-[#ff0000]" /> : <Settings size={18} />}
+                          </button>
+                        </div>
+                      )}
                       <AnimatePresence mode="wait">
                         <motion.div
                           key={activeTab}
@@ -512,7 +537,7 @@ const App = () => {
                           <Suspense fallback={
                             <div className="h-full w-full flex items-center justify-center">
                               <div className="flex flex-col items-center gap-4">
-                                <Loader2 className="animate-spin text-[#22c55e]" size={40} />
+                                <Loader2 className="animate-spin text-[#ff0000]" size={40} />
                                 <p className="text-[12px] font-bold text-[#909090] uppercase tracking-widest">Loading Module...</p>
                               </div>
                             </div>
@@ -526,7 +551,7 @@ const App = () => {
 
                   {/* Mobile Bottom Navigation */}
                   {!isEmbedded && (
-                    <div className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-lg border-t border-slate-100 flex items-center justify-around px-4 z-40 pb-safe shadow-[0_-4px_20px_-4px_rgba(0,0,0,0.05)]">
+                    <div className={`min-[1025px]:hidden fixed bottom-0 left-0 right-0 h-[68px] border-t grid grid-cols-5 px-1 z-40 pb-safe shadow-[0_-4px_20px_-4px_rgba(0,0,0,0.05)] ${clientDark ? 'bg-[#0f0f0f] border-[#2a2a2a]' : 'bg-white border-slate-100'}`}>
                       <button
                         onClick={() => setActiveTab('dashboard')}
                         className={`mobile-nav-item ${activeTab === 'dashboard' ? 'active' : ''}`}
@@ -600,34 +625,46 @@ const App = () => {
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 250 }}
-              className="bottom-sheet-content"
+              className={`bottom-sheet-content ${clientDark ? 'client-profile-dark' : ''}`}
             >
               <div className="bottom-sheet-handle" />
-              <h3 className="text-lg font-black text-slate-900 mb-4">User Profile</h3>
+              <div className="flex items-center justify-between mb-5">
+                <div>
+                  <h3 className={`text-xl font-black ${clientDark ? 'text-white' : 'text-[#0f0f0f]'}`}>Profile</h3>
+                  <p className={`text-xs font-semibold ${clientDark ? 'text-[#aaaaaa]' : 'text-[#606060]'}`}>Account, appearance, and session</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setClientDark(prev => !prev)}
+                  className={`rounded-2xl border px-4 py-2 text-xs font-black ${clientDark ? 'bg-[#202020] border-[#2a2a2a] text-white' : 'bg-[#fff1f1] border-red-100 text-[#ff0000]'}`}
+                >
+                  {clientDark ? 'Light' : 'Dark'}
+                </button>
+              </div>
 
-              <div className="p-4 bg-slate-50 rounded-2xl flex items-center gap-3 border border-slate-100 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-green-500 to-emerald-600 text-white flex items-center justify-center font-black text-lg shadow-sm">
+              <div className={`p-4 rounded-2xl flex items-center gap-3 border mb-6 ${clientDark ? 'bg-[#181818] border-[#2a2a2a]' : 'bg-[#f7f7f7] border-[#ededed]'}`}>
+                <div className="w-12 h-12 rounded-2xl bg-[#ff0000] text-white flex items-center justify-center font-black text-lg shadow-sm">
                   {user?.name?.charAt(0).toUpperCase() || 'A'}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-black text-slate-900 truncate">{user?.name || 'Administrator'}</p>
-                  <p className="text-[11px] text-slate-500 truncate font-semibold">{user?.email}</p>
+                  <p className={`text-sm font-black truncate ${clientDark ? 'text-white' : 'text-[#0f0f0f]'}`}>{user?.name || 'Channelmate'}</p>
+                  <p className={`text-[11px] truncate font-semibold ${clientDark ? 'text-[#aaaaaa]' : 'text-[#606060]'}`}>{user?.email}</p>
                 </div>
-                <span className="bg-green-500/10 text-green-600 text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">
-                  {user?.role === 'admin' ? 'Admin' : 'Pro'}
+                <span className="bg-[#fff1f1] text-[#ff0000] text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">
+                  {user?.role === 'admin' ? 'Admin' : 'Creator'}
                 </span>
               </div>
 
               <div className="space-y-2">
                 <button
                   onClick={() => { setActiveTab('settings'); setProfileSheetOpen(false); }}
-                  className="w-full flex items-center gap-3 px-4 py-3.5 hover:bg-slate-50 rounded-xl text-sm font-bold text-slate-700 transition-all text-left"
+                  className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-bold transition-all text-left ${clientDark ? 'text-white hover:bg-[#202020]' : 'text-slate-700 hover:bg-slate-50'}`}
                 >
                   <Settings size={18} /> Settings & Billing
                 </button>
                 <button
                   onClick={() => { logout(); setProfileSheetOpen(false); }}
-                  className="w-full flex items-center gap-3 px-4 py-3.5 hover:bg-red-50 text-red-600 rounded-xl text-sm font-bold transition-all text-left border border-transparent hover:border-red-100/50"
+                  className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-bold transition-all text-left border border-transparent text-red-600 ${clientDark ? 'hover:bg-[#202020] hover:border-[#2a2a2a]' : 'hover:bg-red-50 hover:border-red-100/50'}`}
                 >
                   <LogOut size={18} /> Logout
                 </button>
@@ -643,7 +680,7 @@ const App = () => {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
-            className="fixed bottom-6 right-6 z-[9999] flex items-center gap-3 px-4 py-3 bg-[#d93025] text-white rounded-2xl shadow-2xl font-black text-xs uppercase tracking-wider border border-white/20 backdrop-blur-md"
+            className="fixed bottom-6 right-6 z-[9999] flex items-center gap-3 px-4 py-3 bg-[#d93025] text-white rounded-2xl shadow-2xl font-black text-xs uppercase tracking-wider border border-white/20 "
           >
             <WifiOff size={16} />
             <span>You are currently offline</span>
@@ -658,3 +695,7 @@ const App = () => {
 
 
 export default App;
+
+
+
+

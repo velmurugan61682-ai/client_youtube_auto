@@ -1,11 +1,11 @@
-import React from 'react';
+﻿import React from 'react';
 import { PlaySquare, Trash2, Calendar, ShieldCheck, AlertTriangle } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const ChannelsPage = ({ channels, onDisconnect, onAdd, setActiveTab, setSelectedChannelId }) => {
   return (
-    <div className="max-w-[1200px] mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+    <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 h-[calc(100vh-2.5rem)] min-h-[760px] overflow-hidden rounded-[28px] bg-[#eef3f5] p-4 sm:p-5 text-[#0f0f0f]">
+      <div className="rounded-[22px] bg-white border border-[#e5e5e5] shadow-sm px-5 sm:px-7 py-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-black text-[#0f0f0f] tracking-tighter">Connected Channels</h1>
         </div>
@@ -18,7 +18,7 @@ const ChannelsPage = ({ channels, onDisconnect, onAdd, setActiveTab, setSelected
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="custom-scroll mt-4 h-[calc(100%-96px)] overflow-y-auto pr-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 content-start">
         {channels.map((channel) => (
           <motion.div
             key={channel.channelId}
@@ -44,8 +44,8 @@ const ChannelsPage = ({ channels, onDisconnect, onAdd, setActiveTab, setSelected
                       Reconnect Required
                     </div>
                   ) : (
-                    <div className="flex items-center gap-1.5 text-[10px] font-black text-[#2ba640] bg-[#e6f4ea] px-2.5 py-0.5 rounded-full">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#2ba640] animate-pulse"></div>
+                    <div className="flex items-center gap-1.5 text-[10px] font-black text-[#ff0000] bg-[#fff1f1] px-2.5 py-0.5 rounded-full">
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#ff0000] animate-pulse"></div>
                       Active
                     </div>
                   )}
@@ -120,3 +120,5 @@ const ChannelsPage = ({ channels, onDisconnect, onAdd, setActiveTab, setSelected
 };
 
 export default ChannelsPage;
+
+

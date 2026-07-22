@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { 
   Mail, 
   Lock, 
@@ -57,23 +57,20 @@ const Register = ({ onSwitchToLogin }) => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-zinc-900 flex items-center justify-center p-4 relative font-['Outfit'] overflow-hidden selection:bg-red-500/20 selection:text-red-900">
-      {/* Background Decorative Gradients */}
-      <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-gradient-to-tr from-[#ff0055]/10 to-[#0055ff]/15 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-gradient-to-br from-[#7000ff]/10 to-[#ff5e00]/10 rounded-full blur-[100px] pointer-events-none" />
+    <div className="min-h-screen bg-[#f7f7f7] text-zinc-900 flex items-center justify-center p-4 relative font-['Outfit'] overflow-hidden selection:bg-red-500/20 selection:text-red-900">
 
       <motion.div 
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         className="w-full max-w-[480px] z-10"
       >
-        <div className="bg-white/60 backdrop-blur-xl border border-white/50 rounded-[32px] p-6 sm:p-8 md:p-10 shadow-[0_24px_80px_rgba(0,0,0,0.02)] relative overflow-hidden text-zinc-850">
+        <div className="bg-white border border-[#e5e5e5] rounded-[22px] p-6 sm:p-8 md:p-10 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.08)] relative overflow-hidden text-zinc-900">
           {/* Header */}
           <div className="flex flex-col items-center text-center mb-8">
             <Link to="/" className="flex flex-col items-center">
-              <img src="/channelmate_logo.svg" className="h-12 sm:h-14 w-auto object-contain mb-3" alt="Channelmate Logo" />
+              <img src="/channelmate_logo.png" className="h-12 sm:h-14 w-auto object-contain mb-3" alt="Channelmate Logo" />
               <h2 className="text-[20px] font-black text-zinc-900 leading-tight mb-1 tracking-tighter">Create Creator Account</h2>
-              <p className="text-zinc-500 text-[13px] font-semibold">Join the elite AI moderation community</p>
+              <p className="text-zinc-500 text-[13px] font-semibold">Create and moderate with a YouTube-ready workspace</p>
             </Link>
           </div>
 
@@ -94,7 +91,7 @@ const Register = ({ onSwitchToLogin }) => {
               <motion.div 
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
-                className="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-3 text-emerald-650 text-[12px] font-bold shadow-sm"
+                className="mb-6 p-4 bg-[#fff1f1] border border-red-100 rounded-xl flex items-center gap-3 text-[#0f7a35] text-[12px] font-bold shadow-sm"
               >
                 <CheckCircle2 size={18} />
                 Account created! Redirecting to login...
@@ -151,7 +148,7 @@ const Register = ({ onSwitchToLogin }) => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="w-full bg-white/40 border border-zinc-200/80 text-zinc-900 rounded-xl py-3 pl-12 pr-4 text-[14px] font-semibold focus:outline-none focus:border-red-500/50 focus:bg-white focus:ring-4 focus:ring-red-500/5 transition-all placeholder-zinc-400"
-                    placeholder="••••••••"
+                    placeholder="Password"
                   />
                 </div>
               </div>
@@ -167,7 +164,7 @@ const Register = ({ onSwitchToLogin }) => {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     className="w-full bg-white/40 border border-zinc-200/80 text-zinc-900 rounded-xl py-3 pl-12 pr-4 text-[14px] font-semibold focus:outline-none focus:border-red-500/50 focus:bg-white focus:ring-4 focus:ring-red-500/5 transition-all placeholder-zinc-400"
-                    placeholder="••••••••"
+                    placeholder="Password"
                   />
                 </div>
               </div>
@@ -220,3 +217,4 @@ const Register = ({ onSwitchToLogin }) => {
 };
 
 export default Register;
+
