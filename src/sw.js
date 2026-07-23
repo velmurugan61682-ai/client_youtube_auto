@@ -60,7 +60,7 @@ self.addEventListener('activate', (event) => {
 
 // Push Notification Event Listener
 self.addEventListener('push', (event) => {
-  let data = { title: 'Notification', body: 'New updates from Channelmate' };
+  let data = { title: 'Notification', body: 'New updates from Channelbot' };
 
   try {
     data = event.data ? event.data.json() : data;

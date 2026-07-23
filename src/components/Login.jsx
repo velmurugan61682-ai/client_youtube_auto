@@ -76,7 +76,7 @@ const Login = ({ onSwitchToRegister }) => {
           {/* Top Logo Container */}
           <div className="flex flex-col items-center text-center mb-8">
             <Link to="/" className="flex flex-col items-center">
-              <img src="/channelmate_logo.png" className="h-12 sm:h-14 w-auto object-contain mb-3" alt="Channelmate Logo" />
+              <img src="/channelmate_logo.png" className="h-12 sm:h-14 w-auto object-contain mb-3" alt="Channelbot Logo" />
               <p className="text-zinc-500 text-[13px] font-semibold">Sign in to your AI moderation centre</p>
             </Link>
           </div>
@@ -113,7 +113,7 @@ const Login = ({ onSwitchToRegister }) => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full bg-white/40 border border-zinc-200/80 text-zinc-900 rounded-xl py-3 pl-12 pr-4 text-[14px] font-semibold focus:outline-none focus:border-red-500/50 focus:bg-white focus:ring-4 focus:ring-red-500/5 transition-all placeholder-zinc-400"
-                  placeholder="admin@channelmate.ai"
+                  placeholder="admin@channelbot.in"
 
                 />
               </div>
@@ -197,7 +197,7 @@ const Login = ({ onSwitchToRegister }) => {
               <span className="flex items-center gap-2"><Zap size={14}/> AI Core v4.2</span>
            </div>
            <p className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.4em]">
-             &copy; 2026 Channelmate AI &bull; Global Systems LLC
+             &copy; 2026 Channelbot AI &bull; Global Systems LLC
            </p>
 
         </div>

@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Mail, Lock, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
@@ -39,8 +39,8 @@ const AdminLogin = () => {
       >
         <div className="bg-white p-8 sm:p-10 rounded-[28px] border border-[#e5e5e5] shadow-xl relative text-left">
           <div className="flex flex-col items-center text-center mb-8">
-            <img src="/logo_icon.png" className="w-20 h-20 object-contain mb-3 drop-shadow-sm" alt="Channelmate Logo" />
-            <h1 className="text-2xl font-black text-slate-900 tracking-tight">ChannelMate Admin Console</h1>
+            <img src="/logo_icon.png" className="w-20 h-20 object-contain mb-3 drop-shadow-sm" alt="Channelbot Logo" />
+            <h1 className="text-2xl font-black text-slate-900 tracking-tight">ChannelBot Admin Console</h1>
             <p className="text-xs font-semibold text-slate-500 mt-1">Single-Admin System Security Portal</p>
           </div>
 
@@ -104,7 +104,7 @@ const AdminLogin = () => {
 
           <div className="mt-8 text-center border-t border-slate-100 pt-6">
             <Link to="/" className="text-xs font-bold text-slate-400 hover:text-slate-700 transition-colors">
-              &larr; Return to ChannelMate Main Website
+              &larr; Return to ChannelBot Main Website
             </Link>
           </div>
         </div>

@@ -117,7 +117,7 @@ const LandingPage = () => {
 
   const testimonials = [
     {
-      quote: "ChannelMate saved me over 15 hours every week moderating toxic comments and answering price inquiries on my tech channel!",
+      quote: "ChannelBot saved me over 15 hours every week moderating toxic comments and answering price inquiries on my tech channel!",
       name: "tech vaseegrah",
       role: "Tech Creator (250K+ Subs)",
       rating: 5
@@ -129,7 +129,7 @@ const LandingPage = () => {
       rating: 5
     },
     {
-      quote: "Managing 12 client YouTube channels used to be chaos. ChannelMate brought complete automation and clean analytics.",
+      quote: "Managing 12 client YouTube channels used to be chaos. ChannelBot brought complete automation and clean analytics.",
       name: "Rohan Verma",
       role: "Digital Media Agency Owner",
       rating: 5
@@ -176,7 +176,7 @@ const LandingPage = () => {
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-[#e5e5e5]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center select-none cursor-pointer" onClick={() => scrollToSection('home')}>
-            <img src="/channelmate_logo.png" className="h-10 sm:h-11 w-auto object-contain" alt="Channelmate Logo" />
+            <img src="/channelmate_logo.png" className="h-10 sm:h-11 w-auto object-contain" alt="Channelbot Logo" />
           </div>
 
           {/* Navigation Links */}
@@ -223,12 +223,12 @@ const LandingPage = () => {
           <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-[1.08] mb-6 text-[#0f0f0f]">
             Automate, Moderate & Grow Your YouTube Channel with{' '}
             <span className="text-[#ff0000]">
-              Channelmate
+              Channelbot
             </span>
           </h1>
 
           <p className="text-[16px] sm:text-[18px] text-[#606060] font-semibold leading-relaxed mb-10 max-w-2xl mx-auto">
-            Channelmate is an AI-powered platform that helps YouTube creators automatically moderate comments, detect spam, generate intelligent AI replies, analyze audience sentiment, and securely manage their channels.
+            Channelbot is an AI-powered platform that helps YouTube creators automatically moderate comments, detect spam, generate intelligent AI replies, analyze audience sentiment, and securely manage their channels.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
@@ -258,7 +258,7 @@ const LandingPage = () => {
               Human Strategy Meets 24/7 AI YouTube Channel Automation
             </h3>
             <p className="text-xs sm:text-sm font-medium text-slate-200 mt-2 max-w-xl">
-              Talk directly with Channelmate AI Co-Pilot to automatically answer viewer comments, purge spam, and turn video interactions into WhatsApp leads.
+              Talk directly with Channelbot AI Co-Pilot to automatically answer viewer comments, purge spam, and turn video interactions into WhatsApp leads.
             </p>
           </div>
         </motion.div>
@@ -317,7 +317,7 @@ const LandingPage = () => {
       <section id="about" className="relative z-10 max-w-7xl mx-auto px-6 py-20 border-t border-[#e5e5e5]">
         <div className="max-w-5xl mx-auto text-center space-y-4 mb-16">
           <span className="text-xs font-black text-[#ff0000] uppercase tracking-widest bg-[#fff1f1] px-4 py-1.5 rounded-full">
-            About ChannelMate
+            About ChannelBot
           </span>
           <h2 className="text-3xl sm:text-5xl font-black text-[#0f0f0f]">
             Intelligent Automation Built for Creators & Brands
@@ -578,7 +578,7 @@ const LandingPage = () => {
           {/* Brand Info */}
           <div className="md:col-span-2 space-y-4">
             <div className="flex items-center">
-              <img src="/channelmate_logo.png" className="h-10 w-auto object-contain brightness-110" alt="Channelmate Logo" />
+              <img src="/channelmate_logo.png" className="h-10 w-auto object-contain brightness-110" alt="Channelbot Logo" />
             </div>
             <p className="text-xs font-semibold leading-relaxed max-w-sm text-zinc-400">
               Intelligent auto-moderation, toxicity shielding, and automated audience engagement built specifically for YouTube creators, brands, and digital agencies.
@@ -655,7 +655,7 @@ const LandingPage = () => {
 
         <div className="max-w-7xl mx-auto px-6 border-t border-zinc-800 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-[11px] font-semibold text-zinc-500">
-            &copy; {new Date().getFullYear()} Channelmate AI. All rights reserved.
+            &copy; {new Date().getFullYear()} Channelbot AI. All rights reserved.
           </p>
           <p className="text-[11px] font-semibold text-zinc-500">
             Made for YouTube Creators

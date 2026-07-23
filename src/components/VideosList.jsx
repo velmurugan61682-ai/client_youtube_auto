@@ -615,10 +615,10 @@ const VideosList = ({
                <div className="max-w-[900px] mx-auto mb-6 p-6 bg-white border border-[#f0f0f0] rounded-2xl shadow-md text-left">
                  <div className="flex items-center gap-3 mb-4">
                    <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-red-600 to-red-500 text-white flex items-center justify-center font-black">
-                     CM
+                     CB
                    </div>
                    <div>
-                     <h4 className="font-black text-[#0f0f0f] text-sm">Channelmate</h4>
+                     <h4 className="font-black text-[#0f0f0f] text-sm">Channelbot</h4>
                      <p className="text-[11px] text-[#909090] font-bold uppercase tracking-wider">Community Post</p>
                    </div>
                  </div>

@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -47,9 +47,9 @@ const AdminLayout = ({ children }) => {
       <aside onMouseEnter={() => setSidebarHover(true)} onMouseLeave={() => setSidebarHover(false)} className={`hidden min-[1025px]:flex h-screen ${sidebarExpanded ? 'w-[272px]' : 'w-[88px]'} ${dashboardDark ? 'bg-[#0f0f0f] border-[#2a2a2a]' : 'bg-white border-[#e5e5e5]'} border-r ${sidebarExpanded ? 'p-6' : 'p-3'} flex-col justify-between shrink-0 transition-[width,background-color,border-color] duration-300 ease-in-out overflow-hidden`}>
         <div>
           <div className={`flex items-center gap-3 px-0 mb-8 select-none relative ${sidebarExpanded ? 'min-w-[220px]' : 'w-full justify-center'}`}>
-            <img src="/logo_icon.png" className="w-10 h-10 object-contain drop-shadow-sm shrink-0" alt="Channelmate Logo" />
+            <img src="/logo_icon.png" className="w-10 h-10 object-contain drop-shadow-sm shrink-0" alt="Channelbot Logo" />
             <div className={`${sidebarExpanded ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-2'} transition-all duration-200 whitespace-nowrap`}>
-              <span className={`${dashboardDark ? 'text-white' : 'text-[#0f0f0f]'} text-[17px] font-black tracking-tighter block leading-none`}>CHANNELMATE</span>
+              <span className={`${dashboardDark ? 'text-white' : 'text-[#0f0f0f]'} text-[17px] font-black tracking-tighter block leading-none`}>CHANNELBOT</span>
               <span className="text-[9px] font-black text-[#ff0000] tracking-[0.2em] uppercase mt-1 block">ADMIN SAAS</span>
             </div>
             <button type="button" onClick={() => setSidebarPinned(prev => !prev)} className={`absolute right-0 top-0 h-9 w-9 rounded-xl flex items-center justify-center transition-colors ${dashboardDark ? 'text-[#aaaaaa] hover:bg-[#202020] hover:text-white' : 'text-[#606060] hover:bg-[#fff1f1] hover:text-[#ff0000]'}`} title={sidebarPinned ? 'Unpin sidebar' : 'Pin sidebar'}>
@@ -91,10 +91,10 @@ const AdminLayout = ({ children }) => {
           </button>
 
           <div className={`px-3 py-3 rounded-2xl border flex items-center gap-3 ${sidebarExpanded ? '' : 'justify-center'} ${dashboardDark ? 'bg-[#202020] border-[#2a2a2a]' : 'bg-[#fff1f1] border-red-100'}`}>
-            <img src="/logo_icon.png" className="w-6 h-6 object-contain shrink-0" alt="Channelmate Logo" />
+            <img src="/logo_icon.png" className="w-6 h-6 object-contain shrink-0" alt="Channelbot Logo" />
             {sidebarExpanded && (
               <div className="min-w-0 flex-1 transition-opacity duration-200">
-                <p className={`${dashboardDark ? 'text-white' : 'text-[#0f0f0f]'} text-xs font-black truncate`}>ChannelMate Admin</p>
+                <p className={`${dashboardDark ? 'text-white' : 'text-[#0f0f0f]'} text-xs font-black truncate`}>ChannelBot Admin</p>
                 <p className="text-[10px] font-bold text-[#ff0000]">Single-Admin System</p>
               </div>
             )}

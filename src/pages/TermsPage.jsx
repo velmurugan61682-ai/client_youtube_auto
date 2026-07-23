@@ -11,7 +11,7 @@ const TermsPage = () => {
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-[#e5e5e5]">
         <div className="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link to="/" className="flex items-center select-none">
-            <img src="/channelmate_logo.png" className="h-9 w-auto object-contain" alt="Channelmate Logo" />
+            <img src="/channelmate_logo.png" className="h-9 w-auto object-contain" alt="Channelbot Logo" />
           </Link>
           <Link 
             to="/" 
@@ -47,7 +47,7 @@ const TermsPage = () => {
                 1. Acceptance of Terms
               </h2>
               <p className="pl-3 text-zinc-650">
-                By accessing or using the Channelmate service, you agree to comply with and be bound by these Terms of Service. If you do not agree, you may not access or use the platform.
+                By accessing or using the Channelbot service, you agree to comply with and be bound by these Terms of Service. If you do not agree, you may not access or use the platform.
               </p>
             </section>
 
@@ -97,7 +97,7 @@ const TermsPage = () => {
                 4. Moderation & Automated Reply Rules
               </h2>
               <p className="pl-3 text-zinc-650">
-                Channelmate provides tools for automated sentiment tracking, category auditing, and automatic replies. You are fully responsible for the auto-replies generated and posted. You must ensure your automated responses do not violate YouTube's spam, harassment, or community guidelines.
+                Channelbot provides tools for automated sentiment tracking, category auditing, and automatic replies. You are fully responsible for the auto-replies generated and posted. You must ensure your automated responses do not violate YouTube's spam, harassment, or community guidelines.
               </p>
             </section>
 
@@ -107,7 +107,7 @@ const TermsPage = () => {
                 5. Limitation of Liability
               </h2>
               <p className="pl-3 text-zinc-650">
-                Under no circumstances shall Channelmate or its creators be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of channel access, suspension by YouTube, data loss, or content flag actions resulting from automated activities.
+                Under no circumstances shall Channelbot or its creators be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of channel access, suspension by YouTube, data loss, or content flag actions resulting from automated activities.
               </p>
             </section>
 
