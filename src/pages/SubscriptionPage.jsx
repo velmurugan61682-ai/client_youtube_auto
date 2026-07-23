@@ -115,7 +115,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
         key: activeKey,
         amount: amount || 99900,
         currency: currency || "INR",
-        name: "Channelbot",
+        name: "ChannelMate",
         description: "Quarterly Pro Subscription (₹999)",
         order_id: activeOrderId,
         handler: async function (response) {

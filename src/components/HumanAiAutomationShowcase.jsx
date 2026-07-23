@@ -27,7 +27,7 @@ const HumanAiAutomationShowcase = () => {
           Live YouTube Workflow Between <span className="text-[#ff0000]">Creator & AI Co-Pilot</span>
         </h2>
         <p className="text-[#606060] font-semibold text-sm sm:text-base leading-relaxed">
-          A focused preview of how Channelbot handles replies, moderation, lead capture, and creator operations.
+          A focused preview of how ChannelMate handles replies, moderation, lead capture, and creator operations.
         </p>
       </div>
 
@@ -67,7 +67,7 @@ const HumanAiAutomationShowcase = () => {
                 <div className="flex items-center gap-3">
                   <div className="h-11 w-11 rounded-2xl bg-[#ff0000] flex items-center justify-center font-black">CB</div>
                   <div>
-                    <h4 className="text-sm font-black">Creator + Channelbot AI</h4>
+                    <h4 className="text-sm font-black">Creator + ChannelMate</h4>
                     <p className="text-[10px] font-semibold text-[#aaaaaa]">Live workflow interaction</p>
                   </div>
                 </div>
@@ -78,7 +78,7 @@ const HumanAiAutomationShowcase = () => {
                 </div>
               </div>
               <div className="mt-5 rounded-2xl bg-[#181818] border border-white/10 p-4 text-sm font-semibold leading-relaxed">
-                Channelbot, handle my new video comments, remove spam, reply to product questions, and capture WhatsApp leads automatically.
+                ChannelMate, handle my new video comments, remove spam, reply to product questions, and capture WhatsApp leads automatically.
               </div>
               <div className="mt-4 flex flex-wrap gap-2 text-[11px] font-black text-red-100">
                 <span className="inline-flex items-center gap-1"><Zap size={12} /> AI replies</span>
@@ -93,7 +93,7 @@ const HumanAiAutomationShowcase = () => {
                 <p className="mt-2 text-sm font-black">Sets goals, reviews important leads, and directs content strategy.</p>
               </div>
               <div className="rounded-[18px] bg-[#fff1f1] border border-red-100 p-4 shadow-sm">
-                <p className="text-[10px] font-black uppercase tracking-widest text-[#ff0000]">Channelbot AI</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-[#ff0000]">ChannelMate</p>
                 <p className="mt-2 text-sm font-black">Replies, moderates, auto-likes, and routes high-value contacts.</p>
               </div>
             </div>
@@ -101,7 +101,7 @@ const HumanAiAutomationShowcase = () => {
 
           <div className="lg:col-span-5 space-y-4">
             <div className="relative rounded-[20px] overflow-hidden border border-[#e5e5e5] shadow-xl">
-              <img src="/yt_human_male_ai_talking.png" alt="Creator talking with Channelbot AI" className="w-full h-60 object-cover" />
+              <img src="/yt_human_male_ai_talking.png" alt="Creator talking with ChannelMate" className="w-full h-60 object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f0f]/90 via-transparent to-transparent p-4 flex flex-col justify-end">
                 <span className="w-fit rounded-md bg-[#ff0000] px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-white">YouTube AI Workflow</span>
                 <p className="mt-2 text-xs font-bold text-white">Creator operations with live AI assistance</p>

@@ -15,7 +15,7 @@ if (typeof window !== 'undefined') {
 
 // Dev-only cleanup for stale PWA assets. Old service workers can keep serving a
 // cached bundle on localhost and leave the landing page blank after UI edits.
-const DEV_CACHE_CLEANUP_KEY = 'channelmate_dev_cache_cleanup_v3';
+const DEV_CACHE_CLEANUP_KEY = 'ChannelMate_dev_cache_cleanup_v3';
 if (typeof window !== 'undefined' && import.meta.env.DEV && !sessionStorage.getItem(DEV_CACHE_CLEANUP_KEY)) {
   sessionStorage.setItem(DEV_CACHE_CLEANUP_KEY, '1');
 
@@ -47,7 +47,7 @@ const lastBuildTime = localStorage.getItem('app_build_time');
 
 if (lastBuildTime && lastBuildTime !== BUILD_TIME) {
   console.warn(`[PWA] New deployment detected (Old: ${lastBuildTime}, New: ${BUILD_TIME}). Purging old service workers and caches...`);
-  
+
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.getRegistrations().then((registrations) => {
       for (const registration of registrations) {
@@ -65,7 +65,7 @@ if (lastBuildTime && lastBuildTime !== BUILD_TIME) {
   }
 
   localStorage.setItem('app_build_time', BUILD_TIME);
-  
+
   setTimeout(() => {
     window.location.reload();
   }, 200);
@@ -95,10 +95,10 @@ if (import.meta.env.PROD && 'serviceWorker' in navigator) {
       .then((reg) => {
         console.log('✓ Service Worker Ready');
         console.log('SW scope:', reg.scope);
-        
+
         // Check for updates immediately
         reg.update();
-        
+
         reg.addEventListener('updatefound', () => {
           const newWorker = reg.installing;
           if (newWorker) {

@@ -25,7 +25,7 @@ export default defineConfig(({ command, mode }) => {
       if (!socketUrl || socketUrl.includes('localhost') || socketUrl.includes('127.0.0.1')) {
         console.warn(`[Build Audit Warning] VITE_SOCKET_URL is localhost: "${socketUrl}". Hardcoded production URL fallback will be used at runtime.`);
       }
-      console.log(`✓ Environment variables successfully validated for production build.`);
+      console.log(`âœ“ Environment variables successfully validated for production build.`);
     }
   }
 
@@ -41,9 +41,9 @@ export default defineConfig(({ command, mode }) => {
         registerType: 'autoUpdate',
         injectRegister: false,
         manifest: {
-          name: 'Channelmate - YouTube AI Automation',
-          short_name: 'Channelmate',
-          description: 'Channelmate is an AI-powered platform that helps YouTube creators automatically moderate comments, detect spam, generate intelligent AI replies, analyze audience sentiment, and securely manage their channels.',
+          name: 'ChannelMate | YouTube Automation Platform',
+          short_name: 'ChannelMate',
+          description: 'ChannelMate is an AI-powered YouTube automation platform for comment replies, moderation, engagement management, and creator analytics.',
           theme_color: '#ff0000',
           background_color: '#ffffff',
 

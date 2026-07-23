@@ -70,10 +70,10 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen, user, o
       >
         <div className={`px-4 pt-5 pb-4 border-b ${isDark ? 'border-[#2a2a2a]' : 'border-[#eeeeee]'}`}>
           <div className={`flex items-center gap-3 ${expanded ? '' : 'justify-center'}`}>
-            <img src="/logo_icon.png" className="h-10 w-10 object-contain drop-shadow-sm shrink-0" alt="Channelbot Logo" />
+            <img src="/logo_icon.png" className="h-10 w-10 object-contain drop-shadow-sm shrink-0" alt="ChannelMate Logo" />
             {expanded && (
               <div className="min-w-0">
-                <p className={`${isDark ? 'text-white' : 'text-[#0f0f0f]'} text-[16px] font-black leading-none tracking-tight`}>Channelbot</p>
+                <p className={`${isDark ? 'text-white' : 'text-[#0f0f0f]'} text-[16px] font-black leading-none tracking-tight`}>ChannelMate</p>
                 <p className="mt-1 text-[9px] font-black uppercase tracking-[0.18em] text-[#ff0000]">Online</p>
               </div>
             )}
@@ -133,7 +133,7 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen, user, o
             </div>
             {expanded && (
               <div className="min-w-0 text-left">
-                <p className="truncate text-[12px] leading-none">{user?.name || 'Channelbot'}</p>
+                <p className="truncate text-[12px] leading-none">{user?.name || 'ChannelMate'}</p>
                 <p className="mt-1 text-[9px] uppercase tracking-widest text-[#ff0000]">Online</p>
               </div>
             )}

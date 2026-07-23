@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { 
-  Mail, 
-  Lock, 
+import {
+  Mail,
+  Lock,
   Loader2,
   AlertCircle,
   ShieldCheck,
@@ -53,7 +53,7 @@ const Login = ({ onSwitchToRegister }) => {
   return (
     <div className="min-h-screen bg-[#f7f7f7] text-zinc-900 flex items-center justify-center p-4 relative font-['Outfit'] overflow-hidden selection:bg-red-500/20 selection:text-red-900">
 
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="w-full max-w-[420px] z-10"
@@ -76,7 +76,7 @@ const Login = ({ onSwitchToRegister }) => {
           {/* Top Logo Container */}
           <div className="flex flex-col items-center text-center mb-8">
             <Link to="/" className="flex flex-col items-center">
-              <img src="/channelmate_logo.png" className="h-12 sm:h-14 w-auto object-contain mb-3" alt="Channelbot Logo" />
+              <img src="/channelmate_logo.png" className="h-12 sm:h-14 w-auto object-contain mb-3" alt="ChannelMate Logo" />
               <p className="text-zinc-500 text-[13px] font-semibold">Sign in to your AI moderation centre</p>
             </Link>
           </div>
@@ -85,7 +85,7 @@ const Login = ({ onSwitchToRegister }) => {
           {/* Error Message */}
           <AnimatePresence>
             {error && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
@@ -107,13 +107,13 @@ const Login = ({ onSwitchToRegister }) => {
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-red-500 transition-colors">
                   <Mail size={16} />
                 </div>
-                <input 
-                  type="email" 
+                <input
+                  type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full bg-white/40 border border-zinc-200/80 text-zinc-900 rounded-xl py-3 pl-12 pr-4 text-[14px] font-semibold focus:outline-none focus:border-red-500/50 focus:bg-white focus:ring-4 focus:ring-red-500/5 transition-all placeholder-zinc-400"
-                  placeholder="admin@channelbot.in"
+                  placeholder="creator@example.com"
 
                 />
               </div>
@@ -132,8 +132,8 @@ const Login = ({ onSwitchToRegister }) => {
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-red-500 transition-colors">
                   <Lock size={16} />
                 </div>
-                <input 
-                  type="password" 
+                <input
+                  type="password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -143,7 +143,7 @@ const Login = ({ onSwitchToRegister }) => {
               </div>
             </div>
 
-            <motion.button 
+            <motion.button
               type="submit"
               disabled={loading}
               whileHover={{ scale: 1.01 }}
@@ -163,42 +163,42 @@ const Login = ({ onSwitchToRegister }) => {
 
           {/* Bottom Footer */}
           <div className="mt-8 text-center">
-             <p className="text-[12px] font-bold text-zinc-500">
-                Need a pro account?{' '}
-                {onSwitchToRegister ? (
-                  <button 
-                    onClick={onSwitchToRegister}
-                    className="text-red-500 hover:underline"
-                  >
-                    Create Now
-                  </button>
-                ) : (
-                  <Link 
-                    to="/register"
-                    className="text-red-500 hover:underline font-bold"
-                  >
-                    Create Now
-                  </Link>
-                )}
-              </p>
-              <p className="text-[11px] font-bold text-zinc-400 mt-2">
-                Admin?{' '}
-                <Link to="/admin/login" className="text-[#ff0000] hover:underline font-black">
-                  Go to Admin Portal 
+            <p className="text-[12px] font-bold text-zinc-500">
+              Need a pro account?{' '}
+              {onSwitchToRegister ? (
+                <button
+                  onClick={onSwitchToRegister}
+                  className="text-red-500 hover:underline"
+                >
+                  Create Now
+                </button>
+              ) : (
+                <Link
+                  to="/register"
+                  className="text-red-500 hover:underline font-bold"
+                >
+                  Create Now
                 </Link>
-              </p>
+              )}
+            </p>
+            <p className="text-[11px] font-bold text-zinc-400 mt-2">
+              Admin?{' '}
+              <Link to="/admin/login" className="text-[#ff0000] hover:underline font-black">
+                Go to Admin Portal
+              </Link>
+            </p>
           </div>
         </div>
 
         {/* Bottom Security Badges */}
         <div className="mt-12 flex flex-col items-center gap-5 opacity-60">
-           <div className="flex items-center gap-8 text-zinc-400 text-[10px] font-black uppercase tracking-widest">
-              <span className="flex items-center gap-2"><ShieldCheck size={14}/> AES-256 Encryption</span>
-              <span className="flex items-center gap-2"><Zap size={14}/> AI Core v4.2</span>
-           </div>
-           <p className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.4em]">
-             &copy; 2026 Channelbot AI &bull; Global Systems LLC
-           </p>
+          <div className="flex items-center gap-8 text-zinc-400 text-[10px] font-black uppercase tracking-widest">
+            <span className="flex items-center gap-2"><ShieldCheck size={14} /> AES-256 Encryption</span>
+            <span className="flex items-center gap-2"><Zap size={14} /> AI Core v4.2</span>
+          </div>
+          <p className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.4em]">
+            &copy; 2026 ChannelMate &bull; Global Systems LLC
+          </p>
 
         </div>
       </motion.div>

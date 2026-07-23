@@ -54,7 +54,7 @@ const InstallAppPrompt = () => {
           <Sparkles size={20} />
         </div>
         <div className="flex-1 min-w-0">
-          <h4 className="text-xs font-black uppercase tracking-wider text-slate-100">Install Channelbot App</h4>
+          <h4 className="text-xs font-black uppercase tracking-wider text-slate-100">Install ChannelMate</h4>
           <p className="text-[11px] text-slate-400 font-semibold leading-tight truncate">Get faster access & offline access on your device</p>
         </div>
         <div className="flex items-center gap-1.5 shrink-0">

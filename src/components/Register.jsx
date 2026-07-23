@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { 
-  Mail, 
-  Lock, 
-  User, 
+import {
+  Mail,
+  Lock,
+  User,
   Loader2,
   CheckCircle2,
   AlertCircle,
@@ -28,7 +28,7 @@ const Register = ({ onSwitchToLogin }) => {
     if (password !== confirmPassword) {
       return setError('Passwords do not match');
     }
-    
+
     setLoading(true);
     setError('');
     try {
@@ -51,7 +51,7 @@ const Register = ({ onSwitchToLogin }) => {
   return (
     <div className="min-h-screen bg-[#f7f7f7] text-zinc-900 flex items-center justify-center p-4 relative font-['Outfit'] overflow-hidden selection:bg-red-500/20 selection:text-red-900">
 
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         className="w-full max-w-[480px] z-10"
@@ -60,7 +60,7 @@ const Register = ({ onSwitchToLogin }) => {
           {/* Header */}
           <div className="flex flex-col items-center text-center mb-8">
             <Link to="/" className="flex flex-col items-center">
-              <img src="/channelmate_logo.png" className="h-12 sm:h-14 w-auto object-contain mb-3" alt="Channelbot Logo" />
+              <img src="/channelmate_logo.png" className="h-12 sm:h-14 w-auto object-contain mb-3" alt="ChannelMate Logo" />
               <h2 className="text-[20px] font-black text-zinc-900 leading-tight mb-1 tracking-tighter">Create Creator Account</h2>
               <p className="text-zinc-500 text-[13px] font-semibold">Create and moderate with a YouTube-ready workspace</p>
             </Link>
@@ -69,7 +69,7 @@ const Register = ({ onSwitchToLogin }) => {
           {/* Status Messages */}
           <AnimatePresence>
             {error && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3 text-red-650 text-[12px] font-bold shadow-sm"
@@ -80,7 +80,7 @@ const Register = ({ onSwitchToLogin }) => {
             )}
 
             {success && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 className="mb-6 p-4 bg-[#fff1f1] border border-red-100 rounded-xl flex items-center gap-3 text-[#0f7a35] text-[12px] font-bold shadow-sm"
@@ -99,8 +99,8 @@ const Register = ({ onSwitchToLogin }) => {
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-zinc-400 group-focus-within:text-red-500 transition-colors">
                   <User size={18} />
                 </div>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -116,8 +116,8 @@ const Register = ({ onSwitchToLogin }) => {
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-zinc-400 group-focus-within:text-red-500 transition-colors">
                   <Mail size={18} />
                 </div>
-                <input 
-                  type="email" 
+                <input
+                  type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -134,8 +134,8 @@ const Register = ({ onSwitchToLogin }) => {
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-zinc-400 group-focus-within:text-red-500 transition-colors">
                     <Lock size={18} />
                   </div>
-                  <input 
-                    type="password" 
+                  <input
+                    type="password"
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -150,8 +150,8 @@ const Register = ({ onSwitchToLogin }) => {
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-zinc-400 group-focus-within:text-red-500 transition-colors">
                     <Lock size={18} />
                   </div>
-                  <input 
-                    type="password" 
+                  <input
+                    type="password"
                     required
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
@@ -162,7 +162,7 @@ const Register = ({ onSwitchToLogin }) => {
               </div>
             </div>
 
-            <motion.button 
+            <motion.button
               type="submit"
               disabled={loading}
               whileHover={{ scale: 1.01 }}
@@ -185,14 +185,14 @@ const Register = ({ onSwitchToLogin }) => {
             <p className="text-[12px] font-bold text-zinc-500">
               Already a member?{' '}
               {onSwitchToLogin ? (
-                <button 
+                <button
                   onClick={onSwitchToLogin}
                   className="text-red-500 hover:underline"
                 >
                   Sign In
                 </button>
               ) : (
-                <Link 
+                <Link
                   to="/login"
                   className="text-red-500 hover:underline font-bold"
                 >

@@ -11,10 +11,10 @@ const PrivacyPage = () => {
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-[#e5e5e5]">
         <div className="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link to="/" className="flex items-center select-none">
-            <img src="/channelmate_logo.png" className="h-9 w-auto object-contain" alt="Channelbot Logo" />
+            <img src="/channelmate_logo.png" className="h-9 w-auto object-contain" alt="ChannelMate Logo" />
           </Link>
-          <Link 
-            to="/" 
+          <Link
+            to="/"
             className="text-[13px] font-bold text-zinc-500 hover:text-zinc-900 transition-colors flex items-center gap-1.5"
           >
             <ArrowLeft size={14} /> Back to Home
@@ -47,7 +47,7 @@ const PrivacyPage = () => {
                 1. Overview
               </h2>
               <p className="pl-3 text-zinc-650">
-                Channelbot ("we", "our", or "us") provides comment analytics, toxic comment moderation, and auto-reply tools for creators. This Privacy Policy details how we access, collect, store, and process your personal and channel data when you use our website and services, specifically through Google APIs.
+                ChannelMate ("we", "our", or "us") provides comment analytics, toxic comment moderation, and auto-reply tools for creators. This Privacy Policy details how we access, collect, store, and process your personal and channel data when you use our website and services, specifically through Google APIs.
               </p>
             </section>
 

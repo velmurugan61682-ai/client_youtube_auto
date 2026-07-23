@@ -1,8 +1,12 @@
 {
-  "short_name": "Channelmate",
-  "name": "Channelmate - YouTube Creator SaaS & AI Automation",
-  "description": "Channelmate is an AI-powered SaaS platform for YouTube creators to automate comment replies, moderation, lead capture, and channel growth.",
-  "categories": ["productivity", "social", "utilities"],
+  "short_name": "ChannelMate",
+  "name": "ChannelMate | YouTube Automation Platform",
+  "description": "ChannelMate is an AI-powered YouTube automation platform for comment replies, moderation, engagement management, and creator analytics.",
+  "categories": [
+    "productivity",
+    "social",
+    "utilities"
+  ],
   "icons": [
     {
       "src": "/icon-192.png",
@@ -28,4 +32,3 @@
   "display": "standalone",
   "orientation": "portrait"
 }
-

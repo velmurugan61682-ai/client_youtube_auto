@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import {
-  
+
   Bell,
   Menu,
   LogOut,
@@ -219,7 +219,7 @@ const Header = ({
     return () => clearTimeout(delayDebounce);
   }, [searchQuery, channels, selectedChannelId]);
 
-  
+
 
   const getNotifIcon = (type) => {
     switch (type) {
@@ -245,7 +245,7 @@ const Header = ({
           onClick={() => setActiveTab && setActiveTab('dashboard')}
           className="flex items-center cursor-pointer group select-none py-1"
         >
-          <img src="/channelmate_logo.png" className="h-10 sm:h-11 w-auto object-contain drop-shadow-sm transition-transform group-hover:scale-[1.02]" alt="Channelbot Logo" />
+          <img src="/channelmate_logo.png" className="h-10 sm:h-11 w-auto object-contain drop-shadow-sm transition-transform group-hover:scale-[1.02]" alt="ChannelMate Logo" />
         </div>
 
         {user && user.role === 'admin' && orgs.length > 0 && (

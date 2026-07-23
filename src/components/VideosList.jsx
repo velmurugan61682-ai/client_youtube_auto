@@ -511,7 +511,7 @@ const VideosList = ({
                       <span className="flex items-center gap-1">
                         <Clock size={10} /> {safeFormatDistanceToNow(video.publishedAt)} ago
                       </span>
-                      <span>•</span>
+                      <span>â€¢</span>
                       <span>{(video.viewCount || video.statistics?.viewCount || 0).toLocaleString()} views</span>
                     </div>
                   </div>
@@ -618,7 +618,7 @@ const VideosList = ({
                      CB
                    </div>
                    <div>
-                     <h4 className="font-black text-[#0f0f0f] text-sm">Channelbot</h4>
+                     <h4 className="font-black text-[#0f0f0f] text-sm">ChannelMate</h4>
                      <p className="text-[11px] text-[#909090] font-bold uppercase tracking-wider">Community Post</p>
                    </div>
                  </div>
