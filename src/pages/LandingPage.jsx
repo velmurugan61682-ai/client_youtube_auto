@@ -185,8 +185,7 @@ const LandingPage = () => {
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-[#e5e5e5]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center select-none cursor-pointer" onClick={() => scrollToSection('home')}>
-            <img src="/logo.png" className="h-10 sm:h-11 w-auto object-contain" alt="ChannelMate Logo" />
-            <span className="ml-2 text-lg font-black text-[#0f0f0f] tracking-tight">ChannelMate</span>
+            <img src="/channelmate_logo.png" className="h-10 sm:h-11 w-auto object-contain" alt="ChannelMate Logo" />
           </div>
 
           {/* Navigation Links */}
@@ -605,7 +604,7 @@ const LandingPage = () => {
           {/* Brand Info */}
           <div className="md:col-span-2 space-y-4">
             <div className="flex items-center">
-              <img src="/logo.png" className="h-10 w-auto object-contain brightness-110" alt="ChannelMate Logo" />
+              <img src="/channelmate_logo.png" className="h-10 w-auto object-contain brightness-110" alt="ChannelMate Logo" />
             </div>
             <p className="text-xs font-semibold leading-relaxed max-w-sm text-zinc-400">
               ChannelMate provides intelligent auto-moderation, toxicity shielding, and automated audience engagement built specifically for YouTube creators, brands, and digital agencies.

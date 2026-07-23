@@ -11,7 +11,7 @@ const PrivacyPage = () => {
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-[#e5e5e5]">
         <div className="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link to="/" className="flex items-center select-none">
-            <img src="/logo.png" className="h-9 w-auto object-contain" alt="ChannelMate Logo" />
+            <img src="/channelmate_logo.png" className="h-9 w-auto object-contain" alt="ChannelMate Logo" />
           </Link>
           <Link
             to="/"
