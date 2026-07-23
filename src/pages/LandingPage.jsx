@@ -234,11 +234,11 @@ const LandingPage = () => {
           </h1>
 
           <p className="text-xl sm:text-2xl text-[#0f0f0f] font-black mb-4 max-w-3xl mx-auto">
-            AI-Powered YouTube Automation Platform
+            AI-powered YouTube comment automation for creators and businesses.
           </p>
 
-          <p className="text-[16px] sm:text-[18px] text-[#606060] font-semibold leading-relaxed mb-6 max-w-2xl mx-auto">
-            Securely connect your YouTube channel using Google OAuth.
+          <p className="text-[16px] sm:text-[18px] text-[#606060] font-semibold leading-relaxed mb-6 max-w-3xl mx-auto">
+            Connect your YouTube channel securely using Google OAuth. ChannelMate helps creators automatically reply to comments, moderate spam and abusive content, manage audience engagement, and view channel analytics.
           </p>
 
           <div className="max-w-2xl mx-auto text-left bg-white border border-[#e5e5e5] rounded-2xl p-5 mb-6 shadow-sm">
@@ -349,7 +349,7 @@ const LandingPage = () => {
             AI-Powered YouTube Automation Platform
           </h2>
           <p className="text-[#606060] font-semibold text-base sm:text-lg leading-relaxed">
-            ChannelMate is an AI-powered YouTube automation platform designed for creators, brands and businesses. Users securely connect their own YouTube channel using Google OAuth. After authorization, ChannelMate can generate AI-powered replies, moderate spam and abusive comments, manage comment workflows, track engagement, and improve creator productivity. ChannelMate only accesses data after user authorization and never performs actions without permission.
+            ChannelMate is an AI-powered YouTube automation platform. Users securely connect their own YouTube channel through Google OAuth. The platform helps manage comments, generate automated replies, moderate harmful or spam comments, and track engagement. ChannelMate only accesses data after user permission is granted, and users can revoke access at any time.
           </p>
         </div>
 
