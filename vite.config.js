@@ -41,9 +41,9 @@ export default defineConfig(({ command, mode }) => {
         registerType: 'autoUpdate',
         injectRegister: false,
         manifest: {
-          name: 'ChannelMate | YouTube Automation Platform',
+          name: 'ChannelMate',
           short_name: 'ChannelMate',
-          description: 'ChannelMate is an AI-powered YouTube automation platform for comment replies, moderation, engagement management, and creator analytics.',
+          description: 'ChannelMate is an AI-powered YouTube automation platform that helps creators securely manage YouTube comments, AI replies, moderation and analytics using Google OAuth.',
           theme_color: '#ff0000',
           background_color: '#ffffff',
 

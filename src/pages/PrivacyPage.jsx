@@ -11,7 +11,7 @@ const PrivacyPage = () => {
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-[#e5e5e5]">
         <div className="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link to="/" className="flex items-center select-none">
-            <img src="/channelmate_logo.png" className="h-9 w-auto object-contain" alt="ChannelMate Logo" />
+            <img src="/logo.png" className="h-9 w-auto object-contain" alt="ChannelMate Logo" />
           </Link>
           <Link
             to="/"
@@ -47,7 +47,7 @@ const PrivacyPage = () => {
                 1. Overview
               </h2>
               <p className="pl-3 text-zinc-650">
-                ChannelMate ("we", "our", or "us") provides comment analytics, toxic comment moderation, and auto-reply tools for creators. This Privacy Policy details how we access, collect, store, and process your personal and channel data when you use our website and services, specifically through Google APIs.
+                ChannelMate ("we", "our", or "us") provides comment analytics, moderation, and auto-reply tools for creators. This Privacy Policy explains how we access, collect, store, and process your personal and YouTube channel data after user authorization through Google OAuth and the YouTube Data API.
               </p>
             </section>
 
@@ -58,7 +58,7 @@ const PrivacyPage = () => {
                 2. Data We Access & Collect
               </h2>
               <p className="pl-3 text-zinc-650">
-                To enable automated AI comment moderation, we require access to specific YouTube and Google user data using official Google OAuth scopes. We collect:
+                To enable automated YouTube comment workflows, we access only the data you authorize through official Google OAuth scopes and the YouTube Data API. We collect:
               </p>
               <ul className="list-disc pl-8 space-y-2 text-zinc-650">
                 <li><strong>Profile Details:</strong> Your name, email address, and profile picture, used strictly for user identification and account security.</li>
@@ -110,7 +110,7 @@ const PrivacyPage = () => {
             <section className="space-y-3 pt-6 border-t border-zinc-200/50">
               <h2 className="text-base font-bold text-zinc-900">Contact Us</h2>
               <p className="pl-3 text-zinc-500">
-                If you have any questions about this Privacy Policy or your data usage, please reach out to us at <span className="text-zinc-900">techvaseegrah@gmail.com</span>.
+                If you have any questions about this Privacy Policy or your data usage, please reach out to us at <span className="text-zinc-900">support@channelbot.in</span>.
               </p>
             </section>
           </div>

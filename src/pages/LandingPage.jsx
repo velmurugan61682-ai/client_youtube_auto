@@ -35,6 +35,7 @@ import HumanAiAutomationShowcase from '../components/HumanAiAutomationShowcase';
 // Landing page
 const LandingPage = () => {
 
+  const location = useLocation();
   const [activeSection, setActiveSection] = useState('home');
   const [contactSubmitted, setContactSubmitted] = useState(false);
   const [contactLoading, setContactLoading] = useState(false);
@@ -61,6 +62,14 @@ const LandingPage = () => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    if (location.pathname === '/contact') {
+      window.requestAnimationFrame(() => {
+        document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+      });
+    }
+  }, [location.pathname]);
 
   const scrollToSection = (id) => {
     setActiveSection(id);
@@ -117,9 +126,9 @@ const LandingPage = () => {
 
   const testimonials = [
     {
-      quote: "ChannelMate saved me over 15 hours every week moderating toxic comments and answering price inquiries on my tech channel!",
-      name: "tech vaseegrah",
-      role: "Tech Creator (250K+ Subs)",
+      quote: "ChannelMate saved me over 15 hours every week moderating toxic comments and answering price inquiries on my YouTube channel!",
+      name: "Creator Team",
+      role: "Creator (250K+ Subs)",
       rating: 5
     },
     {
@@ -176,7 +185,8 @@ const LandingPage = () => {
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-[#e5e5e5]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center select-none cursor-pointer" onClick={() => scrollToSection('home')}>
-            <img src="/channelmate_logo.png" className="h-10 sm:h-11 w-auto object-contain" alt="ChannelMate Logo" />
+            <img src="/logo.png" className="h-10 sm:h-11 w-auto object-contain" alt="ChannelMate Logo" />
+            <span className="ml-2 text-lg font-black text-[#0f0f0f] tracking-tight">ChannelMate</span>
           </div>
 
           {/* Navigation Links */}
@@ -225,11 +235,27 @@ const LandingPage = () => {
           </h1>
 
           <p className="text-xl sm:text-2xl text-[#0f0f0f] font-black mb-4 max-w-3xl mx-auto">
-            AI-powered YouTube comment automation for creators and businesses.
+            AI-Powered YouTube Automation Platform
           </p>
 
-          <p className="text-[16px] sm:text-[18px] text-[#606060] font-semibold leading-relaxed mb-10 max-w-2xl mx-auto">
-            Connect your YouTube channel securely using Google OAuth. ChannelMate helps creators automatically reply to comments, moderate spam and abusive content, manage audience engagement, and view channel analytics.
+          <p className="text-[16px] sm:text-[18px] text-[#606060] font-semibold leading-relaxed mb-6 max-w-2xl mx-auto">
+            Securely connect your YouTube channel using Google OAuth.
+          </p>
+
+          <div className="max-w-2xl mx-auto text-left bg-white border border-[#e5e5e5] rounded-2xl p-5 mb-6 shadow-sm">
+            <p className="text-sm font-black text-[#0f0f0f] mb-3">ChannelMate helps creators and businesses:</p>
+            <ul className="space-y-2 text-sm font-semibold text-[#606060]">
+              <li>Automatically reply to YouTube comments using AI</li>
+              <li>Moderate spam, abusive and harmful comments</li>
+              <li>Manage audience engagement</li>
+              <li>Monitor comment activity</li>
+              <li>View analytics and automation history</li>
+              <li>Save time with intelligent YouTube automation</li>
+            </ul>
+          </div>
+
+          <p className="text-[13px] sm:text-[14px] text-[#606060] font-semibold leading-relaxed mb-10 max-w-2xl mx-auto">
+            Your data is only accessed after you grant permission through Google's OAuth consent screen. You can revoke access at any time from your Google Account.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
@@ -273,7 +299,7 @@ const LandingPage = () => {
                 <PlaySquare size={20} />
               </div>
               <div>
-                <h3 className="text-base font-bold text-slate-900">Tech Channel Creator Hub</h3>
+                <h3 className="text-base font-bold text-slate-900">YouTube Creator Hub</h3>
                 <p className="text-xs font-semibold text-[#ff0000] flex items-center gap-1.5 mt-0.5">
                   <span className="w-2 h-2 rounded-full bg-[#ff0000] animate-pulse" />
                   YouTube Connected & Verified
@@ -324,7 +350,7 @@ const LandingPage = () => {
             AI-Powered YouTube Automation Platform
           </h2>
           <p className="text-[#606060] font-semibold text-base sm:text-lg leading-relaxed">
-            ChannelMate is an AI-powered YouTube automation platform. Users securely connect their own YouTube channel through Google OAuth. The platform helps manage comments, generate automated replies, moderate harmful or spam comments, and track engagement. ChannelMate only accesses data after user permission is granted, and users can revoke access at any time.
+            ChannelMate is an AI-powered YouTube automation platform designed for creators, brands and businesses. Users securely connect their own YouTube channel using Google OAuth. After authorization, ChannelMate can generate AI-powered replies, moderate spam and abusive comments, manage comment workflows, track engagement, and improve creator productivity. ChannelMate only accesses data after user authorization and never performs actions without permission.
           </p>
         </div>
 
@@ -509,7 +535,7 @@ const LandingPage = () => {
               <div className="space-y-3 pt-4 text-xs font-bold text-slate-700">
                 <div className="flex items-center gap-3">
                   <div className="icon-badge-green !w-9 !h-9"><Mail size={16} /></div>
-                  <span>techvaseegrah@gmail.com</span>
+                  <span>support@channelbot.in</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="icon-badge-green !w-9 !h-9"><Phone size={16} /></div>
@@ -532,7 +558,7 @@ const LandingPage = () => {
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="tech vaseeegrah"
+                  placeholder="Your name"
                   className="w-full glass-input py-2.5 px-4 text-xs font-bold outline-none"
                 />
               </div>
@@ -579,7 +605,7 @@ const LandingPage = () => {
           {/* Brand Info */}
           <div className="md:col-span-2 space-y-4">
             <div className="flex items-center">
-              <img src="/channelmate_logo.png" className="h-10 w-auto object-contain brightness-110" alt="ChannelMate Logo" />
+              <img src="/logo.png" className="h-10 w-auto object-contain brightness-110" alt="ChannelMate Logo" />
             </div>
             <p className="text-xs font-semibold leading-relaxed max-w-sm text-zinc-400">
               ChannelMate provides intelligent auto-moderation, toxicity shielding, and automated audience engagement built specifically for YouTube creators, brands, and digital agencies.
@@ -587,7 +613,7 @@ const LandingPage = () => {
             <div className="space-y-1.5 text-[11px] font-bold text-zinc-350">
               <div className="flex items-center gap-2">
                 <Mail size={13} className="text-[#ff0000]" />
-                <span>techvaseegrah@gmail.com</span>
+                <span>support@channelbot.in</span>
               </div>
               <div className="flex items-center gap-2">
                 <Phone size={13} className="text-[#ff0000]" />
@@ -595,19 +621,19 @@ const LandingPage = () => {
               </div>
             </div>
             <div className="flex items-center gap-3.5 pt-2">
-              <a href="https://www.youtube.com/@TechVaseegrah" target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-[#ff0000] transition-colors" title="Follow us on YouTube">
+              <a href="https://channelbot.in" target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-[#ff0000] transition-colors" title="Follow us on YouTube">
                 <Youtube size={17} />
               </a>
-              <a href="https://x.com/Tech_Vaseegrah" target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-[#ff0000] transition-colors" title="Follow us on X (Twitter)">
+              <a href="https://channelbot.in" target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-[#ff0000] transition-colors" title="Follow us on X (Twitter)">
                 <Twitter size={15} />
               </a>
-              <a href="https://www.instagram.com/techvaseegrah/" target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-[#ff0000] transition-colors" title="Follow us on Instagram">
+              <a href="https://channelbot.in" target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-[#ff0000] transition-colors" title="Follow us on Instagram">
                 <Instagram size={15} />
               </a>
-              <a href="https://www.facebook.com/people/Tech-Vaseegrah/" target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-[#ff0000] transition-colors" title="Follow us on Facebook">
+              <a href="https://channelbot.in" target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-[#ff0000] transition-colors" title="Follow us on Facebook">
                 <Facebook size={15} />
               </a>
-              <a href="https://www.linkedin.com/company/tech-vaseegrah/" target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-[#ff0000] transition-colors" title="Follow us on LinkedIn">
+              <a href="https://channelbot.in" target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-[#ff0000] transition-colors" title="Follow us on LinkedIn">
                 <Linkedin size={15} />
               </a>
             </div>
@@ -621,7 +647,7 @@ const LandingPage = () => {
                 <button type="button" onClick={() => scrollToSection('about')} className="hover:text-[#ff0000] transition-colors text-left">About Platform</button>
               </li>
               <li>
-                <button type="button" onClick={() => scrollToSection('features')} className="hover:text-[#ff0000] transition-colors text-left">AI Auto-Mod</button>
+                <button type="button" onClick={() => scrollToSection('features')} className="hover:text-[#ff0000] transition-colors text-left">Automation</button>
               </li>
               <li>
                 <button type="button" onClick={() => scrollToSection('use-cases')} className="hover:text-[#ff0000] transition-colors text-left">Use Cases</button>

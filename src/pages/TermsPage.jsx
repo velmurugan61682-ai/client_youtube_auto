@@ -11,7 +11,7 @@ const TermsPage = () => {
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-[#e5e5e5]">
         <div className="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link to="/" className="flex items-center select-none">
-            <img src="/channelmate_logo.png" className="h-9 w-auto object-contain" alt="ChannelMate Logo" />
+            <img src="/logo.png" className="h-9 w-auto object-contain" alt="ChannelMate Logo" />
           </Link>
           <Link
             to="/"
@@ -47,7 +47,7 @@ const TermsPage = () => {
                 1. Acceptance of Terms
               </h2>
               <p className="pl-3 text-zinc-650">
-                By accessing or using the ChannelMate service, you agree to comply with and be bound by these Terms of Service. If you do not agree, you may not access or use the platform.
+                By accessing or using ChannelMate, you agree to comply with and be bound by these Terms of Service. You own your YouTube data, and you authorize access only through Google OAuth when connecting your account. If you do not agree, you may not access or use the platform.
               </p>
             </section>
 
@@ -57,7 +57,7 @@ const TermsPage = () => {
                 2. YouTube API Terms & Policies
               </h2>
               <p className="pl-3 text-zinc-650">
-                Our application integrates directly with YouTube API Services. By using our service, you explicitly agree to be bound by:
+                Our application integrates directly with YouTube API Services. Users authorize access through Google OAuth and can disconnect their YouTube account at any time from ChannelMate settings or revoke access from their Google Account. By using our service, you explicitly agree to be bound by:
               </p>
               <ul className="list-disc pl-8 space-y-2 text-zinc-600">
                 <li>
@@ -115,7 +115,7 @@ const TermsPage = () => {
             <section className="space-y-3 pt-6 border-t border-zinc-200/50">
               <h2 className="text-base font-bold text-zinc-900">Contact</h2>
               <p className="pl-3 text-zinc-500">
-                If you have any questions regarding these Terms, please contact support at <span className="text-zinc-900">techvaseegrah@gmail.com</span>.
+                If you have any questions regarding these Terms, please contact support at <span className="text-zinc-900">support@channelbot.in</span>.
               </p>
             </section>
           </div>
