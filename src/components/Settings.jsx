@@ -1,21 +1,10 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  Settings as SettingsIcon,
-  Shield,
   Zap,
-  ToggleLeft,
-  ToggleRight,
-  AlertCircle,
   CheckCircle2,
   Loader2,
-  Info,
-  ThumbsUp,
   Key,
-  Globe,
-  Database,
-  Lock,
   ChevronRight,
-  Sparkles,
   Phone,
   User,
   Camera

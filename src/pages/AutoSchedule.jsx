@@ -634,7 +634,7 @@ const AutoSchedule = ({ channels = [], selectedChannelId, setSelectedChannelId }
                   </td>
                 </tr>
               ) : (
-                queue.map((item, i) => (
+                queue.map((item) => (
                   <tr 
                     key={item._id}
                     className="group transition-all hover:bg-[#fcfcfc] border-b border-[#f0f0f0]"

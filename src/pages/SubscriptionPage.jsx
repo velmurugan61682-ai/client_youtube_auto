@@ -9,7 +9,6 @@ import {
   LogOut, 
   ArrowRight, 
   UserCheck, 
-  Zap, 
   History, 
   Download
 } from 'lucide-react';
@@ -25,7 +24,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
   const [cancelling, setCancelling] = useState(false);
   const [message, setMessage] = useState('');
   const [activeSubTab, setActiveSubTab] = useState('plans'); // 'plans' or 'billing'
-  const [trialExpired, setTrialExpired] = useState(false);
+  const [, setTrialExpired] = useState(false);
 
   const fetchStatus = async () => {
     try {
@@ -117,7 +116,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
         amount: amount || 99900,
         currency: currency || "INR",
         name: "Channelmate",
-        description: "Quarterly Pro Subscription (-999)",
+        description: "Quarterly Pro Subscription (₹999)",
         order_id: activeOrderId,
         handler: async function (response) {
           try {
@@ -206,9 +205,9 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
 
   const planDisplayNames = {
     free: 'Free Plan',
-    quarterly: 'Pro Plan (-999)',
-    quarterly_pro: 'Pro Plan (-999)',
-    three_months_999: 'Pro Plan (-999)'
+    quarterly: 'Pro Plan (₹999)',
+    quarterly_pro: 'Pro Plan (₹999)',
+    three_months_999: 'Pro Plan (₹999)'
   };
 
   const hasAnyActiveSub = subData && (subData.status === 'active' || 
@@ -219,7 +218,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
       type: "free",
       name: "STARTER PACK",
       displayName: "Free Plan",
-      price: "-0",
+      price: "₹0",
       period: "/ forever",
       desc: "Perfect for single creators starting out.",
       features: [
@@ -235,7 +234,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
       type: "quarterly",
       name: "BEST VALUE",
       displayName: "Quarterly Pro",
-      price: "-999",
+      price: "₹999",
       period: "/ 3 months",
       desc: "Quarterly saver for professional creators.",
       features: [
@@ -253,7 +252,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
 
 
   return (
-    <div className={`w-full transition-all duration-500 ${isGate ? 'max-w-4xl mx-auto py-6' : 'h-[calc(100vh-2.5rem)] min-h-[760px] overflow-hidden rounded-[28px] bg-[#eef3f5] p-4 sm:p-5 text-[#0f0f0f]'}`}>
+    <div className={`w-full transition-all duration-500 ${isGate ? 'max-w-4xl mx-auto py-6' : 'min-h-[calc(100svh-5.5rem)] min-[1025px]:h-[calc(100vh-2.5rem)] min-[1025px]:min-h-[760px] overflow-visible min-[1025px]:overflow-hidden rounded-[28px] bg-[#eef3f5] p-4 sm:p-5 text-[#0f0f0f]'}`}>
       
       {/* Header Panel */}
       <div className="relative z-10 rounded-[22px] bg-white border border-[#e5e5e5] shadow-sm px-5 sm:px-7 py-5 flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">

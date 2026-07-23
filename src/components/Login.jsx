@@ -18,15 +18,7 @@ const Login = ({ onSwitchToRegister }) => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-
-  let navigate;
-  try {
-    navigate = useNavigate();
-  } catch {
-    navigate = (path) => {
-      console.log('Navigating to:', path);
-    };
-  }
+  const navigate = useNavigate();
 
   // Detect if we're inside an embedded iframe (switch account mode)
   const isEmbedded = new URLSearchParams(window.location.search).get('embed') === 'true';

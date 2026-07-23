@@ -7,14 +7,8 @@ import {
   Zap, 
   CreditCard, 
   Loader2,
-  CheckCircle,
-  ExternalLink,
-  ShieldCheck,
-  TrendingUp,
-  MessageSquare,
   History,
-  Activity,
-  Building
+  Activity
 } from 'lucide-react';
 import api from '../services/api';
 

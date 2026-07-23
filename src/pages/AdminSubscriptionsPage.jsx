@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  CreditCard, 
+   
   Search, 
-  CheckCircle, 
   XCircle, 
-  Clock, 
   Loader2,
-  Calendar,
-  Zap,
   X,
   Edit3,
   PlusCircle,
-  Filter,
-  AlertTriangle
+  Filter
 } from 'lucide-react';
 import api from '../services/api';
 import { motion, AnimatePresence } from 'framer-motion';

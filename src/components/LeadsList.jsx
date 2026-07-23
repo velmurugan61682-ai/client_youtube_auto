@@ -1,19 +1,13 @@
 ﻿import React, { useState, useEffect } from 'react';
 import api from '../services/api';
-import { 
-  Search, 
-  Filter, 
-  Download, 
-  User, 
-  MessageSquare, 
-  Phone, 
-  ExternalLink, 
-  CheckCircle2, 
-  XCircle, 
+import {
+  Search,
+  Download,
+  User,
+  Phone,
+  CheckCircle2,
   Clock,
   Youtube,
-  Trash2,
-  MoreVertical,
   ChevronLeft,
   ChevronRight,
   EyeOff

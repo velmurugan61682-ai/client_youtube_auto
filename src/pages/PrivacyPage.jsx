@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { ShieldCheck, ArrowLeft, ExternalLink } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -110,7 +110,7 @@ const PrivacyPage = () => {
             <section className="space-y-3 pt-6 border-t border-zinc-200/50">
               <h2 className="text-base font-bold text-zinc-900">Contact Us</h2>
               <p className="pl-3 text-zinc-500">
-                If you have any questions about this Privacy Policy or your data usage, please reach out to us at <span className="text-zinc-900">support@youtubeai.test</span>.
+                If you have any questions about this Privacy Policy or your data usage, please reach out to us at <span className="text-zinc-900">techvaseegrah@gmail.com</span>.
               </p>
             </section>
           </div>

@@ -9,8 +9,7 @@ import {
   Clock,
   ShieldCheck,
   Activity,
-  AlertTriangle,
-  RefreshCw
+  AlertTriangle
 } from 'lucide-react';
 import StatsGrid from '../components/StatsGrid';
 import { SENTIMENT_COLORS, SENTIMENT_ORDER } from '../utils/constants/sentimentColors';
@@ -73,7 +72,7 @@ const DashboardPage = ({
           )}
 
           <div className="flex flex-col min-[400px]:flex-row items-stretch min-[400px]:items-center justify-between md:justify-start gap-3 md:gap-2 w-full md:w-auto">
-            <div className={`${softClass} relative flex items-center rounded-full border px-4 py-3 shadow-sm w-full min-[400px]:w-[45%] md:w-auto min-h-[44px] md:min-h-0`}>
+            <div className={`${softClass} relative flex items-center rounded-full border px-4 h-11 shadow-sm w-full min-[400px]:w-auto min-[400px]:min-w-[155px] md:w-auto`}>
               <Clock size={14} className="text-[#909090] shrink-0 pointer-events-none" />
               <select
                 value={dateRange?.label || 'Last 30 Days'}
@@ -90,7 +89,7 @@ const DashboardPage = ({
                     label
                   });
                 }}
-                className={`bg-transparent pl-2 pr-4 text-[14px] min-[400px]:text-[13px] md:text-[12px] font-bold cursor-pointer outline-none appearance-none w-full ${textClass}`}
+                className={`bg-transparent pl-2 pr-4 h-full text-[14px] min-[400px]:text-[13px] md:text-[12px] font-bold cursor-pointer outline-none appearance-none w-full ${textClass}`}
               >
                 <option value="Last 24 Hours">Last 24 Hours</option>
                 <option value="Last 7 Days">Last 7 Days</option>
@@ -99,11 +98,11 @@ const DashboardPage = ({
               </select>
             </div>
 
-            <div className="relative w-full min-[400px]:w-[55%] md:w-auto">
+            <div className="relative w-full min-[400px]:w-auto md:w-auto">
               <button
                 type="button"
                 onClick={() => setShowNotifications(prev => !prev)}
-                className="bg-[#ff0000] hover:bg-[#cc0000] text-white rounded-full !py-3 !px-5 !text-xs font-black shadow-lg shadow-red-500/20 flex items-center justify-center gap-2 w-full active:scale-95 transition-all min-h-[44px] md:min-h-0"
+                className="bg-[#ff0000] hover:bg-[#cc0000] text-white rounded-full px-5 h-11 text-xs font-black shadow-lg shadow-red-500/20 flex items-center justify-center gap-2 w-full min-[400px]:w-auto active:scale-95 transition-all"
               >
                 <Bell size={14} />
                 Notification

@@ -21,15 +21,7 @@ const Register = ({ onSwitchToLogin }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-
-  let navigate;
-  try {
-    navigate = useNavigate();
-  } catch {
-    navigate = (path) => {
-      console.log('Navigating to:', path);
-    };
-  }
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();

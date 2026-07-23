@@ -3,15 +3,10 @@ import {
   Youtube, 
   Key, 
   Trash2, 
-  CheckCircle2, 
-  AlertCircle, 
   Loader2, 
-  Plus, 
   ExternalLink,
   ShieldCheck,
-  Zap,
   Globe,
-  Settings,
   ArrowRight
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -21,8 +16,8 @@ const ChannelConnection = ({ channels, setChannels }) => {
   const [apiKey, setApiKey] = useState('');
   const [channelId, setChannelId] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [, setError] = useState('');
+  const [, setSuccess] = useState('');
 
   const handleOAuthConnect = async () => {
     console.log("VITE_GOOGLE_CLIENT_ID:", import.meta.env.VITE_GOOGLE_CLIENT_ID);
@@ -49,10 +44,7 @@ const ChannelConnection = ({ channels, setChannels }) => {
     setError('');
     setSuccess('');
     try {
-      const res = await api.post('/settings/youtube', {
-        apiKey,
-        channelId
-      });
+      
       setSuccess('Channel linked successfully!');
       setApiKey('');
       setChannelId('');

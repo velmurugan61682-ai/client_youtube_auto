@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DollarSign, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
+import {  Loader2 } from 'lucide-react';
 import api from '../services/api';
 
 const AdminPaymentsPage = () => {

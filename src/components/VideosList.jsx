@@ -8,18 +8,16 @@ import {
   Loader2,
   ChevronLeft,
   ChevronRight,
-  Filter,
   Trash2,
   ThumbsUp,
   ExternalLink,
   ShieldAlert,
   ShieldCheck,
-  Search,
   LogOut,
   MoreVertical
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { getSentimentConfig, SENTIMENT_COLORS } from '../utils/constants/sentimentColors';
 import { useAuth } from '../context/AuthContext';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';

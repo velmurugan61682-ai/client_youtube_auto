@@ -2,23 +2,20 @@ import React, { useState, useEffect } from 'react';
 import api from '../services/api';
 import { getSocket } from '../services/socket';
 import { 
-  ThumbsUp, 
+   
   Trash2, 
   ShieldCheck, 
   ShieldAlert, 
-  Clock, 
-  ExternalLink,
+  Clock,
   Loader2,
   Edit3,
   CheckCircle2,
   AlertTriangle,
   XCircle,
   Heart,
-  MoreVertical,
   Zap,
   Languages,
   Eye,
-  MessageSquare,
   ChevronDown
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';

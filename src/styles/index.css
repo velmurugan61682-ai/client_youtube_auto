@@ -519,3 +519,92 @@
 .client-shell a {
   text-decoration-thickness: 2px;
 }
+
+
+/* Responsive hardening across client and admin shells */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  max-width: 100%;
+}
+
+img,
+video,
+canvas,
+svg {
+  max-width: 100%;
+}
+
+button,
+a,
+select,
+input,
+textarea {
+  min-height: 44px;
+}
+
+.client-shell,
+.admin-shell {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+.client-shell main,
+.admin-shell main {
+  min-width: 0;
+}
+
+@media (max-width: 480px) {
+  .client-shell main,
+  .admin-shell main {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .yt-card,
+  .glass-garden-card {
+    border-radius: 18px;
+    padding: 1rem;
+  }
+
+  .mobile-nav-item {
+    font-size: 9px;
+  }
+
+  .bottom-sheet-content {
+    max-height: 86svh;
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .custom-scroll {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    white-space: nowrap;
+  }
+}
+
+.admin-dark main [class*="bg-[#f9f9f9]"],
+.client-dark main [class*="bg-[#f9f9f9]"],
+.admin-dark main [class*="bg-slate-50"],
+.client-dark main [class*="bg-slate-50"],
+.admin-dark main [class*="bg-zinc-50"],
+.client-dark main [class*="bg-zinc-50"] {
+  background-color: #202020 !important;
+}
+
+.admin-dark main [class*="border-slate-"],
+.client-dark main [class*="border-slate-"],
+.admin-dark main [class*="border-[#f0f0f0]"],
+.client-dark main [class*="border-[#f0f0f0]"] {
+  border-color: #2a2a2a !important;
+}

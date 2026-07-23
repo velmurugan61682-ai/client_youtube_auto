@@ -1,24 +1,20 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   ShieldCheck,
   MessageSquare,
   MessageCircle,
-  MessageSquareQuote,
   Send,
   Clock,
-  Settings,
   Sliders,
   Plus,
   Trash2,
   Play,
   Pause,
   Edit,
-  Copy,
   X,
   CheckCircle,
   AlertTriangle,
   AlertCircle,
-  RotateCcw,
   RefreshCw,
   Video as VideoIcon,
   Sparkles,
@@ -27,12 +23,11 @@ import {
   Search,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   Eye,
   ExternalLink,
   Activity,
-  ThumbsUp,
   Check,
-  ZapOff,
   Zap
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -44,14 +39,13 @@ import {
   deleteRule,
   updateRuleStatus,
   testRule,
-  getHistory,
   retryReply,
   getModerationLogs,
   executeModerationAction,
   getCommentAutomationStats,
   getCommentHistory
 } from '../services/api/autoDmApi';
-import ModerationQueue from '../components/ModerationQueue';
+import '../components/ModerationQueue';
 
 //  Toast utility 
 const Toast = ({ toasts }) => (
@@ -81,31 +75,12 @@ const Toast = ({ toasts }) => (
 );
 
 //  Moderation Rule Toggle Row 
-const RuleToggle = ({ label, description, enabled, onChange }) => (
-  <div className="flex items-center justify-between gap-4 py-3 border-b border-slate-100 last:border-0">
-    <div className="min-w-0">
-      <p className="text-sm font-black text-slate-800">{label}</p>
-      <p className="text-xs text-slate-400 font-medium mt-0.5">{description}</p>
-    </div>
-    <button
-      onClick={() => onChange(!enabled)}
-      className={`relative w-12 h-6 rounded-full transition-all duration-300 shrink-0 focus:outline-none ${enabled ? 'bg-[#ff0000]' : 'bg-slate-200'
-        }`}
-      aria-pressed={enabled}
-    >
-      <span
-        className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-300 ${enabled ? 'translate-x-6' : 'translate-x-0'
-          }`}
-      />
-    </button>
-  </div>
-);
+
 
 //  Main Component 
 const ModerationPage = ({
   channels = [],
   onAction,
-  searchQuery,
   selectedChannelId: propSelectedChannelId,
   setSelectedChannelId: propSetSelectedChannelId,
   initialTab = 'auto-reply'
@@ -150,8 +125,8 @@ const ModerationPage = ({
     linkSpam: true
   });
   const [moderationAction, setModerationAction] = useState('delete');
-  const [savingModRules, setSavingModRules] = useState(false);
-  const [loadingModSettings, setLoadingModSettings] = useState(false);
+  const [, setSavingModRules] = useState(false);
+  const [, setLoadingModSettings] = useState(false);
 
   const fetchModSettings = async () => {
     try {
@@ -167,31 +142,17 @@ const ModerationPage = ({
     }
   };
 
-  const saveModSettings = async () => {
-    try {
-      setSavingModRules(true);
-      await api.patch('/settings', {
-        settings: { moderationRules: modRules, moderationAction }
-      });
-      showToast('Moderation settings saved!');
-      if (onAction) onAction();
-    } catch (err) {
-      console.error(err);
-      showToast(err.response?.data?.error || 'Failed to save settings', 'error');
-    } finally {
-      setSavingModRules(false);
-    }
-  };
+  
 
   useEffect(() => { if (mainTab === 'moderation-rules') fetchModSettings(); }, [mainTab]);
 
   //  Auto Reply State 
   const [videos, setVideos] = useState([]);
-  const [loadingVideos, setLoadingVideos] = useState(false);
+  const [, setLoadingVideos] = useState(false);
   const [stats, setStats] = useState({ totalRules: 0, totalTriggers: 0, totalSuccess: 0, totalFailed: 0 });
   const [rulesList, setRulesList] = useState([]);
   const [loadingRules, setLoadingRules] = useState(false);
-  const [ruleToDelete, setRuleToDelete] = useState(null);
+  const [, setRuleToDelete] = useState(null);
 
   // Form
   const [editingRuleId, setEditingRuleId] = useState(null);
@@ -235,13 +196,11 @@ const ModerationPage = ({
   const [historyPages, setHistoryPages] = useState(1);
   const [historyPage, setHistoryPage] = useState(1);
   const [historySearch, setHistorySearch] = useState('');
-  const [historyFilterStatus, setHistoryFilterStatus] = useState('');
-  const [historySubTab, setHistorySubTab] = useState('moderated-comments');
   const [loadingHistory, setLoadingHistory] = useState(false);
-  const [retryingLogId, setRetryingLogId] = useState(null);
+  const [, setRetryingLogId] = useState(null);
 
   const [chatLogs, setChatLogs] = useState([]);
-  const [loadingChatLogs, setLoadingChatLogs] = useState(false);
+  const [, setLoadingChatLogs] = useState(false);
 
   const fetchChatLogs = async (channelId) => {
     try {
@@ -255,15 +214,15 @@ const ModerationPage = ({
     }
   };
 
-  const [modLogs, setModLogs] = useState([]);
-  const [modTotal, setModTotal] = useState(0);
-  const [modPages, setModPages] = useState(1);
+  const [, setModLogs] = useState([]);
+  const [, setModTotal] = useState(0);
+  const [, setModPages] = useState(1);
   const [modPage, setModPage] = useState(1);
-  const [modFilterCategory, setModFilterCategory] = useState('');
-  const [modFilterStatus, setModFilterStatus] = useState('');
-  const [modSearch, setModSearch] = useState('');
-  const [loadingMod, setLoadingMod] = useState(false);
-  const [executingModId, setExecutingModId] = useState(null);
+  const [modFilterCategory] = useState('');
+  const [modFilterStatus] = useState('');
+  const [modSearch] = useState('');
+  const [, setLoadingMod] = useState(false);
+  const [, setExecutingModId] = useState(null);
 
   //  Comment Chat State 
   const [chatSearch, setChatSearch] = useState('');
@@ -434,13 +393,7 @@ const ModerationPage = ({
     setKeywordInput('');
   };
 
-  const addTemplate = () => {
-    const tpl = templateInput.trim();
-    if (!tpl) return;
-    if (replyTemplates.includes(tpl)) { showToast('Template already exists', 'warning'); return; }
-    setReplyTemplates([...replyTemplates, tpl]);
-    setTemplateInput('');
-  };
+  
 
   const resetRuleForm = () => {
     setEditingRuleId(null);
@@ -578,26 +531,9 @@ const ModerationPage = ({
     } catch { showToast('Failed to update status', 'error'); }
   };
 
-  const handleRetryReply = async (logId) => {
-    try {
-      setRetryingLogId(logId);
-      await retryReply(logId);
-      showToast('Reply retried successfully!');
-      fetchHistoryLogs(historyPage);
-    } catch (err) { showToast(err.response?.data?.error || 'Retry failed', 'error'); }
-    finally { setRetryingLogId(null); }
-  };
+  
 
-  const handleExecuteModAction = async (logId, action) => {
-    try {
-      setExecutingModId(logId);
-      await executeModerationAction(logId, action);
-      showToast(`Action "${action}" executed!`);
-      fetchModerationQueue(modPage);
-      fetchStats(selectedChannelId);
-    } catch (err) { showToast(err.response?.data?.error || 'Action failed', 'error'); }
-    finally { setExecutingModId(null); }
-  };
+  
 
   const handleRunTest = async () => {
     if (!testCommentText.trim()) { showToast('Enter a sample comment', 'warning'); return; }
@@ -611,42 +547,18 @@ const ModerationPage = ({
     finally { setTestingInProgress(false); }
   };
 
-  const livePreview = useMemo(() => {
-    if (!publicReplyEnabled) return 'Public reply disabled';
-    if (aiReplyEnabled) return ` [AI reply in ${aiTone} tone]`;
-    if (replyTemplates.length === 0) return 'Add a template to preview.';
-    const ch = channels.find(c => c.channelId === selectedChannelId);
-    const vid = videos.find(v => v.videoId === selectedVideoId);
-    return replyTemplates[0]
-      .replace(/\{\{username\}\}/g, '@Viewer123')
-      .replace(/\{\{channelName\}\}/g, ch?.title || 'ChannelMate')
-      .replace(/\{\{videoTitle\}\}/g, vid?.title || 'My Latest Video')
-      .replace(/\{\{commentText\}\}/g, 'Where can I find more details?');
-  }, [publicReplyEnabled, aiReplyEnabled, aiTone, replyTemplates, selectedVideoId, videos, channels, selectedChannelId]);
+  
 
-  const MOD_RULE_DEFS = [
-    { key: 'toxicDetection', label: 'Toxic Detection', description: 'Detect profanity, offensive language, and hate words.' },
-    { key: 'spamDetection', label: 'Spam Detection', description: 'Flag self-promotion and repetitive promotional messages.' },
-    { key: 'hateSpeech', label: 'Hate Speech', description: 'Detect racist, sexist, and discriminatory content.' },
-    { key: 'abuse', label: 'Abuse', description: 'Flag threats, harassment, and bullying comments.' },
-    { key: 'scam', label: 'Scam', description: 'Detect fraudulent investment or phishing comments.' },
-    { key: 'sexualContent', label: 'Sexual Content', description: 'Flag explicit or inappropriate sexual content.' },
-    { key: 'duplicateComments', label: 'Duplicate Comments', description: 'Remove repeated identical comments from same user.' },
-    { key: 'linkSpam', label: 'Link Spam', description: 'Flag comments with external links not on the whitelist.' },
-  ];
+  
 
-  const HISTORY_SUBTABS = [
-    { id: 'comment-queue', label: 'Moderation Queue', icon: ShieldCheck },
-    { id: 'automation-logs', label: 'Automation Logs', icon: Activity },
-    { id: 'moderation-queue', label: 'Moderation Actions', icon: Filter },
-  ];
+  
 
   //  Render 
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="h-[calc(100vh-2.5rem)] min-h-[760px] overflow-hidden rounded-[28px] bg-[#eef3f5] p-4 sm:p-5 text-[#0f0f0f] relative min-w-0"
+      className="min-h-[calc(100svh-5.5rem)] min-[1025px]:h-[calc(100vh-2.5rem)] min-[1025px]:min-h-[760px] overflow-visible min-[1025px]:overflow-hidden rounded-[28px] bg-[#eef3f5] p-4 sm:p-5 text-[#0f0f0f] relative min-w-0"
     >
       <Toast toasts={toasts} />
 
@@ -662,18 +574,19 @@ const ModerationPage = ({
         </div>
 
         {/* Channel Selector */}
-        <div className="flex items-center gap-3 bg-white border border-slate-100 rounded-2xl px-4 py-2.5 shadow-sm max-w-xs w-full md:w-auto">
-          <Sliders size={16} className="text-[#ff0000]" />
+        <div className="relative flex items-center gap-2 bg-white border border-[#e5e5e5] rounded-full px-4 h-11 shadow-sm w-full min-[400px]:w-[200px] md:w-auto md:min-w-[200px] shrink-0">
+          <Sliders size={15} className="text-[#ff0000] shrink-0 pointer-events-none" />
           <select
             value={selectedChannelId || ''}
             onChange={(e) => setSelectedChannelId(e.target.value)}
-            className="w-full bg-transparent border-none text-xs font-black uppercase tracking-wider text-[#0f0f0f] focus:outline-none cursor-pointer"
+            className="w-full h-full bg-transparent border-none text-xs font-black uppercase tracking-wider text-[#0f0f0f] focus:outline-none cursor-pointer appearance-none pr-6 py-0"
           >
             <option value="" disabled>Select Channel</option>
             {channels.map(ch => (
               <option key={ch.channelId} value={ch.channelId}>{ch.title}</option>
             ))}
           </select>
+          <ChevronDown size={14} className="text-slate-500 shrink-0 pointer-events-none absolute right-4 top-1/2 -translate-y-1/2" />
         </div>
       </div>
 

@@ -180,8 +180,8 @@ const AdminDashboardPage = () => {
   }
 
   return (
-    <div className={`h-[calc(100vh-2.5rem)] min-h-[720px] overflow-hidden rounded-[28px] p-3 sm:p-4 transition-colors ${theme.shell}`}>
-      <section className="min-w-0 overflow-hidden flex h-full flex-col gap-4">
+    <div className={`min-h-[calc(100svh-5.5rem)] min-[1025px]:h-[calc(100vh-2.5rem)] min-[1025px]:min-h-[720px] overflow-visible min-[1025px]:overflow-hidden rounded-[28px] p-3 sm:p-4 transition-colors ${theme.shell}`}>
+      <section className="min-w-0 overflow-visible min-[1025px]:overflow-hidden flex min-[1025px]:h-full flex-col gap-4">
         <div className={`${theme.panel} rounded-[22px] border p-3 sm:p-4 shadow-sm flex flex-col gap-3 md:flex-row md:items-center md:justify-between`}>
           <div className={`relative w-full md:max-w-sm rounded-full ${theme.input}`}>
             <Search className="absolute right-4 top-1/2 -translate-y-1/2" size={16} />

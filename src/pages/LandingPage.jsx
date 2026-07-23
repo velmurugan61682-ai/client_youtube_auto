@@ -1,31 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { 
-  ShieldCheck, 
-  Zap, 
-  BarChart3, 
+import {
+  ShieldCheck,
+  BarChart3,
   ArrowRight,
   Sparkles,
   Lock,
   CheckCircle,
-  ExternalLink,
   MessageSquare,
   PlaySquare,
   Users,
-  Activity,
   TrendingUp,
   ThumbsUp,
   Bot,
   Building,
   GraduationCap,
   Layers,
-  Heart,
   Send,
   Mail,
-  User,
   Star,
   Check,
-  Loader2
+  Loader2,
+  Phone,
+  Twitter,
+  Instagram,
+  Facebook,
+  Linkedin,
+  Youtube
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import HumanAiAutomationShowcase from '../components/HumanAiAutomationShowcase';
@@ -33,7 +34,7 @@ import HumanAiAutomationShowcase from '../components/HumanAiAutomationShowcase';
 
 // Landing page
 const LandingPage = () => {
-  const navigate = useNavigate();
+
   const [activeSection, setActiveSection] = useState('home');
   const [contactSubmitted, setContactSubmitted] = useState(false);
   const [contactLoading, setContactLoading] = useState(false);
@@ -117,7 +118,7 @@ const LandingPage = () => {
   const testimonials = [
     {
       quote: "ChannelMate saved me over 15 hours every week moderating toxic comments and answering price inquiries on my tech channel!",
-      name: "Vaseegrah Dev",
+      name: "tech vaseegrah",
       role: "Tech Creator (250K+ Subs)",
       rating: 5
     },
@@ -184,11 +185,10 @@ const LandingPage = () => {
               <button
                 key={link.id}
                 onClick={() => scrollToSection(link.id)}
-                className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
-                  activeSection === link.id
-                    ? 'bg-[#0f0f0f] text-white shadow-sm'
-                    : 'text-[#606060] hover:text-[#0f0f0f] hover:bg-white'
-                }`}
+                className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${activeSection === link.id
+                  ? 'bg-[#0f0f0f] text-white shadow-sm'
+                  : 'text-[#606060] hover:text-[#0f0f0f] hover:bg-white'
+                  }`}
               >
                 {link.label}
               </button>
@@ -196,14 +196,14 @@ const LandingPage = () => {
           </nav>
 
           <div className="flex items-center gap-3">
-            <Link 
-              to="/login" 
+            <Link
+              to="/login"
               className="text-xs font-bold text-[#0f0f0f] hover:text-[#ff0000] transition-colors px-3 py-2"
             >
               Sign In
             </Link>
-            <Link 
-              to="/register" 
+            <Link
+              to="/register"
               className="btn-glass-primary text-xs px-5 py-2.5 shadow-red-500/25 active:scale-95"
             >
               Get Started
@@ -449,11 +449,10 @@ const LandingPage = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 max-w-5xl mx-auto gap-8">
           {pricingPlans.map((p, i) => (
-            <div 
-              key={i} 
-              className={`glass-garden-card p-8 rounded-2xl flex flex-col justify-between relative ${
-                p.highlight ? 'border-2 border-[#ff0000] shadow-sm bg-white' : ''
-              }`}
+            <div
+              key={i}
+              className={`glass-garden-card p-8 rounded-2xl flex flex-col justify-between relative ${p.highlight ? 'border-2 border-[#ff0000] shadow-sm bg-white' : ''
+                }`}
             >
               {p.highlight && (
                 <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#ff0000] text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full">
@@ -481,9 +480,8 @@ const LandingPage = () => {
 
               <Link
                 to="/register"
-                className={`w-full text-center text-xs py-3 rounded-full font-bold transition-all ${
-                  p.highlight ? 'btn-glass-primary' : 'btn-glass-secondary'
-                }`}
+                className={`w-full text-center text-xs py-3 rounded-full font-bold transition-all ${p.highlight ? 'btn-glass-primary' : 'btn-glass-secondary'
+                  }`}
               >
                 {p.cta}
               </Link>
@@ -510,11 +508,11 @@ const LandingPage = () => {
               <div className="space-y-3 pt-4 text-xs font-bold text-slate-700">
                 <div className="flex items-center gap-3">
                   <div className="icon-badge-green !w-9 !h-9"><Mail size={16} /></div>
-                  <span>support@channelmate.ai</span>
+                  <span>techvaseegrah@gmail.com</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="icon-badge-green !w-9 !h-9"><Bot size={16} /></div>
-                  <span>Global AI Automation Systems</span>
+                  <div className="icon-badge-green !w-9 !h-9"><Phone size={16} /></div>
+                  <span>WhatsApp: +91 90474 84484</span>
                 </div>
               </div>
             </div>
@@ -533,7 +531,7 @@ const LandingPage = () => {
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="Vaseegrah Dev"
+                  placeholder="tech vaseeegrah"
                   className="w-full glass-input py-2.5 px-4 text-xs font-bold outline-none"
                 />
               </div>
@@ -545,7 +543,7 @@ const LandingPage = () => {
                   required
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="name@example.com"
+                  placeholder="name@gmail.com"
                   className="w-full glass-input py-2.5 px-4 text-xs font-bold outline-none"
                 />
               </div>
@@ -575,16 +573,93 @@ const LandingPage = () => {
       </section>
 
       {/* FOOTER */}
-      <footer className="relative z-10 border-t border-[#e5e5e5] bg-white/50 backdrop-blur-xl py-12 text-[#606060]">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-2 text-xs font-semibold">
-            <span>&copy; {new Date().getFullYear()} Channelmate AI.</span>
-            <span>All rights reserved.</span>
+      <footer className="relative z-10 border-t border-zinc-800 bg-[#0f0f0f] pt-16 pb-8 text-zinc-400">
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+          {/* Brand Info */}
+          <div className="md:col-span-2 space-y-4">
+            <div className="flex items-center">
+              <img src="/channelmate_logo.png" className="h-10 w-auto object-contain brightness-110" alt="Channelmate Logo" />
+            </div>
+            <p className="text-xs font-semibold leading-relaxed max-w-sm text-zinc-400">
+              Intelligent auto-moderation, toxicity shielding, and automated audience engagement built specifically for YouTube creators, brands, and digital agencies.
+            </p>
+            <div className="space-y-1.5 text-[11px] font-bold text-zinc-350">
+              <div className="flex items-center gap-2">
+                <Mail size={13} className="text-[#ff0000]" />
+                <span>techvaseegrah@gmail.com</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Phone size={13} className="text-[#ff0000]" />
+                <span>+91 90474 84484</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-3.5 pt-2">
+              <a href="https://www.youtube.com/@TechVaseegrah" target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-[#ff0000] transition-colors" title="Follow us on YouTube">
+                <Youtube size={17} />
+              </a>
+              <a href="https://x.com/Tech_Vaseegrah" target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-[#ff0000] transition-colors" title="Follow us on X (Twitter)">
+                <Twitter size={15} />
+              </a>
+              <a href="https://www.instagram.com/techvaseegrah/" target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-[#ff0000] transition-colors" title="Follow us on Instagram">
+                <Instagram size={15} />
+              </a>
+              <a href="https://www.facebook.com/people/Tech-Vaseegrah/" target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-[#ff0000] transition-colors" title="Follow us on Facebook">
+                <Facebook size={15} />
+              </a>
+              <a href="https://www.linkedin.com/company/tech-vaseegrah/" target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-[#ff0000] transition-colors" title="Follow us on LinkedIn">
+                <Linkedin size={15} />
+              </a>
+            </div>
           </div>
-          <div className="flex items-center gap-6 text-xs font-bold text-slate-500">
-            <Link to="/privacy" className="hover:text-[#ff0000] transition-colors">Privacy Policy</Link>
-            <Link to="/terms" className="hover:text-[#ff0000] transition-colors">Terms of Service</Link>
+
+          {/* Product Links */}
+          <div className="space-y-3">
+            <h3 className="text-xs font-black text-white uppercase tracking-widest">Platform</h3>
+            <ul className="space-y-2 text-xs font-semibold text-zinc-400">
+              <li>
+                <button type="button" onClick={() => scrollToSection('about')} className="hover:text-[#ff0000] transition-colors text-left">About Platform</button>
+              </li>
+              <li>
+                <button type="button" onClick={() => scrollToSection('features')} className="hover:text-[#ff0000] transition-colors text-left">AI Auto-Mod</button>
+              </li>
+              <li>
+                <button type="button" onClick={() => scrollToSection('use-cases')} className="hover:text-[#ff0000] transition-colors text-left">Use Cases</button>
+              </li>
+              <li>
+                <button type="button" onClick={() => scrollToSection('pricing')} className="hover:text-[#ff0000] transition-colors text-left">Pricing Plans</button>
+              </li>
+            </ul>
           </div>
+
+          {/* Resources & Support */}
+          <div className="space-y-3">
+            <h3 className="text-xs font-black text-white uppercase tracking-widest">Resources</h3>
+            <ul className="space-y-2 text-xs font-semibold text-zinc-400">
+              <li>
+                <Link to="/privacy" className="hover:text-[#ff0000] transition-colors">Privacy Policy</Link>
+              </li>
+              <li>
+                <Link to="/terms" className="hover:text-[#ff0000] transition-colors">Terms of Service</Link>
+              </li>
+              <li>
+                <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer" className="hover:text-[#ff0000] transition-colors inline-flex items-center gap-1">
+                  Google Permissions
+                </a>
+              </li>
+              <li>
+                <button type="button" onClick={() => scrollToSection('contact')} className="hover:text-[#ff0000] transition-colors text-left">Get Support</button>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 border-t border-zinc-800 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-[11px] font-semibold text-zinc-500">
+            &copy; {new Date().getFullYear()} Channelmate AI. All rights reserved.
+          </p>
+          <p className="text-[11px] font-semibold text-zinc-500">
+            Made for YouTube Creators
+          </p>
         </div>
       </footer>
     </div>

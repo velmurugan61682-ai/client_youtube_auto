@@ -1,13 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import {
-  Search,
+  
   Bell,
   Menu,
   LogOut,
   Settings,
   ChevronDown,
   ChevronRight,
-  Sparkles,
   LayoutDashboard,
   MessageSquare,
   ThumbsUp,
@@ -18,10 +17,7 @@ import {
   PlaySquare,
   UsersRound,
   ShieldCheck,
-  MessageCircle,
   CreditCard,
-  ArrowUpRight,
-  Loader2,
   Video
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -30,17 +26,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const EMPTY_ARRAY = [];
 
-const parseISO8601Duration = (durationStr) => {
-  if (!durationStr) return { seconds: 0 };
-  const regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
-  const matches = durationStr.match(regex);
-  if (!matches) return { seconds: 0 };
-  const hours = parseInt(matches[1] || 0, 10);
-  const minutes = parseInt(matches[2] || 0, 10);
-  const seconds = parseInt(matches[3] || 0, 10);
-  const totalSeconds = hours * 3600 + minutes * 60 + seconds;
-  return { seconds: totalSeconds };
-};
+
 
 const Header = ({
   toggleSidebar,
@@ -48,9 +34,7 @@ const Header = ({
   setActiveTab,
   notifications = EMPTY_ARRAY,
   channels = [],
-  selectedChannelId,
-  setSelectedChannelId,
-  setVideoSubTab
+  selectedChannelId
 }) => {
   const { user, logout, switchOrg } = useAuth();
   const [localNotifications, setLocalNotifications] = useState([]);
@@ -143,9 +127,9 @@ const Header = ({
     }
   };
 
-  const [isFocused, setIsFocused] = useState(false);
-  const [searchResults, setSearchResults] = useState({ pages: [], channels: [], videos: [], leads: [] });
-  const [searchLoading, setSearchLoading] = useState(false);
+  const [, setIsFocused] = useState(false);
+  const [, setSearchResults] = useState({ pages: [], channels: [], videos: [], leads: [] });
+  const [, setSearchLoading] = useState(false);
   const searchContainerRef = useRef(null);
 
   const menuItems = [
@@ -235,11 +219,7 @@ const Header = ({
     return () => clearTimeout(delayDebounce);
   }, [searchQuery, channels, selectedChannelId]);
 
-  const handleSearch = (e) => {
-    const value = e.target.value;
-    setSearchQuery(value);
-    if (onSearch) onSearch(value);
-  };
+  
 
   const getNotifIcon = (type) => {
     switch (type) {

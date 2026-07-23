@@ -2,11 +2,8 @@ import React from 'react';
 import { 
   Zap, 
   Trash2, 
-  AlertCircle, 
-  CheckCircle2, 
   ShieldAlert,
   Clock,
-  ExternalLink,
   MessageSquare
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';

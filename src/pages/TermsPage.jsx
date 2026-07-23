@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { FileText, ArrowLeft, ExternalLink } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -115,7 +115,7 @@ const TermsPage = () => {
             <section className="space-y-3 pt-6 border-t border-zinc-200/50">
               <h2 className="text-base font-bold text-zinc-900">Contact</h2>
               <p className="pl-3 text-zinc-500">
-                If you have any questions regarding these Terms, please contact support at <span className="text-zinc-900">support@youtubeai.test</span>.
+                If you have any questions regarding these Terms, please contact support at <span className="text-zinc-900">techvaseegrah@gmail.com</span>.
               </p>
             </section>
           </div>
