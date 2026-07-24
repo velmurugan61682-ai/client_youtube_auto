@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Allow: /privacy
+Allow: /terms
+Allow: /google-permissions
+Allow: /contact
+Disallow: /dashboard
+Disallow: /admin
+
+Sitemap: https://channelbot.in/sitemap.xml
