@@ -277,7 +277,7 @@ const LandingPage = () => {
           </p>
 
           <p className="text-[16px] sm:text-[18px] text-[#606060] font-semibold leading-relaxed mb-6 max-w-3xl mx-auto">
-            ChannelMate is an AI-powered YouTube comment management platform for creators and businesses. Users securely connect their YouTube account using Google OAuth to:
+            ChannelMate is an AI-powered platform for YouTube creators and businesses. Using secure Google OAuth, users can safely connect their YouTube channel to automate comment moderation, generate AI-powered replies, manage engagement, detect spam and harmful comments, and monitor channel analytics.
           </p>
 
           <div className="max-w-2xl mx-auto text-left bg-white border border-[#e5e5e5] rounded-2xl p-5 mb-6 shadow-sm">
@@ -289,16 +289,18 @@ const LandingPage = () => {
 
             <p className="text-xs font-black text-[#0f0f0f] mb-2">After you grant permission, ChannelMate can:</p>
             <ul className="space-y-2 text-xs font-semibold text-[#606060] mb-4">
-              <li>• Read comments on their own YouTube videos</li>
-              <li>• Generate AI-powered replies</li>
-              <li>• Moderate spam and abusive comments</li>
-              <li>• Manage audience engagement</li>
-              <li>• View YouTube comment analytics</li>
+              <li>✅ Read comments from your YouTube videos</li>
+              <li>✅ Generate AI-powered replies</li>
+              <li>✅ Detect spam, abusive and harmful comments</li>
+              <li>✅ Publish approved automated replies</li>
+              <li>✅ Display YouTube comment analytics</li>
+              <li>✅ Synchronize channel information</li>
             </ul>
 
             <div className="pt-3 border-t border-slate-100 text-[11px] text-[#606060] font-semibold space-y-1">
-              <p>ChannelMate never requests or stores your Google password.</p>
-              <p>Users can revoke access anytime from your Google Account.</p>
+              <p><strong>Privacy Note:</strong> ChannelMate never requests or stores your Google password.</p>
+              <p>Your Google data is accessed only after you explicitly grant permission.</p>
+              <p>You can revoke access anytime from your Google Account.</p>
             </div>
           </div>
 

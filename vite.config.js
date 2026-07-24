@@ -43,7 +43,7 @@ export default defineConfig(({ command, mode }) => {
         manifest: {
           name: 'ChannelMate',
           short_name: 'ChannelMate',
-          description: 'AI-powered YouTube comment management platform',
+          description: 'ChannelMate is an AI-powered YouTube automation platform for comment replies, moderation, engagement management, and creator analytics.',
           theme_color: '#ff0000',
           background_color: '#ffffff',
 
