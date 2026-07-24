@@ -2,14 +2,14 @@ import axios from 'axios';
 
 // RUNTIME Base URL detection
 const getBaseURL = () => {
-  // If we are on localhost, dynamically route to local backend
-  if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-    return 'http://localhost:5000';
+  // If we are in production mode, use VITE_API_URL if defined, otherwise strictly use the Render production backend URL
+  if (import.meta.env.PROD === true) {
+    return import.meta.env.VITE_API_URL || 'https://server-youtube-auto.onrender.com';
   }
 
-  // If we are in production mode, strictly use the Render production backend URL
-  if (import.meta.env.PROD === true) {
-    return 'https://server-youtube-auto.onrender.com';
+  // If we are on localhost, dynamically route to local backend using VITE_API_URL if present, otherwise default to port 5000
+  if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+    return import.meta.env.VITE_API_URL || 'http://localhost:5000';
   }
   
   // Fallback for Local Development

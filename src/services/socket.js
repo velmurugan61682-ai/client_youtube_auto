@@ -13,7 +13,7 @@ export const getSocket = () => {
 
     if (import.meta.env.PROD === true && !isLocalhost) {
       // In production mode, strictly use the Render production backend URL
-      socketUrl = 'https://server-youtube-auto.onrender.com';
+      socketUrl = import.meta.env.VITE_SOCKET_URL || 'https://server-youtube-auto.onrender.com';
       console.log(`✓ Production Socket URL: ${socketUrl}`);
     } else {
       const rawUrl = import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL || '';
