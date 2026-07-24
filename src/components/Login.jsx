@@ -79,7 +79,7 @@ const Login = ({ onSwitchToRegister }) => {
           {/* Top Logo Container */}
           <div className="flex flex-col items-center text-center mb-8">
             <Link to="/" className="flex flex-col items-center">
-              <img src="/channelmate_logo.png" className="h-12 sm:h-14 w-auto object-contain mb-3" alt="ChannelMate Logo" />
+              <img src="/brand-logo.png" className="h-12 sm:h-14 w-auto object-contain mb-3" alt="ChannelMate Logo" />
               <p className="text-zinc-500 text-[13px] font-semibold">Sign in to your AI moderation centre</p>
             </Link>
           </div>

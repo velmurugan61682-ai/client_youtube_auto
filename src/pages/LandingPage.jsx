@@ -225,7 +225,7 @@ const LandingPage = () => {
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-[#e5e5e5]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2 select-none cursor-pointer" onClick={() => scrollToSection('home')}>
-            <img src="/channelmate_logo.png" className="h-10 sm:h-11 w-auto object-contain" alt="ChannelMate Logo" />
+            <img src="/brand-logo.png" className="h-10 sm:h-11 w-auto object-contain" alt="ChannelMate Logo" />
             <div className="flex flex-col items-start leading-none">
               <span className="text-base font-black tracking-tight text-[#0f0f0f]">ChannelMate</span>
               <span className="text-[9px] font-semibold text-[#606060] mt-0.5">YouTube Creators</span>
@@ -380,6 +380,55 @@ const LandingPage = () => {
         </motion.div>
       </section>
 
+      {/* SECTION: PUBLIC GOOGLE OAUTH DISCLOSURE */}
+      <section id="oauth-disclosure" className="relative z-10 border-t border-[#e5e5e5] bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
+          <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-8 items-start">
+            <div className="space-y-4">
+              <span className="inline-flex items-center gap-2 text-xs font-black text-[#ff0000] uppercase tracking-widest bg-[#fff1f1] px-4 py-1.5 rounded-full">
+                <Lock size={14} />
+                Secure Google Access
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-black text-[#0f0f0f] tracking-tight">
+                Why ChannelMate uses Google OAuth
+              </h2>
+              <div className="space-y-3 text-sm sm:text-base font-semibold text-[#606060] leading-relaxed">
+                <p>
+                  ChannelMate is an AI-powered YouTube comment automation platform that helps creators manage their YouTube communities.
+                </p>
+                <p>
+                  ChannelMate uses Google OAuth to securely connect a user's YouTube account.
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-[#f9f9f9] border border-[#e5e5e5] rounded-2xl p-5 sm:p-6 shadow-sm">
+              <p className="text-sm font-black text-[#0f0f0f] mb-4">After permission is granted, ChannelMate can:</p>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm font-bold text-[#606060]">
+                {[
+                  "Read comments on the user's YouTube videos",
+                  'Generate AI-powered replies',
+                  'Detect spam, abusive, toxic and scam comments',
+                  "Moderate comments based on the user's settings",
+                  'Display YouTube analytics and engagement insights',
+                  'Help creators manage their communities efficiently'
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2">
+                    <CheckCircle size={16} className="mt-0.5 shrink-0 text-[#ff0000]" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-5 pt-5 border-t border-[#e5e5e5] flex gap-3 text-xs sm:text-sm font-semibold text-[#606060] leading-relaxed">
+                <ShieldCheck size={20} className="shrink-0 text-[#ff0000]" />
+                <p>
+                  ChannelMate never asks for or stores the user's Google password. Access is granted securely through Google OAuth, and users can revoke access at any time from their Google Account settings.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
       {/* SECTION: HOW ChannelMate WORKS */}
       <section id="how-it-works" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-16 border-t border-[#e5e5e5]">
         <div className="max-w-5xl mx-auto text-center space-y-8">
@@ -780,11 +829,12 @@ const LandingPage = () => {
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
           {/* Brand Info */}
           <div className="md:col-span-2 space-y-4">
-            <div className="flex items-center">
-              <img src="/channelmate_logo.png" className="h-10 w-auto object-contain brightness-110" alt="ChannelMate Logo" />
+            <div className="flex items-center gap-3">
+              <img src="/brand-logo.png" className="h-10 w-auto object-contain brightness-110" alt="ChannelMate Logo" />
+              <span className="text-base font-black tracking-tight text-white">ChannelMate</span>
             </div>
             <p className="text-xs font-semibold leading-relaxed max-w-sm text-zinc-400">
-              ChannelMate provides intelligent auto-moderation, toxicity shielding, and automated audience engagement built specifically for YouTube creators, brands, and digital agencies.
+              AI-powered YouTube Comment Automation
             </p>
             <div className="space-y-1.5 text-[11px] font-bold text-zinc-350">
               <div className="flex items-center gap-2">
@@ -822,10 +872,10 @@ const LandingPage = () => {
             <h3 className="text-xs font-black text-white uppercase tracking-widest">Resources</h3>
             <ul className="space-y-2 text-xs font-semibold text-zinc-400">
               <li>
-                <Link to="/privacy" className="hover:text-[#ff0000] transition-colors">Privacy Policy</Link>
+                <a href="https://channelbot.in/privacy" className="hover:text-[#ff0000] transition-colors">Privacy Policy</a>
               </li>
               <li>
-                <Link to="/terms" className="hover:text-[#ff0000] transition-colors">Terms of Service</Link>
+                <a href="https://channelbot.in/terms" className="hover:text-[#ff0000] transition-colors">Terms of Service</a>
               </li>
               <li>
                 <Link to="/google-permissions" className="hover:text-[#ff0000] transition-colors">Google Permissions</Link>
