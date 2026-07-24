@@ -270,10 +270,9 @@ const LandingPage = () => {
             <span className="text-[11px] font-black uppercase tracking-widest">YouTube Comment Automation & Moderation</span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-[1.08] mb-4 text-[#0f0f0f]">
+          <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-[1.08] mb-3 text-[#0f0f0f]">
             <span className="text-[#ff0000]">ChannelMate</span>
           </h1>
-
           <p className="text-xl sm:text-2xl text-[#0f0f0f] font-black mb-6 max-w-3xl mx-auto">
             AI-powered YouTube Comment Automation
           </p>
