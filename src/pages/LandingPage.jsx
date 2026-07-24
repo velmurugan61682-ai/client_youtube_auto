@@ -26,7 +26,8 @@ import {
   Instagram,
   Facebook,
   Linkedin,
-  Youtube
+  Youtube,
+  AlertCircle
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import HumanAiAutomationShowcase from '../components/HumanAiAutomationShowcase';
@@ -278,15 +279,12 @@ const LandingPage = () => {
           </p>
 
           <div className="max-w-2xl mx-auto text-left bg-white border border-[#e5e5e5] rounded-2xl p-5 mb-6 shadow-sm">
-            <p className="text-sm font-black text-[#0f0f0f] mb-3">What ChannelMate does for creators & businesses:</p>
-            <ul className="space-y-2 text-sm font-semibold text-[#606060]">
-              <li>Automatically reply to YouTube comments using context-aware AI</li>
-              <li>Moderate spam, abusive, and harmful comments in real-time</li>
-              <li>Monitor and manage audience engagement metrics</li>
-              <li>Safeguard community comment threads securely</li>
-              <li>View subscriber engagement trends and channel analytics</li>
-              <li>Access YouTube features only after explicit user permission</li>
-              <li>Disconnect channels or revoke access at any time</li>
+            <p className="text-sm font-black text-[#0f0f0f] mb-3">YouTube OAuth Authorization & Features Access Details:</p>
+            <ul className="space-y-2 text-xs font-semibold text-[#606060]">
+              <li><strong>What it is &amp; Who it is for:</strong> ChannelMate is an AI-powered comment automation and moderation platform built for YouTube creators and businesses.</li>
+              <li><strong>Why Google OAuth is required:</strong> Used to establish a secure OAuth 2.0 connection. ChannelMate never requests, sees, or stores your Google password.</li>
+              <li><strong>YouTube Features Accessed:</strong> Retrieve comments on your videos, publish automated AI replies, hide or delete spam comments, and display channel analytics.</li>
+              <li><strong>User Control:</strong> ChannelMate only accesses YouTube data after you grant permission. You can disconnect your channel from settings or revoke access from your Google Account at any time.</li>
             </ul>
           </div>
 
