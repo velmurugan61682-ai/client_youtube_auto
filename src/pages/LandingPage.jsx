@@ -250,6 +250,18 @@ const LandingPage = () => {
 
           <div className="flex items-center gap-3">
             <Link
+              to="/privacy"
+              className="hidden sm:inline-flex text-xs font-bold text-[#606060] hover:text-[#ff0000] transition-colors px-2 py-2"
+            >
+              Privacy
+            </Link>
+            <Link
+              to="/terms"
+              className="hidden sm:inline-flex text-xs font-bold text-[#606060] hover:text-[#ff0000] transition-colors px-2 py-2"
+            >
+              Terms
+            </Link>
+            <Link
               to="/login"
               className="text-xs font-bold text-[#0f0f0f] hover:text-[#ff0000] transition-colors px-3 py-2"
             >
@@ -277,7 +289,7 @@ const LandingPage = () => {
           </p>
 
           <p className="text-[16px] sm:text-[18px] text-[#606060] font-semibold leading-relaxed mb-6 max-w-3xl mx-auto">
-            ChannelMate is an AI-powered platform for YouTube creators and businesses. Using secure Google OAuth, users can safely connect their YouTube channel to automate comment moderation, generate AI-powered replies, manage engagement, detect spam and harmful comments, and monitor channel analytics.
+            ChannelMate is an AI-powered YouTube comment automation SaaS for creators and businesses. Using secure Google OAuth and YouTube API access, users can connect their own YouTube channel to automate comment moderation, generate approved replies, manage viewer engagement, detect spam and harmful comments, and review channel analytics.
           </p>
 
           <div className="max-w-2xl mx-auto text-left bg-white border border-[#e5e5e5] rounded-2xl p-5 mb-6 shadow-sm">
@@ -289,12 +301,13 @@ const LandingPage = () => {
 
             <p className="text-xs font-black text-[#0f0f0f] mb-2">After you grant permission, ChannelMate can:</p>
             <ul className="space-y-2 text-xs font-semibold text-[#606060] mb-4">
-              <li>✅ Read comments from your YouTube videos</li>
-              <li>✅ Generate AI-powered replies</li>
-              <li>✅ Detect spam, abusive and harmful comments</li>
-              <li>✅ Publish approved automated replies</li>
-              <li>✅ Display YouTube comment analytics</li>
-              <li>✅ Synchronize channel information</li>
+              <li>Read comments from your YouTube videos</li>
+              <li>Read video metadata such as video IDs, titles, thumbnails, publish dates, and engagement counts</li>
+              <li>Read channel information and analytics needed for engagement reports</li>
+              <li>Generate AI-powered replies</li>
+              <li>Detect spam, abusive and harmful comments</li>
+              <li>Publish approved automated replies</li>
+              <li>Display YouTube comment, video, and channel analytics</li>
             </ul>
 
             <div className="pt-3 border-t border-slate-100 text-[11px] text-[#606060] font-semibold space-y-1">
@@ -407,6 +420,8 @@ const LandingPage = () => {
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm font-bold text-[#606060]">
                 {[
                   "Read comments on the user's YouTube videos",
+                  'Read video metadata such as titles, thumbnails, publish dates and engagement counts',
+                  'Read channel analytics needed for engagement reports',
                   'Generate AI-powered replies',
                   'Detect spam, abusive, toxic and scam comments',
                   "Moderate comments based on the user's settings",
@@ -872,10 +887,10 @@ const LandingPage = () => {
             <h3 className="text-xs font-black text-white uppercase tracking-widest">Resources</h3>
             <ul className="space-y-2 text-xs font-semibold text-zinc-400">
               <li>
-                <a href="https://channelbot.in/privacy" className="hover:text-[#ff0000] transition-colors">Privacy Policy</a>
+                <Link to="/privacy" className="hover:text-[#ff0000] transition-colors">Privacy Policy</Link>
               </li>
               <li>
-                <a href="https://channelbot.in/terms" className="hover:text-[#ff0000] transition-colors">Terms of Service</a>
+                <Link to="/terms" className="hover:text-[#ff0000] transition-colors">Terms of Service</Link>
               </li>
               <li>
                 <Link to="/google-permissions" className="hover:text-[#ff0000] transition-colors">Google Permissions</Link>

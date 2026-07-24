@@ -1,146 +1,129 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ShieldCheck, ArrowLeft, ExternalLink } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { ArrowLeft, ExternalLink, ShieldCheck } from 'lucide-react';
+
+const CONTACT_EMAIL = 'support@channelbot.in';
+
+const Section = ({ title, children }) => (
+  <section className="space-y-3">
+    <h2 className="text-base sm:text-lg font-black text-zinc-900">{title}</h2>
+    <div className="space-y-3 text-sm font-semibold leading-relaxed text-zinc-650">{children}</div>
+  </section>
+);
 
 const PrivacyPage = () => {
   return (
     <div className="min-h-screen bg-[#f7f7f7] text-zinc-900 font-['Outfit'] relative overflow-x-hidden selection:bg-red-500/20 selection:text-red-900">
-
-      {/* Header */}
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-[#e5e5e5]">
-        <div className="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 select-none">
+        <div className="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between gap-4">
+          <Link to="/" className="flex items-center gap-2 select-none min-w-0">
             <img src="/brand-logo.png" className="h-9 w-auto object-contain" alt="ChannelMate Logo" />
-            <div className="flex flex-col items-start leading-none">
+            <div className="flex flex-col items-start leading-none min-w-0">
               <span className="text-base font-black tracking-tight text-zinc-900">ChannelMate</span>
-              <span className="text-[9px] font-semibold text-zinc-500 mt-0.5">YouTube Creators</span>
+              <span className="text-[9px] font-semibold text-zinc-500 mt-0.5">AI-powered YouTube Comment Automation</span>
             </div>
           </Link>
-          <Link
-            to="/"
-            className="text-[13px] font-bold text-zinc-500 hover:text-zinc-900 transition-colors flex items-center gap-1.5"
-          >
-            <ArrowLeft size={14} /> Back to Home
+          <Link to="/" className="text-[13px] font-bold text-zinc-500 hover:text-zinc-900 transition-colors flex items-center gap-1.5 shrink-0">
+            <ArrowLeft size={14} /> Home
           </Link>
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="relative z-10 max-w-3xl mx-auto px-6 py-16">
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="bg-white border border-[#e5e5e5] rounded-[22px] p-6 sm:p-10 shadow-sm text-zinc-800"
-        >
-          <div className="flex items-center gap-3 mb-8 pb-6 border-b border-zinc-200/50">
+        <article className="bg-white border border-[#e5e5e5] rounded-[22px] p-6 sm:p-10 shadow-sm text-zinc-800 space-y-8">
+          <div className="flex items-center gap-3 pb-6 border-b border-zinc-200/50">
             <div className="w-10 h-10 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-500 border border-red-500/20 shadow-sm">
               <ShieldCheck size={20} />
             </div>
             <div>
               <h1 className="text-xl sm:text-2xl font-black text-zinc-900">Privacy Policy</h1>
-              <p className="text-[11px] font-black text-zinc-400 uppercase tracking-widest mt-0.5">Last Updated: July 2026</p>
+              <p className="text-[11px] font-black text-zinc-400 uppercase tracking-widest mt-0.5">Last updated: July 24, 2026</p>
             </div>
           </div>
 
-          <div className="space-y-8 text-zinc-700 text-[13px] sm:text-[14px] font-semibold leading-relaxed">
-            <section className="space-y-3">
-              <h2 className="text-base font-bold text-zinc-900 flex items-center gap-2">
-                <span className="w-1.5 h-1.5 bg-red-500 rounded-full"></span>
-                1. Overview
-              </h2>
-              <p className="pl-3 text-zinc-650">
-                ChannelMate ("we", "our", or "us") provides comment analytics, auto-moderation, and AI-powered reply tools for YouTube creators and businesses. This Privacy Policy outlines how we access, collect, process, store, and secure your personal profile data and YouTube channel data once you authorize access via Google OAuth 2.0 and the YouTube Data API. We are committed to maintaining the highest privacy standards and complying with Google’s API policies.
-              </p>
-            </section>
+          <Section title="Overview">
+            <p>
+              ChannelMate is a SaaS tool for YouTube creators, businesses, and agencies that helps automate comment replies, moderate comments, manage engagement, and understand channel performance. This policy explains what information ChannelMate collects, why we need it, how long we keep it, and how you can control or delete it.
+            </p>
+          </Section>
 
-            <section className="space-y-3">
-              <h2 className="text-base font-bold text-zinc-900 flex items-center gap-2">
-                <span className="w-1.5 h-1.5 bg-red-500 rounded-full"></span>
-                2. Data We Access & Collect
-              </h2>
-              <p className="pl-3 text-zinc-650">
-                To perform YouTube comment auto-replies and toxicity moderations, ChannelMate accesses only the specific data categories you authorize through Google OAuth. This includes:
-              </p>
-              <ul className="list-disc pl-8 space-y-2 text-zinc-650">
-                <li><strong>User Profile Data:</strong> Your name, email address, and profile photo, accessed via basic scopes (openid, email, profile) to create, secure, and customize your ChannelMate account.</li>
-                <li><strong>YouTube Channel Metadata:</strong> Channel names, titles, custom subscriber statistics, and video logs, used to generate analytics and telemetry in your dashboard.</li>
-                <li><strong>YouTube Videos & Comments:</strong> The text, author metadata, timestamps, and reaction metrics of comments left on your public videos. This is required to process automated AI replies and filter toxic messages.</li>
-                <li><strong>OAuth Tokens:</strong> Encrypted Google OAuth access and refresh tokens, which allow our backend workers to securely authenticate with YouTube APIs to fetch comments and post replies on your behalf.</li>
-              </ul>
-            </section>
+          <Section title="Information We Collect">
+            <p>When you create an account or connect a YouTube channel through Google OAuth and the YouTube Data API, ChannelMate may collect or access:</p>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>Account details such as your name, email address, profile image, login status, plan, and account settings.</li>
+              <li>YouTube channel data such as channel ID, channel name, thumbnail, subscriber or engagement counts available through authorized API access, and connection status.</li>
+              <li>YouTube video metadata such as video IDs, titles, descriptions, thumbnails, publish dates, and engagement metrics needed to organize comments and analytics.</li>
+              <li>YouTube comments and comment metadata, including comment text, comment IDs, authors, timestamps, moderation state, reply status, and related video information.</li>
+              <li>YouTube analytics and engagement data that you authorize, used to show dashboard reports and measure moderation or reply activity.</li>
+              <li>OAuth tokens issued by Google so ChannelMate can access YouTube API features you authorize. Tokens are stored encrypted and are not your Google password.</li>
+              <li>Operational logs such as moderation actions, automated reply history, channel sync status, errors, and security audit events needed to run and support the service.</li>
+            </ul>
+          </Section>
 
-            <section className="space-y-3">
-              <h2 className="text-base font-bold text-zinc-900 flex items-center gap-2">
-                <span className="w-1.5 h-1.5 bg-red-500 rounded-full"></span>
-                3. How We Use Your Data
-              </h2>
-              <p className="pl-3 text-zinc-650">
-                Your data is used strictly to power features within your private ChannelMate dashboard:
-              </p>
-              <ul className="list-disc pl-8 space-y-2 text-zinc-650">
-                <li>Fetching comments to analyze sentiment and flag spam or harmful words.</li>
-                <li>Posting automatic context-aware replies generated by DeepSeek AI based on rules you create.</li>
-                <li>Compiling sentiment reports, telemetry graphs, and moderator logs.</li>
-                <li><strong>No Selling or Sharing:</strong> We do not sell, rent, or share your profile or YouTube channel data with third parties. Data is used exclusively to deliver the automation services you configure.</li>
-              </ul>
-            </section>
+          <Section title="Why We Use This Information">
+            <p>ChannelMate uses this data only to provide the product features you request or configure:</p>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>To fetch YouTube comments so they can be reviewed, filtered, moderated, and answered.</li>
+              <li>To generate and publish automated replies according to your rules and account settings.</li>
+              <li>To detect spam, scam, abusive, toxic, or harmful comments and support moderation workflows.</li>
+              <li>To organize comments by channel and video so you can manage engagement efficiently.</li>
+              <li>To show analytics, reports, reply history, moderation logs, and engagement summaries in your dashboard.</li>
+              <li>To secure your account, troubleshoot errors, prevent misuse, and provide customer support.</li>
+            </ul>
+          </Section>
 
-            <section className="space-y-3">
-              <h2 className="text-base font-bold text-zinc-900 flex items-center gap-2">
-                <span className="w-1.5 h-1.5 bg-red-500 rounded-full"></span>
-                4. Data Storage & Encryption
-              </h2>
-              <p className="pl-3 text-zinc-650">
-                We utilize strict industry-standard measures to keep your data secure:
-              </p>
-              <ul className="list-disc pl-8 space-y-2 text-zinc-650">
-                <li><strong>Data in Transit:</strong> All communication between the browser, ChannelMate servers, and YouTube API endpoints is secured using SSL/TLS encryption.</li>
-                <li><strong>Data at Rest:</strong> Sensitive authentication tokens (Google OAuth credentials) are stored securely on our database servers using strong AES-256-CBC encryption.</li>
-              </ul>
-            </section>
+          <Section title="No Sale or Third-Party Sharing">
+            <p>
+              ChannelMate does not sell, rent, trade, or share your Google user data, YouTube channel data, comments, video metadata, analytics data, or OAuth tokens with third parties for advertising, resale, profiling, or unrelated purposes. We use the information only to operate and improve the ChannelMate features visible in the service.
+            </p>
+          </Section>
 
-            <section className="space-y-3">
-              <h2 className="text-base font-bold text-zinc-900 flex items-center gap-2">
-                <span className="w-1.5 h-1.5 bg-red-500 rounded-full"></span>
-                5. Google API Services User Data Policy Compliance
-              </h2>
-              <p className="pl-3 text-zinc-650 font-semibold text-[#ff0000]">
-                ChannelMate's use and transfer to any other app of information received from Google APIs will adhere to the Google API Services User Data Policy, including the Limited Use requirements.
-              </p>
-              <p className="pl-3 text-zinc-650">
-                We strictly limit our access to and usage of Google API user data to providing and improving the comment automation and moderation tools visible on the user's dashboard. We do not use this data for serving advertisements, retargeting, profiling, or database resale under any circumstances.
-              </p>
-            </section>
+          <Section title="Google API Data and Limited Use">
+            <p>
+              ChannelMate's use and transfer of information received from Google APIs follows the Google API Services User Data Policy, including the Limited Use requirements. We do not use Google user data for ads, retargeting, credit checks, or unrelated product analytics.
+            </p>
+          </Section>
 
-            <section className="space-y-3">
-              <h2 className="text-base font-bold text-zinc-900 flex items-center gap-2">
-                <span className="w-1.5 h-1.5 bg-red-500 rounded-full"></span>
-                6. Data Retention, Disconnection & Deletion
-              </h2>
-              <p className="pl-3 text-zinc-650">
-                You maintain complete ownership of your YouTube account and data. We store your tokens and cached comments only for the duration of your active channel connection:
-              </p>
-              <ul className="list-disc pl-8 space-y-2 text-zinc-650">
-                <li><strong>YouTube Channel Disconnection:</strong> You can disconnect your YouTube channel at any time in the settings tab of your dashboard. Disconnecting a channel immediately deletes all associated OAuth access tokens, refresh tokens, and cached comment logs from our active databases.</li>
-                <li><strong>Account Deletion:</strong> You can request complete deletion of your ChannelMate creator account. Upon deletion, all of your user profile details, database logs, and credentials are permanently purged.</li>
-                <li><strong>Google Permissions Revocation:</strong> You can instantly revoke all access rights granted to ChannelMate by visiting the secure <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] hover:underline font-bold inline-flex items-center gap-0.5">Google Security Permissions Panel <ExternalLink size={11} /></a>.</li>
-              </ul>
-            </section>
+          <Section title="Data Retention">
+            <p>
+              We keep account records, connected channel records, OAuth tokens, cached comments, video metadata, analytics snapshots, moderation logs, and reply logs while your ChannelMate account or YouTube channel connection is active and the information is needed to provide the service.
+            </p>
+            <p>
+              If you disconnect a YouTube channel, we delete stored OAuth tokens for that channel and stop syncing new YouTube data. Cached operational records tied to the channel, such as moderation and reply logs, are removed from active systems within a reasonable period unless we must keep limited records for security, fraud prevention, dispute resolution, legal compliance, or backup recovery.
+            </p>
+            <p>
+              Backup copies may remain for a limited backup-retention period before they are overwritten or deleted. They are not used for normal product activity after deletion is requested.
+            </p>
+          </Section>
 
-            <section className="space-y-3 pt-6 border-t border-zinc-200/50">
-              <h2 className="text-base font-bold text-zinc-900">Contact Us</h2>
-              <p className="pl-3 text-zinc-500">
-                If you have questions about this Privacy Policy, your data storage, or Google OAuth compliance, please reach out to us at <span className="text-zinc-900 font-bold">support@channelbot.in</span>.
-              </p>
-            </section>
+          <Section title="Your Controls: Revoke Access or Delete Data">
+            <ul className="list-disc pl-6 space-y-2">
+              <li>You can disconnect a YouTube channel from ChannelMate settings when you no longer want the service to access that channel.</li>
+              <li>You can revoke Google OAuth access at any time from your Google Account permissions page: <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] hover:underline inline-flex items-center gap-1">https://myaccount.google.com/permissions <ExternalLink size={12} /></a>.</li>
+              <li>To request deletion of your ChannelMate account or stored YouTube data, email <span className="font-black text-zinc-900">{CONTACT_EMAIL}</span> from the email address associated with your account and include the channel name or account email you want deleted.</li>
+            </ul>
+          </Section>
+
+          <Section title="Security">
+            <p>
+              We use technical and organizational safeguards designed to protect your data, including HTTPS in transit, encrypted OAuth token storage, access controls, and audit logging. No online system can be guaranteed to be perfectly secure, but we limit access to the data needed to operate ChannelMate.
+            </p>
+          </Section>
+
+          <Section title="Contact">
+            <p>
+              Questions, privacy requests, OAuth revocation questions, and deletion requests can be sent to <span className="font-black text-zinc-900">{CONTACT_EMAIL}</span>.
+            </p>
+          </Section>
+
+          <div className="pt-6 border-t border-zinc-200/50 flex flex-wrap gap-4 text-sm font-bold">
+            <Link to="/terms" className="text-[#ff0000] hover:underline">Terms of Service</Link>
+            <Link to="/" className="text-zinc-500 hover:text-zinc-900">Back to ChannelMate</Link>
           </div>
-        </motion.div>
+        </article>
       </main>
     </div>
   );
 };
 
 export default PrivacyPage;
-
