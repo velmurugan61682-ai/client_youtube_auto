@@ -100,7 +100,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
       const res = await api.post('/subscription/create', { planType });
       const { orderId, subscriptionId, razorpayKeyId, amount, currency } = res.data;
 
-      const activeKey = razorpayKeyId || 'rzp_test_SnyBwTTmMiaZjY';
+      const activeKey = razorpayKeyId;
       const activeOrderId = orderId || subscriptionId;
 
       // Load Razorpay script for standard checkout

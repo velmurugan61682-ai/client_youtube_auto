@@ -15,7 +15,7 @@ if (typeof window !== 'undefined') {
 
 // Dev-only cleanup for stale PWA assets. Old service workers can keep serving a
 // cached bundle on localhost and leave the landing page blank after UI edits.
-const DEV_CACHE_CLEANUP_KEY = 'Channelbot_dev_cache_cleanup_v3';
+const DEV_CACHE_CLEANUP_KEY = 'ChannelMate_dev_cache_cleanup_v4';
 if (typeof window !== 'undefined' && import.meta.env.DEV && !sessionStorage.getItem(DEV_CACHE_CLEANUP_KEY)) {
   sessionStorage.setItem(DEV_CACHE_CLEANUP_KEY, '1');
 
