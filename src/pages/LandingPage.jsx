@@ -228,7 +228,7 @@ const LandingPage = () => {
             <img src="/channelmate_logo.png" className="h-10 sm:h-11 w-auto object-contain" alt="ChannelMate Logo" />
             <div className="flex flex-col items-start leading-none">
               <span className="text-base font-black tracking-tight text-[#0f0f0f]">ChannelMate</span>
-              <span className="text-[9px] font-semibold text-[#606060] mt-0.5">AI-powered YouTube Comment Automation</span>
+              <span className="text-[9px] font-semibold text-[#606060] mt-0.5">YouTube Creators</span>
             </div>
           </div>
 
