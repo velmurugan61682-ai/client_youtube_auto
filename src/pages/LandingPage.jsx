@@ -273,7 +273,7 @@ const LandingPage = () => {
             <span className="text-[#ff0000]">ChannelMate</span>
           </h1>
           <p className="text-xl sm:text-2xl text-[#0f0f0f] font-black mb-6 max-w-3xl mx-auto">
-            YouTube Creators
+            AI-powered YouTube Comment Automation
           </p>
 
           <p className="text-[16px] sm:text-[18px] text-[#606060] font-semibold leading-relaxed mb-6 max-w-3xl mx-auto">
@@ -387,7 +387,7 @@ const LandingPage = () => {
             <div className="space-y-4">
               <span className="inline-flex items-center gap-2 text-xs font-black text-[#ff0000] uppercase tracking-widest bg-[#fff1f1] px-4 py-1.5 rounded-full">
                 <Lock size={14} />
-                Secure Google Access
+                App Purpose and Secure Google Access
               </span>
               <h2 className="text-3xl sm:text-4xl font-black text-[#0f0f0f] tracking-tight">
                 Why ChannelMate uses Google OAuth
