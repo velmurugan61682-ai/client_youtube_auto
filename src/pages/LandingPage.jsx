@@ -133,7 +133,7 @@ const LandingPage = () => {
   const useCases = [
     {
       icon: <PlaySquare size={26} />,
-      title: "YouTube Creators",
+      title: "AI-powered YouTube Comment Automation",
       desc: "Automate viewer comment replies, filter spam instantly, and keep your video comment section clean 24/7."
     },
     {
@@ -228,7 +228,7 @@ const LandingPage = () => {
             <img src="/brand-logo.png" className="h-10 sm:h-11 w-auto object-contain" alt="ChannelMate Logo" />
             <div className="flex flex-col items-start leading-none">
               <span className="text-base font-black tracking-tight text-[#0f0f0f]">ChannelMate</span>
-              <span className="text-[9px] font-semibold text-[#606060] mt-0.5">YouTube Creators</span>
+              <span className="text-[9px] font-semibold text-[#606060] mt-0.5">AI-powered YouTube Comment Automation</span>
             </div>
           </div>
 
