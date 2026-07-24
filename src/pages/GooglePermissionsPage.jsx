@@ -44,7 +44,7 @@ const GooglePermissionsPage = () => {
 
   return (
     <div className="min-h-screen bg-[#f7f7f7] text-zinc-900 font-['Outfit'] relative overflow-x-hidden selection:bg-red-500/20 selection:text-red-900">
-      
+
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-[#e5e5e5]">
         <div className="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
@@ -94,15 +94,14 @@ const GooglePermissionsPage = () => {
                     <code className="text-xs font-bold text-[#ff0000] break-all bg-red-50/50 px-2 py-1 rounded-md border border-red-100/40">
                       {scope.name}
                     </code>
-                    <span className={`self-start text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full ${
-                      scope.access === 'Read-only' 
-                        ? 'bg-blue-50 text-blue-600 border border-blue-100' 
+                    <span className={`self-start text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full ${scope.access === 'Read-only'
+                        ? 'bg-blue-50 text-blue-600 border border-blue-100'
                         : 'bg-amber-50 text-amber-700 border border-amber-100'
-                    }`}>
+                      }`}>
                       {scope.access}
                     </span>
                   </div>
-                  
+
                   <div>
                     <h3 className="text-sm sm:text-base font-black text-zinc-900 mb-1">{scope.title}</h3>
                     <p className="text-xs text-zinc-500 font-semibold leading-relaxed">{scope.description}</p>

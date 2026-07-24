@@ -101,11 +101,10 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen, user, o
                   if (window.innerWidth <= 1024) setIsOpen(false);
                 }}
                 title={item.label}
-                className={`relative h-12 w-full flex items-center gap-4 rounded-2xl transition-all duration-200 group border ${
-                  isMenuTabActive
+                className={`relative h-12 w-full flex items-center gap-4 rounded-2xl transition-all duration-200 group border ${isMenuTabActive
                     ? 'bg-[#fff1f1] text-[#ff0000] border-red-100 font-black shadow-sm'
                     : (isDark ? 'text-[#aaaaaa] border-transparent hover:bg-[#202020] hover:text-white font-bold' : 'text-[#475569] border-transparent hover:bg-[#f7f7f7] hover:text-[#0f0f0f] font-bold')
-                } ${expanded ? 'px-4' : 'justify-center px-0'}`}
+                  } ${expanded ? 'px-4' : 'justify-center px-0'}`}
               >
                 <item.icon size={20} strokeWidth={isMenuTabActive ? 2.6 : 2.1} className="shrink-0" />
                 {expanded && <span className="text-[14px] font-black tracking-tight whitespace-nowrap">{item.label}</span>}

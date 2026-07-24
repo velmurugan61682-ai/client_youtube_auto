@@ -14,7 +14,7 @@ const ContactPage = () => {
     if (!formData.name.trim()) {
       tempErrors.name = 'Name is required.';
     }
-    
+
     if (!formData.email.trim()) {
       tempErrors.email = 'Email is required.';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -46,7 +46,7 @@ const ContactPage = () => {
       const body = encodeURIComponent(
         `Hello ChannelMate Support,\n\nI have an inquiry regarding the platform.\n\nName: ${formData.name.trim()}\nEmail: ${formData.email.trim()}\n\nMessage:\n${formData.message.trim()}\n\nRegards,\n${formData.name.trim()}`
       );
-      
+
       // Trigger mailto fallback redirect
       window.location.href = `mailto:support@channelbot.in?subject=${subject}&body=${body}`;
 
@@ -60,7 +60,7 @@ const ContactPage = () => {
 
   return (
     <div className="min-h-screen bg-[#f7f7f7] text-zinc-900 font-['Outfit'] relative overflow-x-hidden selection:bg-red-500/20 selection:text-red-900">
-      
+
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-[#e5e5e5]">
         <div className="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
@@ -137,9 +137,8 @@ const ContactPage = () => {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="Your name"
-                  className={`w-full glass-input py-2.5 px-4 text-xs font-bold outline-none border transition-colors ${
-                    errors.name ? 'border-red-500/80 bg-red-50/10' : 'border-[#e5e5e5] focus:border-[#ff0000]/50'
-                  }`}
+                  className={`w-full glass-input py-2.5 px-4 text-xs font-bold outline-none border transition-colors ${errors.name ? 'border-red-500/80 bg-red-50/10' : 'border-[#e5e5e5] focus:border-[#ff0000]/50'
+                    }`}
                 />
                 {errors.name && (
                   <p className="text-[10px] font-bold text-red-600 mt-1 ml-1 flex items-center gap-1">
@@ -155,9 +154,8 @@ const ContactPage = () => {
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="name@gmail.com"
-                  className={`w-full glass-input py-2.5 px-4 text-xs font-bold outline-none border transition-colors ${
-                    errors.email ? 'border-red-500/80 bg-red-50/10' : 'border-[#e5e5e5] focus:border-[#ff0000]/50'
-                  }`}
+                  className={`w-full glass-input py-2.5 px-4 text-xs font-bold outline-none border transition-colors ${errors.email ? 'border-red-500/80 bg-red-50/10' : 'border-[#e5e5e5] focus:border-[#ff0000]/50'
+                    }`}
                 />
                 {errors.email && (
                   <p className="text-[10px] font-bold text-red-600 mt-1 ml-1 flex items-center gap-1">
@@ -173,9 +171,8 @@ const ContactPage = () => {
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   placeholder="How can we help you grow your channel?"
-                  className={`w-full glass-input py-2.5 px-4 text-xs font-bold outline-none resize-none border transition-colors ${
-                    errors.message ? 'border-red-500/80 bg-red-50/10' : 'border-[#e5e5e5] focus:border-[#ff0000]/50'
-                  }`}
+                  className={`w-full glass-input py-2.5 px-4 text-xs font-bold outline-none resize-none border transition-colors ${errors.message ? 'border-red-500/80 bg-red-50/10' : 'border-[#e5e5e5] focus:border-[#ff0000]/50'
+                    }`}
                 />
                 {errors.message && (
                   <p className="text-[10px] font-bold text-red-600 mt-1 ml-1 flex items-center gap-1">

@@ -33,7 +33,7 @@ const AdminLogin = () => {
 
   return (
     <div className="min-h-screen bg-white text-slate-900 flex items-center justify-center p-4 relative font-['Outfit'] overflow-hidden">
-<motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="w-full max-w-[440px] z-10"

@@ -99,7 +99,7 @@ const App = () => {
       label: 'Last 30 Days'
     };
   });
-useEffect(() => {
+  useEffect(() => {
     const handleOnline = () => setIsOffline(false);
     const handleOffline = () => setIsOffline(true);
     window.addEventListener('online', handleOnline);
@@ -443,7 +443,7 @@ useEffect(() => {
               ? <Navigate to="/dashboard" replace />
               : <Register />
           } />
-          
+
           {/* Dedicated SaaS Admin Panel Routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<AdminRoute><AdminLayout><AdminDashboardPage /></AdminLayout></AdminRoute>} />
@@ -482,7 +482,7 @@ useEffect(() => {
                   </Suspense>
                 </div>
               ) : (
-                <div className={`client-shell ${clientDark ? 'client-dark' : 'client-light'} min-h-screen min-[1025px]:h-screen flex min-[1025px]:overflow-hidden relative selection:bg-[#ff0000]/20 min-w-0 overflow-x-hidden transition-colors ${clientDark ? 'bg-[#0f0f0f] selection:text-white' : 'bg-white selection:text-[#0f0f0f]'}`}> 
+                <div className={`client-shell ${clientDark ? 'client-dark' : 'client-light'} min-h-screen min-[1025px]:h-screen flex min-[1025px]:overflow-hidden relative selection:bg-[#ff0000]/20 min-w-0 overflow-x-hidden transition-colors ${clientDark ? 'bg-[#0f0f0f] selection:text-white' : 'bg-white selection:text-[#0f0f0f]'}`}>
                   {/* Dummy inputs for Chrome Password Manager / Autofill Trap */}
                   <div style={{ position: 'absolute', top: '-1000px', left: '-1000px', width: '0px', height: '0px', overflow: 'hidden' }} aria-hidden="true">
                     <input type="text" name="chrome_autocomplete_trap_email" tabIndex="-1" autoComplete="username" />

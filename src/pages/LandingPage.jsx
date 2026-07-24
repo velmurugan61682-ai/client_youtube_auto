@@ -86,7 +86,7 @@ const LandingPage = () => {
     if (!formData.name.trim()) {
       tempErrors.name = 'Name is required.';
     }
-    
+
     if (!formData.email.trim()) {
       tempErrors.email = 'Email is required.';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -118,7 +118,7 @@ const LandingPage = () => {
       const body = encodeURIComponent(
         `Hello ChannelMate Support,\n\nI have an inquiry regarding the platform.\n\nName: ${formData.name.trim()}\nEmail: ${formData.email.trim()}\n\nMessage:\n${formData.message.trim()}\n\nRegards,\n${formData.name.trim()}`
       );
-      
+
       // Trigger mailto fallback redirect
       window.location.href = `mailto:support@channelbot.in?subject=${subject}&body=${body}`;
 
@@ -277,30 +277,28 @@ const LandingPage = () => {
           </p>
 
           <p className="text-[16px] sm:text-[18px] text-[#606060] font-semibold leading-relaxed mb-6 max-w-3xl mx-auto">
-            ChannelMate is an AI-powered platform for YouTube creators and businesses. Using secure Google OAuth, users can safely connect their YouTube channel to automate comment moderation, generate AI-powered replies, manage engagement, detect spam and harmful comments, and monitor channel analytics.
+            ChannelMate is an AI-powered YouTube comment management platform for creators and businesses. Users securely connect their YouTube account using Google OAuth to:
           </p>
 
           <div className="max-w-2xl mx-auto text-left bg-white border border-[#e5e5e5] rounded-2xl p-5 mb-6 shadow-sm">
             <p className="text-sm font-black text-[#0f0f0f] mb-3">Why ChannelMate Uses Google OAuth</p>
-            
+
             <p className="text-xs font-semibold text-[#606060] mb-3 leading-relaxed">
               ChannelMate uses Google's official OAuth 2.0 authentication to securely connect your YouTube account.
             </p>
-            
+
             <p className="text-xs font-black text-[#0f0f0f] mb-2">After you grant permission, ChannelMate can:</p>
             <ul className="space-y-2 text-xs font-semibold text-[#606060] mb-4">
-              <li>✅ Read comments from your YouTube videos</li>
-              <li>✅ Generate AI-powered replies</li>
-              <li>✅ Detect spam, abusive and harmful comments</li>
-              <li>✅ Publish approved automated replies</li>
-              <li>✅ Display YouTube comment analytics</li>
-              <li>✅ Synchronize channel information</li>
+              <li>• Read comments on their own YouTube videos</li>
+              <li>• Generate AI-powered replies</li>
+              <li>• Moderate spam and abusive comments</li>
+              <li>• Manage audience engagement</li>
+              <li>• View YouTube comment analytics</li>
             </ul>
 
             <div className="pt-3 border-t border-slate-100 text-[11px] text-[#606060] font-semibold space-y-1">
-              <p><strong>Privacy Note:</strong> ChannelMate never requests or stores your Google password.</p>
-              <p>Your Google data is accessed only after you explicitly grant permission.</p>
-              <p>You can revoke access anytime from your Google Account.</p>
+              <p>ChannelMate never requests or stores your Google password.</p>
+              <p>Users can revoke access anytime from your Google Account.</p>
             </div>
           </div>
 
@@ -380,21 +378,21 @@ const LandingPage = () => {
         </motion.div>
       </section>
 
-      {/* SECTION: HOW CHANNELMATE WORKS */}
+      {/* SECTION: HOW ChannelMate WORKS */}
       <section id="how-it-works" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-16 border-t border-[#e5e5e5]">
         <div className="max-w-5xl mx-auto text-center space-y-8">
           <div>
             <h2 className="text-2xl sm:text-3xl font-black text-[#0f0f0f] tracking-tight">How ChannelMate Works</h2>
             <p className="text-xs font-black text-[#606060] uppercase tracking-wider mt-1">Simple, Secure Creator Integration Pipeline</p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
             <div className="bg-white p-5 rounded-2xl border border-[#e5e5e5] shadow-sm space-y-3">
               <div className="w-10 h-10 rounded-xl bg-red-50 text-[#ff0000] flex items-center justify-center border border-red-100"><Lock size={20} /></div>
               <h3 className="text-base font-black text-[#0f0f0f]">Sign in securely using Google OAuth</h3>
               <p className="text-xs font-semibold text-[#606060] leading-relaxed">Authorize securely with your Google account.</p>
             </div>
-            
+
             <div className="bg-white p-5 rounded-2xl border border-[#e5e5e5] shadow-sm space-y-3">
               <div className="w-10 h-10 rounded-xl bg-red-50 text-[#ff0000] flex items-center justify-center border border-red-100"><Youtube size={20} /></div>
               <h3 className="text-base font-black text-[#0f0f0f]">Connect your YouTube Channel</h3>
@@ -431,7 +429,7 @@ const LandingPage = () => {
       {/* SECTION: GOOGLE DATA & PRIVACY CONTROL */}
       <section id="google-data-privacy" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-16 border-t border-[#e5e5e5]">
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
-          
+
           {/* Left Column: Google User Data We Access */}
           <div className="bg-white p-6 sm:p-8 rounded-2xl border border-[#e5e5e5] shadow-sm space-y-4">
             <h3 className="text-lg sm:text-xl font-black text-[#0f0f0f] border-b border-slate-100 pb-3 flex items-center gap-2">
@@ -719,9 +717,8 @@ const LandingPage = () => {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="Your name"
-                  className={`w-full glass-input py-2.5 px-4 text-xs font-bold outline-none border transition-colors ${
-                    errors.name ? 'border-red-500/80 bg-red-50/10' : 'border-[#e5e5e5]'
-                  }`}
+                  className={`w-full glass-input py-2.5 px-4 text-xs font-bold outline-none border transition-colors ${errors.name ? 'border-red-500/80 bg-red-50/10' : 'border-[#e5e5e5]'
+                    }`}
                 />
                 {errors.name && (
                   <p className="text-[10px] font-bold text-red-600 mt-1 ml-1 flex items-center gap-1">
@@ -737,9 +734,8 @@ const LandingPage = () => {
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="name@gmail.com"
-                  className={`w-full glass-input py-2.5 px-4 text-xs font-bold outline-none border transition-colors ${
-                    errors.email ? 'border-red-500/80 bg-red-50/10' : 'border-[#e5e5e5]'
-                  }`}
+                  className={`w-full glass-input py-2.5 px-4 text-xs font-bold outline-none border transition-colors ${errors.email ? 'border-red-500/80 bg-red-50/10' : 'border-[#e5e5e5]'
+                    }`}
                 />
                 {errors.email && (
                   <p className="text-[10px] font-bold text-red-600 mt-1 ml-1 flex items-center gap-1">
@@ -755,9 +751,8 @@ const LandingPage = () => {
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   placeholder="How can we help you grow your channel?"
-                  className={`w-full glass-input py-2.5 px-4 text-xs font-bold outline-none resize-none border transition-colors ${
-                    errors.message ? 'border-red-500/80 bg-red-50/10' : 'border-[#e5e5e5]'
-                  }`}
+                  className={`w-full glass-input py-2.5 px-4 text-xs font-bold outline-none resize-none border transition-colors ${errors.message ? 'border-red-500/80 bg-red-50/10' : 'border-[#e5e5e5]'
+                    }`}
                 />
                 {errors.message && (
                   <p className="text-[10px] font-bold text-red-600 mt-1 ml-1 flex items-center gap-1">

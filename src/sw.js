@@ -31,11 +31,11 @@ registerRoute(navigationRoute);
 
 // Handle external image caching (Google/YouTube avatars and thumbnails)
 registerRoute(
-  ({ url, request }) => 
-    request.destination === 'image' && 
-    (url.hostname.includes('ggpht.com') || 
-     url.hostname.includes('ytimg.com') || 
-     url.hostname.includes('googleusercontent.com')),
+  ({ url, request }) =>
+    request.destination === 'image' &&
+    (url.hostname.includes('ggpht.com') ||
+      url.hostname.includes('ytimg.com') ||
+      url.hostname.includes('googleusercontent.com')),
   new CacheFirst({
     cacheName: 'youtube-images-cache',
     plugins: [
@@ -67,7 +67,7 @@ self.addEventListener('push', (event) => {
   } catch (e) {
     data = { title: 'Notification', body: event.data ? event.data.text() : data.body };
   }
-  
+
   const options = {
     body: data.body,
     icon: '/icon-192.png',

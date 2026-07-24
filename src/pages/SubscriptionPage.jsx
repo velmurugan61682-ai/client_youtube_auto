@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import api from '../services/api';
-import { 
-  CreditCard, 
-  Check, 
-  AlertTriangle, 
-  Loader2, 
-  Star, 
-  LogOut, 
-  ArrowRight, 
-  UserCheck, 
-  History, 
+import {
+  CreditCard,
+  Check,
+  AlertTriangle,
+  Loader2,
+  Star,
+  LogOut,
+  ArrowRight,
+  UserCheck,
+  History,
   Download
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -147,7 +147,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
           color: "#ff0000"
         },
         modal: {
-          ondismiss: function() {
+          ondismiss: function () {
             setPurchasingPlan(null);
           }
         }
@@ -210,7 +210,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
     three_months_999: 'Pro Plan (₹999)'
   };
 
-  const hasAnyActiveSub = subData && (subData.status === 'active' || 
+  const hasAnyActiveSub = subData && (subData.status === 'active' ||
     (subData.status === 'cancelled' && subData.currentEnd && new Date(subData.currentEnd) > new Date()));
 
   const plans = [
@@ -253,7 +253,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
 
   return (
     <div className={`w-full transition-all duration-500 ${isGate ? 'max-w-4xl mx-auto py-6' : 'min-h-[calc(100svh-5.5rem)] min-[1025px]:h-[calc(100vh-2.5rem)] min-[1025px]:min-h-[760px] overflow-visible min-[1025px]:overflow-hidden rounded-[28px] bg-[#eef3f5] p-4 sm:p-5 text-[#0f0f0f]'}`}>
-      
+
       {/* Header Panel */}
       <div className="relative z-10 rounded-[22px] bg-white border border-[#e5e5e5] shadow-sm px-5 sm:px-7 py-5 flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
         <div>
@@ -261,7 +261,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
             Subscription
           </h1>
         </div>
-        
+
         {isGate ? (
           <button
             onClick={logout}
@@ -273,21 +273,19 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
           <div className="flex bg-zinc-200/50 p-1 rounded-2xl border border-zinc-200">
             <button
               onClick={() => setActiveSubTab('plans')}
-              className={`px-4 py-2 text-xs font-black uppercase tracking-widest rounded-xl transition-all ${
-                activeSubTab === 'plans' 
-                  ? 'bg-zinc-950 text-white shadow-sm' 
+              className={`px-4 py-2 text-xs font-black uppercase tracking-widest rounded-xl transition-all ${activeSubTab === 'plans'
+                  ? 'bg-zinc-950 text-white shadow-sm'
                   : 'text-zinc-500 hover:text-zinc-900'
-              }`}
+                }`}
             >
               Subscription Plans
             </button>
             <button
               onClick={() => setActiveSubTab('billing')}
-              className={`px-4 py-2 text-xs font-black uppercase tracking-widest rounded-xl transition-all ${
-                activeSubTab === 'billing' 
-                  ? 'bg-zinc-950 text-white shadow-sm' 
+              className={`px-4 py-2 text-xs font-black uppercase tracking-widest rounded-xl transition-all ${activeSubTab === 'billing'
+                  ? 'bg-zinc-950 text-white shadow-sm'
                   : 'text-zinc-500 hover:text-zinc-900'
-              }`}
+                }`}
             >
               Billing History
             </button>
@@ -303,22 +301,21 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
 
       {activeSubTab === 'plans' ? (
         <div className="custom-scroll h-[calc(100%-112px)] overflow-y-auto pr-1 space-y-8 relative z-10">
-          
+
           {/* Active Subscription Banner */}
           {!isGate && (
             <div className="bg-white rounded-[22px] border border-[#e5e5e5] p-6 md:p-8 shadow-[0_12px_40px_rgba(0,0,0,0.02)] flex flex-col md:flex-row md:items-center justify-between gap-6">
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <span className={`px-3 py-1 text-[10px] font-black uppercase rounded-full tracking-widest border ${
-                    hasAnyActiveSub 
-                      ? 'bg-[#fff1f1] text-[#ff0000] border-red-100' 
+                  <span className={`px-3 py-1 text-[10px] font-black uppercase rounded-full tracking-widest border ${hasAnyActiveSub
+                      ? 'bg-[#fff1f1] text-[#ff0000] border-red-100'
                       : 'bg-zinc-100 text-zinc-650 border-zinc-200'
-                  }`}>
+                    }`}>
                     {hasAnyActiveSub ? `Active: ${planDisplayNames[subData.planType] || subData.planType}` : 'Free Tier Active'}
                   </span>
                   {hasAnyActiveSub && <span className="text-xs text-zinc-400 font-semibold">Subscription ID: {subData.id}</span>}
                 </div>
-                
+
                 <p className="text-sm text-zinc-800 font-black">
                   {hasAnyActiveSub ? (
                     `Premium Active - Connected channels share organization limits under the ${planDisplayNames[subData.planType] || subData.planType} tier.`
@@ -349,24 +346,23 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
           <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-8">
             {plans.map((plan) => {
               const isActive = isPlanActive(plan.type);
-              
+
               return (
-                <div 
+                <div
                   key={plan.type}
-                  className={`bg-white rounded-[22px] border p-6 flex flex-col justify-between transition-all duration-300 hover:shadow-xl relative overflow-hidden ${
-                    isActive 
-                      ? 'border-[#ff0000] ring-2 ring-[#ff0000]/10' 
-                      : plan.recommended 
-                      ? 'border-orange-300 ring-2 ring-orange-400/10' 
-                      : 'border-white/50'
-                  }`}
+                  className={`bg-white rounded-[22px] border p-6 flex flex-col justify-between transition-all duration-300 hover:shadow-xl relative overflow-hidden ${isActive
+                      ? 'border-[#ff0000] ring-2 ring-[#ff0000]/10'
+                      : plan.recommended
+                        ? 'border-orange-300 ring-2 ring-orange-400/10'
+                        : 'border-white/50'
+                    }`}
                 >
                   {isActive && (
                     <div className="absolute top-0 right-0 bg-[#ff0000] text-white text-[8px] font-black uppercase tracking-widest py-1.5 px-4 rounded-bl-2xl flex items-center gap-1">
                       <Star size={8} fill="white" /> Active Plan
                     </div>
                   )}
-                  
+
                   <div>
                     <div className="mb-4 flex justify-between items-start">
                       <div>
@@ -401,11 +397,10 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
                   <button
                     disabled={purchasingPlan === plan.type || isActive}
                     onClick={() => handleSubscribe(plan.type)}
-                    className={`w-full py-3 text-xs font-black uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-1.5 ${
-                      isActive
+                    className={`w-full py-3 text-xs font-black uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-1.5 ${isActive
                         ? 'bg-[#ff0000] text-white cursor-default shadow-[0_4px_12px_rgba(255,0,0,0.18)]'
                         : 'bg-zinc-900 hover:bg-zinc-800 text-white active:scale-98'
-                    }`}
+                      }`}
                   >
                     {purchasingPlan === plan.type ? (
                       <Loader2 className="animate-spin" size={14} />
@@ -465,16 +460,15 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
                         {(inv.amount / 100).toLocaleString('en-IN', { style: 'currency', currency: inv.currency || 'INR' })}
                       </td>
                       <td className="py-4">
-                        <span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider ${
-                          inv.status === 'paid' || inv.status === 'issued'
+                        <span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider ${inv.status === 'paid' || inv.status === 'issued'
                             ? 'bg-[#fff1f1] text-[#ff0000] border border-red-100'
                             : 'bg-red-50 text-red-700 border border-red-200'
-                        }`}>
+                          }`}>
                           {inv.status}
                         </span>
                       </td>
                       <td className="py-4 text-right">
-                        <button 
+                        <button
                           onClick={() => alert(`Invoice details: ${inv.id}`)}
                           className="p-2 hover:bg-zinc-100 rounded-xl text-zinc-500 hover:text-zinc-900 transition-colors inline-flex items-center gap-1"
                         >
