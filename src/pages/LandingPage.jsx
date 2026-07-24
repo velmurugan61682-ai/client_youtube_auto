@@ -273,26 +273,36 @@ const LandingPage = () => {
             <span className="text-[#ff0000]">ChannelMate</span>
           </h1>
           <p className="text-xl sm:text-2xl text-[#0f0f0f] font-black mb-6 max-w-3xl mx-auto">
-            AI-powered YouTube Comment Automation
+            AI-powered YouTube Comment Automation &amp; Moderation Platform
           </p>
 
           <p className="text-[16px] sm:text-[18px] text-[#606060] font-semibold leading-relaxed mb-6 max-w-3xl mx-auto">
-            ChannelMate is an AI-powered YouTube comment automation and moderation platform for creators and businesses. Users securely connect their YouTube channel through Google OAuth to manage comments, automatically generate replies, moderate spam or harmful content, monitor engagement, and view channel analytics.
+            ChannelMate is an AI-powered platform for YouTube creators and businesses. Using secure Google OAuth, users can safely connect their YouTube channel to automate comment moderation, generate AI-powered replies, manage engagement, detect spam and harmful comments, and monitor channel analytics.
           </p>
 
           <div className="max-w-2xl mx-auto text-left bg-white border border-[#e5e5e5] rounded-2xl p-5 mb-6 shadow-sm">
-            <p className="text-sm font-black text-[#0f0f0f] mb-3">YouTube OAuth Authorization & Features Access Details:</p>
-            <ul className="space-y-2 text-xs font-semibold text-[#606060]">
-              <li><strong>What it is &amp; Who it is for:</strong> ChannelMate is an AI-powered comment automation and moderation platform built for YouTube creators and businesses.</li>
-              <li><strong>Why Google OAuth is required:</strong> Used to establish a secure OAuth 2.0 connection. ChannelMate never requests, sees, or stores your Google password.</li>
-              <li><strong>YouTube Features Accessed:</strong> Retrieve comments on your videos, publish automated AI replies, hide or delete spam comments, and display channel analytics.</li>
-              <li><strong>User Control:</strong> ChannelMate only accesses YouTube data after you grant permission. You can disconnect your channel from settings or revoke access from your Google Account at any time.</li>
+            <p className="text-sm font-black text-[#0f0f0f] mb-3">Why ChannelMate Uses Google OAuth</p>
+            
+            <p className="text-xs font-semibold text-[#606060] mb-3 leading-relaxed">
+              ChannelMate uses Google's official OAuth 2.0 authentication to securely connect your YouTube account.
+            </p>
+            
+            <p className="text-xs font-black text-[#0f0f0f] mb-2">After you grant permission, ChannelMate can:</p>
+            <ul className="space-y-2 text-xs font-semibold text-[#606060] mb-4">
+              <li>✅ Read comments from your YouTube videos</li>
+              <li>✅ Generate AI-powered replies</li>
+              <li>✅ Detect spam, abusive and harmful comments</li>
+              <li>✅ Publish approved automated replies</li>
+              <li>✅ Display YouTube comment analytics</li>
+              <li>✅ Synchronize channel information</li>
             </ul>
-          </div>
 
-          <p className="text-[13px] sm:text-[14px] text-[#606060] font-semibold leading-relaxed mb-10 max-w-2xl mx-auto">
-            Your data is only accessed after you grant permission through Google's OAuth consent screen. You can revoke access at any time from your Google Account.
-          </p>
+            <div className="pt-3 border-t border-slate-100 text-[11px] text-[#606060] font-semibold space-y-1">
+              <p><strong>Privacy Note:</strong> ChannelMate never requests or stores your Google password.</p>
+              <p>Your Google data is accessed only after you explicitly grant permission.</p>
+              <p>You can revoke access anytime from your Google Account.</p>
+            </div>
+          </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
             <Link to="/register" className="btn-glass-primary w-full sm:w-auto text-[15px] px-8 py-3.5 shadow-lg group">
@@ -370,47 +380,118 @@ const LandingPage = () => {
         </motion.div>
       </section>
 
-      {/* SECTION: HOW CHANNELMATE USES GOOGLE OAUTH */}
-      <section id="google-oauth" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-16 border-t border-[#e5e5e5]">
-        <div className="max-w-5xl mx-auto glass-garden-card p-6 sm:p-10 rounded-2xl text-left border-[#e5e5e5] bg-white shadow-sm">
-          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
-            <div className="w-10 h-10 rounded-xl bg-red-50 text-[#ff0000] flex items-center justify-center border border-red-100">
-              <ShieldCheck size={22} />
+      {/* SECTION: HOW CHANNELMATE WORKS */}
+      <section id="how-it-works" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-16 border-t border-[#e5e5e5]">
+        <div className="max-w-5xl mx-auto text-center space-y-8">
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-black text-[#0f0f0f] tracking-tight">How ChannelMate Works</h2>
+            <p className="text-xs font-black text-[#606060] uppercase tracking-wider mt-1">Simple, Secure Creator Integration Pipeline</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+            <div className="bg-white p-5 rounded-2xl border border-[#e5e5e5] shadow-sm space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-red-50 text-[#ff0000] flex items-center justify-center border border-red-100"><Lock size={20} /></div>
+              <h3 className="text-base font-black text-[#0f0f0f]">Sign in securely using Google OAuth</h3>
+              <p className="text-xs font-semibold text-[#606060] leading-relaxed">Authorize securely with your Google account.</p>
             </div>
-            <div>
-              <h2 className="text-xl sm:text-2xl font-black text-[#0f0f0f]">How ChannelMate Uses Google OAuth</h2>
-              <p className="text-[10px] font-black text-[#606060] uppercase tracking-wider mt-0.5">Secure, Consent-Based YouTube Integration</p>
+            
+            <div className="bg-white p-5 rounded-2xl border border-[#e5e5e5] shadow-sm space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-red-50 text-[#ff0000] flex items-center justify-center border border-red-100"><Youtube size={20} /></div>
+              <h3 className="text-base font-black text-[#0f0f0f]">Connect your YouTube Channel</h3>
+              <p className="text-xs font-semibold text-[#606060] leading-relaxed">Select and connect your YouTube channel.</p>
+            </div>
+
+            <div className="bg-white p-5 rounded-2xl border border-[#e5e5e5] shadow-sm space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-red-50 text-[#ff0000] flex items-center justify-center border border-red-100"><MessageSquare size={20} /></div>
+              <h3 className="text-base font-black text-[#0f0f0f]">Retrieve Comments</h3>
+              <p className="text-xs font-semibold text-[#606060] leading-relaxed">ChannelMate securely retrieves comments from your videos.</p>
+            </div>
+
+            <div className="bg-white p-5 rounded-2xl border border-[#e5e5e5] shadow-sm space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-red-50 text-[#ff0000] flex items-center justify-center border border-red-100"><Sparkles size={20} /></div>
+              <h3 className="text-base font-black text-[#0f0f0f]">AI Moderation</h3>
+              <p className="text-xs font-semibold text-[#606060] leading-relaxed">AI detects spam, abuse, hate speech and harmful content.</p>
+            </div>
+
+            <div className="bg-white p-5 rounded-2xl border border-[#e5e5e5] shadow-sm space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-red-50 text-[#ff0000] flex items-center justify-center border border-red-100"><Bot size={20} /></div>
+              <h3 className="text-base font-black text-[#0f0f0f]">AI Reply Generation</h3>
+              <p className="text-xs font-semibold text-[#606060] leading-relaxed">Automatically generate AI replies according to your settings.</p>
+            </div>
+
+            <div className="bg-white p-5 rounded-2xl border border-[#e5e5e5] shadow-sm space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-red-50 text-[#ff0000] flex items-center justify-center border border-red-100"><BarChart3 size={20} /></div>
+              <h3 className="text-base font-black text-[#0f0f0f]">Dashboard &amp; Analytics</h3>
+              <p className="text-xs font-semibold text-[#606060] leading-relaxed">View moderation history, AI replies and channel analytics.</p>
             </div>
           </div>
-          <p className="text-sm font-semibold text-[#606060] mb-5 leading-relaxed">
-            ChannelMate accesses your YouTube channel data only after you explicitly grant permission via the secure Google OAuth consent screen. Here is how we ensure compliance and protect your account:
-          </p>
-          <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-semibold text-[#606060]">
-            <li className="flex items-start gap-2 bg-[#f9f9f9] p-3.5 rounded-xl border border-[#e5e5e5]">
-              <CheckCircle size={14} className="text-[#ff0000] shrink-0 mt-0.5" />
-              <span><strong>Secure Connection:</strong> ChannelMate uses Google OAuth 2.0 to securely connect your YouTube channel. This means we never see, request, or store your Google password.</span>
-            </li>
-            <li className="flex items-start gap-2 bg-[#f9f9f9] p-3.5 rounded-xl border border-[#e5e5e5]">
-              <CheckCircle size={14} className="text-[#ff0000] shrink-0 mt-0.5" />
-              <span><strong>Approved Permissions:</strong> We access only the specific YouTube API permissions explicitly approved by you. We cannot access your Gmail, Google Drive, or other unrelated services.</span>
-            </li>
-            <li className="flex items-start gap-2 bg-[#f9f9f9] p-3.5 rounded-xl border border-[#e5e5e5]">
-              <CheckCircle size={14} className="text-[#ff0000] shrink-0 mt-0.5" />
-              <span><strong>Purpose-Driven Use:</strong> Requested permissions are used strictly for comment retrieval, automated comment replies, comment moderation actions, channel information, and displaying dashboard analytics.</span>
-            </li>
-            <li className="flex items-start gap-2 bg-[#f9f9f9] p-3.5 rounded-xl border border-[#e5e5e5]">
-              <CheckCircle size={14} className="text-[#ff0000] shrink-0 mt-0.5" />
-              <span><strong>No Consent, No Access:</strong> ChannelMate does not access or perform any actions on your YouTube account without your explicit permission.</span>
-            </li>
-            <li className="flex items-start gap-2 bg-[#f9f9f9] p-3.5 rounded-xl border border-[#e5e5e5]">
-              <CheckCircle size={14} className="text-[#ff0000] shrink-0 mt-0.5" />
-              <span><strong>YouTube Channel Disconnection:</strong> You can disconnect your YouTube channel from ChannelMate settings at any time, which deletes all associated data and tokens.</span>
-            </li>
-            <li className="flex items-start gap-2 bg-[#f9f9f9] p-3.5 rounded-xl border border-[#e5e5e5]">
-              <CheckCircle size={14} className="text-[#ff0000] shrink-0 mt-0.5" />
-              <span><strong>Revoke Access Instantly:</strong> You can revoke ChannelMate's access to your channel at any time from your Google Account permissions page.</span>
-            </li>
-          </ul>
+        </div>
+      </section>
+
+      {/* SECTION: GOOGLE DATA & PRIVACY CONTROL */}
+      <section id="google-data-privacy" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-16 border-t border-[#e5e5e5]">
+        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+          
+          {/* Left Column: Google User Data We Access */}
+          <div className="bg-white p-6 sm:p-8 rounded-2xl border border-[#e5e5e5] shadow-sm space-y-4">
+            <h3 className="text-lg sm:text-xl font-black text-[#0f0f0f] border-b border-slate-100 pb-3 flex items-center gap-2">
+              <span className="w-2.5 h-2.5 bg-[#ff0000] rounded-full"></span>
+              Google User Data We Access
+            </h3>
+            <ul className="space-y-3 text-xs font-bold text-[#606060]">
+              <li className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 bg-[#ff0000] rounded-full"></span>
+                Basic Google profile
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 bg-[#ff0000] rounded-full"></span>
+                YouTube channel information
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 bg-[#ff0000] rounded-full"></span>
+                YouTube comments
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 bg-[#ff0000] rounded-full"></span>
+                Comment analytics
+              </li>
+            </ul>
+            <div className="pt-4 border-t border-slate-100 text-[11px] text-[#606060] font-semibold leading-relaxed space-y-2">
+              <p>We only access the Google data required to provide ChannelMate features.</p>
+              <p className="text-emerald-700 font-bold">We never sell, share or misuse Google user data.</p>
+            </div>
+          </div>
+
+          {/* Right Column: Your Privacy & Control */}
+          <div className="bg-white p-6 sm:p-8 rounded-2xl border border-[#e5e5e5] shadow-sm space-y-4">
+            <h3 className="text-lg sm:text-xl font-black text-[#0f0f0f] border-b border-slate-100 pb-3 flex items-center gap-2">
+              <span className="w-2.5 h-2.5 bg-[#ff0000] rounded-full"></span>
+              Your Privacy &amp; Control
+            </h3>
+            <ul className="space-y-3 text-xs font-bold text-[#606060]">
+              <li className="flex items-start gap-2">
+                <span className="text-emerald-500 font-black">✔</span>
+                <span>OAuth permission is required before accessing any data.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-emerald-500 font-black">✔</span>
+                <span>We never request your Google password.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-emerald-500 font-black">✔</span>
+                <span>OAuth tokens are securely encrypted.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-emerald-500 font-black">✔</span>
+                <span>You can disconnect your YouTube account anytime.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-emerald-500 font-black">✔</span>
+                <span>You can revoke Google access anytime from your Google Account.</span>
+              </li>
+            </ul>
+          </div>
+
         </div>
       </section>
 
