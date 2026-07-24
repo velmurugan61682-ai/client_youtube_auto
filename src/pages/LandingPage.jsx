@@ -273,7 +273,7 @@ const LandingPage = () => {
             <span className="text-[#ff0000]">ChannelMate</span>
           </h1>
           <p className="text-xl sm:text-2xl text-[#0f0f0f] font-black mb-6 max-w-3xl mx-auto">
-            AI-powered YouTube Comment Automation &amp; Moderation Platform
+            YouTube Creators
           </p>
 
           <p className="text-[16px] sm:text-[18px] text-[#606060] font-semibold leading-relaxed mb-6 max-w-3xl mx-auto">
