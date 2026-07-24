@@ -97,12 +97,14 @@ const VideosList = ({
   }, []);
 
   const processedVideos = (videos || []).map(v => {
-    if (v.isPost) {
-      return { ...v, durationSeconds: 0, formattedDuration: '' };
+    const isPost = v.isPost || v.duration === 'Post' || v.duration === 'P0D';
+    if (isPost) {
+      return { ...v, isPost: true, durationSeconds: 0, formattedDuration: '' };
     }
     const { seconds, formatted } = parseISO8601Duration(v.duration);
     return {
       ...v,
+      isPost: false,
       durationSeconds: seconds,
       formattedDuration: v.duration ? formatted : '--:--'
     };

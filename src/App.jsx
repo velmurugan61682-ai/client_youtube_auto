@@ -655,8 +655,16 @@ const App = () => {
               </div>
 
               <div className={`p-4 rounded-2xl flex items-center gap-3 border mb-6 ${clientDark ? 'bg-[#181818] border-[#2a2a2a]' : 'bg-[#f7f7f7] border-[#ededed]'}`}>
-                <div className="w-12 h-12 rounded-2xl bg-[#ff0000] text-white flex items-center justify-center font-black text-lg shadow-sm">
-                  {user?.name?.charAt(0).toUpperCase() || 'A'}
+                <div className="w-12 h-12 rounded-2xl bg-[#ff0000] text-white flex items-center justify-center font-black text-lg shadow-sm overflow-hidden shrink-0">
+                  {user?.profilePicture ? (
+                    <img
+                      src={user.profilePicture}
+                      alt={user?.name || 'Profile'}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    user?.name?.charAt(0).toUpperCase() || 'A'
+                  )}
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className={`text-sm font-black truncate ${clientDark ? 'text-white' : 'text-[#0f0f0f]'}`}>{user?.name || 'ChannelMate'}</p>
