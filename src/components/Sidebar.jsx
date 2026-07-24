@@ -127,8 +127,16 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen, user, o
             className={`w-full flex items-center gap-3 rounded-2xl py-3 transition-colors font-black text-[13px] ${expanded ? 'px-4' : 'justify-center px-0'} ${isDark ? 'text-white bg-[#202020] hover:bg-[#2a2a2a]' : 'text-[#0f0f0f] bg-[#f7f7f7] hover:bg-[#eeeeee]'}`}
             title="Profile"
           >
-            <div className="h-8 w-8 rounded-xl bg-[#0f0f0f] text-white flex items-center justify-center text-[11px] font-black shrink-0">
-              {user?.name?.charAt(0).toUpperCase() || <UserCircle size={18} />}
+            <div className="h-8 w-8 rounded-xl bg-[#0f0f0f] text-white flex items-center justify-center text-[11px] font-black shrink-0 overflow-hidden">
+              {user?.profilePicture ? (
+                <img
+                  src={user.profilePicture}
+                  alt={user?.name || 'Profile'}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                user?.name?.charAt(0).toUpperCase() || <UserCircle size={18} />
+              )}
             </div>
             {expanded && (
               <div className="min-w-0 text-left">

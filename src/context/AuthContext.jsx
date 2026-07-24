@@ -25,6 +25,14 @@ export const AuthProvider = ({ children }) => {
       const queryParams = new URLSearchParams(window.location.search);
       const sso_username = queryParams.get('sso_username');
       const sso_key = queryParams.get('sso_key');
+      const embed = queryParams.get('embed');
+      const hide_shell = queryParams.get('hide_shell');
+      const redirect = queryParams.get('redirect');
+
+      if (embed === 'true' || hide_shell === 'true') {
+        localStorage.setItem('embed', 'true');
+        localStorage.setItem('hide_shell', 'true');
+      }
 
       if (sso_username && sso_key) {
         try {
@@ -35,6 +43,9 @@ export const AuthProvider = ({ children }) => {
           }
           if (response.data.user) {
             localStorage.setItem('user', JSON.stringify(response.data.user));
+          }
+          if (redirect) {
+            localStorage.setItem('sso_redirect', redirect);
           }
           
           // Clear SSO params from URL
@@ -139,6 +150,9 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
       localStorage.removeItem('token');
       localStorage.removeItem('user');
+      localStorage.removeItem('embed');
+      localStorage.removeItem('hide_shell');
+      localStorage.removeItem('sso_redirect');
     }
   };
 

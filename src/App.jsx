@@ -59,16 +59,24 @@ const App = () => {
   const [loadingChannels, setLoadingChannels] = useState(true);
   const [activeTab, setActiveTab] = useState(() => {
     const queryParams = new URLSearchParams(window.location.search);
+    const redirectParam = queryParams.get('redirect') || localStorage.getItem('sso_redirect');
+    localStorage.removeItem('sso_redirect');
+
     if (queryParams.get('status') === 'success') {
       // Small alert to confirm success
       setTimeout(() => alert('YouTube Channel Connected Successfully!'), 500);
       return 'channels';
     }
-    return queryParams.get('redirect') === 'comments' ? 'videos' : 'dashboard';
+    return (redirectParam === 'comments' || redirectParam === 'videos') ? 'videos' : 'dashboard';
   });
   const [isEmbedded] = useState(() => {
     const queryParams = new URLSearchParams(window.location.search);
-    return queryParams.get('embed') === 'true';
+    return (
+      queryParams.get('embed') === 'true' ||
+      queryParams.get('hide_shell') === 'true' ||
+      localStorage.getItem('embed') === 'true' ||
+      localStorage.getItem('hide_shell') === 'true'
+    );
   });
   const [stats, setStats] = useState(null);
   const [channels, setChannels] = useState([]);

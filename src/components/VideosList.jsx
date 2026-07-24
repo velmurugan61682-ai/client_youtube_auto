@@ -108,8 +108,15 @@ const VideosList = ({
     };
   });
 
-  const longVideos = processedVideos.filter(v => !v.isPost && (!v.duration || v.durationSeconds >= 60));
-  const shortVideos = processedVideos.filter(v => !v.isPost && v.duration && v.durationSeconds < 60);
+  const isShortVideo = (video) => {
+    if (video.isPost) return false;
+    if (video.duration && video.durationSeconds < 60) return true;
+    const text = `${video.title || ''} ${video.description || ''} ${video.url || ''}`.toLowerCase();
+    return text.includes('#shorts') || text.includes('/shorts/') || text.includes('shorts');
+  };
+
+  const shortVideos = processedVideos.filter(isShortVideo);
+  const longVideos = processedVideos.filter(v => !v.isPost && !isShortVideo(v));
   const communityPosts = processedVideos.filter(v => v.isPost);
 
   const activeVideosList = videoTab === 'videos' ? longVideos : (videoTab === 'shorts' ? shortVideos : communityPosts);
@@ -977,5 +984,3 @@ const VideosList = ({
 };
 
 export default VideosList;
-
-
