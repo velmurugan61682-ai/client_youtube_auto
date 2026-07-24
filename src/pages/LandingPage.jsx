@@ -268,10 +268,6 @@ const LandingPage = () => {
       {/* SECTION 1: HOME (HERO) */}
       <section id="home" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-14 pb-16 text-center">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-5xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white border border-[#e5e5e5] text-[#0f0f0f] rounded-full mb-7 shadow-sm">
-            <Sparkles size={14} className="animate-pulse text-[#ff0000]" />
-         
-          </div>
 
           <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-[1.08] mb-3 text-[#0f0f0f]">
             <span className="text-[#ff0000]">ChannelMate</span>
