@@ -26,6 +26,8 @@ const SubscriptionPage = lazy(() => import('./pages/SubscriptionPage'));
 
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
 const TermsPage = lazy(() => import('./pages/TermsPage'));
+const GooglePermissionsPage = lazy(() => import('./pages/GooglePermissionsPage'));
+const ContactPage = lazy(() => import('./pages/ContactPage'));
 const Login = lazy(() => import('./components/Login'));
 const Register = lazy(() => import('./components/Register'));
 const AdminPortal = lazy(() => import('./pages/AdminPortal'));
@@ -427,7 +429,8 @@ useEffect(() => {
           <Route path="/" element={<LandingPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/terms" element={<TermsPage />} />
-          <Route path="/contact" element={<LandingPage />} />
+          <Route path="/google-permissions" element={<GooglePermissionsPage />} />
+          <Route path="/contact" element={<ContactPage />} />
           {/* Client Login  only redirect if a CLIENT is already logged in.
               If admin session exists in localStorage, ignore it so a client can still log in. */}
           <Route path="/login" element={

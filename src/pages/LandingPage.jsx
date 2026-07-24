@@ -40,6 +40,7 @@ const LandingPage = () => {
   const [contactSubmitted, setContactSubmitted] = useState(false);
   const [contactLoading, setContactLoading] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [errors, setErrors] = useState({});
 
   // Handle active section on scroll
   useEffect(() => {
@@ -79,15 +80,53 @@ const LandingPage = () => {
     }
   };
 
+  const validate = () => {
+    const tempErrors = {};
+    if (!formData.name.trim()) {
+      tempErrors.name = 'Name is required.';
+    }
+    
+    if (!formData.email.trim()) {
+      tempErrors.email = 'Email is required.';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      tempErrors.email = 'Email address is invalid.';
+    }
+
+    if (!formData.message.trim()) {
+      tempErrors.message = 'Message is required.';
+    } else if (formData.message.trim().length < 10) {
+      tempErrors.message = 'Message must be at least 10 characters long.';
+    }
+
+    setErrors(tempErrors);
+    return Object.keys(tempErrors).length === 0;
+  };
+
   const handleContactSubmit = (e) => {
     e.preventDefault();
+    if (!validate()) return;
+
     setContactLoading(true);
+    setErrors({});
+
     setTimeout(() => {
       setContactLoading(false);
       setContactSubmitted(true);
+
+      const subject = encodeURIComponent(`ChannelMate Inquiry from ${formData.name.trim()}`);
+      const body = encodeURIComponent(
+        `Hello ChannelMate Support,\n\nI have an inquiry regarding the platform.\n\nName: ${formData.name.trim()}\nEmail: ${formData.email.trim()}\n\nMessage:\n${formData.message.trim()}\n\nRegards,\n${formData.name.trim()}`
+      );
+      
+      // Trigger mailto fallback redirect
+      window.location.href = `mailto:support@channelbot.in?subject=${subject}&body=${body}`;
+
+      // Reset form fields
       setFormData({ name: '', email: '', message: '' });
-      setTimeout(() => setContactSubmitted(false), 5000);
-    }, 800);
+
+      // Hide redirect message after 8 seconds
+      setTimeout(() => setContactSubmitted(false), 8000);
+    }, 1000);
   };
 
   const useCases = [
@@ -184,8 +223,9 @@ const LandingPage = () => {
       {/* 1. Sticky Floating Glass Navbar */}
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-[#e5e5e5]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center select-none cursor-pointer" onClick={() => scrollToSection('home')}>
+          <div className="flex items-center gap-2 select-none cursor-pointer" onClick={() => scrollToSection('home')}>
             <img src="/channelmate_logo.png" className="h-10 sm:h-11 w-auto object-contain" alt="ChannelMate Logo" />
+            <span className="text-lg font-black tracking-tight text-[#0f0f0f]">ChannelMate</span>
           </div>
 
           {/* Navigation Links */}
@@ -226,30 +266,27 @@ const LandingPage = () => {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-5xl mx-auto">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white border border-[#e5e5e5] text-[#0f0f0f] rounded-full mb-7 shadow-sm">
             <Sparkles size={14} className="animate-pulse text-[#ff0000]" />
-            <span className="text-[11px] font-black uppercase tracking-widest">YouTube Creator Automation Studio</span>
+            <span className="text-[11px] font-black uppercase tracking-widest">YouTube Comment Automation & Moderation</span>
           </div>
 
           <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-[1.08] mb-6 text-[#0f0f0f]">
             <span className="text-[#ff0000]">ChannelMate</span>
           </h1>
 
-          <p className="text-xl sm:text-2xl text-[#0f0f0f] font-black mb-4 max-w-3xl mx-auto">
-            AI-powered YouTube comment automation for creators and businesses.
-          </p>
-
           <p className="text-[16px] sm:text-[18px] text-[#606060] font-semibold leading-relaxed mb-6 max-w-3xl mx-auto">
-            Connect your YouTube channel securely using Google OAuth. ChannelMate helps creators automatically reply to comments, moderate spam and abusive content, manage audience engagement, and view channel analytics.
+            ChannelMate is an AI-powered YouTube comment automation and moderation platform for creators and businesses. Users securely connect their YouTube channel through Google OAuth to manage comments, automatically generate replies, moderate spam or harmful content, monitor engagement, and view channel analytics.
           </p>
 
           <div className="max-w-2xl mx-auto text-left bg-white border border-[#e5e5e5] rounded-2xl p-5 mb-6 shadow-sm">
-            <p className="text-sm font-black text-[#0f0f0f] mb-3">ChannelMate helps creators and businesses:</p>
+            <p className="text-sm font-black text-[#0f0f0f] mb-3">What ChannelMate does for creators & businesses:</p>
             <ul className="space-y-2 text-sm font-semibold text-[#606060]">
-              <li>Automatically reply to YouTube comments using AI</li>
-              <li>Moderate spam, abusive and harmful comments</li>
-              <li>Manage audience engagement</li>
-              <li>Monitor comment activity</li>
-              <li>View analytics and automation history</li>
-              <li>Save time with intelligent YouTube automation</li>
+              <li>Automatically reply to YouTube comments using context-aware AI</li>
+              <li>Moderate spam, abusive, and harmful comments in real-time</li>
+              <li>Monitor and manage audience engagement metrics</li>
+              <li>Safeguard community comment threads securely</li>
+              <li>View subscriber engagement trends and channel analytics</li>
+              <li>Access YouTube features only after explicit user permission</li>
+              <li>Disconnect channels or revoke access at any time</li>
             </ul>
           </div>
 
@@ -331,6 +368,50 @@ const LandingPage = () => {
             </div>
           </div>
         </motion.div>
+      </section>
+
+      {/* SECTION: HOW CHANNELMATE USES GOOGLE OAUTH */}
+      <section id="google-oauth" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-16 border-t border-[#e5e5e5]">
+        <div className="max-w-5xl mx-auto glass-garden-card p-6 sm:p-10 rounded-2xl text-left border-[#e5e5e5] bg-white shadow-sm">
+          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+            <div className="w-10 h-10 rounded-xl bg-red-50 text-[#ff0000] flex items-center justify-center border border-red-100">
+              <ShieldCheck size={22} />
+            </div>
+            <div>
+              <h2 className="text-xl sm:text-2xl font-black text-[#0f0f0f]">How ChannelMate Uses Google OAuth</h2>
+              <p className="text-[10px] font-black text-[#606060] uppercase tracking-wider mt-0.5">Secure, Consent-Based YouTube Integration</p>
+            </div>
+          </div>
+          <p className="text-sm font-semibold text-[#606060] mb-5 leading-relaxed">
+            ChannelMate accesses your YouTube channel data only after you explicitly grant permission via the secure Google OAuth consent screen. Here is how we ensure compliance and protect your account:
+          </p>
+          <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-semibold text-[#606060]">
+            <li className="flex items-start gap-2 bg-[#f9f9f9] p-3.5 rounded-xl border border-[#e5e5e5]">
+              <CheckCircle size={14} className="text-[#ff0000] shrink-0 mt-0.5" />
+              <span><strong>Secure Connection:</strong> ChannelMate uses Google OAuth 2.0 to securely connect your YouTube channel. This means we never see, request, or store your Google password.</span>
+            </li>
+            <li className="flex items-start gap-2 bg-[#f9f9f9] p-3.5 rounded-xl border border-[#e5e5e5]">
+              <CheckCircle size={14} className="text-[#ff0000] shrink-0 mt-0.5" />
+              <span><strong>Approved Permissions:</strong> We access only the specific YouTube API permissions explicitly approved by you. We cannot access your Gmail, Google Drive, or other unrelated services.</span>
+            </li>
+            <li className="flex items-start gap-2 bg-[#f9f9f9] p-3.5 rounded-xl border border-[#e5e5e5]">
+              <CheckCircle size={14} className="text-[#ff0000] shrink-0 mt-0.5" />
+              <span><strong>Purpose-Driven Use:</strong> Requested permissions are used strictly for comment retrieval, automated comment replies, comment moderation actions, channel information, and displaying dashboard analytics.</span>
+            </li>
+            <li className="flex items-start gap-2 bg-[#f9f9f9] p-3.5 rounded-xl border border-[#e5e5e5]">
+              <CheckCircle size={14} className="text-[#ff0000] shrink-0 mt-0.5" />
+              <span><strong>No Consent, No Access:</strong> ChannelMate does not access or perform any actions on your YouTube account without your explicit permission.</span>
+            </li>
+            <li className="flex items-start gap-2 bg-[#f9f9f9] p-3.5 rounded-xl border border-[#e5e5e5]">
+              <CheckCircle size={14} className="text-[#ff0000] shrink-0 mt-0.5" />
+              <span><strong>YouTube Channel Disconnection:</strong> You can disconnect your YouTube channel from ChannelMate settings at any time, which deletes all associated data and tokens.</span>
+            </li>
+            <li className="flex items-start gap-2 bg-[#f9f9f9] p-3.5 rounded-xl border border-[#e5e5e5]">
+              <CheckCircle size={14} className="text-[#ff0000] shrink-0 mt-0.5" />
+              <span><strong>Revoke Access Instantly:</strong> You can revoke ChannelMate's access to your channel at any time from your Google Account permissions page.</span>
+            </li>
+          </ul>
+        </div>
       </section>
 
       {/* SECTION: HUMAN + AI AUTOMATION SHOWCASE */}
@@ -544,52 +625,70 @@ const LandingPage = () => {
             </div>
 
             {/* Contact Form */}
-            <form onSubmit={handleContactSubmit} className="space-y-4">
+            <form onSubmit={handleContactSubmit} className="space-y-4" noValidate>
               {contactSubmitted && (
-                <div className="p-3 bg-[#fff1f1] text-[#cc0000] border border-red-100 rounded-xl text-xs font-bold">
-                  Thank you! Your message has been sent successfully.
+                <div className="p-3.5 bg-emerald-50 text-emerald-800 border border-emerald-100 rounded-xl text-xs font-bold">
+                  Your email application has been opened. Please send the email to complete your request.
                 </div>
               )}
               <div>
                 <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 ml-1">Your Name</label>
                 <input
                   type="text"
-                  required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="Your name"
-                  className="w-full glass-input py-2.5 px-4 text-xs font-bold outline-none"
+                  className={`w-full glass-input py-2.5 px-4 text-xs font-bold outline-none border transition-colors ${
+                    errors.name ? 'border-red-500/80 bg-red-50/10' : 'border-[#e5e5e5]'
+                  }`}
                 />
+                {errors.name && (
+                  <p className="text-[10px] font-bold text-red-600 mt-1 ml-1 flex items-center gap-1">
+                    <AlertCircle size={10} /> {errors.name}
+                  </p>
+                )}
               </div>
 
               <div>
                 <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 ml-1">Your Email</label>
                 <input
                   type="email"
-                  required
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="name@gmail.com"
-                  className="w-full glass-input py-2.5 px-4 text-xs font-bold outline-none"
+                  className={`w-full glass-input py-2.5 px-4 text-xs font-bold outline-none border transition-colors ${
+                    errors.email ? 'border-red-500/80 bg-red-50/10' : 'border-[#e5e5e5]'
+                  }`}
                 />
+                {errors.email && (
+                  <p className="text-[10px] font-bold text-red-600 mt-1 ml-1 flex items-center gap-1">
+                    <AlertCircle size={10} /> {errors.email}
+                  </p>
+                )}
               </div>
 
               <div>
                 <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 ml-1">Your Message</label>
                 <textarea
-                  required
                   rows={3}
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   placeholder="How can we help you grow your channel?"
-                  className="w-full glass-input py-2.5 px-4 text-xs font-bold outline-none resize-none"
+                  className={`w-full glass-input py-2.5 px-4 text-xs font-bold outline-none resize-none border transition-colors ${
+                    errors.message ? 'border-red-500/80 bg-red-50/10' : 'border-[#e5e5e5]'
+                  }`}
                 />
+                {errors.message && (
+                  <p className="text-[10px] font-bold text-red-600 mt-1 ml-1 flex items-center gap-1">
+                    <AlertCircle size={10} /> {errors.message}
+                  </p>
+                )}
               </div>
 
               <button
                 type="submit"
                 disabled={contactLoading}
-                className="btn-glass-primary w-full py-3 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2"
+                className="btn-glass-primary w-full py-3 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 cursor-pointer"
               >
                 {contactLoading ? <Loader2 className="animate-spin" size={16} /> : <><Send size={14} /> Send Message</>}
               </button>
@@ -618,23 +717,6 @@ const LandingPage = () => {
                 <Phone size={13} className="text-[#ff0000]" />
                 <span>+91 90474 84484</span>
               </div>
-            </div>
-            <div className="flex items-center gap-3.5 pt-2">
-              <a href="https://channelbot.in" target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-[#ff0000] transition-colors" title="Follow us on YouTube">
-                <Youtube size={17} />
-              </a>
-              <a href="https://channelbot.in" target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-[#ff0000] transition-colors" title="Follow us on X (Twitter)">
-                <Twitter size={15} />
-              </a>
-              <a href="https://channelbot.in" target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-[#ff0000] transition-colors" title="Follow us on Instagram">
-                <Instagram size={15} />
-              </a>
-              <a href="https://channelbot.in" target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-[#ff0000] transition-colors" title="Follow us on Facebook">
-                <Facebook size={15} />
-              </a>
-              <a href="https://channelbot.in" target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-[#ff0000] transition-colors" title="Follow us on LinkedIn">
-                <Linkedin size={15} />
-              </a>
             </div>
           </div>
 
@@ -668,9 +750,7 @@ const LandingPage = () => {
                 <Link to="/terms" className="hover:text-[#ff0000] transition-colors">Terms of Service</Link>
               </li>
               <li>
-                <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer" className="hover:text-[#ff0000] transition-colors inline-flex items-center gap-1">
-                  Google Permissions
-                </a>
+                <Link to="/google-permissions" className="hover:text-[#ff0000] transition-colors">Google Permissions</Link>
               </li>
               <li>
                 <Link to="/contact" className="hover:text-[#ff0000] transition-colors">Contact</Link>
