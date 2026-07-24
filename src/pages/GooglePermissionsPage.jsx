@@ -50,7 +50,10 @@ const GooglePermissionsPage = () => {
         <div className="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 select-none">
             <img src="/channelmate_logo.png" className="h-9 w-auto object-contain" alt="ChannelMate Logo" />
-            <span className="text-base font-black tracking-tight text-zinc-900">ChannelMate</span>
+            <div className="flex flex-col items-start leading-none">
+              <span className="text-base font-black tracking-tight text-zinc-900">ChannelMate</span>
+              <span className="text-[9px] font-semibold text-zinc-500 mt-0.5">AI-powered YouTube Comment Automation</span>
+            </div>
           </Link>
           <Link
             to="/"

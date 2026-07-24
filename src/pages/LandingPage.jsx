@@ -226,7 +226,10 @@ const LandingPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2 select-none cursor-pointer" onClick={() => scrollToSection('home')}>
             <img src="/channelmate_logo.png" className="h-10 sm:h-11 w-auto object-contain" alt="ChannelMate Logo" />
-            <span className="text-lg font-black tracking-tight text-[#0f0f0f]">ChannelMate</span>
+            <div className="flex flex-col items-start leading-none">
+              <span className="text-base font-black tracking-tight text-[#0f0f0f]">ChannelMate</span>
+              <span className="text-[9px] font-semibold text-[#606060] mt-0.5">AI-powered YouTube Comment Automation</span>
+            </div>
           </div>
 
           {/* Navigation Links */}
