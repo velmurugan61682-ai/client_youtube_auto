@@ -1061,7 +1061,6 @@ const LandingPage = () => {
           </div>
         )}
       </AnimatePresence>
-    </footer>
   </div>
 );
 };
