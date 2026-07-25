@@ -29,7 +29,7 @@ import {
   Youtube,
   AlertCircle
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import HumanAiAutomationShowcase from '../components/HumanAiAutomationShowcase';
 
 
@@ -42,7 +42,6 @@ const LandingPage = () => {
   const [contactLoading, setContactLoading] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [errors, setErrors] = useState({});
-  const [activeModal, setActiveModal] = useState(null);
 
   // Handle active section on scroll
   useEffect(() => {
@@ -888,16 +887,16 @@ const LandingPage = () => {
             <h3 className="text-xs font-black text-white uppercase tracking-widest">Resources</h3>
             <ul className="space-y-2 text-xs font-semibold text-zinc-400">
               <li>
-                <button type="button" onClick={() => setActiveModal('privacy')} className="hover:text-[#ff0000] transition-colors text-left cursor-pointer">Privacy Policy</button>
+                <Link to="/privacy" className="hover:text-[#ff0000] transition-colors">Privacy Policy</Link>
               </li>
               <li>
-                <button type="button" onClick={() => setActiveModal('terms')} className="hover:text-[#ff0000] transition-colors text-left cursor-pointer">Terms of Service</button>
+                <Link to="/terms" className="hover:text-[#ff0000] transition-colors">Terms of Service</Link>
               </li>
               <li>
-                <button type="button" onClick={() => setActiveModal('google')} className="hover:text-[#ff0000] transition-colors text-left cursor-pointer">Google Permissions</button>
+                <Link to="/google-permissions" className="hover:text-[#ff0000] transition-colors">Google Permissions</Link>
               </li>
               <li>
-                <button type="button" onClick={() => scrollToSection('contact')} className="hover:text-[#ff0000] transition-colors text-left cursor-pointer">Contact</button>
+                <Link to="/contact" className="hover:text-[#ff0000] transition-colors">Contact</Link>
               </li>
             </ul>
           </div>
@@ -912,157 +911,8 @@ const LandingPage = () => {
           </p>
         </div>
       </footer>
-
-      {/* Policies Overlay Modals */}
-      <AnimatePresence>
-        {activeModal && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setActiveModal(null)}
-              className="fixed inset-0 bg-black/75 backdrop-blur-sm"
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ type: 'spring', duration: 0.4 }}
-              className="relative z-10 w-full max-w-3xl max-h-[85vh] bg-white rounded-3xl border border-[#e5e5e5] shadow-2xl overflow-hidden flex flex-col"
-            >
-              {/* Header */}
-              <div className="flex items-center justify-between px-6 py-5 border-b border-zinc-155 shrink-0">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-red-500/10 flex items-center justify-center text-[#ff0000] border border-red-500/20 shadow-sm shrink-0">
-                    {activeModal === 'privacy' && <ShieldCheck size={20} />}
-                    {activeModal === 'terms' && <Lock size={20} />}
-                    {activeModal === 'google' && <AlertCircle size={20} />}
-                  </div>
-                  <div className="text-left">
-                    <h2 className="text-lg font-black text-zinc-900 leading-none">
-                      {activeModal === 'privacy' && 'Privacy Policy'}
-                      {activeModal === 'terms' && 'Terms of Service'}
-                      {activeModal === 'google' && 'Google Permissions & Scopes'}
-                    </h2>
-                    <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mt-1">
-                      {activeModal === 'google' ? 'Compliance Directory' : 'Last updated: July 24, 2026'}
-                    </p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => setActiveModal(null)}
-                  className="rounded-full w-8 h-8 flex items-center justify-center bg-zinc-100 hover:bg-zinc-200 text-zinc-500 hover:text-zinc-800 transition-colors font-bold text-xs cursor-pointer"
-                >
-                  ✕
-                </button>
-              </div>
-
-              {/* Content */}
-              <div className="p-6 sm:p-8 overflow-y-auto text-zinc-700 text-xs sm:text-sm font-semibold leading-relaxed space-y-6 text-left">
-                {activeModal === 'privacy' && (
-                  <>
-                    <section className="space-y-2">
-                      <h3 className="text-sm sm:text-base font-black text-zinc-900">Overview</h3>
-                      <p className="text-zinc-650">
-                        ChannelMate is a SaaS tool for YouTube creators, businesses, and agencies that helps automate comment replies, moderate comments, manage engagement, and understand channel performance. This policy explains what information ChannelMate collects, why we need it, how long we keep it, and how you can control or delete it.
-                      </p>
-                    </section>
-                    <section className="space-y-2">
-                      <h3 className="text-sm sm:text-base font-black text-zinc-900">Information We Collect</h3>
-                      <p className="text-zinc-650">When you create an account or connect a YouTube channel through Google OAuth and the YouTube Data API, ChannelMate may collect or access:</p>
-                      <ul className="list-disc pl-6 space-y-2 text-zinc-650">
-                        <li>Account details such as your name, email address, profile image, login status, plan, and account settings.</li>
-                        <li>YouTube channel data such as channel ID, channel name, thumbnail, subscriber or engagement counts available through authorized API access, and connection status.</li>
-                        <li>YouTube video metadata such as video IDs, titles, descriptions, thumbnails, publish dates, and engagement metrics needed to organize comments and analytics.</li>
-                        <li>YouTube comments and comment metadata, including comment text, comment IDs, authors, timestamps, moderation state, reply status, and related video information.</li>
-                        <li>OAuth tokens issued by Google so ChannelMate can access YouTube API features you authorize. Tokens are stored encrypted and are not your Google password.</li>
-                        <li>Operational logs such as moderation actions, automated reply history, channel sync status, errors, and security audit events needed to run and support the service.</li>
-                      </ul>
-                    </section>
-                    <section className="space-y-2">
-                      <h3 className="text-sm sm:text-base font-black text-zinc-900">No Sale or Third-Party Sharing</h3>
-                      <p className="text-zinc-650">
-                        ChannelMate does not sell, rent, trade, or share your Google user data, YouTube channel data, comments, video metadata, analytics data, or OAuth tokens with third parties for advertising, resale, profiling, or unrelated purposes. We use the information only to operate and improve the ChannelMate features visible in the service.
-                      </p>
-                    </section>
-                    <section className="space-y-2">
-                      <h3 className="text-sm sm:text-base font-black text-zinc-900">Google API Data and Limited Use</h3>
-                      <p className="text-zinc-650">
-                        ChannelMate's use and transfer of information received from Google APIs follows the Google API Services User Data Policy, including the Limited Use requirements. We do not use Google user data for ads, retargeting, credit checks, or unrelated product analytics.
-                      </p>
-                    </section>
-                  </>
-                )}
-                {activeModal === 'terms' && (
-                  <>
-                    <section className="space-y-2">
-                      <h3 className="text-sm sm:text-base font-black text-zinc-900">Agreement to These Terms</h3>
-                      <p className="text-zinc-650">
-                        These Terms of Service govern your access to and use of ChannelMate, a YouTube comment automation, moderation, engagement management, and analytics SaaS platform. By creating an account, connecting a YouTube channel, or using ChannelMate, you agree to these Terms and our Privacy Policy.
-                      </p>
-                    </section>
-                    <section className="space-y-2">
-                      <h3 className="text-sm sm:text-base font-black text-zinc-900">Google and YouTube Access</h3>
-                      <p className="text-zinc-650">
-                        ChannelMate uses Google OAuth and YouTube API Services only after you authorize access. You can disconnect your YouTube channel in ChannelMate or revoke access from your Google Account permissions page at any time.
-                      </p>
-                      <p className="text-zinc-650">
-                        Your use of connected YouTube features is also subject to the YouTube Terms of Service, the Google Privacy Policy, and applicable YouTube API policies.
-                      </p>
-                    </section>
-                    <section className="space-y-2">
-                      <h3 className="text-sm sm:text-base font-black text-zinc-900">Acceptable Use</h3>
-                      <p className="text-zinc-650">You agree not to use ChannelMate to:</p>
-                      <ul className="list-disc pl-6 space-y-2 text-zinc-650">
-                        <li>Post spam, scams, deceptive promotions, abusive content, harassment, hate speech, or unlawful content.</li>
-                        <li>Impersonate another person or misrepresent your relationship with a channel, brand, or viewer.</li>
-                        <li>Bypass YouTube rules, Google API restrictions, rate limits, security controls, or ChannelMate usage limits.</li>
-                      </ul>
-                    </section>
-                  </>
-                )}
-                {activeModal === 'google' && (
-                  <>
-                    <p className="text-zinc-650">
-                      ChannelMate integrates securely with Google APIs using the OAuth 2.0 protocol. We request only the absolute minimum permissions needed to deliver comment replies and moderation services. Your channel data is never accessed without consent, and you can revoke access at any time.
-                    </p>
-                    <div className="space-y-4">
-                      <div className="p-4 rounded-xl border border-[#e5e5e5] bg-[#fbfbfb]">
-                        <code className="text-[11px] font-bold text-[#ff0000] break-all bg-red-50/50 px-2 py-0.5 rounded border border-red-100/40">openid / email / profile</code>
-                        <h4 className="text-xs sm:text-sm font-black text-zinc-900 mt-2 mb-1">Google Identity & Profile Info</h4>
-                        <p className="text-xs text-zinc-500 font-semibold leading-relaxed">Used to securely verify your identity, map user login sessions, and show basic profile info on your dashboard.</p>
-                      </div>
-                      <div className="p-4 rounded-xl border border-[#e5e5e5] bg-[#fbfbfb]">
-                        <code className="text-[11px] font-bold text-[#ff0000] break-all bg-red-50/50 px-2 py-0.5 rounded border border-red-100/40">youtube.readonly</code>
-                        <h4 className="text-xs sm:text-sm font-black text-zinc-900 mt-2 mb-1">YouTube Read-Only Data</h4>
-                        <p className="text-xs text-zinc-500 font-semibold leading-relaxed">Used to retrieve channel metadata, comment threads, and compile dashboard sentiment logs.</p>
-                      </div>
-                      <div className="p-4 rounded-xl border border-[#e5e5e5] bg-[#fbfbfb]">
-                        <code className="text-[11px] font-bold text-[#ff0000] break-all bg-red-50/50 px-2 py-0.5 rounded border border-red-100/40">youtube.force-ssl</code>
-                        <h4 className="text-xs sm:text-sm font-black text-zinc-900 mt-2 mb-1">YouTube Account Management</h4>
-                        <p className="text-xs text-zinc-500 font-semibold leading-relaxed">Required to fetch viewer comments for moderation workflows, post contextual AI replies, and perform moderation actions (delete/hold) as configured by you.</p>
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
-
-              {/* Footer */}
-              <div className="px-6 py-4 bg-zinc-50 border-t border-zinc-150 flex items-center justify-end gap-3 shrink-0">
-                <button
-                  onClick={() => setActiveModal(null)}
-                  className="btn-glass-secondary px-5 py-2 text-xs font-black uppercase tracking-wider rounded-xl cursor-pointer"
-                >
-                  Close
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-  </div>
-);
+    </div>
+  );
 };
 
 export default LandingPage;
