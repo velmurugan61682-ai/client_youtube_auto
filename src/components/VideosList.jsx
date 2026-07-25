@@ -132,6 +132,8 @@ const VideosList = ({
       }
     } else {
       setSelectedVideo(null);
+      setComments([]);
+      setVideoAnalytics(null);
       setIsMobileDetail(false);
     }
   }, [videoTab, videos]);
@@ -348,13 +350,19 @@ const VideosList = ({
   };
 
   const filteredComments = comments.filter(c => {
+    if (!selectedVideo) return false;
+    if (c.videoId && c.videoId !== selectedVideo) return false;
     if (c.isBotReply || (c.youtubeId && c.youtubeId.includes('.'))) return false;
     if (filter === 'all') return true;
     return c.sentiment === filter;
   });
 
   const getStatsForFilter = (type) => {
-    const topLevelComments = comments.filter(c => !c.isBotReply && !(c.youtubeId && c.youtubeId.includes('.')));
+    if (!selectedVideo) return 0;
+    const topLevelComments = comments.filter(c => {
+      if (c.videoId && c.videoId !== selectedVideo) return false;
+      return !c.isBotReply && !(c.youtubeId && c.youtubeId.includes('.'));
+    });
     if (type === 'all') return topLevelComments.length;
     return topLevelComments.filter(c => c.sentiment === type).length;
   };
@@ -647,7 +655,15 @@ const VideosList = ({
                 ></iframe>
               </div>
             )}
-            {activePanelTab === 'comments' ? (
+            {!selectedVideo ? (
+              <div className="h-full flex flex-col items-center justify-center text-[#909090] py-16 text-center">
+                <PlaySquare size={48} className="mb-4 text-[#909090]" />
+                <p className="text-base md:text-lg font-bold text-[#0f0f0f]">No Video Selected</p>
+                <p className="text-xs text-[#909090] max-w-[320px] mt-1 font-medium leading-relaxed">
+                  Select a video or short from the list on the left to analyze its specific comments and video analytics.
+                </p>
+              </div>
+            ) : activePanelTab === 'comments' ? (
               // Comments Tab Content
               loadingComments ? (
                 <div className="h-full flex flex-col items-center justify-center gap-4 text-[#909090]">
