@@ -1,6 +1,6 @@
 import { precacheAndRoute, cleanupOutdatedCaches, createHandlerBoundToURL } from 'workbox-precaching';
 import { registerRoute, NavigationRoute } from 'workbox-routing';
-import { CacheFirst, NetworkOnly } from 'workbox-strategies';
+import { CacheFirst, NetworkOnly, NetworkFirst, StaleWhileRevalidate } from 'workbox-strategies';
 import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 import { ExpirationPlugin } from 'workbox-expiration';
 
@@ -10,15 +10,46 @@ cleanupOutdatedCaches();
 // Precache all compiled assets (HTML, JS, CSS, images, etc.)
 precacheAndRoute(self.__WB_MANIFEST || []);
 
-// Ensure API requests, authorization endpoints, and socket.io are never cached (always Network Only)
+// 1. Google Fonts Caching Strategy (StaleWhileRevalidate)
+registerRoute(
+  ({ url }) => url.origin === 'https://fonts.googleapis.com' || url.origin === 'https://fonts.gstatic.com',
+  new StaleWhileRevalidate({
+    cacheName: 'google-fonts-cache',
+    plugins: [
+      new CacheableResponsePlugin({ statuses: [0, 200] }),
+      new ExpirationPlugin({ maxEntries: 30, maxAgeSeconds: 60 * 60 * 24 * 365 })
+    ]
+  })
+);
+
+// 2. NetworkFirst for Socket-synced API routes (Comments, Leads, Stats, Dashboard)
+// Excludes OAuth redirects and Socket.IO to prevent stale authentication/token states
 registerRoute(
   ({ url }) => {
     const isApi = url.pathname.startsWith('/api') || url.href.includes('/api');
-    const isSocket = url.pathname.startsWith('/socket.io') || url.href.includes('/socket.io');
     const isAuth = url.pathname.includes('/auth') || url.href.includes('/auth');
     const isBackend = url.hostname.includes('server-youtube-auto.onrender.com');
-    return isApi || isSocket || isAuth || isBackend;
+    const isSocket = url.pathname.startsWith('/socket.io') || url.href.includes('/socket.io');
+    const isOAuthCallback = url.pathname.includes('/callback') || url.pathname.includes('/connect');
+    return (isApi || isAuth || isBackend) && !isSocket && !isOAuthCallback;
   },
+  new NetworkFirst({
+    cacheName: 'api-network-first-cache',
+    networkTimeoutSeconds: 3,
+    plugins: [
+      new CacheableResponsePlugin({ statuses: [0, 200] }),
+      new ExpirationPlugin({ maxEntries: 50, maxAgeSeconds: 24 * 60 * 60 })
+    ]
+  })
+);
+
+// 3. Socket.IO connections & OAuth Callbacks must ALWAYS be NetworkOnly
+registerRoute(
+  ({ url }) => 
+    url.pathname.startsWith('/socket.io') || 
+    url.href.includes('/socket.io') || 
+    url.pathname.includes('/callback') || 
+    url.pathname.includes('/connect'),
   new NetworkOnly()
 );
 
@@ -29,23 +60,29 @@ const navigationRoute = new NavigationRoute(handler, {
 });
 registerRoute(navigationRoute);
 
-// Handle external image caching (Google/YouTube avatars and thumbnails)
+// 4. Handle external Video Thumbnails (ytimg.com) using StaleWhileRevalidate
+// Ensures modified YouTube thumbnails refresh in background without staying stale for 30 days
+registerRoute(
+  ({ url, request }) => request.destination === 'image' && url.hostname.includes('ytimg.com'),
+  new StaleWhileRevalidate({
+    cacheName: 'youtube-thumbnails-cache',
+    plugins: [
+      new CacheableResponsePlugin({ statuses: [0, 200] }),
+      new ExpirationPlugin({ maxEntries: 100, maxAgeSeconds: 7 * 24 * 60 * 60 })
+    ]
+  })
+);
+
+// 5. Handle external Avatars (ggpht.com, googleusercontent.com) using CacheFirst
 registerRoute(
   ({ url, request }) =>
     request.destination === 'image' &&
-    (url.hostname.includes('ggpht.com') ||
-      url.hostname.includes('ytimg.com') ||
-      url.hostname.includes('googleusercontent.com')),
+    (url.hostname.includes('ggpht.com') || url.hostname.includes('googleusercontent.com')),
   new CacheFirst({
-    cacheName: 'youtube-images-cache',
+    cacheName: 'youtube-avatars-cache',
     plugins: [
-      new CacheableResponsePlugin({
-        statuses: [0, 200]
-      }),
-      new ExpirationPlugin({
-        maxEntries: 100,
-        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
-      })
+      new CacheableResponsePlugin({ statuses: [0, 200] }),
+      new ExpirationPlugin({ maxEntries: 100, maxAgeSeconds: 30 * 24 * 60 * 60 })
     ]
   })
 );

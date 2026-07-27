@@ -100,6 +100,12 @@ export default defineConfig(({ command, mode }) => {
               if (id.includes('recharts') || id.includes('d3')) {
                 return 'vendor-charts';
               }
+              if (id.includes('framer-motion')) {
+                return 'vendor-framer';
+              }
+              if (id.includes('@reduxjs') || id.includes('redux-persist') || id.includes('react-redux')) {
+                return 'vendor-redux';
+              }
               return 'vendor';
             }
           }

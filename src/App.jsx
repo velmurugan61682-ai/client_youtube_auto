@@ -46,7 +46,7 @@ import AdminRoute from './components/AdminRoute';
 import Sidebar from './components/Sidebar';
 import InstallAppPrompt from './components/InstallAppPrompt';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import LandingPage from './pages/LandingPage';
+const LandingPage = lazy(() => import('./pages/LandingPage'));
 
 
 let activeAnalyticsPromise = null;
