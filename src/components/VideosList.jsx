@@ -112,9 +112,11 @@ const VideosList = ({
 
   const isShortVideo = (video) => {
     if (video.isPost) return false;
-    if (video.duration && video.durationSeconds < 60) return true;
+    if (typeof video.durationSeconds === 'number' && video.durationSeconds > 0) {
+      return video.durationSeconds <= 60;
+    }
     const text = `${video.title || ''} ${video.description || ''} ${video.url || ''}`.toLowerCase();
-    return text.includes('#shorts') || text.includes('/shorts/') || text.includes('shorts');
+    return text.includes('#shorts') || text.includes('/shorts/');
   };
 
   const shortVideos = processedVideos.filter(isShortVideo);
