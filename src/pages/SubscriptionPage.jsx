@@ -244,8 +244,8 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
       name: "STARTER PACK",
       displayName: "Free Plan",
       price: "₹0",
-      period: "/ forever",
-      desc: "Perfect for single creators starting out.",
+      period: "/ 30 days",
+      desc: "30-day free trial for single creators.",
       features: [
         "Connect 1 YouTube Channel",
         "AI Autopilot Comment Moderation",
@@ -263,7 +263,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
       period: "/ 3 months",
       desc: "Quarterly saver for professional creators.",
       features: [
-        "Connect Unlimited Channels",
+        "Connect 1 YouTube Channel",
         "AI Autopilot Comment Moderation",
         "Auto Reply & Smart Auto-Like",
         "Advanced Audience Analytics",
