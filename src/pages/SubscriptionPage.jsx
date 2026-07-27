@@ -482,7 +482,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
                         {inv.issued_at ? new Date(inv.issued_at * 1000).toLocaleDateString() : 'N/A'}
                       </td>
                       <td className="py-4 font-black">
-                        {(inv.amount / 100).toLocaleString('en-IN', { style: 'currency', currency: inv.currency || 'INR' })}
+                        {((inv.amount > 0 && inv.amount < 10000 ? inv.amount : inv.amount / 100) || 0).toLocaleString('en-IN', { style: 'currency', currency: inv.currency || 'INR' })}
                       </td>
                       <td className="py-4">
                         <span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider ${inv.status === 'paid' || inv.status === 'issued'

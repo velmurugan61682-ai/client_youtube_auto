@@ -70,7 +70,7 @@ const StatsGrid = React.memo(({ stats, isDark = false }) => {
     },
     {
       label: 'Moderate',
-      value: stats?.categories?.find(c => c._id === 'moderate')?.count || 0,
+      value: stats?.categories?.find(c => c._id === 'moderate')?.count || stats?.moderateComments || 0,
       icon: AlertTriangle,
       color: 'text-[#f9ab00]',
       iconBg: 'bg-[#fff8e1]',

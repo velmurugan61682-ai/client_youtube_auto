@@ -97,7 +97,7 @@ const VideosList = ({
   }, []);
 
   const processedVideos = (videos || []).map(v => {
-    const isPost = v.isPost || v.duration === 'Post' || v.duration === 'P0D';
+    const isPost = Boolean(v.isPost || v.duration === 'Post' || v.videoId?.startsWith('yt_post_'));
     if (isPost) {
       return { ...v, isPost: true, durationSeconds: 0, formattedDuration: '' };
     }
