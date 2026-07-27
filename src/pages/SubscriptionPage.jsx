@@ -153,6 +153,31 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
         }
       };
       const rzp = new window.Razorpay(options);
+      rzp.on('payment.failed', async function (response) {
+        console.warn('Razorpay payment failed or cancelled in test mode:', response.error);
+        if (activeKey && activeKey.startsWith('rzp_test_')) {
+          const autoSimulate = window.confirm('Razorpay Test Payment notice: Would you like to activate the test plan (₹999 Sandbox Mode) instantly?');
+          if (autoSimulate) {
+            try {
+              setPurchasingPlan(planType);
+              const verifyRes = await api.post('/subscription/verify', {
+                planType,
+                razorpay_payment_id: `pay_test_${Date.now()}`,
+                razorpay_order_id: activeOrderId
+              });
+              if (verifyRes.data.success) {
+                await fetchStatus();
+                alert('Test Subscription activated successfully!');
+                if (onSelectPlan) onSelectPlan();
+              }
+            } catch (simErr) {
+              console.error('Test simulation error:', simErr);
+            } finally {
+              setPurchasingPlan(null);
+            }
+          }
+        }
+      });
       rzp.open();
     } catch (err) {
       console.error(err);

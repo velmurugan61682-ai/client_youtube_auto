@@ -1,27 +1,12 @@
 import axios from 'axios';
+import { API_BASE_URL } from '../config/environment.js';
 
-// RUNTIME Base URL detection
-const getBaseURL = () => {
-  // If we are in production mode, use VITE_API_URL if defined, otherwise strictly use the Render production backend URL
-  if (import.meta.env.PROD === true) {
-    return import.meta.env.VITE_API_URL || 'https://server-youtube-auto.onrender.com';
-  }
-
-  // If we are on localhost, dynamically route to local backend using VITE_API_URL if present, otherwise default to port 5000
-  if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-    return import.meta.env.VITE_API_URL || 'http://localhost:5000';
-  }
-  
-  // Fallback for Local Development
-  return import.meta.env.VITE_API_URL || 'http://localhost:5000';
-};
-
-export const API_BASE_URL = getBaseURL().endsWith('/') ? getBaseURL().slice(0, -1) : getBaseURL();
+export { API_BASE_URL };
 
 console.log(`✓ Production API URL: ${API_BASE_URL}`);
 
 const api = axios.create({
-  baseURL: `${API_BASE_URL}/api`,
+  baseURL: API_BASE_URL,
   timeout: 60000, // 60 seconds
   withCredentials: true,
   headers: {

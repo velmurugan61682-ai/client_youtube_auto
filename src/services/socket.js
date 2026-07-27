@@ -1,4 +1,5 @@
 import { io } from 'socket.io-client';
+import { SOCKET_URL } from '../config/environment.js';
 
 let socket = null;
 
@@ -7,22 +8,10 @@ let socket = null;
  */
 export const getSocket = () => {
   if (!socket) {
-    let socketUrl;
+    console.log(`✓ Socket URL: ${SOCKET_URL}`);
 
-    const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-
-    if (import.meta.env.PROD === true && !isLocalhost) {
-      // In production mode, strictly use the Render production backend URL
-      socketUrl = import.meta.env.VITE_SOCKET_URL || 'https://server-youtube-auto.onrender.com';
-      console.log(`✓ Production Socket URL: ${socketUrl}`);
-    } else {
-      const rawUrl = import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL || '';
-      socketUrl = rawUrl
-        .replace(/\/api\/?$/, '')
-        .replace(/\/auth\/google\/?$/, '') || 'http://localhost:5000';
-    }
-
-    socket = io(socketUrl, {
+    socket = io(SOCKET_URL, {
+      withCredentials: true,
       reconnection: true,
       transports: ['polling', 'websocket'], // Start with HTTP polling to establish connection, then upgrade to WebSocket. This is much more reliable and avoids 404/timeout handshake errors on Render.
       reconnectionAttempts: Infinity, // Reconnect automatically

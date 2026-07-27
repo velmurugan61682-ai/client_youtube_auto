@@ -498,12 +498,19 @@ const VideosList = ({
               >
                 <div className="relative flex-shrink-0 w-20 h-12 rounded-xl overflow-hidden bg-slate-100 shadow-sm">
                   <img
-                    src={video.thumbnail ? video.thumbnail.replace('_live.jpg', '.jpg') : ''}
+                    src={video.thumbnail ? video.thumbnail.replace('_live.jpg', '.jpg') : `https://i.ytimg.com/vi/${video.videoId}/hqdefault.jpg`}
                     alt=""
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     onError={(e) => {
                       e.target.onerror = null;
-                      e.target.src = 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=150&auto=format&fit=crop&q=60';
+                      const currentSrc = e.target.src || '';
+                      if (currentSrc.includes('mqdefault.jpg') && video.videoId) {
+                        e.target.src = `https://i.ytimg.com/vi/${video.videoId}/hqdefault.jpg`;
+                      } else if (currentSrc.includes('hqdefault.jpg') && video.videoId) {
+                        e.target.src = `https://i.ytimg.com/vi/${video.videoId}/default.jpg`;
+                      } else {
+                        e.target.src = 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=150&auto=format&fit=crop&q=60';
+                      }
                     }}
                   />
                   {video.isPost ? (
@@ -691,9 +698,13 @@ const VideosList = ({
                         <div className="flex gap-3 md:gap-4">
                           <div className="relative flex-shrink-0">
                             <img
-                              src={comment.authorProfileImageUrl || `https://ui-avatars.com/api/?name=${comment.author}&background=random`}
+                              src={comment.authorProfileImageUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(comment.author || 'User')}&background=random`}
                               className="w-9 h-9 md:w-11 md:h-11 rounded-full border border-[#f0f0f0]"
                               alt=""
+                              onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(comment.author || 'User')}&background=random`;
+                              }}
                             />
                             <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 md:w-4 md:h-4 rounded-full border-2 border-white flex items-center justify-center" style={{ backgroundColor: getSentimentConfig(comment.sentiment).color }}>
                               {comment.sentiment === 'toxic' ? <ShieldAlert size={8} className="text-white" /> : <ThumbsUp size={8} className="text-white" />}

@@ -202,9 +202,13 @@ const ModerationQueue = ({ onAction, searchQuery }) => {
                       <div className="flex gap-5">
                         <div className="relative shrink-0">
                           <img 
-                            src={comment.authorProfileImageUrl || `https://ui-avatars.com/api/?name=${comment.author}&background=f0f0f0&color=606060`} 
+                            src={comment.authorProfileImageUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(comment.author || 'User')}&background=f0f0f0&color=606060`} 
                             className="w-12 h-12 rounded-[20px] border-2 border-white shadow-sm ring-1 ring-[#f0f0f0] group-hover:ring-[#ff0000]/20 transition-all" 
                             alt=""
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(comment.author || 'User')}&background=f0f0f0&color=606060`;
+                            }}
                           />
                           <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-white rounded-full border border-[#f0f0f0] flex items-center justify-center text-[10px] font-black">
                              {i + 1}

@@ -18,16 +18,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
-
-// Get API base URL dynamically
-const getBaseURL = () => {
-  if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-    return 'http://localhost:5000';
-  }
-  return 'https://server-youtube-auto.onrender.com';
-};
-
-const API_BASE_URL = getBaseURL();
+import { API_BASE_URL } from '../config/environment.js';
 
 const AdminPortal = () => {
   const [isAdminAuth, setIsAdminAuth] = useState(false);
@@ -57,7 +48,8 @@ const AdminPortal = () => {
 
   // Configure Axios Instance for Admin requests
   const adminApi = axios.create({
-    baseURL: `${API_BASE_URL}/api`,
+    baseURL: API_BASE_URL,
+    withCredentials: true,
     headers: {
       Authorization: adminToken ? `Bearer ${adminToken}` : '',
       'Content-Type': 'application/json'
