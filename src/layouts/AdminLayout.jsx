@@ -10,7 +10,8 @@ import {
   Moon,
   Sun,
   PanelLeftClose,
-  PanelLeftOpen
+  PanelLeftOpen,
+  Key
 } from 'lucide-react';
 
 const AdminLayout = ({ children }) => {
@@ -22,10 +23,11 @@ const AdminLayout = ({ children }) => {
   const sidebarExpanded = sidebarPinned || sidebarHover;
 
   const navItems = [
-    { path: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { path: '/admin/clients', label: 'Client Management', icon: Users },
-    { path: '/admin/subscriptions', label: 'Subscriptions', icon: CreditCard },
-    { path: '/admin/payments', label: 'Payments', icon: DollarSign },
+    { path: '/admin/dashboard',   label: 'Dashboard',         icon: LayoutDashboard },
+    { path: '/admin/clients',     label: 'Client Management', icon: Users },
+    { path: '/admin/subscriptions', label: 'Subscriptions',  icon: CreditCard },
+    { path: '/admin/payments',    label: 'Payments',          icon: DollarSign },
+    { path: '/admin/api-keys',    label: 'API Keys',          icon: Key },
   ];
 
   useEffect(() => {

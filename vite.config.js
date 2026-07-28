@@ -19,11 +19,11 @@ export default defineConfig(({ command, mode }) => {
       console.log(` - VITE_API_URL: "${apiUrl}"`);
       console.log(` - VITE_SOCKET_URL: "${socketUrl}"`);
 
-      if (!apiUrl || apiUrl.includes('localhost') || apiUrl.includes('127.0.0.1')) {
-        console.warn(`[Build Audit Warning] VITE_API_URL is localhost: "${apiUrl}". Hardcoded production URL fallback will be used at runtime.`);
+      if (!apiUrl) {
+        console.warn(`[Build Audit Warning] VITE_API_URL is not set.`);
       }
-      if (!socketUrl || socketUrl.includes('localhost') || socketUrl.includes('127.0.0.1')) {
-        console.warn(`[Build Audit Warning] VITE_SOCKET_URL is localhost: "${socketUrl}". Hardcoded production URL fallback will be used at runtime.`);
+      if (!socketUrl) {
+        console.warn(`[Build Audit Warning] VITE_SOCKET_URL is not set.`);
       }
       console.log(`Ã¢Å“â€œ Environment variables successfully validated for production build.`);
     }

@@ -3,7 +3,7 @@ import { API_BASE_URL } from '../config/environment.js';
 
 export { API_BASE_URL };
 
-console.log(`✓ Production API URL: ${API_BASE_URL}`);
+console.log(`Production API URL: ${API_BASE_URL}`);
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -33,7 +33,7 @@ let apiConnectedLogged = false;
 api.interceptors.response.use(
   (response) => {
     if (!apiConnectedLogged) {
-      console.log('✓ API Connected');
+      console.log('API connected');
       apiConnectedLogged = true;
     }
     return response;
@@ -45,11 +45,11 @@ api.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       const currentPath = window.location.pathname;
       if (currentPath.startsWith('/admin') && currentPath !== '/admin/login') {
-        console.warn('⚠️ [API Interceptor] 401 Unauthenticated error received on Admin route. Clearing adminToken...');
+        console.warn('[API Interceptor] 401 unauthenticated error received on admin route. Clearing adminToken...');
         localStorage.removeItem('adminToken');
         window.location.href = '/admin/login';
       } else if (!currentPath.startsWith('/admin') && currentPath !== '/login' && currentPath !== '/register' && currentPath !== '/') {
-        console.warn('⚠️ [API Interceptor] 401 Unauthenticated error received on Client route. Clearing token...');
+        console.warn('[API Interceptor] 401 unauthenticated error received on client route. Clearing token...');
         localStorage.removeItem('token');
         window.location.href = '/login';
       }
@@ -62,7 +62,7 @@ api.interceptors.response.use(
     }
     
     config._retry = true; // Mark as retried
-    console.warn(`⚠️ API call failed: ${error.message}. Retrying once in 1s...`);
+    console.warn(`API call failed: ${error.message}. Retrying once in 1s...`);
     
     // 1-second delay to settle transient glitches
     await new Promise(resolve => setTimeout(resolve, 1000));

@@ -23,6 +23,7 @@ const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 const LeadsPage = lazy(() => import('./pages/LeadsPage'));
 const AutoSchedulePage = lazy(() => import('./pages/AutoSchedule'));
 const SubscriptionPage = lazy(() => import('./pages/SubscriptionPage'));
+const ApiKeysPage = lazy(() => import('./pages/ApiKeysPage'));
 
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
 const TermsPage = lazy(() => import('./pages/TermsPage'));
@@ -39,6 +40,7 @@ const AdminClientsPage = lazy(() => import('./pages/AdminClientsPage'));
 const AdminClientDetailPage = lazy(() => import('./pages/AdminClientDetailPage'));
 const AdminSubscriptionsPage = lazy(() => import('./pages/AdminSubscriptionsPage'));
 const AdminPaymentsPage = lazy(() => import('./pages/AdminPaymentsPage'));
+const AdminApiKeysPage = lazy(() => import('./pages/ApiKeysPage'));
 const AdminLayout = lazy(() => import('./layouts/AdminLayout'));
 
 
@@ -405,6 +407,8 @@ const App = () => {
       case 'autodm':
         // Redirect old Comment Automation route to Auto-Mod > Auto Reply tab
         return <ModerationPage channels={channels} onAction={fetchAnalytics} searchQuery={searchQuery} selectedChannelId={selectedChannelId} setSelectedChannelId={setSelectedChannelId} initialTab="auto-reply" />;
+      case 'api-keys':
+        return <ApiKeysPage />;
       case 'settings':
         return <SettingsPage />;
       case 'subscription':
@@ -459,6 +463,7 @@ const App = () => {
           <Route path="/admin/clients/:id" element={<AdminRoute><AdminLayout><AdminClientDetailPage /></AdminLayout></AdminRoute>} />
           <Route path="/admin/subscriptions" element={<AdminRoute><AdminLayout><AdminSubscriptionsPage /></AdminLayout></AdminRoute>} />
           <Route path="/admin/payments" element={<AdminRoute><AdminLayout><AdminPaymentsPage /></AdminLayout></AdminRoute>} />
+          <Route path="/admin/api-keys" element={<AdminRoute><AdminLayout><AdminApiKeysPage /></AdminLayout></AdminRoute>} />
 
 
           <Route path="/admin-portal" element={<AdminPortal />} />

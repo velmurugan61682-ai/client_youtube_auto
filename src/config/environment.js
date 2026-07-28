@@ -11,7 +11,7 @@ const isProd = import.meta.env.PROD === true;
 const resolveApiBaseUrl = () => {
   let envUrl = import.meta.env.VITE_API_URL || '';
   if (!envUrl) {
-    envUrl = isProd ? 'https://server-youtube-auto.onrender.com/api' : 'http://localhost:5000/api';
+    envUrl = 'http://localhost:5000/api';
   }
   // Standardize trailing slashes & ensure /api path suffix
   let cleanUrl = envUrl.trim().replace(/\/+$/, '');

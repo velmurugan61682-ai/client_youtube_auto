@@ -162,7 +162,7 @@ const AdminPortal = () => {
     setLoginLoading(true);
     setLoginError('');
     try {
-      const res = await axios.post(`${API_BASE_URL}/api/admin/login`, { username, password });
+      const res = await axios.post(`${API_BASE_URL}/admin/login`, { username, password });
       if (res.data.success) {
         const token = res.data.token;
         localStorage.setItem('adminToken', token);
@@ -601,21 +601,21 @@ const AdminPortal = () => {
                           id: 'get-users',
                           title: '1. Retrieve Registered Users (GET /api/external/users)',
                           desc: 'Fetches profile, registration details, and subscription states for all accounts currently using the platform.',
-                          url: `${API_BASE_URL}/api/external/users`,
+                          url: `${API_BASE_URL}/external/users`,
                           method: 'GET',
                           payload: null,
-                          curl: (key) => `curl -X GET "${API_BASE_URL}/api/external/users" \\\n  -H "x-api-key: ${key}"`,
-                          fetch: (key) => `fetch('${API_BASE_URL}/api/external/users', {\n  method: 'GET',\n  headers: {\n    'x-api-key': '${key}'\n  }\n})\n.then(res => res.json())\n.then(data => console.log(data));`
+                          curl: (key) => `curl -X GET "${API_BASE_URL}/external/users" \\\n  -H "x-api-key: ${key}"`,
+                          fetch: (key) => `fetch('${API_BASE_URL}/external/users', {\n  method: 'GET',\n  headers: {\n    'x-api-key': '${key}'\n  }\n})\n.then(res => res.json())\n.then(data => console.log(data));`
                         },
                         {
                           id: 'get-leads',
                           title: '2. Retrieve System Leads Data (GET /api/external/leads)',
                           desc: 'Fetches all customer leads across the entire application, populated with the user details (name, email) who owns them.',
-                          url: `${API_BASE_URL}/api/external/leads`,
+                          url: `${API_BASE_URL}/external/leads`,
                           method: 'GET',
                           payload: null,
-                          curl: (key) => `curl -X GET "${API_BASE_URL}/api/external/leads" \\\n  -H "x-api-key: ${key}"`,
-                          fetch: (key) => `fetch('${API_BASE_URL}/api/external/leads', {\n  method: 'GET',\n  headers: {\n    'x-api-key': '${key}'\n  }\n})\n.then(res => res.json())\n.then(data => console.log(data));`
+                          curl: (key) => `curl -X GET "${API_BASE_URL}/external/leads" \\\n  -H "x-api-key: ${key}"`,
+                          fetch: (key) => `fetch('${API_BASE_URL}/external/leads', {\n  method: 'GET',\n  headers: {\n    'x-api-key': '${key}'\n  }\n})\n.then(res => res.json())\n.then(data => console.log(data));`
                         }
                       ].map(doc => (
                         <div key={doc.id} className="border border-slate-900 rounded-2xl overflow-hidden bg-slate-905/30">
