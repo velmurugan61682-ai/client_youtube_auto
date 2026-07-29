@@ -1,19 +1,18 @@
 /**
- * Centralized Production Application Environment Configuration
- * 
- * All API services, Socket.IO connections, authentication redirects, and endpoints
- * MUST import configuration from this single source of truth.
+ * Senior Developer Grade Centralized Environment Configuration
+ * Single Source of Truth for API endpoints, Socket.IO URLs, and Frontend URLs.
  */
 
 const isProd = import.meta.env.PROD === true;
 
 // Resolve API base URL (must end with /api without trailing slash)
 const resolveApiBaseUrl = () => {
-  let envUrl = import.meta.env.VITE_API_URL || '';
-  if (!envUrl) {
-    envUrl = 'http://localhost:5000/api';
+  let envUrl = import.meta.env.VITE_API_URL;
+  if (!envUrl || envUrl.trim() === '') {
+    envUrl = isProd
+      ? 'https://server-youtube-auto.onrender.com/api'
+      : 'http://localhost:5000/api';
   }
-  // Standardize trailing slashes & ensure /api path suffix
   let cleanUrl = envUrl.trim().replace(/\/+$/, '');
   if (!cleanUrl.endsWith('/api')) {
     cleanUrl = `${cleanUrl}/api`;
@@ -21,22 +20,25 @@ const resolveApiBaseUrl = () => {
   return cleanUrl;
 };
 
-// Resolve Socket URL (must be backend origin without /api)
+// Resolve Socket URL (backend origin without trailing slash or /api)
 const resolveSocketUrl = () => {
-  let envSocketUrl = import.meta.env.VITE_SOCKET_URL || '';
-  if (!envSocketUrl) {
-    const apiBase = resolveApiBaseUrl();
-    envSocketUrl = apiBase.replace(/\/api\/?$/, '');
+  let envSocketUrl = import.meta.env.VITE_SOCKET_URL;
+  if (!envSocketUrl || envSocketUrl.trim() === '') {
+    envSocketUrl = isProd
+      ? 'https://server-youtube-auto.onrender.com'
+      : 'http://localhost:5000';
   }
   let cleanUrl = envSocketUrl.trim().replace(/\/+$/, '');
   return cleanUrl.replace(/\/api\/?$/, '');
 };
 
-// Resolve Frontend URL
+// Resolve Frontend Base URL
 const resolveFrontendUrl = () => {
-  let envFrontendUrl = import.meta.env.VITE_FRONTEND_URL || '';
-  if (!envFrontendUrl) {
-    envFrontendUrl = isProd ? 'https://channelbot.in' : 'http://localhost:5173';
+  let envFrontendUrl = import.meta.env.VITE_FRONTEND_URL;
+  if (!envFrontendUrl || envFrontendUrl.trim() === '') {
+    envFrontendUrl = isProd
+      ? 'https://channelbot.in'
+      : 'http://localhost:5173';
   }
   return envFrontendUrl.trim().replace(/\/+$/, '');
 };

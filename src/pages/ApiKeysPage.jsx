@@ -3,7 +3,7 @@ import {
   Key, Plus, Trash2, Copy, Check, RefreshCw,
   Shield, Zap, Clock, ChevronDown, ChevronUp, X, ToggleLeft,
   ToggleRight, AlertTriangle, Info, Terminal, Activity, 
-  Lock, CheckCircle2, XCircle, Loader2
+  Lock, CheckCircle2, XCircle, Loader2, Eye, EyeOff
 } from 'lucide-react';
 import {
   getApiKeys,
@@ -384,6 +384,8 @@ const KeyCard = ({ keyData, onDelete, onToggle }) => {
   const [stats, setStats] = useState(null);
   const [loadingStats, setLoadingStats] = useState(false);
 
+  const [showKey, setShowKey] = useState(false);
+
   const handleDelete = async () => {
     setDeleting(true);
     try { await deleteApiKey(keyData._id); onDelete(keyData._id); } catch {}
@@ -405,6 +407,7 @@ const KeyCard = ({ keyData, onDelete, onToggle }) => {
   useEffect(() => { if (expanded) loadStats(); }, [expanded]);
 
   const isExpired = keyData.expiresAt && new Date() > new Date(keyData.expiresAt);
+  const displayKey = showKey ? (keyData.rawKey || keyData.key) : keyData.key;
 
   return (
     <>
@@ -435,9 +438,20 @@ const KeyCard = ({ keyData, onDelete, onToggle }) => {
                   {keyData.isActive && !isExpired && <span style={{ fontSize: 10, fontWeight: 800, padding: '2px 8px', borderRadius: 20, background: '#fff1f1', color: '#dc2626', border: '1px solid #fecaca' }}>ACTIVE</span>}
                 </div>
                 {keyData.description && <div style={{ fontSize: 13, color: '#64748b', marginBottom: 8, fontWeight: 500 }}>{keyData.description}</div>}
-                <code style={{ fontSize: 12, color: '#475569', background: '#f8fafc', padding: '4px 10px', borderRadius: 8, fontFamily: 'monospace', border: '1px solid #e2e8f0', fontWeight: 600 }}>
-                  {keyData.key}
-                </code>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                  <code style={{ fontSize: 12, color: '#0f172a', background: '#f8fafc', padding: '5px 12px', borderRadius: 8, fontFamily: 'monospace', border: '1px solid #cbd5e1', fontWeight: 700, wordBreak: 'break-all' }}>
+                    {displayKey}
+                  </code>
+                  <button onClick={() => setShowKey(prev => !prev)} title={showKey ? 'Hide key' : 'View full key'} style={{
+                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                    padding: '6px 10px', borderRadius: 8, border: '1px solid #cbd5e1',
+                    background: showKey ? '#fff1f1' : '#f8fafc', color: showKey ? '#dc2626' : '#475569',
+                    cursor: 'pointer', transition: 'all .2s'
+                  }}>
+                    {showKey ? <EyeOff size={15} /> : <Eye size={15} />}
+                  </button>
+                  <CopyButton text={keyData.rawKey || keyData.key} label="Copy Key" />
+                </div>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
@@ -594,7 +608,6 @@ export default function ApiKeysPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap');
         .apk-root * { font-family: 'Outfit', sans-serif; box-sizing: border-box; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .spin { animation: spin 0.7s linear infinite; }
@@ -719,43 +732,6 @@ export default function ApiKeysPage() {
           {/* Right column */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16, position: 'sticky', top: 24 }}>
             <DocsPanel />
-
-            {/* Auth guide */}
-            <div className="apk-card-bg" style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 18, padding: '18px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                <div style={{ width: 28, height: 28, borderRadius: 8, background: '#fff1f1', border: '1px solid #fecaca', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Info size={14} color="#ff0000" />
-                </div>
-                <span style={{ fontSize: 14, fontWeight: 900, color: '#0f172a' }}>Authentication</span>
-              </div>
-              <p style={{ fontSize: 12, color: '#64748b', margin: '0 0 10px', lineHeight: 1.6, fontWeight: 500 }}>
-                Pass your API key in the request header:
-              </p>
-              <code style={{ display: 'block', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, padding: '10px 12px', fontSize: 12, color: '#dc2626', fontFamily: 'monospace', fontWeight: 700 }}>
-                x-api-key: yt_your_key_here
-              </code>
-              <p style={{ fontSize: 11, color: '#94a3b8', margin: '10px 0 0', lineHeight: 1.6, fontWeight: 500 }}>
-                Also accepted as: <code style={{ color: '#475569' }}>Authorization: Bearer yt_...</code>
-              </p>
-            </div>
-
-            {/* Permission reference */}
-            <div className="apk-card-bg" style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 18, padding: '18px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-                <div style={{ width: 28, height: 28, borderRadius: 8, background: '#fff1f1', border: '1px solid #fecaca', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Shield size={14} color="#ff0000" />
-                </div>
-                <span style={{ fontSize: 14, fontWeight: 900, color: '#0f172a' }}>Permission Scopes</span>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {AVAILABLE_PERMISSIONS.map(p => (
-                  <div key={p.scope} style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                    <PermissionChip scope={p.scope} />
-                    <span style={{ fontSize: 11, color: '#64748b', paddingLeft: 4, fontWeight: 500 }}>{p.description}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
       </div>

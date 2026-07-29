@@ -29,6 +29,17 @@ export const AuthProvider = ({ children }) => {
       const hide_shell = queryParams.get('hide_shell');
       const redirect = queryParams.get('redirect');
 
+      const urlToken = queryParams.get('token');
+
+      if (urlToken) {
+        localStorage.setItem('token', urlToken);
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.delete('token');
+        const newSearch = searchParams.toString();
+        const newUrl = window.location.pathname + (newSearch ? `?${newSearch}` : '');
+        window.history.replaceState({}, '', newUrl);
+      }
+
       if (embed === 'true' || hide_shell === 'true') {
         localStorage.setItem('embed', 'true');
         localStorage.setItem('hide_shell', 'true');
