@@ -613,40 +613,44 @@ const VideosList = ({
           </div>
 
           {/* Tab Selector */}
-          <div className="px-4 py-2 border-b border-[#e5e5e5] bg-[#f2f2f2] flex gap-2 overflow-x-auto no-scrollbar">
+          <div className="px-2 py-2 border-b border-[#e5e5e5] bg-[#f2f2f2] grid grid-cols-4 gap-1">
             <button
               onClick={() => setVideoTab('videos')}
-              className={`min-h-[44px] min-w-max px-4 py-2 text-[10px] font-black uppercase tracking-wider rounded-xl transition-all border ${videoTab === 'videos'
+              className={`min-h-[40px] px-1 py-2 text-[9px] sm:text-[10px] font-black uppercase tracking-wider rounded-xl transition-all border text-center truncate ${videoTab === 'videos'
                   ? 'bg-[#fff1f1] text-[#ff0000] border-red-100 shadow-sm'
                   : 'text-[#909090] hover:text-[#0f0f0f] border-transparent'
                 }`}
+              title={`Videos (${longVideos.length})`}
             >
               Videos ({longVideos.length})
             </button>
             <button
               onClick={() => setVideoTab('shorts')}
-              className={`min-h-[44px] min-w-max px-4 py-2 text-[10px] font-black uppercase tracking-wider rounded-xl transition-all border ${videoTab === 'shorts'
+              className={`min-h-[40px] px-1 py-2 text-[9px] sm:text-[10px] font-black uppercase tracking-wider rounded-xl transition-all border text-center truncate ${videoTab === 'shorts'
                   ? 'bg-[#fff1f1] text-[#ff0000] border-red-100 shadow-sm'
                   : 'text-[#909090] hover:text-[#0f0f0f] border-transparent'
                 }`}
+              title={`Shorts (${shortVideos.length})`}
             >
               Shorts ({shortVideos.length})
             </button>
             <button
               onClick={() => setVideoTab('live')}
-              className={`min-h-[44px] min-w-max px-4 py-2 text-[10px] font-black uppercase tracking-wider rounded-xl transition-all border ${videoTab === 'live'
+              className={`min-h-[40px] px-1 py-2 text-[9px] sm:text-[10px] font-black uppercase tracking-wider rounded-xl transition-all border text-center truncate ${videoTab === 'live'
                   ? 'bg-[#fff1f1] text-[#ff0000] border-red-100 shadow-sm'
                   : 'text-[#909090] hover:text-[#0f0f0f] border-transparent'
                 }`}
+              title={`Live (${liveVideos.length})`}
             >
               Live ({liveVideos.length})
             </button>
             <button
               onClick={() => setVideoTab('posts')}
-              className={`min-h-[44px] min-w-max px-4 py-2 text-[10px] font-black uppercase tracking-wider rounded-xl transition-all border ${videoTab === 'posts'
+              className={`min-h-[40px] px-1 py-2 text-[9px] sm:text-[10px] font-black uppercase tracking-wider rounded-xl transition-all border text-center truncate ${videoTab === 'posts'
                   ? 'bg-[#fff1f1] text-[#ff0000] border-red-100 shadow-sm'
                   : 'text-[#909090] hover:text-[#0f0f0f] border-transparent'
                 }`}
+              title={`Posts (${communityPosts.length})`}
             >
               Posts ({communityPosts.length})
             </button>
@@ -788,25 +792,36 @@ const VideosList = ({
           {/* Conditional Content Rendering */}
           <div className="flex-1 overflow-y-auto overflow-x-hidden custom-scroll p-3 md:p-6 bg-white" onScroll={handleCommentsScroll}>
             {selectedVideoData && selectedVideoData.isPost ? (
-              <div className="max-w-[900px] mx-auto mb-6 p-6 bg-white border border-[#f0f0f0] rounded-2xl shadow-md text-left">
+              <div className="max-w-[900px] mx-auto mb-6 p-6 bg-white border border-[#e5e5e5] rounded-2xl shadow-md text-left">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-red-600 to-red-500 text-white flex items-center justify-center font-black">
                     CB
                   </div>
                   <div>
                     <h4 className="font-black text-[#0f0f0f] text-sm">ChannelBot</h4>
-                    <p className="text-[11px] text-[#909090] font-bold uppercase tracking-wider">Community Post</p>
+                    <p className="text-[11px] text-[#909090] font-bold uppercase tracking-wider">
+                      Community Post • {safeFormatDistanceToNow(selectedVideoData.publishedAt)} ago
+                    </p>
                   </div>
                 </div>
-                <p className="text-[14px] text-slate-800 leading-relaxed font-semibold mb-4 whitespace-pre-wrap">
-                  {selectedVideoData.description || selectedVideoData.title}
-                </p>
+                {selectedVideoData.title && (
+                  <p className="text-[15px] text-[#0f0f0f] leading-relaxed font-bold mb-3 whitespace-pre-wrap">
+                    {selectedVideoData.title}
+                  </p>
+                )}
+                {selectedVideoData.description && selectedVideoData.description !== selectedVideoData.title && (
+                  <p className="text-[13px] text-[#606060] leading-relaxed font-medium mb-4 whitespace-pre-wrap">
+                    {selectedVideoData.description}
+                  </p>
+                )}
                 {selectedVideoData.thumbnail && (
-                  <img
-                    src={selectedVideoData.thumbnail}
-                    alt="Post Attachment"
-                    className="w-full max-h-[260px] sm:max-h-[400px] object-cover rounded-xl border border-slate-100"
-                  />
+                  <div className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-2 flex justify-center items-center overflow-hidden">
+                    <img
+                      src={selectedVideoData.thumbnail}
+                      alt="Post Attachment"
+                      className="w-full max-h-[480px] object-contain rounded-xl"
+                    />
+                  </div>
                 )}
               </div>
             ) : selectedVideo && (
