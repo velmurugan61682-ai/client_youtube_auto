@@ -99,10 +99,10 @@ const AdminPortal = () => {
     if (!window.confirm(`Activate subscription manually for user ${email}?`)) return;
     try {
       await adminApi.post(`/admin/subscriptions/${userId}/activate`, { planType: 'professional', durationDays: 30 });
-      alert(`Subscription activated for ${email}`);
+      console.log(`Subscription activated for ${email}`);
       loadSubscriptions();
     } catch (err) {
-      alert(err.response?.data?.error || 'Failed to activate subscription');
+      console.error(err.response?.data?.error || 'Failed to activate subscription');
     }
   };
 
@@ -110,10 +110,10 @@ const AdminPortal = () => {
     if (!window.confirm(`Are you sure you want to cancel subscription for ${email}?`)) return;
     try {
       await adminApi.post(`/admin/subscriptions/${userId}/cancel`);
-      alert(`Subscription cancelled for ${email}`);
+      console.log(`Subscription cancelled for ${email}`);
       loadSubscriptions();
     } catch (err) {
-      alert(err.response?.data?.error || 'Failed to cancel subscription');
+      console.error(err.response?.data?.error || 'Failed to cancel subscription');
     }
   };
 
@@ -121,13 +121,13 @@ const AdminPortal = () => {
     const daysStr = window.prompt(`Enter number of days to extend subscription for ${email}:`, '30');
     if (!daysStr) return;
     const days = parseInt(daysStr);
-    if (isNaN(days) || days <= 0) return alert('Invalid number of days.');
+    if (isNaN(days) || days <= 0) return console.error('Invalid number of days.');
     try {
       await adminApi.post(`/admin/subscriptions/${userId}/extend`, { days });
-      alert(`Subscription extended by ${days} days for ${email}`);
+      console.log(`Subscription extended by ${days} days for ${email}`);
       loadSubscriptions();
     } catch (err) {
-      alert(err.response?.data?.error || 'Failed to extend subscription');
+      console.error(err.response?.data?.error || 'Failed to extend subscription');
     }
   };
 
@@ -138,11 +138,11 @@ const AdminPortal = () => {
     try {
       const res = await adminApi.delete(`/admin/users/${id}`);
       if (res.data.success) {
-        window.alert(`User account "${name}" successfully deleted.`);
+        console.log(`User account "${name}" successfully deleted.`);
         loadUsers();
       }
     } catch (err) {
-      window.alert(err.response?.data?.error || 'Failed to delete user account');
+      console.error(err.response?.data?.error || 'Failed to delete user account');
     }
   };
 
@@ -215,7 +215,7 @@ const AdminPortal = () => {
         loadApiKeys();
       }
     } catch (err) {
-      alert(err.response?.data?.error || 'Failed to generate API Key');
+      console.error(err.response?.data?.error || 'Failed to generate API Key');
     } finally {
       setCreatingKey(false);
     }
@@ -234,7 +234,7 @@ const AdminPortal = () => {
         }
       }
     } catch (err) {
-      alert(err.response?.data?.error || 'Failed to revoke API Key');
+      console.error(err.response?.data?.error || 'Failed to revoke API Key');
     }
   };
 

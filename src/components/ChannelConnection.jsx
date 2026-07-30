@@ -63,7 +63,7 @@ const ChannelConnection = ({ channels, setChannels }) => {
       await api.delete(`/youtube/channels/${id}`);
       setChannels(prev => prev.filter(c => c.channelId !== id));
     } catch (err) {
-      alert('Failed to disconnect.');
+      console.error('Failed to disconnect:', err);
     }
   };
 

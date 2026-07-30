@@ -42,6 +42,7 @@ const AdminSubscriptionsPage = lazy(() => import('./pages/AdminSubscriptionsPage
 const AdminPaymentsPage = lazy(() => import('./pages/AdminPaymentsPage'));
 const AdminApiKeysPage = lazy(() => import('./pages/ApiKeysPage'));
 const AdminLayout = lazy(() => import('./layouts/AdminLayout'));
+const OAuthCallbackPage = lazy(() => import('./pages/OAuthCallbackPage'));
 
 
 import AdminRoute from './components/AdminRoute';
@@ -66,9 +67,8 @@ const App = () => {
     const redirectParam = queryParams.get('redirect') || localStorage.getItem('sso_redirect');
     localStorage.removeItem('sso_redirect');
 
-    if (queryParams.get('status') === 'success') {
-      // Small alert to confirm success
-      setTimeout(() => alert('YouTube Channel Connected Successfully!'), 500);
+    if (queryParams.get('status') === 'success' && queryParams.get('channelId')) {
+      // Only show channel connected message when a channelId is present (channel link flow, not login flow)
       return 'channels';
     }
     return (redirectParam === 'comments' || redirectParam === 'videos') ? 'videos' : 'dashboard';
@@ -336,7 +336,6 @@ const App = () => {
       }
     } catch (err) {
       console.error('Failed to disconnect channel:', err);
-      alert('Failed to disconnect channel.');
     } finally {
       setLoading(false);
     }
@@ -376,12 +375,12 @@ const App = () => {
           onAdd={async () => {
             try {
               const [subRes, channelsRes] = await Promise.all([
-                api.get('/subscription/status'),
+                api.get('/billing/status'),
                 api.get('/youtube/channels')
               ]);
-              const currentSub = subRes.data.subscription;
-              const userRole = subRes.data.role;
-              const currentChannelsCount = channelsRes.data.length;
+              const currentSub = subRes.data?.data?.subscription || subRes.data?.subscription;
+              const userRole = subRes.data?.data?.role || subRes.data?.role;
+              const currentChannelsCount = channelsRes.data?.data?.length || channelsRes.data?.length || 0;
 
               const isSubActive = currentSub && currentSub.status === 'active';
               const isAdmin = userRole === 'admin';
@@ -398,7 +397,7 @@ const App = () => {
               }
             } catch (err) {
               const errMsg = err.response?.data?.error || 'Failed to initiate secure connection';
-              alert(errMsg);
+              console.error(errMsg);
               if (err.response?.status === 403) {
                 setActiveTab('subscription'); // Redirect to subscription plans to upgrade
               }
@@ -481,8 +480,17 @@ const App = () => {
 
           <Route path="/admin-portal" element={<AdminPortal />} />
 
+          <Route path="/oauth/callback" element={<OAuthCallbackPage />} />
+
           <Route path="/dashboard/*" element={
-            !user ? <Navigate to="/login" replace /> : (user.role === 'admin' || user.role === 'superadmin') ? <Navigate to="/admin/dashboard" replace /> : (
+            authLoading ? (
+              <div className="h-screen w-full flex items-center justify-center bg-[#f9f9f9]">
+                <div className="flex flex-col items-center gap-4">
+                  <Loader2 className="animate-spin text-[#ff0000]" size={48} />
+                  <p className="text-[14px] font-bold text-[#606060] uppercase tracking-widest">Loading...</p>
+                </div>
+              </div>
+            ) : !user ? <Navigate to="/login" replace /> : (user.role === 'admin' || user.role === 'superadmin') ? <Navigate to="/admin/dashboard" replace /> : (
               !planSelected && loadingChannels ? (
                 <div className="h-screen w-full flex items-center justify-center bg-[#f9f9f9]">
                   <div className="flex flex-col items-center gap-4">

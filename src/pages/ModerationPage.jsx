@@ -129,6 +129,30 @@ const getContentIconClasses = (content) => {
 //  Moderation Rule Toggle Row 
 
 
+const ThumbnailImage = ({ initialSrc, alt, className }) => {
+  const [src, setSrc] = useState(initialSrc);
+  const [errorCount, setErrorCount] = useState(0);
+
+  useEffect(() => {
+    setSrc(initialSrc);
+    setErrorCount(0);
+  }, [initialSrc]);
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className={className}
+      onError={() => {
+        if (errorCount === 0) {
+          setSrc('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150&auto=format&fit=crop&q=80');
+          setErrorCount(1);
+        }
+      }}
+    />
+  );
+};
+
 //  Main Component 
 const ModerationPage = ({
   channels = [],
@@ -1780,7 +1804,11 @@ const ModerationPage = ({
                     >
                       <div className="h-28 bg-slate-900 relative overflow-hidden">
                         {v.thumbnail ? (
-                          <img src={v.thumbnail} alt={v.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                          <ThumbnailImage 
+                            initialSrc={v.thumbnail} 
+                            alt={v.title} 
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                          />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-slate-600 font-black">
                             <VideoIcon size={24} />

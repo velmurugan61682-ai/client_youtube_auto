@@ -59,7 +59,7 @@ const Login = ({ onSwitchToRegister }) => {
         setGoogleLoadingText('Redirecting securely...');
       }, 750);
 
-      const response = await api.get('/auth/google');
+      const response = await api.get('/auth/google?flow=login');
       clearTimeout(timer);
 
       if (response.data && response.data.redirectUrl) {

@@ -114,7 +114,7 @@ const AdminSubscriptionsPage = () => {
       await api.delete(`/admin/subscriptions/${sub._id}`);
       await fetchSubscriptions();
     } catch (err) {
-      alert(err.response?.data?.error || 'Failed to cancel subscription');
+      console.error(err.response?.data?.error || 'Failed to cancel subscription');
     }
   };
 

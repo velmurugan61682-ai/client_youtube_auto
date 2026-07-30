@@ -26,7 +26,7 @@ const Settings = () => {
     const file = e.target.files[0];
     if (file) {
       if (file.size > 2 * 1024 * 1024) {
-        alert('File size must be less than 2MB');
+        setSuccessMessage('File size must be less than 2MB');
         return;
       }
       const reader = new FileReader();
@@ -74,11 +74,11 @@ const Settings = () => {
   const handleSaveProfile = async (e) => {
     e.preventDefault();
     if (!profileName.trim()) {
-      alert('Name is required');
+      setSuccessMessage('Name is required');
       return;
     }
     if (newPassword && newPassword !== confirmPassword) {
-      alert('Passwords do not match');
+      setSuccessMessage('Passwords do not match');
       return;
     }
 
@@ -107,7 +107,7 @@ const Settings = () => {
       }
     } catch (err) {
       console.error(err);
-      alert(err.response?.data?.error || 'Failed to update profile');
+      setSuccessMessage(err.response?.data?.error || 'Failed to update profile');
     } finally {
       setSavingProfile(false);
     }
@@ -170,7 +170,7 @@ const Settings = () => {
       setSuccessMessage('Configuration synchronized!');
       setTimeout(() => setSuccessMessage(''), 3000);
     } catch (err) {
-      alert(err.response?.data?.error || 'Failed to sync configuration.');
+      setSuccessMessage(err.response?.data?.error || 'Failed to sync configuration.');
     } finally {
       setSavingSettings(false);
     }

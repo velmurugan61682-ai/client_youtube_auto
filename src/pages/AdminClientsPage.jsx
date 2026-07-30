@@ -108,7 +108,7 @@ const AdminClientsPage = () => {
       await api.patch(`/admin/clients/${client._id}`, { status: newStatus });
       await fetchClients();
     } catch (err) {
-      alert('Failed to update status');
+      console.error('Failed to update status:', err);
     }
   };
 
@@ -120,7 +120,7 @@ const AdminClientsPage = () => {
       setDeleteModalClient(null);
       await fetchClients();
     } catch (err) {
-      alert(err.response?.data?.error || 'Failed to delete client account');
+      console.error(err.response?.data?.error || 'Failed to delete client account');
     } finally {
       setActionLoading(false);
     }

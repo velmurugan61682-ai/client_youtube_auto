@@ -97,8 +97,7 @@ const Header = ({
         await switchOrg(orgId);
         window.location.reload();
       } catch (err) {
-        console.error('Failed to switch organization:', err);
-        alert('Failed to switch organization tenant.');
+        console.error('Failed to switch organization tenant:', err);
       }
     }
   };

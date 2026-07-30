@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import api from '../services/api';
 import { 
   Clock, 
@@ -86,7 +86,7 @@ const AutoSchedule = ({ channels = [], selectedChannelId, setSelectedChannelId }
     if (!file) return;
 
     if (!activeChannel) {
-      alert('Please select a channel first.');
+      setUploadError('Please select a channel first.');
       return;
     }
 
@@ -140,11 +140,11 @@ const AutoSchedule = ({ channels = [], selectedChannelId, setSelectedChannelId }
 
   const handleAutoSchedule = async () => {
     if (!activeChannel) {
-      alert('Please select a channel first.');
+      setUploadError('Please select a channel first.');
       return;
     }
     if (!videoId) {
-      alert('Please upload a video first.');
+      setUploadError('Please upload a video first.');
       return;
     }
     try {
@@ -164,7 +164,7 @@ const AutoSchedule = ({ channels = [], selectedChannelId, setSelectedChannelId }
       setUploadProgress(0);
     } catch (err) {
       console.error(err);
-      alert(err.response?.data?.error || 'AI analysis failed.');
+      setUploadError(err.response?.data?.error || 'AI analysis failed.');
     } finally {
       setLoading(false);
     }
@@ -172,15 +172,15 @@ const AutoSchedule = ({ channels = [], selectedChannelId, setSelectedChannelId }
 
   const handleManualSchedule = async () => {
     if (!activeChannel) {
-      alert('Please select a channel first.');
+      setUploadError('Please select a channel first.');
       return;
     }
     if (!videoId) {
-      alert('Please upload a video first.');
+      setUploadError('Please upload a video first.');
       return;
     }
     if (!manualTime) {
-      alert('Please select a publication date and time.');
+      setUploadError('Please select a publication date and time.');
       return;
     }
     try {
@@ -202,7 +202,7 @@ const AutoSchedule = ({ channels = [], selectedChannelId, setSelectedChannelId }
       setUploadProgress(0);
     } catch (err) {
       console.error(err);
-      alert(err.response?.data?.error || 'Failed to confirm manual schedule.');
+      setUploadError(err.response?.data?.error || 'Failed to confirm manual schedule.');
     } finally {
       setLoading(false);
     }

@@ -72,7 +72,7 @@ const ActivityFeed = ({ activities }) => {
 
       <div className="p-4 bg-[#f8f9fa]/50 border-t border-[#f0f0f0] flex justify-end">
         <button 
-          onClick={() => alert('Feed paused. Real-time updates are temporarily suspended.')}
+          onClick={() => console.log('Feed paused. Real-time updates are temporarily suspended.')}
           className="px-6 py-2 bg-white border border-[#e5e5e5] hover:border-[#ff0000]/30 hover:text-[#ff0000] text-[#606060] rounded-xl text-[11px] font-black uppercase tracking-widest transition-all"
         >
           Pause Feed

@@ -84,7 +84,7 @@ const AdminDashboardPage = () => {
       });
       setUsers(prev => prev.map(u => u._id === user._id ? { ...u, plan: newPlan === 'Pro' ? 'quarterly_pro' : 'free' } : u));
     } catch (err) {
-      alert('Failed to update plan');
+      console.error('Failed to update plan:', err);
     } finally {
       setActionLoadingId(null);
     }
@@ -99,7 +99,7 @@ const AdminDashboardPage = () => {
       });
       setUsers(prev => prev.map(u => u._id === user._id ? { ...u, agent: newAgent, assignedAgent: newAgent } : u));
     } catch (err) {
-      alert('Failed to update agent');
+      console.error('Failed to update agent:', err);
     } finally {
       setActionLoadingId(null);
     }
@@ -112,7 +112,7 @@ const AdminDashboardPage = () => {
       await api.patch(`/admin/clients/${user._id}`, { status: newStatus });
       setUsers(prev => prev.map(u => u._id === user._id ? { ...u, status: newStatus } : u));
     } catch (err) {
-      alert('Failed to update account status');
+      console.error('Failed to update account status:', err);
     } finally {
       setActionLoadingId(null);
     }

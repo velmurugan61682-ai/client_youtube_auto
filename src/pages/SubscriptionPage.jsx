@@ -90,7 +90,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
         const res = await api.post('/subscription/create', { planType });
         if (res.data.success) {
           await fetchStatus();
-          alert('Downgraded to Free Plan successfully.');
+          setMessage('Downgraded to Free Plan successfully.');
           if (onSelectPlan) onSelectPlan();
         }
         return;
@@ -130,7 +130,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
             });
             if (verifyRes.data.success) {
               await fetchStatus();
-              alert('Subscription activated successfully!');
+              setMessage('Subscription activated successfully!');
               if (onSelectPlan) onSelectPlan();
             }
           } catch (err) {
@@ -167,7 +167,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
               });
               if (verifyRes.data.success) {
                 await fetchStatus();
-                alert('Test Subscription activated successfully!');
+                setMessage('Test Subscription activated successfully!');
                 if (onSelectPlan) onSelectPlan();
               }
             } catch (simErr) {
@@ -195,7 +195,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
       const res = await api.post('/subscription/cancel');
       if (res.data.success) {
         await fetchStatus();
-        alert('Subscription cancelled successfully.');
+        setMessage('Subscription cancelled successfully.');
       }
     } catch (err) {
       setMessage(err.response?.data?.error || 'Cancellation failed.');
@@ -494,7 +494,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
                       </td>
                       <td className="py-4 text-right">
                         <button
-                          onClick={() => alert(`Invoice details: ${inv.id}`)}
+                          onClick={() => setMessage(`Invoice details: ${inv.id}`)}
                           className="p-2 hover:bg-zinc-100 rounded-xl text-zinc-500 hover:text-zinc-900 transition-colors inline-flex items-center gap-1"
                         >
                           <Download size={14} /> Download

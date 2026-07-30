@@ -33,11 +33,14 @@ export const AuthProvider = ({ children }) => {
 
       if (urlToken) {
         localStorage.setItem('token', urlToken);
-        const searchParams = new URLSearchParams(window.location.search);
-        searchParams.delete('token');
-        const newSearch = searchParams.toString();
-        const newUrl = window.location.pathname + (newSearch ? `?${newSearch}` : '');
-        window.history.replaceState({}, '', newUrl);
+        // Only strip token from URL if NOT on the dedicated OAuth callback route
+        if (window.location.pathname !== '/oauth/callback') {
+          const searchParams = new URLSearchParams(window.location.search);
+          searchParams.delete('token');
+          const newSearch = searchParams.toString();
+          const newUrl = window.location.pathname + (newSearch ? `?${newSearch}` : '');
+          window.history.replaceState({}, '', newUrl);
+        }
       }
 
       if (embed === 'true' || hide_shell === 'true') {

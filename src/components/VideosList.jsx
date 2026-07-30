@@ -79,6 +79,33 @@ const formatChartDate = (dateStr) => {
   }
 };
 
+const ThumbnailImage = ({ initialSrc, videoId, alt, className }) => {
+  const [src, setSrc] = useState(initialSrc);
+  const [errorLevel, setErrorLevel] = useState(0);
+
+  useEffect(() => {
+    setSrc(initialSrc);
+    setErrorLevel(0);
+  }, [initialSrc]);
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className={className}
+      onError={() => {
+        if (errorLevel === 0 && src.includes('hqdefault.jpg') && videoId) {
+          setSrc(`https://i.ytimg.com/vi/${videoId}/default.jpg`);
+          setErrorLevel(1);
+        } else if (errorLevel <= 1) {
+          setSrc('https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=150&auto=format&fit=crop&q=60');
+          setErrorLevel(2);
+        }
+      }}
+    />
+  );
+};
+
 const VideosList = ({
   channelId,
   onAction,
@@ -371,7 +398,6 @@ const VideosList = ({
       }
     } catch (err) {
       console.error('Failed to submit dashboard like:', err);
-      alert(err.response?.data?.error || 'Failed to submit like.');
     } finally {
       setSubmittingLike(false);
     }
@@ -441,7 +467,7 @@ const VideosList = ({
       setComments(originalComments);
 
       const errorMsg = err.response?.data?.error || err.message || 'Moderation action failed.';
-      alert(`Action failed: ${errorMsg}`);
+      console.error(`Action failed: ${errorMsg}`);
     } finally {
       setProcessingId(null);
     }
@@ -617,19 +643,11 @@ const VideosList = ({
                   }`}
               >
                 <div className="relative flex-shrink-0 w-20 h-12 rounded-xl overflow-hidden bg-slate-100 shadow-sm">
-                  <img
-                    src={getCleanThumbnail(video)}
+                  <ThumbnailImage
+                    initialSrc={getCleanThumbnail(video)}
+                    videoId={video.videoId}
                     alt=""
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      const currentSrc = e.target.src || '';
-                      if (currentSrc.includes('hqdefault.jpg') && video?.videoId) {
-                        e.target.src = `https://i.ytimg.com/vi/${video.videoId}/default.jpg`;
-                      } else {
-                        e.target.src = 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=150&auto=format&fit=crop&q=60';
-                      }
-                    }}
                   />
                   {video.isPost ? (
                     <span className="absolute bottom-1 right-1 bg-[#ff0000]/90 text-white text-[9px] font-black px-1.5 py-0.5 rounded-md">
@@ -662,7 +680,7 @@ const VideosList = ({
                   <span
                     onClick={(e) => {
                       e.stopPropagation();
-                      alert(`Video Audit Details:\n- Video ID: ${video.videoId}\n- Title: ${video.title}`);
+                      console.log(`Video Audit Details:\n- Video ID: ${video.videoId}\n- Title: ${video.title}`);
                     }}
                     className="p-1.5 hover:bg-slate-200 rounded-lg text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
                   >
