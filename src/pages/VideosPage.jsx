@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import VideosList from '../components/VideosList';;
 import { motion } from 'framer-motion';
 

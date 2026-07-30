@@ -197,6 +197,12 @@ const AdminClientDetailPage = () => {
                   <p className="text-[10px] text-slate-400">Leads Captured</p>
                   <p className="text-lg font-black text-[#ff0000] mt-0.5">{metrics.leadsGenerated || 0}</p>
                 </div>
+                <div className="bg-white/80 p-2.5 rounded-xl border border-slate-100 col-span-2">
+                  <p className="text-[10px] text-slate-400">Live Chat & Broadcasts</p>
+                  <p className="text-sm font-black text-emerald-600 mt-0.5 flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> Active System
+                  </p>
+                </div>
               </div>
             </div>
           </div>

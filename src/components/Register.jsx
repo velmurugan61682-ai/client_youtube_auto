@@ -11,6 +11,17 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
+import api from '../services/api';
+
+// Official 4-color Google "G" Icon
+const GoogleIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+    <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z" />
+    <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.96H1.26v3.15C3.25 21.3 7.31 24 12 24z" />
+    <path fill="#FBBC05" d="M5.28 14.24c-.25-.72-.38-1.49-.38-2.24s.13-1.52.38-2.24V6.61H1.26C.46 8.21 0 10.05 0 12s.46 3.79 1.26 5.39l4.02-3.15z" />
+    <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.25 2.7 1.26 6.61l4.02 3.15c.95-2.85 3.6-4.96 6.72-4.96z" />
+  </svg>
+);
 
 const Register = ({ onSwitchToLogin }) => {
   const { register } = useAuth();
@@ -22,6 +33,34 @@ const Register = ({ onSwitchToLogin }) => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [googleLoadingText, setGoogleLoadingText] = useState('Connecting to Google...');
+
+  const handleGoogleSignIn = async () => {
+    setGoogleLoading(true);
+    setError('');
+    setGoogleLoadingText('Connecting to Google...');
+
+    try {
+      const timer = setTimeout(() => {
+        setGoogleLoadingText('Redirecting securely...');
+      }, 750);
+
+      const response = await api.get('/auth/google');
+      clearTimeout(timer);
+
+      if (response.data && response.data.redirectUrl) {
+        setGoogleLoadingText('Redirecting securely...');
+        window.location.href = response.data.redirectUrl;
+      } else {
+        throw new Error('No redirect URL received');
+      }
+    } catch (err) {
+      console.error('Google OAuth error:', err);
+      setGoogleLoading(false);
+      setError('Unable to connect to Google. Please try again.');
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -90,6 +129,38 @@ const Register = ({ onSwitchToLogin }) => {
               </motion.div>
             )}
           </AnimatePresence>
+
+          {/* Google OAuth Button Section */}
+          <div className="space-y-4 mt-2">
+            <motion.button
+              type="button"
+              onClick={handleGoogleSignIn}
+              disabled={googleLoading || loading}
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              className="w-full bg-white hover:bg-zinc-50 border border-zinc-300 hover:border-zinc-400 text-zinc-700 font-bold py-3.5 px-4 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all flex items-center justify-center gap-3 text-[14px] relative group disabled:opacity-70 disabled:cursor-not-allowed"
+            >
+              {googleLoading ? (
+                <div className="flex items-center gap-2.5 text-zinc-600 font-bold text-[13px]">
+                  <Loader2 className="animate-spin text-blue-600" size={18} />
+                  <span className="animate-pulse">{googleLoadingText}</span>
+                </div>
+              ) : (
+                <>
+                  <GoogleIcon />
+                  <span className="text-zinc-700 font-bold tracking-tight">Continue with Google</span>
+                </>
+              )}
+            </motion.button>
+          </div>
+
+          {/* Divider */}
+          <div className="relative flex items-center justify-center my-6">
+            <div className="w-full border-t border-zinc-200" />
+            <span className="absolute bg-white px-3 text-[10px] font-black text-zinc-400 uppercase tracking-widest">
+              or with email and password
+            </span>
+          </div>
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -164,7 +235,7 @@ const Register = ({ onSwitchToLogin }) => {
 
             <motion.button
               type="submit"
-              disabled={loading}
+              disabled={loading || googleLoading}
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.99 }}
               className="w-full bg-[#ff0000] hover:bg-[#cc0000] disabled:bg-zinc-200 text-white font-black py-4 rounded-xl shadow-[0_12px_24px_-8px_rgba(255,0,0,0.4)] transition-all flex items-center justify-center gap-3 text-sm mt-6"

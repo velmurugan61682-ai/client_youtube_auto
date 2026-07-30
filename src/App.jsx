@@ -47,7 +47,7 @@ const AdminLayout = lazy(() => import('./layouts/AdminLayout'));
 import AdminRoute from './components/AdminRoute';
 import Sidebar from './components/Sidebar';
 import InstallAppPrompt from './components/InstallAppPrompt';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 
 
@@ -55,6 +55,8 @@ let activeAnalyticsPromise = null;
 let activeChannelsPromise = null;
 
 const App = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { user, authLoading, logout } = useAuth();
   const [planSelected, setPlanSelected] = useState(() => sessionStorage.getItem('plan_acknowledged') === 'true');
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
@@ -97,6 +99,17 @@ const App = () => {
   const [profileSheetOpen, setProfileSheetOpen] = useState(false);
   const [clientDark, setClientDark] = useState(() => localStorage.getItem('clientTheme') === 'dark');
   const [videoSubTab, setVideoSubTab] = useState('videos');
+
+  const handleDashboardTabChange = useCallback((tab) => {
+    setActiveTab(tab);
+  }, []);
+
+  useEffect(() => {
+    if (location.pathname === '/dashboard/live-chat') {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [location.pathname, navigate]);
+
   useEffect(() => {
     localStorage.setItem('clientTheme', clientDark ? 'dark' : 'light');
   }, [clientDark]);
@@ -468,7 +481,7 @@ const App = () => {
 
           <Route path="/admin-portal" element={<AdminPortal />} />
 
-          <Route path="/dashboard" element={
+          <Route path="/dashboard/*" element={
             !user ? <Navigate to="/login" replace /> : (user.role === 'admin' || user.role === 'superadmin') ? <Navigate to="/admin/dashboard" replace /> : (
               !planSelected && loadingChannels ? (
                 <div className="h-screen w-full flex items-center justify-center bg-[#f9f9f9]">
@@ -506,7 +519,7 @@ const App = () => {
                     {!isEmbedded && (
                       <Sidebar
                         activeTab={activeTab}
-                        setActiveTab={setActiveTab}
+                        setActiveTab={handleDashboardTabChange}
                         onLogout={logout}
                         isOpen={sidebarOpen}
                         setIsOpen={setSidebarOpen}
@@ -720,6 +733,8 @@ const App = () => {
 
 
 export default App;
+
+
 
 
 

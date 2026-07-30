@@ -119,11 +119,27 @@ const VideosList = ({
     return text.includes('#shorts') || text.includes('/shorts/');
   };
 
-  const shortVideos = processedVideos.filter(isShortVideo);
-  const longVideos = processedVideos.filter(v => !v.isPost && !isShortVideo(v));
+  const isLiveVideo = (video) => {
+    return Boolean(
+      video.isLive || 
+      video.liveChatId || 
+      video.liveBroadcastContent === 'live' || 
+      video.liveBroadcastContent === 'upcoming'
+    );
+  };
+
+  const liveVideos = processedVideos.filter(isLiveVideo);
+  const shortVideos = processedVideos.filter(v => !isLiveVideo(v) && isShortVideo(v));
+  const longVideos = processedVideos.filter(v => !isLiveVideo(v) && !v.isPost && !isShortVideo(v));
   const communityPosts = processedVideos.filter(v => v.isPost);
 
-  const activeVideosList = videoTab === 'videos' ? longVideos : (videoTab === 'shorts' ? shortVideos : communityPosts);
+  const activeVideosList = videoTab === 'videos' 
+    ? longVideos 
+    : (videoTab === 'shorts' 
+      ? shortVideos 
+      : (videoTab === 'live' 
+        ? liveVideos 
+        : communityPosts));
   const selectedVideoData = processedVideos.find(v => v.videoId === selectedVideo);
 
   useEffect(() => {
@@ -187,17 +203,43 @@ const VideosList = ({
   const fetchVideos = async () => {
     try {
       setLoadingVideos(true);
-      const res = await api.get('/youtube/videos', { params: { channelId } });
-      const fetchedVideos = Array.isArray(res.data)
-        ? res.data
-        : (res.data && Array.isArray(res.data.videos))
-          ? res.data.videos
-          : (res.data && Array.isArray(res.data.data))
-            ? res.data.data
-            : [];
-      setVideos(fetchedVideos);
-      if (fetchedVideos.length > 0 && !selectedVideo) {
-        handleVideoSelect(fetchedVideos[0].videoId, false);
+      const [videosRes, liveRes] = await Promise.allSettled([
+        api.get('/youtube/videos', { params: { channelId } }),
+        api.get('/live-chat/streams', { params: { channelId } })
+      ]);
+
+      const fetchedVideos = videosRes.status === 'fulfilled' && Array.isArray(videosRes.value.data)
+        ? videosRes.value.data
+        : (videosRes.status === 'fulfilled' && videosRes.value.data && Array.isArray(videosRes.value.data.videos))
+          ? videosRes.value.data.videos
+          : [];
+
+      const fetchedLive = liveRes.status === 'fulfilled' && liveRes.value.data && Array.isArray(liveRes.value.data.streams)
+        ? liveRes.value.data.streams
+        : [];
+
+      // Merge videos and live streams cleanly without duplicates
+      const byVideoId = new Map();
+      [...fetchedVideos, ...fetchedLive].forEach(item => {
+        if (!item?.videoId) return;
+        const previous = byVideoId.get(item.videoId) || {};
+        byVideoId.set(item.videoId, {
+          ...previous,
+          ...item,
+          isLive: Boolean(previous.isLive || item.isLive || item.liveChatId || item.liveBroadcastContent === 'live'),
+          liveBroadcastContent: item.liveBroadcastContent || previous.liveBroadcastContent || 'none',
+          liveChatId: item.liveChatId || previous.liveChatId || ''
+        });
+      });
+
+      const mergedVideos = Array.from(byVideoId.values());
+      setVideos(mergedVideos);
+
+      if (mergedVideos.length > 0 && !selectedVideo) {
+        const isCurrentSelectedInList = mergedVideos.some(v => v.videoId === selectedVideo);
+        if (!isCurrentSelectedInList) {
+          handleVideoSelect(mergedVideos[0].videoId, false);
+        }
       }
     } catch (err) {
       console.error('Error fetching videos:', err);
@@ -214,16 +256,48 @@ const VideosList = ({
       setLoadingComments(true);
       setLoadingAnalytics(true);
 
-      const [commentsRes, analyticsRes] = await Promise.all([
-        api.get('/comments', { params: { videoId } }),
-        api.get(`/youtube/video/${videoId}/analytics`).catch(err => {
-          console.error('Error fetching video analytics:', err);
-          return { data: { video: null } };
-        })
-      ]);
+      const currentVideo = processedVideos.find(v => v.videoId === videoId);
+      const isLive = currentVideo ? isLiveVideo(currentVideo) : false;
 
-      setComments(Array.isArray(commentsRes.data) ? commentsRes.data : (commentsRes.data?.comments || []));
-      setVideoAnalytics(analyticsRes.data?.video || null);
+      let commentsData = [];
+      let analyticsData = null;
+
+      if (isLive && currentVideo?.liveChatId) {
+        try {
+          const liveChatRes = await api.get('/live-chat/messages', {
+            params: { channelId, liveChatId: currentVideo.liveChatId }
+          });
+          const messages = liveChatRes.data?.messages || [];
+          commentsData = messages.map(m => ({
+            _id: m._id || m.messageId,
+            youtubeId: m.messageId,
+            videoId: videoId,
+            author: m.authorName || 'Anonymous',
+            authorProfileImageUrl: m.authorProfileImageUrl,
+            text: m.messageText,
+            publishedAt: m.publishedAt,
+            sentiment: m.senderType === 'toxic' ? 'toxic' : 'positive',
+            replyText: m.isBotReply ? m.messageText : null,
+            replyStatus: m.senderType === 'bot' ? 'sent' : null,
+            isLiveChat: true
+          }));
+        } catch (err) {
+          console.error('Error fetching live chat messages:', err);
+        }
+      } else {
+        const commentsRes = await api.get('/comments', { params: { videoId } });
+        commentsData = Array.isArray(commentsRes.data) ? commentsRes.data : (commentsRes.data?.comments || []);
+      }
+
+      try {
+        const analyticsRes = await api.get(`/youtube/video/${videoId}/analytics`);
+        analyticsData = analyticsRes.data?.video || null;
+      } catch (err) {
+        console.error('Error fetching video analytics:', err);
+      }
+
+      setComments(commentsData);
+      setVideoAnalytics(analyticsData);
     } catch (err) {
       console.error('Error fetching video selection data:', err);
     } finally {
@@ -480,6 +554,15 @@ const VideosList = ({
               Shorts ({shortVideos.length})
             </button>
             <button
+              onClick={() => setVideoTab('live')}
+              className={`min-h-[44px] min-w-max px-4 py-2 text-[10px] font-black uppercase tracking-wider rounded-xl transition-all border ${videoTab === 'live'
+                  ? 'bg-[#fff1f1] text-[#ff0000] border-red-100 shadow-sm'
+                  : 'text-[#909090] hover:text-[#0f0f0f] border-transparent'
+                }`}
+            >
+              Live ({liveVideos.length})
+            </button>
+            <button
               onClick={() => setVideoTab('posts')}
               className={`min-h-[44px] min-w-max px-4 py-2 text-[10px] font-black uppercase tracking-wider rounded-xl transition-all border ${videoTab === 'posts'
                   ? 'bg-[#fff1f1] text-[#ff0000] border-red-100 shadow-sm'
@@ -518,6 +601,11 @@ const VideosList = ({
                   {video.isPost ? (
                     <span className="absolute bottom-1 right-1 bg-[#ff0000]/90 text-white text-[9px] font-black px-1.5 py-0.5 rounded-md">
                       POST
+                    </span>
+                  ) : isLiveVideo(video) ? (
+                    <span className="absolute bottom-1 right-1 bg-[#ff0000] text-white text-[9px] font-black px-1.5 py-0.5 rounded-md flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+                      LIVE
                     </span>
                   ) : (
                     <span className="absolute bottom-1 right-1 bg-black/75 text-white text-[9px] font-black px-1.5 py-0.5 rounded-md">

@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { PlaySquare, AlertTriangle } from 'lucide-react';
 import { motion } from 'framer-motion';
 

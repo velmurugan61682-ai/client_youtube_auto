@@ -4,6 +4,7 @@ import {
   Video,
   PlaySquare,
   ShieldCheck,
+  MessageCircle,
   Settings,
   LogOut,
   UsersRound,
@@ -171,3 +172,4 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen, user, o
 };
 
 export default Sidebar;
+

@@ -73,6 +73,43 @@ const Toast = ({ toasts }) => (
     </AnimatePresence>
   </div>
 );
+const isPostContent = (content) => Boolean(content?.isPost || content?.duration === 'Post' || content?.videoId?.startsWith('yt_post_'));
+
+const isLiveContent = (content) => Boolean(
+  content?.isLive ||
+  content?.liveChatId ||
+  content?.liveBroadcastContent === 'live' ||
+  content?.liveBroadcastContent === 'upcoming'
+);
+
+const parseDurationSeconds = (duration = '') => {
+  const match = String(duration).match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+  if (!match) return 0;
+  return (parseInt(match[1] || '0', 10) * 3600) + (parseInt(match[2] || '0', 10) * 60) + parseInt(match[3] || '0', 10);
+};
+
+const isShortContent = (content) => {
+  if (isPostContent(content) || isLiveContent(content)) return false;
+  const durationSeconds = parseDurationSeconds(content?.duration);
+  if (durationSeconds > 0) return durationSeconds <= 60;
+  const text = `${content?.title || ''} ${content?.description || ''} ${content?.url || ''}`.toLowerCase();
+  return text.includes('#shorts') || text.includes('/shorts/');
+};
+
+const getContentKind = (content) => {
+  if (isLiveContent(content)) return 'Live';
+  if (isPostContent(content)) return 'Post';
+  if (isShortContent(content)) return 'Short';
+  return 'Video';
+};
+
+const getContentIconClasses = (content) => {
+  const kind = getContentKind(content);
+  if (kind === 'Live') return 'bg-[#ff0000] text-white';
+  if (kind === 'Post') return 'bg-sky-50 text-sky-600';
+  if (kind === 'Short') return 'bg-violet-50 text-violet-600';
+  return 'bg-[#ff0000]/10 text-[#ff0000]';
+};
 
 //  Moderation Rule Toggle Row 
 
@@ -294,9 +331,36 @@ const ModerationPage = ({
   const fetchVideosForChannel = async (channelId) => {
     try {
       setLoadingVideos(true);
-      const res = await api.get('/youtube/videos', { params: { channelId } });
-      const arr = Array.isArray(res.data) ? res.data : res.data?.videos || [];
-      setVideos(arr);
+      const [videosResult, liveResult] = await Promise.allSettled([
+        api.get('/youtube/videos', { params: { channelId } }),
+        api.get('/live-chat/streams', { params: { channelId } })
+      ]);
+
+      if (videosResult.status === 'rejected') {
+        showToast('Failed to load videos', 'error');
+        setVideos([]);
+        return;
+      }
+
+      const videoData = videosResult.value.data;
+      const arr = Array.isArray(videoData) ? videoData : videoData?.videos || [];
+      const liveData = liveResult.status === 'fulfilled' ? liveResult.value.data : null;
+      const liveStreams = Array.isArray(liveData?.streams) ? liveData.streams : [];
+      const byVideoId = new Map();
+
+      [...arr, ...liveStreams].forEach(item => {
+        if (!item?.videoId) return;
+        const previous = byVideoId.get(item.videoId) || {};
+        byVideoId.set(item.videoId, {
+          ...previous,
+          ...item,
+          isLive: Boolean(previous.isLive || item.isLive || item.liveChatId || item.liveBroadcastContent === 'live'),
+          liveBroadcastContent: item.liveBroadcastContent || previous.liveBroadcastContent || 'none',
+          liveChatId: item.liveChatId || previous.liveChatId || ''
+        });
+      });
+
+      setVideos(Array.from(byVideoId.values()));
     } catch { showToast('Failed to load videos', 'error'); }
     finally { setLoadingVideos(false); }
   };
@@ -372,17 +436,23 @@ const ModerationPage = ({
     }
   }, [selectedChannelId, mainTab, historyType]);
 
+  const selectedContent = useMemo(
+    () => selectedVideoId === 'all_videos' ? null : videos.find(v => v.videoId === selectedVideoId),
+    [selectedVideoId, videos]
+  );
+  const selectedContentKind = selectedVideoId === 'all_videos' ? 'All' : getContentKind(selectedContent);
+
   //  Auto-suggest rule name 
   useEffect(() => {
     if (editingRuleId) return;
     const videoTitle = selectedVideoId === 'all_videos'
-      ? 'All Videos'
-      : videos.find(v => v.videoId === selectedVideoId)?.title?.substring(0, 20) || 'Video';
+      ? 'All Content'
+      : selectedContent?.title?.substring(0, 20) || selectedContentKind;
     const triggerDesc = triggerType === 'any_comment' ? 'Any comment'
       : triggerType === 'ai_intent' ? 'AI Intent'
         : keywords.length > 0 ? `Keywords (${keywords.slice(0, 2).join(', ')})` : 'New rule';
     setRuleName(`${triggerDesc} reply for ${videoTitle}`);
-  }, [selectedVideoId, triggerType, keywords, videos, editingRuleId]);
+  }, [selectedVideoId, selectedContent, selectedContentKind, triggerType, keywords, editingRuleId]);
 
   //  Keyword chips 
   const addKeywordChip = () => {
@@ -683,23 +753,23 @@ const ModerationPage = ({
                               className="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex items-center justify-between cursor-pointer hover:border-[#ff0000] transition-all group"
                             >
                               <div className="flex items-center gap-3 min-w-0">
-                                {selectedVideoId !== 'all_videos' && videos.find(v => v.videoId === selectedVideoId)?.thumbnail ? (
+                                {selectedVideoId !== 'all_videos' && selectedContent?.thumbnail ? (
                                   <img
-                                    src={videos.find(v => v.videoId === selectedVideoId).thumbnail}
+                                    src={selectedContent.thumbnail}
                                     alt="Thumbnail"
                                     className="w-12 h-12 rounded-xl object-cover shrink-0 border border-slate-200"
                                   />
                                 ) : (
-                                  <div className="w-12 h-12 rounded-xl bg-[#ff0000]/10 text-[#ff0000] flex items-center justify-center shrink-0">
+                                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${selectedVideoId === 'all_videos' ? 'bg-[#ff0000]/10 text-[#ff0000]' : getContentIconClasses(selectedContent)}`}>
                                     <VideoIcon size={20} />
                                   </div>
                                 )}
                                 <div className="min-w-0">
                                   <p className="text-xs font-black text-slate-900 truncate">
-                                    {selectedVideoId === 'all_videos' ? 'All Videos & Shorts (Channel-wide)' : videos.find(v => v.videoId === selectedVideoId)?.title || selectedVideoId}
+                                    {selectedVideoId === 'all_videos' ? 'All Videos, Shorts, Posts & Live (Channel-wide)' : selectedContent?.title || selectedVideoId}
                                   </p>
                                   <p className="text-[11px] text-slate-400 font-semibold">
-                                    {selectedVideoId === 'all_videos' ? 'Applies to all content on your channel' : 'Targeted single content'}
+                                    {selectedVideoId === 'all_videos' ? 'Applies to every supported channel content type' : 'Targeted' }
                                   </p>
                                 </div>
                               </div>
@@ -1647,7 +1717,7 @@ const ModerationPage = ({
               <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                 <div>
                   <h3 className="text-lg font-black text-slate-900">Select YouTube Content</h3>
-                  <p className="text-xs text-slate-400 font-semibold">Choose the source for automation (Videos, Shorts, Posts)</p>
+                  <p className="text-xs text-slate-400 font-semibold">Choose the source for automation (Videos, Shorts, Posts, Live)</p>
                 </div>
                 <button onClick={() => setContentPickerOpen(false)} className="p-2 hover:bg-slate-100 rounded-xl text-slate-400">
                   <X size={18} />
@@ -1656,12 +1726,12 @@ const ModerationPage = ({
 
               <div className="flex-1 overflow-y-auto pr-1">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {/* Option 1: All Videos (Channel-wide) */}
+                  {/* Option 1: All Content (Channel-wide) */}
                   <div
                     onClick={() => {
                       setSelectedVideoId('all_videos');
                       setContentPickerOpen(false);
-                      showToast('Target set to All Videos (Channel-wide)', 'info');
+                      showToast('Target set to all channel content', 'info');
                     }}
                     className={`rounded-2xl border-2 p-3 flex flex-col items-center justify-center text-center cursor-pointer transition-all aspect-square ${selectedVideoId === 'all_videos'
                         ? 'border-[#ff0000] bg-[#ff0000]/10 text-[#ff0000] font-black'
@@ -1669,7 +1739,7 @@ const ModerationPage = ({
                       }`}
                   >
                     <VideoIcon size={32} className="mb-2 text-[#ff0000]" />
-                    <p className="text-xs font-black">All Videos & Shorts</p>
+                    <p className="text-xs font-black">All Content</p>
                     <p className="text-[10px] opacity-70 font-semibold mt-1">Channel-wide</p>
                   </div>
 
@@ -1695,6 +1765,27 @@ const ModerationPage = ({
                             <VideoIcon size={24} />
                           </div>
                         )}
+                        {/* Content Type Badge */}
+                        <div className="absolute top-2 left-2 flex items-center gap-1">
+                          {getContentKind(v) === 'Live' ? (
+                            <span className="px-2 py-0.5 bg-[#ff0000] text-white text-[9px] font-black uppercase tracking-wider rounded-md flex items-center gap-1 shadow-sm">
+                              <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+                              Live
+                            </span>
+                          ) : getContentKind(v) === 'Short' ? (
+                            <span className="px-2 py-0.5 bg-violet-600 text-white text-[9px] font-black uppercase tracking-wider rounded-md shadow-sm">
+                              Short
+                            </span>
+                          ) : getContentKind(v) === 'Post' ? (
+                            <span className="px-2 py-0.5 bg-sky-600 text-white text-[9px] font-black uppercase tracking-wider rounded-md shadow-sm">
+                              Post
+                            </span>
+                          ) : (
+                            <span className="px-2 py-0.5 bg-slate-700 text-white text-[9px] font-black uppercase tracking-wider rounded-md shadow-sm">
+                              Video
+                            </span>
+                          )}
+                        </div>
                         {selectedVideoId === v.videoId && (
                           <div className="absolute top-2 right-2 bg-[#ff0000] text-white p-1 rounded-full shadow">
                             <Check size={12} />
@@ -1726,6 +1817,11 @@ const ModerationPage = ({
 };
 
 export default ModerationPage;
+
+
+
+
+
 
 
 

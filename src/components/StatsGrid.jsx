@@ -91,15 +91,15 @@ const StatsGrid = React.memo(({ stats, isDark = false }) => {
       description: 'Comments handled by delete or hide protection rules.'
     },
     {
-      label: 'Auto Likes',
-      value: stats?.positiveLiked || 0,
-      icon: ThumbsUp,
-      color: 'text-[#0f0f0f]',
-      iconBg: 'bg-[#f8f9fa]',
-      iconColor: 'text-[#0f0f0f]',
-      trend: '+24%',
-      isUp: true,
-      description: 'Positive comments automatically acknowledged.'
+      label: 'Live Viewers',
+      value: stats?.liveViewers !== undefined ? stats.liveViewers : 0,
+      icon: Users,
+      color: (stats?.liveViewers || 0) > 0 ? 'text-[#ff0000]' : 'text-[#0f0f0f]',
+      iconBg: (stats?.liveViewers || 0) > 0 ? 'bg-[#fff1f1] animate-pulse' : 'bg-[#f8f9fa]',
+      iconColor: (stats?.liveViewers || 0) > 0 ? 'text-[#ff0000]' : 'text-[#0f0f0f]',
+      trend: (stats?.liveViewers || 0) > 0 ? '🔴 LIVE' : 'OFFLINE',
+      isUp: (stats?.liveViewers || 0) > 0,
+      description: 'Current concurrent viewers on your active live stream.'
     },
     {
       label: 'Auto Reply',
