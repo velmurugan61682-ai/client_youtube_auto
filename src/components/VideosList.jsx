@@ -211,10 +211,28 @@ const VideosList = ({
         handleVideoSelect(activeVideosList[0].videoId, false);
       }
     } else {
-      setSelectedVideo(null);
-      setComments([]);
-      setVideoAnalytics(null);
-      setIsMobileDetail(false);
+      if (videoTab === 'videos' && longVideos.length === 0) {
+        if (shortVideos.length > 0) setVideoTab('shorts');
+        else if (liveVideos.length > 0) setVideoTab('live');
+        else if (communityPosts.length > 0) setVideoTab('posts');
+      } else if (videoTab === 'shorts' && shortVideos.length === 0) {
+        if (longVideos.length > 0) setVideoTab('videos');
+        else if (liveVideos.length > 0) setVideoTab('live');
+        else if (communityPosts.length > 0) setVideoTab('posts');
+      } else if (videoTab === 'live' && liveVideos.length === 0) {
+        if (longVideos.length > 0) setVideoTab('videos');
+        else if (shortVideos.length > 0) setVideoTab('shorts');
+        else if (communityPosts.length > 0) setVideoTab('posts');
+      } else if (videoTab === 'posts' && communityPosts.length === 0) {
+        if (longVideos.length > 0) setVideoTab('videos');
+        else if (shortVideos.length > 0) setVideoTab('shorts');
+        else if (liveVideos.length > 0) setVideoTab('live');
+      } else {
+        setSelectedVideo(null);
+        setComments([]);
+        setVideoAnalytics(null);
+        setIsMobileDetail(false);
+      }
     }
   }, [videoTab, videos]);
 
@@ -672,7 +690,7 @@ const VideosList = ({
                     <span className="flex items-center gap-1">
                       <Clock size={10} /> {safeFormatDistanceToNow(video.publishedAt)} ago
                     </span>
-                    <span>â€¢</span>
+                    <span>•</span>
                     <span>{(video.viewCount || video.statistics?.viewCount || 0).toLocaleString()} views</span>
                   </div>
                 </div>
