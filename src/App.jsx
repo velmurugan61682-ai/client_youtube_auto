@@ -550,8 +550,8 @@ const App = () => {
                             <Menu size={20} />
                           </button>
                           <div className="min-w-0 flex items-center gap-2">
-                            <img src="/logo_icon.png" className="h-8 w-8 object-contain shrink-0" alt="ChannelMate Logo" />
-                            <span className={`text-sm font-black truncate ${clientDark ? 'text-white' : 'text-[#0f0f0f]'}`}>ChannelMate</span>
+                            <img src="/logo_icon.png" className="h-8 w-8 object-contain shrink-0" alt="ChannelBot Logo" />
+                            <span className={`text-sm font-black truncate ${clientDark ? 'text-white' : 'text-[#0f0f0f]'}`}>ChannelBot</span>
                           </div>
                           <button
                             type="button"
@@ -693,7 +693,7 @@ const App = () => {
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className={`text-sm font-black truncate ${clientDark ? 'text-white' : 'text-[#0f0f0f]'}`}>{user?.name || 'ChannelMate'}</p>
+                  <p className={`text-sm font-black truncate ${clientDark ? 'text-white' : 'text-[#0f0f0f]'}`}>{user?.name || 'ChannelBot'}</p>
                   <p className={`text-[11px] truncate font-semibold ${clientDark ? 'text-[#aaaaaa]' : 'text-[#606060]'}`}>{user?.email}</p>
                 </div>
                 <span className="bg-[#fff1f1] text-[#ff0000] text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">

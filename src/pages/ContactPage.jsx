@@ -42,9 +42,9 @@ const ContactPage = () => {
       setIsLoading(false);
       setShowRedirectMessage(true);
 
-      const subject = encodeURIComponent(`ChannelMate Inquiry from ${formData.name.trim()}`);
+      const subject = encodeURIComponent(`ChannelBot Inquiry from ${formData.name.trim()}`);
       const body = encodeURIComponent(
-        `Hello ChannelMate Support,\n\nI have an inquiry regarding the platform.\n\nName: ${formData.name.trim()}\nEmail: ${formData.email.trim()}\n\nMessage:\n${formData.message.trim()}\n\nRegards,\n${formData.name.trim()}`
+        `Hello ChannelBot Support,\n\nI have an inquiry regarding the platform.\n\nName: ${formData.name.trim()}\nEmail: ${formData.email.trim()}\n\nMessage:\n${formData.message.trim()}\n\nRegards,\n${formData.name.trim()}`
       );
 
       // Trigger mailto fallback redirect
@@ -65,9 +65,9 @@ const ContactPage = () => {
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-[#e5e5e5]">
         <div className="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 select-none">
-            <img src="/brand-logo.png" className="h-9 w-auto object-contain" alt="ChannelMate Logo" />
+            <img src="/brand-logo.png" className="h-9 w-auto object-contain" alt="ChannelBot Logo" />
             <div className="flex flex-col items-start leading-none">
-              <span className="text-base font-black tracking-tight text-zinc-900">ChannelMate</span>
+              <span className="text-base font-black tracking-tight text-zinc-900">ChannelBot</span>
               <span className="text-[9px] font-semibold text-zinc-500 mt-0.5">YouTube Creators</span>
             </div>
           </Link>

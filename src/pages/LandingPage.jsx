@@ -114,9 +114,9 @@ const LandingPage = () => {
       setContactLoading(false);
       setContactSubmitted(true);
 
-      const subject = encodeURIComponent(`ChannelMate Inquiry from ${formData.name.trim()}`);
+      const subject = encodeURIComponent(`ChannelBot Inquiry from ${formData.name.trim()}`);
       const body = encodeURIComponent(
-        `Hello ChannelMate Support,\n\nI have an inquiry regarding the platform.\n\nName: ${formData.name.trim()}\nEmail: ${formData.email.trim()}\n\nMessage:\n${formData.message.trim()}\n\nRegards,\n${formData.name.trim()}`
+        `Hello ChannelBot Support,\n\nI have an inquiry regarding the platform.\n\nName: ${formData.name.trim()}\nEmail: ${formData.email.trim()}\n\nMessage:\n${formData.message.trim()}\n\nRegards,\n${formData.name.trim()}`
       );
 
       // Trigger mailto fallback redirect
@@ -166,7 +166,7 @@ const LandingPage = () => {
 
   const testimonials = [
     {
-      quote: "ChannelMate saved me over 15 hours every week moderating toxic comments and answering price inquiries on my YouTube channel!",
+      quote: "ChannelBot saved me over 15 hours every week moderating toxic comments and answering price inquiries on my YouTube channel!",
       name: "Creator Team",
       role: "Creator (250K+ Subs)",
       rating: 5
@@ -178,7 +178,7 @@ const LandingPage = () => {
       rating: 5
     },
     {
-      quote: "Managing 12 client YouTube channels used to be chaos. ChannelMate brought complete automation and clean analytics.",
+      quote: "Managing 12 client YouTube channels used to be chaos. ChannelBot brought complete automation and clean analytics.",
       name: "Rohan Verma",
       role: "Digital Media Agency Owner",
       rating: 5
@@ -225,9 +225,9 @@ const LandingPage = () => {
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-[#e5e5e5]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2 select-none cursor-pointer" onClick={() => scrollToSection('home')}>
-            <img src="/brand-logo.png" className="h-10 sm:h-11 w-auto object-contain" alt="ChannelMate Logo" />
+            <img src="/brand-logo.png" className="h-10 sm:h-11 w-auto object-contain" alt="ChannelBot Logo" />
             <div className="flex flex-col items-start leading-none">
-              <span className="text-base font-black tracking-tight text-[#0f0f0f]">ChannelMate</span>
+              <span className="text-base font-black tracking-tight text-[#0f0f0f]">ChannelBot</span>
               <span className="text-[9px] font-semibold text-[#606060] mt-0.5">AI-powered YouTube Comment Automation</span>
             </div>
           </div>
@@ -282,24 +282,24 @@ const LandingPage = () => {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-5xl mx-auto">
 
           <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-[1.08] mb-3 text-[#0f0f0f]">
-            <span className="text-[#ff0000]">ChannelMate</span>
+            <span className="text-[#ff0000]">ChannelBot</span>
           </h1>
           <p className="text-xl sm:text-2xl text-[#0f0f0f] font-black mb-6 max-w-3xl mx-auto">
             AI-powered YouTube Comment Automation
           </p>
 
           <p className="text-[16px] sm:text-[18px] text-[#606060] font-semibold leading-relaxed mb-6 max-w-3xl mx-auto">
-            ChannelMate is an AI-powered YouTube comment automation SaaS for creators and businesses. Using secure Google OAuth and YouTube API access, users can connect their own YouTube channel to automate comment moderation, generate approved replies, manage viewer engagement, detect spam and harmful comments, and review channel analytics.
+            ChannelBot is an AI-powered YouTube comment automation SaaS for creators and businesses. Using secure Google OAuth and YouTube API access, users can connect their own YouTube channel to automate comment moderation, generate approved replies, manage viewer engagement, detect spam and harmful comments, and review channel analytics.
           </p>
 
           <div className="max-w-2xl mx-auto text-left bg-white border border-[#e5e5e5] rounded-2xl p-5 mb-6 shadow-sm">
-            <p className="text-sm font-black text-[#0f0f0f] mb-3">Why ChannelMate Uses Google OAuth</p>
+            <p className="text-sm font-black text-[#0f0f0f] mb-3">Why ChannelBot Uses Google OAuth</p>
 
             <p className="text-xs font-semibold text-[#606060] mb-3 leading-relaxed">
-              ChannelMate uses Google's official OAuth 2.0 authentication to securely connect your YouTube account.
+              ChannelBot uses Google's official OAuth 2.0 authentication to securely connect your YouTube account.
             </p>
 
-            <p className="text-xs font-black text-[#0f0f0f] mb-2">After you grant permission, ChannelMate can:</p>
+            <p className="text-xs font-black text-[#0f0f0f] mb-2">After you grant permission, ChannelBot can:</p>
             <ul className="space-y-2 text-xs font-semibold text-[#606060] mb-4">
               <li>Read comments from your YouTube videos</li>
               <li>Read video metadata such as video IDs, titles, thumbnails, publish dates, and engagement counts</li>
@@ -311,7 +311,7 @@ const LandingPage = () => {
             </ul>
 
             <div className="pt-3 border-t border-slate-100 text-[11px] text-[#606060] font-semibold space-y-1">
-              <p><strong>Privacy Note:</strong> ChannelMate never requests or stores your Google password.</p>
+              <p><strong>Privacy Note:</strong> ChannelBot never requests or stores your Google password.</p>
               <p>Your Google data is accessed only after you explicitly grant permission.</p>
               <p>You can revoke access anytime from your Google Account.</p>
             </div>
@@ -344,7 +344,7 @@ const LandingPage = () => {
               Human Strategy Meets 24/7 AI YouTube Channel Automation
             </h3>
             <p className="text-xs sm:text-sm font-medium text-slate-200 mt-2 max-w-xl">
-              Talk directly with ChannelMate to automatically answer viewer comments, purge spam, and turn video interactions into WhatsApp leads.
+              Talk directly with ChannelBot to automatically answer viewer comments, purge spam, and turn video interactions into WhatsApp leads.
             </p>
           </div>
         </motion.div>
@@ -403,20 +403,20 @@ const LandingPage = () => {
                 App Purpose and Secure Google Access
               </span>
               <h2 className="text-3xl sm:text-4xl font-black text-[#0f0f0f] tracking-tight">
-                Why ChannelMate uses Google OAuth
+                Why ChannelBot uses Google OAuth
               </h2>
               <div className="space-y-3 text-sm sm:text-base font-semibold text-[#606060] leading-relaxed">
                 <p>
-                  ChannelMate is an AI-powered YouTube comment automation platform that helps creators manage their YouTube communities.
+                  ChannelBot is an AI-powered YouTube comment automation platform that helps creators manage their YouTube communities.
                 </p>
                 <p>
-                  ChannelMate uses Google OAuth to securely connect a user's YouTube account.
+                  ChannelBot uses Google OAuth to securely connect a user's YouTube account.
                 </p>
               </div>
             </div>
 
             <div className="bg-[#f9f9f9] border border-[#e5e5e5] rounded-2xl p-5 sm:p-6 shadow-sm">
-              <p className="text-sm font-black text-[#0f0f0f] mb-4">After permission is granted, ChannelMate can:</p>
+              <p className="text-sm font-black text-[#0f0f0f] mb-4">After permission is granted, ChannelBot can:</p>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm font-bold text-[#606060]">
                 {[
                   "Read comments on the user's YouTube videos",
@@ -437,18 +437,18 @@ const LandingPage = () => {
               <div className="mt-5 pt-5 border-t border-[#e5e5e5] flex gap-3 text-xs sm:text-sm font-semibold text-[#606060] leading-relaxed">
                 <ShieldCheck size={20} className="shrink-0 text-[#ff0000]" />
                 <p>
-                  ChannelMate never asks for or stores the user's Google password. Access is granted securely through Google OAuth, and users can revoke access at any time from their Google Account settings.
+                  ChannelBot never asks for or stores the user's Google password. Access is granted securely through Google OAuth, and users can revoke access at any time from their Google Account settings.
                 </p>
               </div>
             </div>
           </div>
         </div>
       </section>
-      {/* SECTION: HOW ChannelMate WORKS */}
+      {/* SECTION: HOW ChannelBot WORKS */}
       <section id="how-it-works" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-16 border-t border-[#e5e5e5]">
         <div className="max-w-5xl mx-auto text-center space-y-8">
           <div>
-            <h2 className="text-2xl sm:text-3xl font-black text-[#0f0f0f] tracking-tight">How ChannelMate Works</h2>
+            <h2 className="text-2xl sm:text-3xl font-black text-[#0f0f0f] tracking-tight">How ChannelBot Works</h2>
             <p className="text-xs font-black text-[#606060] uppercase tracking-wider mt-1">Simple, Secure Creator Integration Pipeline</p>
           </div>
 
@@ -468,7 +468,7 @@ const LandingPage = () => {
             <div className="bg-white p-5 rounded-2xl border border-[#e5e5e5] shadow-sm space-y-3">
               <div className="w-10 h-10 rounded-xl bg-red-50 text-[#ff0000] flex items-center justify-center border border-red-100"><MessageSquare size={20} /></div>
               <h3 className="text-base font-black text-[#0f0f0f]">Retrieve Comments</h3>
-              <p className="text-xs font-semibold text-[#606060] leading-relaxed">ChannelMate securely retrieves comments from your videos.</p>
+              <p className="text-xs font-semibold text-[#606060] leading-relaxed">ChannelBot securely retrieves comments from your videos.</p>
             </div>
 
             <div className="bg-white p-5 rounded-2xl border border-[#e5e5e5] shadow-sm space-y-3">
@@ -521,7 +521,7 @@ const LandingPage = () => {
               </li>
             </ul>
             <div className="pt-4 border-t border-slate-100 text-[11px] text-[#606060] font-semibold leading-relaxed space-y-2">
-              <p>We only access the Google data required to provide ChannelMate features.</p>
+              <p>We only access the Google data required to provide ChannelBot features.</p>
               <p className="text-emerald-700 font-bold">We never sell, share or misuse Google user data.</p>
             </div>
           </div>
@@ -569,13 +569,13 @@ const LandingPage = () => {
       <section id="about" className="relative z-10 max-w-7xl mx-auto px-6 py-20 border-t border-[#e5e5e5]">
         <div className="max-w-5xl mx-auto text-center space-y-4 mb-16">
           <span className="text-xs font-black text-[#ff0000] uppercase tracking-widest bg-[#fff1f1] px-4 py-1.5 rounded-full">
-            About ChannelMate
+            About ChannelBot
           </span>
           <h2 className="text-3xl sm:text-5xl font-black text-[#0f0f0f]">
             AI-Powered YouTube Automation Platform
           </h2>
           <p className="text-[#606060] font-semibold text-base sm:text-lg leading-relaxed">
-            ChannelMate is an AI-powered YouTube automation platform. Users securely connect their own YouTube channel through Google OAuth. The platform helps manage comments, generate automated replies, moderate harmful or spam comments, and track engagement. ChannelMate only accesses data after user permission is granted, and users can revoke access at any time.
+            ChannelBot is an AI-powered YouTube automation platform. Users securely connect their own YouTube channel through Google OAuth. The platform helps manage comments, generate automated replies, moderate harmful or spam comments, and track engagement. ChannelBot only accesses data after user permission is granted, and users can revoke access at any time.
           </p>
         </div>
 
@@ -845,8 +845,8 @@ const LandingPage = () => {
           {/* Brand Info */}
           <div className="md:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
-              <img src="/brand-logo.png" className="h-10 w-auto object-contain brightness-110" alt="ChannelMate Logo" />
-              <span className="text-base font-black tracking-tight text-white">ChannelMate</span>
+              <img src="/brand-logo.png" className="h-10 w-auto object-contain brightness-110" alt="ChannelBot Logo" />
+              <span className="text-base font-black tracking-tight text-white">ChannelBot</span>
             </div>
             <p className="text-xs font-semibold leading-relaxed max-w-sm text-zinc-400">
               AI-powered YouTube Comment Automation
@@ -904,7 +904,7 @@ const LandingPage = () => {
 
         <div className="max-w-7xl mx-auto px-6 border-t border-zinc-800 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-[11px] font-semibold text-zinc-500">
-            &copy; {new Date().getFullYear()} ChannelMate. All rights reserved.
+            &copy; {new Date().getFullYear()} ChannelBot. All rights reserved.
           </p>
           <p className="text-[11px] font-semibold text-zinc-500">
             Made for YouTube Creators

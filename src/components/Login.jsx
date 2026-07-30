@@ -128,7 +128,7 @@ const Login = ({ onSwitchToRegister }) => {
           {/* Top Logo & Title Container */}
           <div className="flex flex-col items-center text-center mb-8">
             <Link to="/" className="flex flex-col items-center">
-              <img src="/brand-logo.png" className="h-12 sm:h-14 w-auto object-contain mb-3" alt="ChannelMate Logo" />
+              <img src="/brand-logo.png" className="h-12 sm:h-14 w-auto object-contain mb-3" alt="ChannelBot Logo" />
               <p className="text-zinc-500 text-[13px] font-semibold">Sign in to your AI moderation centre</p>
             </Link>
           </div>
@@ -288,7 +288,7 @@ const Login = ({ onSwitchToRegister }) => {
             <span className="flex items-center gap-2"><Zap size={14} /> AI Core v4.2</span>
           </div>
           <p className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.4em]">
-            &copy; 2026 ChannelMate &bull; Global Systems LLC
+            &copy; 2026 ChannelBot &bull; Global Systems LLC
           </p>
         </div>
       </motion.div>

@@ -776,7 +776,7 @@ const VideosList = ({
                     CB
                   </div>
                   <div>
-                    <h4 className="font-black text-[#0f0f0f] text-sm">ChannelMate</h4>
+                    <h4 className="font-black text-[#0f0f0f] text-sm">ChannelBot</h4>
                     <p className="text-[11px] text-[#909090] font-bold uppercase tracking-wider">Community Post</p>
                   </div>
                 </div>

@@ -37,7 +37,7 @@ const GooglePermissionsPage = () => {
       name: 'https://www.googleapis.com/auth/youtube.force-ssl',
       title: 'YouTube Account Management (SSL)',
       access: 'Read & Manage (Data API)',
-      description: 'Read and manage YouTube account data permitted by the YouTube Data API. ChannelMate uses this scope to retrieve comments required for moderation workflows, post replies on behalf of the connected channel, apply supported moderation actions to comments, and manage YouTube resources only when initiated or configured by the authorized user.',
+      description: 'Read and manage YouTube account data permitted by the YouTube Data API. ChannelBot uses this scope to retrieve comments required for moderation workflows, post replies on behalf of the connected channel, apply supported moderation actions to comments, and manage YouTube resources only when initiated or configured by the authorized user.',
       feature: 'AI Auto-Replies, Automated Spam & Toxicity Moderation'
     }
   ];
@@ -49,9 +49,9 @@ const GooglePermissionsPage = () => {
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-[#e5e5e5]">
         <div className="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 select-none">
-            <img src="/brand-logo.png" className="h-9 w-auto object-contain" alt="ChannelMate Logo" />
+            <img src="/brand-logo.png" className="h-9 w-auto object-contain" alt="ChannelBot Logo" />
             <div className="flex flex-col items-start leading-none">
-              <span className="text-base font-black tracking-tight text-zinc-900">ChannelMate</span>
+              <span className="text-base font-black tracking-tight text-zinc-900">ChannelBot</span>
               <span className="text-[9px] font-semibold text-zinc-500 mt-0.5">YouTube Creators</span>
             </div>
           </Link>
@@ -84,7 +84,7 @@ const GooglePermissionsPage = () => {
 
           <div className="space-y-6 text-zinc-700 text-[13px] sm:text-[14px] font-semibold leading-relaxed">
             <p className="text-zinc-650 mb-6 font-medium">
-              ChannelMate integrates securely with Google APIs using the OAuth 2.0 protocol. We request only the absolute minimum permissions needed to deliver comment replies and moderation services. Your channel data is never accessed without consent, and you can revoke access at any time.
+              ChannelBot integrates securely with Google APIs using the OAuth 2.0 protocol. We request only the absolute minimum permissions needed to deliver comment replies and moderation services. Your channel data is never accessed without consent, and you can revoke access at any time.
             </p>
 
             <div className="space-y-6">
@@ -123,10 +123,10 @@ const GooglePermissionsPage = () => {
                 How to Revoke Permissions
               </h2>
               <p className="text-zinc-650 font-medium">
-                You maintain complete control over your Google Account and YouTube channels. If you wish to disconnect ChannelMate:
+                You maintain complete control over your Google Account and YouTube channels. If you wish to disconnect ChannelBot:
               </p>
               <ul className="list-decimal pl-6 space-y-2 text-zinc-650">
-                <li>You can disconnect any YouTube channel from the <strong>Settings</strong> page inside the ChannelMate dashboard, which immediately deletes the stored access and refresh tokens.</li>
+                <li>You can disconnect any YouTube channel from the <strong>Settings</strong> page inside the ChannelBot dashboard, which immediately deletes the stored access and refresh tokens.</li>
                 <li>You can completely revoke the app's authorization directly from your Google Account's secure panel by visiting the <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] hover:underline font-bold">Google Third-Party Access Security Page</a>.</li>
               </ul>
             </section>

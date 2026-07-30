@@ -90,7 +90,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
         const res = await api.post('/subscription/create', { planType });
         if (res.data.success) {
           await fetchStatus();
-          setMessage('Downgraded to Free Plan successfully.');
+          setMessage('Free Plan activated successfully! You can now connect 1 YouTube channel.');
           if (onSelectPlan) onSelectPlan();
         }
         return;
@@ -115,7 +115,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
         key: activeKey,
         amount: amount || 99900,
         currency: currency || "INR",
-        name: "ChannelMate",
+        name: "ChannelBot",
         description: "Quarterly Pro Subscription (₹999)",
         order_id: activeOrderId,
         handler: async function (response) {
