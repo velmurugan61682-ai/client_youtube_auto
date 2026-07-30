@@ -75,12 +75,27 @@ const Toast = ({ toasts }) => (
 );
 const isPostContent = (content) => Boolean(content?.isPost || content?.duration === 'Post' || content?.videoId?.startsWith('yt_post_'));
 
-const isLiveContent = (content) => Boolean(
-  content?.isLive ||
-  content?.liveChatId ||
-  content?.liveBroadcastContent === 'live' ||
-  content?.liveBroadcastContent === 'upcoming'
-);
+const isLiveContent = (content) => {
+  if (isPostContent(content)) return false;
+  const titleUpper = String(content?.title || '').trim().toUpperCase();
+  const isLiveTitle = titleUpper.startsWith('LIVE |') ||
+    titleUpper.startsWith('LIVE:') ||
+    titleUpper.startsWith('[LIVE]') ||
+    titleUpper.startsWith('LIVE -') ||
+    titleUpper.includes('LIVE STREAM') ||
+    titleUpper.includes('STREAMED LIVE') ||
+    titleUpper.includes('WAS LIVE');
+
+  return Boolean(
+    content?.isLive ||
+    content?.liveChatId ||
+    content?.isLiveStream ||
+    content?.liveBroadcastContent === 'live' ||
+    content?.liveBroadcastContent === 'upcoming' ||
+    content?.liveBroadcastContent === 'completed' ||
+    isLiveTitle
+  );
+};
 
 const parseDurationSeconds = (duration = '') => {
   const match = String(duration).match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
@@ -1744,7 +1759,13 @@ const ModerationPage = ({
                   </div>
 
                   {/* Channel Videos / Shorts Grid */}
-                  {videos.map(v => (
+                  {([...videos].sort((a, b) => {
+                    const aLive = isLiveContent(a) && Boolean(a.isLive || a.liveBroadcastContent === 'live');
+                    const bLive = isLiveContent(b) && Boolean(b.isLive || b.liveBroadcastContent === 'live');
+                    if (aLive && !bLive) return -1;
+                    if (!aLive && bLive) return 1;
+                    return new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0);
+                  })).map(v => (
                     <div
                       key={v.videoId}
                       onClick={() => {

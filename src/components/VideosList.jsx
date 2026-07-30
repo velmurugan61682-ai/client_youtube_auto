@@ -120,15 +120,35 @@ const VideosList = ({
   };
 
   const isLiveVideo = (video) => {
+    if (video.isPost) return false;
+    const titleUpper = String(video.title || '').trim().toUpperCase();
+    const isLiveTitle = titleUpper.startsWith('LIVE |') ||
+      titleUpper.startsWith('LIVE:') ||
+      titleUpper.startsWith('[LIVE]') ||
+      titleUpper.startsWith('LIVE -') ||
+      titleUpper.includes('LIVE STREAM') ||
+      titleUpper.includes('STREAMED LIVE') ||
+      titleUpper.includes('WAS LIVE');
+
     return Boolean(
       video.isLive || 
       video.liveChatId || 
+      video.isLiveStream ||
       video.liveBroadcastContent === 'live' || 
-      video.liveBroadcastContent === 'upcoming'
+      video.liveBroadcastContent === 'upcoming' ||
+      video.liveBroadcastContent === 'completed' ||
+      isLiveTitle
     );
   };
 
-  const liveVideos = processedVideos.filter(isLiveVideo);
+  const liveVideos = processedVideos.filter(isLiveVideo).sort((a, b) => {
+    const aIsActive = Boolean(a.isLive || a.liveBroadcastContent === 'live');
+    const bIsActive = Boolean(b.isLive || b.liveBroadcastContent === 'live');
+    if (aIsActive && !bIsActive) return -1;
+    if (!aIsActive && bIsActive) return 1;
+    return new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0);
+  });
+
   const shortVideos = processedVideos.filter(v => !isLiveVideo(v) && isShortVideo(v));
   const longVideos = processedVideos.filter(v => !isLiveVideo(v) && !v.isPost && !isShortVideo(v));
   const communityPosts = processedVideos.filter(v => v.isPost);
