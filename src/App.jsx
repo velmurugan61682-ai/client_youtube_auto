@@ -481,6 +481,7 @@ const App = () => {
           <Route path="/admin-portal" element={<AdminPortal />} />
 
           <Route path="/oauth/callback" element={<OAuthCallbackPage />} />
+          <Route path="/dashboard/oauth/callback" element={<OAuthCallbackPage />} />
 
           <Route path="/dashboard/*" element={
             authLoading ? (

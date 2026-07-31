@@ -27,11 +27,10 @@ registerRoute(
 registerRoute(
   ({ url }) => {
     const isApi = url.pathname.startsWith('/api') || url.href.includes('/api');
-    const isAuth = url.pathname.includes('/auth') || url.href.includes('/auth');
     const isBackend = url.hostname.includes('server-youtube-auto.onrender.com');
     const isSocket = url.pathname.startsWith('/socket.io') || url.href.includes('/socket.io');
-    const isOAuthCallback = url.pathname.includes('/callback') || url.pathname.includes('/connect');
-    return (isApi || isAuth || isBackend) && !isSocket && !isOAuthCallback;
+    const isBackendCallback = url.pathname.startsWith('/api/') && (url.pathname.includes('/callback') || url.pathname.includes('/connect'));
+    return (isApi || isBackend) && !isSocket && !isBackendCallback;
   },
   new NetworkFirst({
     cacheName: 'api-network-first-cache',
@@ -43,20 +42,20 @@ registerRoute(
   })
 );
 
-// 3. Socket.IO connections & OAuth Callbacks must ALWAYS be NetworkOnly
+// 3. Socket.IO connections & Backend API OAuth Callbacks must ALWAYS be NetworkOnly
 registerRoute(
   ({ url }) => 
     url.pathname.startsWith('/socket.io') || 
     url.href.includes('/socket.io') || 
-    url.pathname.includes('/callback') || 
-    url.pathname.includes('/connect'),
+    ((url.pathname.startsWith('/api') || url.hostname.includes('server-youtube-auto.onrender.com')) && 
+     (url.pathname.includes('/callback') || url.pathname.includes('/connect'))),
   new NetworkOnly()
 );
 
 // Navigation fallback for SPA routing
 const handler = createHandlerBoundToURL('/index.html');
 const navigationRoute = new NavigationRoute(handler, {
-  denylist: [/^\/api/, /^\/socket.io/, /^\/auth/],
+  denylist: [/^\/api/, /^\/socket.io/],
 });
 registerRoute(navigationRoute);
 
