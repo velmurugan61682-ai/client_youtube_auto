@@ -44,16 +44,153 @@ const AdminApiKeysPage = lazy(() => import('./pages/ApiKeysPage'));
 const AdminLayout = lazy(() => import('./layouts/AdminLayout'));
 const OAuthCallbackPage = lazy(() => import('./pages/OAuthCallbackPage'));
 
-
 import AdminRoute from './components/AdminRoute';
 import Sidebar from './components/Sidebar';
 import InstallAppPrompt from './components/InstallAppPrompt';
-import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate, useLocation, Outlet, NavLink } from 'react-router-dom';
 const LandingPage = lazy(() => import('./pages/LandingPage'));
-
 
 let activeAnalyticsPromise = null;
 let activeChannelsPromise = null;
+
+const DashboardLayout = ({
+  isEmbedded,
+  sidebarOpen,
+  setSidebarOpen,
+  user,
+  logout,
+  clientDark,
+  setClientDark,
+  setProfileSheetOpen,
+}) => {
+  const location = useLocation();
+
+  return (
+    <div className={`client-shell ${clientDark ? 'client-dark' : 'client-light'} min-h-screen min-[1025px]:h-screen flex min-[1025px]:overflow-hidden relative selection:bg-[#ff0000]/20 min-w-0 overflow-x-hidden transition-colors ${clientDark ? 'bg-[#0f0f0f] selection:text-white' : 'bg-white selection:text-[#0f0f0f]'}`}>
+      {/* Dummy inputs for Chrome Password Manager / Autofill Trap */}
+      <div style={{ position: 'absolute', top: '-1000px', left: '-1000px', width: '0px', height: '0px', overflow: 'hidden' }} aria-hidden="true">
+        <input type="text" name="chrome_autocomplete_trap_email" tabIndex="-1" autoComplete="username" />
+        <input type="password" name="chrome_autocomplete_trap_password" tabIndex="-1" autoComplete="current-password" />
+      </div>
+
+      <div className="flex flex-1 min-[1025px]:overflow-hidden relative min-w-0 overflow-x-hidden">
+        {!isEmbedded && (
+          <Sidebar
+            onLogout={logout}
+            isOpen={sidebarOpen}
+            setIsOpen={setSidebarOpen}
+            user={user}
+            onProfileClick={() => setProfileSheetOpen(true)}
+            isDark={clientDark}
+            onToggleTheme={() => setClientDark(prev => !prev)}
+          />
+        )}
+
+        <main className={`flex-1 overflow-y-auto overflow-x-hidden min-w-0 ${isEmbedded ? 'p-0' : 'p-3 sm:p-4 min-[1025px]:p-5 pt-[76px] min-[1025px]:pt-5 pb-[calc(96px+env(safe-area-inset-bottom))] min-[1025px]:pb-5'} custom-scroll transition-all duration-300 ease-in-out ${clientDark ? 'bg-[#0f0f0f]' : 'bg-white'}`}>
+          {!isEmbedded && (
+            <div className={`min-[1025px]:hidden fixed top-0 left-0 right-0 z-[90] h-[64px] border-b px-3 flex items-center justify-between shadow-sm ${clientDark ? 'bg-[#0f0f0f] border-[#2a2a2a]' : 'bg-white border-[#e5e5e5]'}`}>
+              <button
+                type="button"
+                onClick={() => setSidebarOpen(true)}
+                className={`h-11 w-11 rounded-2xl flex items-center justify-center border ${clientDark ? 'bg-[#181818] border-[#2a2a2a] text-white' : 'bg-[#fff1f1] border-red-100 text-[#ff0000]'}`}
+                title="Open navigation"
+              >
+                <Menu size={20} />
+              </button>
+              <div className="min-w-0 flex items-center gap-2">
+                <img src="/logo_icon.png" className="h-8 w-8 object-contain shrink-0" alt="ChannelBot Logo" />
+                <span className={`text-sm font-black truncate ${clientDark ? 'text-white' : 'text-[#0f0f0f]'}`}>ChannelBot</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setClientDark(prev => !prev)}
+                className={`h-11 w-11 rounded-2xl flex items-center justify-center border ${clientDark ? 'bg-[#181818] border-[#2a2a2a] text-white' : 'bg-white border-[#e5e5e5] text-[#606060]'}`}
+                title={clientDark ? 'Light mode' : 'Dark mode'}
+              >
+                {clientDark ? <Settings size={18} className="text-[#ff0000]" /> : <Settings size={18} />}
+              </button>
+            </div>
+          )}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={location.pathname}
+              initial={{ opacity: 0, x: 10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -10 }}
+              transition={{ duration: 0.2 }}
+              className="h-full"
+            >
+              <Suspense fallback={
+                <div className="h-full w-full flex items-center justify-center">
+                  <div className="flex flex-col items-center gap-4">
+                    <Loader2 className="animate-spin text-[#ff0000]" size={40} />
+                    <p className="text-[12px] font-bold text-[#909090] uppercase tracking-widest">Loading Module...</p>
+                  </div>
+                </div>
+              }>
+                <Outlet />
+              </Suspense>
+            </motion.div>
+          </AnimatePresence>
+        </main>
+      </div>
+
+      {/* Mobile Bottom Navigation */}
+      {!isEmbedded && (
+        <div className={`min-[1025px]:hidden fixed bottom-0 left-0 right-0 h-[68px] border-t grid grid-cols-5 px-1 z-40 pb-safe shadow-[0_-4px_20px_-4px_rgba(0,0,0,0.05)] ${clientDark ? 'bg-[#0f0f0f] border-[#2a2a2a]' : 'bg-white border-slate-100'}`}>
+          <NavLink
+            to="/dashboard"
+            end
+            className={({ isActive }) => `mobile-nav-item ${isActive ? 'active' : ''}`}
+          >
+            <div className="mobile-nav-icon-container">
+              <LayoutDashboard size={18} />
+            </div>
+            <span>Dashboard</span>
+          </NavLink>
+          <NavLink
+            to="/dashboard/videos"
+            className={({ isActive }) => `mobile-nav-item ${isActive ? 'active' : ''}`}
+          >
+            <div className="mobile-nav-icon-container">
+              <Video size={18} />
+            </div>
+            <span>Videos</span>
+          </NavLink>
+          <NavLink
+            to="/dashboard/auto-mod"
+            className={({ isActive }) => `mobile-nav-item ${isActive ? 'active' : ''}`}
+          >
+            <div className="mobile-nav-icon-container">
+              <ShieldCheck size={18} />
+            </div>
+            <span>Auto-Mod</span>
+          </NavLink>
+          <NavLink
+            to="/dashboard/settings"
+            className={({ isActive }) => `mobile-nav-item ${isActive ? 'active' : ''}`}
+          >
+            <div className="mobile-nav-icon-container">
+              <Settings size={18} />
+            </div>
+            <span>Settings</span>
+          </NavLink>
+          <button
+            onClick={() => setProfileSheetOpen(true)}
+            className="mobile-nav-item"
+          >
+            <div className="mobile-nav-icon-container">
+              <div className="w-5 h-5 rounded-full bg-slate-900 text-white flex items-center justify-center text-[10px] font-black">
+                {user?.name?.charAt(0).toUpperCase() || 'A'}
+              </div>
+            </div>
+            <span>Profile</span>
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const App = () => {
   const navigate = useNavigate();
@@ -62,17 +199,7 @@ const App = () => {
   const [planSelected, setPlanSelected] = useState(() => sessionStorage.getItem('plan_acknowledged') === 'true');
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
   const [loadingChannels, setLoadingChannels] = useState(true);
-  const [activeTab, setActiveTab] = useState(() => {
-    const queryParams = new URLSearchParams(window.location.search);
-    const redirectParam = queryParams.get('redirect') || localStorage.getItem('sso_redirect');
-    localStorage.removeItem('sso_redirect');
 
-    if (queryParams.get('status') === 'success' && queryParams.get('channelId')) {
-      // Only show channel connected message when a channelId is present (channel link flow, not login flow)
-      return 'channels';
-    }
-    return (redirectParam === 'comments' || redirectParam === 'videos') ? 'videos' : 'dashboard';
-  });
   const [isEmbedded] = useState(() => {
     const queryParams = new URLSearchParams(window.location.search);
     return (
@@ -100,15 +227,23 @@ const App = () => {
   const [clientDark, setClientDark] = useState(() => localStorage.getItem('clientTheme') === 'dark');
   const [videoSubTab, setVideoSubTab] = useState('videos');
 
-  const handleDashboardTabChange = useCallback((tab) => {
-    setActiveTab(tab);
-  }, []);
-
   useEffect(() => {
     if (location.pathname === '/dashboard/live-chat') {
       navigate('/dashboard', { replace: true });
     }
   }, [location.pathname, navigate]);
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const redirectParam = queryParams.get('redirect') || localStorage.getItem('sso_redirect');
+    localStorage.removeItem('sso_redirect');
+
+    if (queryParams.get('status') === 'success' && queryParams.get('channelId')) {
+      navigate('/dashboard/channels', { replace: true });
+    } else if (redirectParam === 'comments' || redirectParam === 'videos') {
+      navigate('/dashboard/videos', { replace: true });
+    }
+  }, [navigate]);
 
   useEffect(() => {
     localStorage.setItem('clientTheme', clientDark ? 'dark' : 'light');
@@ -122,6 +257,7 @@ const App = () => {
       label: 'Last 30 Days'
     };
   });
+
   useEffect(() => {
     const handleOnline = () => setIsOffline(false);
     const handleOffline = () => setIsOffline(true);
@@ -140,14 +276,13 @@ const App = () => {
     } else if (queryParams.get('status') === 'error') {
       const errMsg = queryParams.get('error') || 'Failed to connect account.';
       setTimeout(() => {
-
         if (errMsg.toLowerCase().includes('limit') || errMsg.toLowerCase().includes('free plan') || errMsg.toLowerCase().includes('pro')) {
-          setActiveTab('subscription');
+          navigate('/dashboard/subscription');
         }
       }, 500);
       window.history.replaceState({}, document.title, window.location.pathname);
     }
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -164,7 +299,6 @@ const App = () => {
       localStorage.setItem('sidebarOpen', JSON.stringify(sidebarOpen));
     }
   }, [sidebarOpen]);
-
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.innerWidth <= 1024) {
@@ -323,7 +457,7 @@ const App = () => {
     }
   }, [selectedChannelId, user, planSelected, fetchAnalytics]);
 
-  const disconnectChannel = async (id, name) => {
+  const disconnectChannel = useCallback(async (id, name) => {
     if (!window.confirm(`Are you sure you want to disconnect ${name}? All related comments and data will be removed.`)) return;
     try {
       setLoading(true);
@@ -331,7 +465,7 @@ const App = () => {
       setChannels(prev => prev.filter(c => c.channelId !== id));
       if (selectedChannelId === id) {
         setSelectedChannelId(null);
-        setActiveTab('channels');
+        navigate('/dashboard/channels');
         fetchAnalytics();
       }
     } catch (err) {
@@ -339,96 +473,38 @@ const App = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedChannelId, fetchAnalytics, navigate]);
 
-  const renderActiveTab = () => {
-    switch (activeTab) {
-      case 'dashboard':
-        return <DashboardPage
-          stats={stats}
-          channels={channels}
-          selectedChannelId={selectedChannelId}
-          setSelectedChannelId={setSelectedChannelId}
-          fetchAnalytics={fetchAnalytics}
-          loading={loading}
-          activities={activities}
-          searchQuery={searchQuery}
-          dateRange={dateRange}
-          setDateRange={setDateRange}
-          isDark={clientDark}
-        />;
-      case 'videos':
-        return <VideosPage
-          channels={channels}
-          user={user}
-          selectedChannelId={selectedChannelId}
-          setSelectedChannelId={setSelectedChannelId}
-          fetchAnalytics={fetchAnalytics}
-          searchQuery={searchQuery}
-          videoSubTab={videoSubTab}
-          setVideoSubTab={setVideoSubTab}
-        />;
-      case 'channels':
-        return <ChannelsPage
-          channels={channels}
-          onDisconnect={disconnectChannel}
-          onAdd={async () => {
-            try {
-              const [subRes, channelsRes] = await Promise.all([
-                api.get('/billing/status'),
-                api.get('/youtube/channels')
-              ]);
-              const currentSub = subRes.data?.data?.subscription || subRes.data?.subscription;
-              const userRole = subRes.data?.data?.role || subRes.data?.role;
-              const currentChannelsCount = channelsRes.data?.data?.length || channelsRes.data?.length || 0;
+  const handleAddChannel = useCallback(async () => {
+    try {
+      const [subRes, channelsRes] = await Promise.all([
+        api.get('/billing/status'),
+        api.get('/youtube/channels')
+      ]);
+      const currentSub = subRes.data?.data?.subscription || subRes.data?.subscription;
+      const userRole = subRes.data?.data?.role || subRes.data?.role;
+      const currentChannelsCount = channelsRes.data?.data?.length || channelsRes.data?.length || 0;
 
-              const isSubActive = currentSub && currentSub.status === 'active';
-              const isAdmin = userRole === 'admin';
+      const isSubActive = currentSub && currentSub.status === 'active';
+      const isAdmin = userRole === 'admin';
 
-              if (!isAdmin && !isSubActive && currentChannelsCount >= 1) {
+      if (!isAdmin && !isSubActive && currentChannelsCount >= 1) {
+        navigate('/dashboard/subscription');
+        return;
+      }
 
-                setActiveTab('subscription');
-                return;
-              }
-
-              const res = await api.post('/youtube/auth/initiate');
-              if (res.data.redirectUrl) {
-                window.location.href = res.data.redirectUrl;
-              }
-            } catch (err) {
-              const errMsg = err.response?.data?.error || 'Failed to initiate secure connection';
-              console.error(errMsg);
-              if (err.response?.status === 403) {
-                setActiveTab('subscription'); // Redirect to subscription plans to upgrade
-              }
-            }
-          }}
-          setActiveTab={setActiveTab}
-          setSelectedChannelId={setSelectedChannelId}
-        />;
-      case 'moderation':
-        return <ModerationPage channels={channels} onAction={fetchAnalytics} searchQuery={searchQuery} selectedChannelId={selectedChannelId} setSelectedChannelId={setSelectedChannelId} />;
-      case 'leads':
-        return <LeadsPage searchQuery={searchQuery} />;
-      case 'autoschedule':
-        return <AutoSchedulePage
-          channels={channels}
-          selectedChannelId={selectedChannelId}
-          setSelectedChannelId={setSelectedChannelId}
-        />;
-      case 'autodm':
-        // Redirect old Comment Automation route to Auto-Mod > Auto Reply tab
-        return <ModerationPage channels={channels} onAction={fetchAnalytics} searchQuery={searchQuery} selectedChannelId={selectedChannelId} setSelectedChannelId={setSelectedChannelId} initialTab="auto-reply" />;
-      case 'api-keys':
-        return <ApiKeysPage />;
-      case 'settings':
-        return <SettingsPage />;
-      case 'subscription':
-        return <SubscriptionPage isGate={false} />;
-      default:
-        return null;
+      const res = await api.post('/youtube/auth/initiate');
+      if (res.data.redirectUrl) {
+        window.location.href = res.data.redirectUrl;
+      }
+    } catch (err) {
+      const errMsg = err.response?.data?.error || 'Failed to initiate secure connection';
+      console.error(errMsg);
+      if (err.response?.status === 403) {
+        navigate('/dashboard/subscription');
+      }
     }
-  };
+  }, [navigate]);
 
   if (authLoading) return (
     <div className="h-screen w-full flex items-center justify-center bg-[#f9f9f9]">
@@ -455,7 +531,7 @@ const App = () => {
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/google-permissions" element={<GooglePermissionsPage />} />
           <Route path="/contact" element={<ContactPage />} />
-          {/* Client Login  only redirect if a CLIENT is already logged in.
+          {/* Client Login only redirect if a CLIENT is already logged in.
               If admin session exists in localStorage, ignore it so a client can still log in. */}
           <Route path="/login" element={
             (user && user.role !== 'admin' && user.role !== 'superadmin')
@@ -477,11 +553,10 @@ const App = () => {
           <Route path="/admin/payments" element={<AdminRoute><AdminLayout><AdminPaymentsPage /></AdminLayout></AdminRoute>} />
           <Route path="/admin/api-keys" element={<AdminRoute><AdminLayout><AdminApiKeysPage /></AdminLayout></AdminRoute>} />
 
-
           <Route path="/admin-portal" element={<AdminPortal />} />
-
           <Route path="/oauth/callback" element={<OAuthCallbackPage />} />
 
+          {/* Dashboard Route Hierarchy */}
           <Route path="/dashboard/*" element={
             authLoading ? (
               <div className="h-screen w-full flex items-center justify-center bg-[#f9f9f9]">
@@ -510,139 +585,96 @@ const App = () => {
                       onSelectPlan={() => {
                         sessionStorage.setItem('plan_acknowledged', 'true');
                         setPlanSelected(true);
-                        setActiveTab('dashboard');
+                        navigate('/dashboard');
                       }}
                     />
                   </Suspense>
                 </div>
               ) : (
-                <div className={`client-shell ${clientDark ? 'client-dark' : 'client-light'} min-h-screen min-[1025px]:h-screen flex min-[1025px]:overflow-hidden relative selection:bg-[#ff0000]/20 min-w-0 overflow-x-hidden transition-colors ${clientDark ? 'bg-[#0f0f0f] selection:text-white' : 'bg-white selection:text-[#0f0f0f]'}`}>
-                  {/* Dummy inputs for Chrome Password Manager / Autofill Trap */}
-                  <div style={{ position: 'absolute', top: '-1000px', left: '-1000px', width: '0px', height: '0px', overflow: 'hidden' }} aria-hidden="true">
-                    <input type="text" name="chrome_autocomplete_trap_email" tabIndex="-1" autoComplete="username" />
-                    <input type="password" name="chrome_autocomplete_trap_password" tabIndex="-1" autoComplete="current-password" />
-                  </div>
-
-                  <div className="flex flex-1 min-[1025px]:overflow-hidden relative min-w-0 overflow-x-hidden">
-                    {!isEmbedded && (
-                      <Sidebar
-                        activeTab={activeTab}
-                        setActiveTab={handleDashboardTabChange}
-                        onLogout={logout}
-                        isOpen={sidebarOpen}
-                        setIsOpen={setSidebarOpen}
-                        user={user}
-                        onProfileClick={() => setProfileSheetOpen(true)}
-                        isDark={clientDark}
-                        onToggleTheme={() => setClientDark(prev => !prev)}
-                      />
-                    )}
-
-                    <main className={`flex-1 overflow-y-auto overflow-x-hidden min-w-0 ${isEmbedded ? 'p-0' : 'p-3 sm:p-4 min-[1025px]:p-5 pt-[76px] min-[1025px]:pt-5 pb-[calc(96px+env(safe-area-inset-bottom))] min-[1025px]:pb-5'} custom-scroll transition-all duration-300 ease-in-out ${clientDark ? 'bg-[#0f0f0f]' : 'bg-white'}`}>
-                      {!isEmbedded && (
-                        <div className={`min-[1025px]:hidden fixed top-0 left-0 right-0 z-[90] h-[64px] border-b px-3 flex items-center justify-between shadow-sm ${clientDark ? 'bg-[#0f0f0f] border-[#2a2a2a]' : 'bg-white border-[#e5e5e5]'}`}>
-                          <button
-                            type="button"
-                            onClick={() => setSidebarOpen(true)}
-                            className={`h-11 w-11 rounded-2xl flex items-center justify-center border ${clientDark ? 'bg-[#181818] border-[#2a2a2a] text-white' : 'bg-[#fff1f1] border-red-100 text-[#ff0000]'}`}
-                            title="Open navigation"
-                          >
-                            <Menu size={20} />
-                          </button>
-                          <div className="min-w-0 flex items-center gap-2">
-                            <img src="/logo_icon.png" className="h-8 w-8 object-contain shrink-0" alt="ChannelBot Logo" />
-                            <span className={`text-sm font-black truncate ${clientDark ? 'text-white' : 'text-[#0f0f0f]'}`}>ChannelBot</span>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => setClientDark(prev => !prev)}
-                            className={`h-11 w-11 rounded-2xl flex items-center justify-center border ${clientDark ? 'bg-[#181818] border-[#2a2a2a] text-white' : 'bg-white border-[#e5e5e5] text-[#606060]'}`}
-                            title={clientDark ? 'Light mode' : 'Dark mode'}
-                          >
-                            {clientDark ? <Settings size={18} className="text-[#ff0000]" /> : <Settings size={18} />}
-                          </button>
-                        </div>
-                      )}
-                      <AnimatePresence mode="wait">
-                        <motion.div
-                          key={activeTab}
-                          initial={{ opacity: 0, x: 10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          exit={{ opacity: 0, x: -10 }}
-                          transition={{ duration: 0.2 }}
-                          className="h-full"
-                        >
-                          <Suspense fallback={
-                            <div className="h-full w-full flex items-center justify-center">
-                              <div className="flex flex-col items-center gap-4">
-                                <Loader2 className="animate-spin text-[#ff0000]" size={40} />
-                                <p className="text-[12px] font-bold text-[#909090] uppercase tracking-widest">Loading Module...</p>
-                              </div>
-                            </div>
-                          }>
-                            {renderActiveTab()}
-                          </Suspense>
-                        </motion.div>
-                      </AnimatePresence>
-                    </main>
-                  </div>
-
-                  {/* Mobile Bottom Navigation */}
-                  {!isEmbedded && (
-                    <div className={`min-[1025px]:hidden fixed bottom-0 left-0 right-0 h-[68px] border-t grid grid-cols-5 px-1 z-40 pb-safe shadow-[0_-4px_20px_-4px_rgba(0,0,0,0.05)] ${clientDark ? 'bg-[#0f0f0f] border-[#2a2a2a]' : 'bg-white border-slate-100'}`}>
-                      <button
-                        onClick={() => setActiveTab('dashboard')}
-                        className={`mobile-nav-item ${activeTab === 'dashboard' ? 'active' : ''}`}
-                      >
-                        <div className="mobile-nav-icon-container">
-                          <LayoutDashboard size={18} />
-                        </div>
-                        <span>Dashboard</span>
-                      </button>
-                      <button
-                        onClick={() => setActiveTab('videos')}
-                        className={`mobile-nav-item ${activeTab === 'videos' ? 'active' : ''}`}
-                      >
-                        <div className="mobile-nav-icon-container">
-                          <Video size={18} />
-                        </div>
-                        <span>Videos</span>
-                      </button>
-                      <button
-                        onClick={() => setActiveTab('moderation')}
-                        className={`mobile-nav-item ${activeTab === 'moderation' || activeTab === 'autodm' ? 'active' : ''}`}
-                      >
-                        <div className="mobile-nav-icon-container">
-                          <ShieldCheck size={18} />
-                        </div>
-                        <span>Auto-Mod</span>
-                      </button>
-                      <button
-                        onClick={() => setActiveTab('settings')}
-                        className={`mobile-nav-item ${activeTab === 'settings' ? 'active' : ''}`}
-                      >
-                        <div className="mobile-nav-icon-container">
-                          <Settings size={18} />
-                        </div>
-                        <span>Settings</span>
-                      </button>
-                      <button
-                        onClick={() => setProfileSheetOpen(true)}
-                        className="mobile-nav-item"
-                      >
-                        <div className="mobile-nav-icon-container">
-                          <div className="w-5 h-5 rounded-full bg-slate-900 text-white flex items-center justify-center text-[10px] font-black">
-                            {user?.name?.charAt(0).toUpperCase() || 'A'}
-                          </div>
-                        </div>
-                        <span>Profile</span>
-                      </button>
-                    </div>
-                  )}
-                </div>
+                <DashboardLayout
+                  isEmbedded={isEmbedded}
+                  sidebarOpen={sidebarOpen}
+                  setSidebarOpen={setSidebarOpen}
+                  user={user}
+                  logout={logout}
+                  clientDark={clientDark}
+                  setClientDark={setClientDark}
+                  setProfileSheetOpen={setProfileSheetOpen}
+                />
               )
             )
-          } />
+          }>
+            <Route index element={
+              <DashboardPage
+                stats={stats}
+                channels={channels}
+                selectedChannelId={selectedChannelId}
+                setSelectedChannelId={setSelectedChannelId}
+                fetchAnalytics={fetchAnalytics}
+                loading={loading}
+                activities={activities}
+                searchQuery={searchQuery}
+                dateRange={dateRange}
+                setDateRange={setDateRange}
+                isDark={clientDark}
+              />
+            } />
+            <Route path="videos" element={
+              <VideosPage
+                channels={channels}
+                user={user}
+                selectedChannelId={selectedChannelId}
+                setSelectedChannelId={setSelectedChannelId}
+                fetchAnalytics={fetchAnalytics}
+                searchQuery={searchQuery}
+                videoSubTab={videoSubTab}
+                setVideoSubTab={setVideoSubTab}
+              />
+            } />
+            <Route path="channels" element={
+              <ChannelsPage
+                channels={channels}
+                onDisconnect={disconnectChannel}
+                onAdd={handleAddChannel}
+                setSelectedChannelId={setSelectedChannelId}
+              />
+            } />
+            <Route path="leads" element={<LeadsPage searchQuery={searchQuery} />} />
+            <Route path="auto-mod" element={
+              <ModerationPage
+                channels={channels}
+                onAction={fetchAnalytics}
+                searchQuery={searchQuery}
+                selectedChannelId={selectedChannelId}
+                setSelectedChannelId={setSelectedChannelId}
+              />
+            } />
+            <Route path="subscription" element={<SubscriptionPage isGate={false} />} />
+            <Route path="settings" element={<SettingsPage />} />
+
+            {/* Legacy & alias routes */}
+            <Route path="moderation" element={<Navigate to="/dashboard/auto-mod" replace />} />
+            <Route path="autodm" element={
+              <ModerationPage
+                channels={channels}
+                onAction={fetchAnalytics}
+                searchQuery={searchQuery}
+                selectedChannelId={selectedChannelId}
+                setSelectedChannelId={setSelectedChannelId}
+                initialTab="auto-reply"
+              />
+            } />
+            <Route path="autoschedule" element={
+              <AutoSchedulePage
+                channels={channels}
+                selectedChannelId={selectedChannelId}
+                setSelectedChannelId={setSelectedChannelId}
+              />
+            } />
+            <Route path="api-keys" element={<ApiKeysPage />} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Route>
+
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
@@ -703,7 +735,7 @@ const App = () => {
 
               <div className="space-y-2">
                 <button
-                  onClick={() => { setActiveTab('settings'); setProfileSheetOpen(false); }}
+                  onClick={() => { navigate('/dashboard/settings'); setProfileSheetOpen(false); }}
                   className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-bold transition-all text-left ${clientDark ? 'text-white hover:bg-[#202020]' : 'text-slate-700 hover:bg-slate-50'}`}
                 >
                   <Settings size={18} /> Settings & Billing
@@ -739,11 +771,4 @@ const App = () => {
   );
 };
 
-
 export default App;
-
-
-
-
-
-

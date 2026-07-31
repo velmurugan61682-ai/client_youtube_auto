@@ -1,8 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { PlaySquare, AlertTriangle } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const ChannelsPage = ({ channels, onDisconnect, onAdd, setActiveTab, setSelectedChannelId }) => {
+const ChannelsPage = ({ channels, onDisconnect, onAdd, setSelectedChannelId }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 min-h-[calc(100svh-5.5rem)] min-[1025px]:h-[calc(100vh-2.5rem)] min-[1025px]:min-h-[760px] overflow-visible min-[1025px]:overflow-hidden rounded-[28px] bg-[#eef3f5] p-4 sm:p-5 text-[#0f0f0f]">
       <div className="rounded-[22px] bg-white border border-[#e5e5e5] shadow-sm px-5 sm:px-7 py-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -84,7 +87,7 @@ const ChannelsPage = ({ channels, onDisconnect, onAdd, setActiveTab, setSelected
                 <button
                   onClick={() => {
                     setSelectedChannelId(channel.channelId);
-                    setActiveTab('videos');
+                    navigate('/dashboard/videos');
                   }}
                   className="text-[13px] font-bold text-[#065fd4] hover:underline flex items-center gap-1"
                 >

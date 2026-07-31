@@ -241,7 +241,7 @@ const Header = ({
         </button>
 
         <div
-          onClick={() => setActiveTab && setActiveTab('dashboard')}
+          onClick={() => navigate('/dashboard')}
           className="flex items-center cursor-pointer group select-none py-1"
         >
           <img src="/brand-logo.png" className="h-10 sm:h-11 w-auto object-contain drop-shadow-sm transition-transform group-hover:scale-[1.02]" alt="ChannelBot Logo" />
@@ -343,8 +343,8 @@ const Header = ({
                             transition={{ delay: Math.min(idx * 0.05, 0.3) }}
                             className={`p-3 bg-[#f9f9f9] sm:bg-white rounded-2xl hover:bg-slate-100/50 sm:hover:bg-[#f2f2f2] transition-all cursor-pointer group flex gap-3 border border-transparent hover:border-slate-100 sm:hover:border-[#e5e5e5] ${notif.isRead ? 'opacity-50' : ''}`}
                             onClick={() => {
-                              if (notif.type === 'like' || notif.type === 'new_comment') setActiveTab('moderation');
-                              else if (notif.whatsappSent) setActiveTab('leads');
+                              if (notif.type === 'like' || notif.type === 'new_comment') navigate('/dashboard/auto-mod');
+                              else if (notif.whatsappSent) navigate('/dashboard/leads');
                               setLocalNotifications(prev => prev.map(n => (n._id || n.id) === (notif._id || notif.id) ? { ...n, isRead: true } : n));
                               setShowNotifications(false);
                             }}
@@ -378,7 +378,7 @@ const Header = ({
                       Mark All as Read
                     </button>
                     <button
-                      onClick={() => { setActiveTab('dashboard'); setShowNotifications(false); }}
+                      onClick={() => { navigate('/dashboard'); setShowNotifications(false); }}
                       className="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-[#606060] text-[11px] font-black uppercase tracking-widest rounded-xl transition-colors text-center sm:hidden"
                     >
                       View Feed
@@ -452,7 +452,7 @@ const Header = ({
                 {/* Menu Options */}
                 <div className="p-3 space-y-1 bg-white">
                   <button
-                    onClick={() => { setActiveTab('settings'); setShowProfileMenu(false); }}
+                    onClick={() => { navigate('/dashboard/settings'); setShowProfileMenu(false); }}
                     className="w-full flex items-center justify-between px-4 py-3 hover:bg-slate-50 rounded-xl transition-all group"
                   >
                     <div className="flex items-center gap-3">
