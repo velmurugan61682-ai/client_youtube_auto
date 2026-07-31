@@ -111,27 +111,16 @@ const DashboardLayout = ({
               </button>
             </div>
           )}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={location.pathname}
-              initial={{ opacity: 0, x: 10 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -10 }}
-              transition={{ duration: 0.2 }}
-              className="h-full"
-            >
-              <Suspense fallback={
-                <div className="h-full w-full flex items-center justify-center">
-                  <div className="flex flex-col items-center gap-4">
-                    <Loader2 className="animate-spin text-[#ff0000]" size={40} />
-                    <p className="text-[12px] font-bold text-[#909090] uppercase tracking-widest">Loading Module...</p>
-                  </div>
-                </div>
-              }>
-                <Outlet />
-              </Suspense>
-            </motion.div>
-          </AnimatePresence>
+          <Suspense fallback={
+            <div className="h-full w-full flex items-center justify-center py-20">
+              <div className="flex flex-col items-center gap-4">
+                <Loader2 className="animate-spin text-[#ff0000]" size={40} />
+                <p className="text-[12px] font-bold text-[#909090] uppercase tracking-widest">Loading Module...</p>
+              </div>
+            </div>
+          }>
+            <Outlet />
+          </Suspense>
         </main>
       </div>
 
@@ -382,19 +371,23 @@ const App = () => {
 
     activeChannelsPromise = api.get('/youtube/channels')
       .then(res => {
-        setChannels(res.data);
+        const channelList = Array.isArray(res.data)
+          ? res.data
+          : (Array.isArray(res.data?.data) ? res.data.data : (Array.isArray(res.data?.channels) ? res.data.channels : []));
+
+        setChannels(channelList);
 
         // Auto-bypass plan gate if they already have 1 or more channels connected
-        if (res.data.length >= 1) {
+        if (channelList.length >= 1) {
           setPlanSelected(true);
           sessionStorage.setItem('plan_acknowledged', 'true');
         }
 
-        const channelExists = res.data.some(c => c.channelId === selectedChannelId);
+        const channelExists = channelList.some(c => c.channelId === selectedChannelId);
         if (!channelExists) {
-          setSelectedChannelId(res.data.length > 0 ? res.data[0].channelId : null);
+          setSelectedChannelId(channelList.length > 0 ? channelList[0].channelId : null);
         }
-        return res.data;
+        return channelList;
       })
       .catch(err => {
         console.error('Fetch Channels Error:', err);
