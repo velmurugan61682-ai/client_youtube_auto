@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard,
   Video,
@@ -19,7 +18,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const Sidebar = ({ onLogout, isOpen, setIsOpen, user, onProfileClick, isDark = false, onToggleTheme }) => {
+const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen, user, onProfileClick, isDark = false, onToggleTheme }) => {
   const [hoverOpen, setHoverOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(() => typeof window !== 'undefined' && window.innerWidth > 1024);
 
@@ -30,15 +29,19 @@ const Sidebar = ({ onLogout, isOpen, setIsOpen, user, onProfileClick, isDark = f
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  useEffect(() => {
+    if (!isDesktop) setIsOpen(false);
+  }, [activeTab, isDesktop, setIsOpen]);
+
   const expanded = isOpen || (isDesktop && hoverOpen);
   const menuItems = [
-    { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, end: true },
-    { path: '/dashboard/videos', label: 'Videos', icon: Video },
-    { path: '/dashboard/channels', label: 'Channels', icon: PlaySquare },
-    { path: '/dashboard/leads', label: 'Leads', icon: UsersRound },
-    { path: '/dashboard/auto-mod', label: 'Auto-Mod', icon: ShieldCheck },
-    { path: '/dashboard/subscription', label: 'Subscription', icon: CreditCard },
-    { path: '/dashboard/settings', label: 'Settings', icon: Settings },
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'videos', label: 'Videos', icon: Video },
+    { id: 'channels', label: 'Channels', icon: PlaySquare },
+    { id: 'leads', label: 'Leads', icon: UsersRound },
+    { id: 'moderation', label: 'Auto-Mod', icon: ShieldCheck },
+    { id: 'subscription', label: 'Subscription', icon: CreditCard },
+    { id: 'settings', label: 'Settings', icon: Settings },
   ];
 
   return (
@@ -89,35 +92,33 @@ const Sidebar = ({ onLogout, isOpen, setIsOpen, user, onProfileClick, isDark = f
         </div>
 
         <nav className="flex-1 py-5 px-3 flex flex-col gap-2 overflow-y-auto custom-scroll">
-          {menuItems.map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              end={item.end}
-              onClick={() => {
-                if (window.innerWidth <= 1024) setIsOpen(false);
-              }}
-              title={item.label}
-              className={({ isActive }) => `relative h-12 w-full flex items-center gap-4 rounded-2xl transition-all duration-200 group border ${isActive
-                  ? 'bg-[#fff1f1] text-[#ff0000] border-red-100 font-black shadow-sm'
-                  : (isDark ? 'text-[#aaaaaa] border-transparent hover:bg-[#202020] hover:text-white font-bold' : 'text-[#475569] border-transparent hover:bg-[#f7f7f7] hover:text-[#0f0f0f] font-bold')
-                } ${expanded ? 'px-4' : 'justify-center px-0'}`}
-            >
-              {({ isActive }) => (
-                <>
-                  <item.icon size={20} strokeWidth={isActive ? 2.6 : 2.1} className="shrink-0" />
-                  {expanded && <span className="text-[14px] font-black tracking-tight whitespace-nowrap">{item.label}</span>}
-                  {isActive && expanded && <ChevronRight size={14} className="ml-auto" />}
-                  {!expanded && isDesktop && (
-                    <span className="absolute left-full ml-4 px-3 py-2 bg-[#0f0f0f] text-white text-[10px] font-black uppercase tracking-widest rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-all whitespace-nowrap z-[200] shadow-2xl">
-                      {item.label}
-                    </span>
-                  )}
-                  {isActive && !expanded && <span className="absolute right-[-13px] top-1/2 -translate-y-1/2 h-6 w-1 rounded-l-full bg-[#ff0000]" />}
-                </>
-              )}
-            </NavLink>
-          ))}
+          {menuItems.map((item) => {
+            const isMenuTabActive = activeTab === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => {
+                  setActiveTab(item.id);
+                  if (window.innerWidth <= 1024) setIsOpen(false);
+                }}
+                title={item.label}
+                className={`relative h-12 w-full flex items-center gap-4 rounded-2xl transition-all duration-200 group border ${isMenuTabActive
+                    ? 'bg-[#fff1f1] text-[#ff0000] border-red-100 font-black shadow-sm'
+                    : (isDark ? 'text-[#aaaaaa] border-transparent hover:bg-[#202020] hover:text-white font-bold' : 'text-[#475569] border-transparent hover:bg-[#f7f7f7] hover:text-[#0f0f0f] font-bold')
+                  } ${expanded ? 'px-4' : 'justify-center px-0'}`}
+              >
+                <item.icon size={20} strokeWidth={isMenuTabActive ? 2.6 : 2.1} className="shrink-0" />
+                {expanded && <span className="text-[14px] font-black tracking-tight whitespace-nowrap">{item.label}</span>}
+                {isMenuTabActive && expanded && <ChevronRight size={14} className="ml-auto" />}
+                {!expanded && isDesktop && (
+                  <span className="absolute left-full ml-4 px-3 py-2 bg-[#0f0f0f] text-white text-[10px] font-black uppercase tracking-widest rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-all whitespace-nowrap z-[200] shadow-2xl">
+                    {item.label}
+                  </span>
+                )}
+                {isMenuTabActive && !expanded && <span className="absolute right-[-13px] top-1/2 -translate-y-1/2 h-6 w-1 rounded-l-full bg-[#ff0000]" />}
+              </button>
+            );
+          })}
         </nav>
 
         <div className={`border-t p-4 space-y-3 ${isDark ? 'border-[#2a2a2a]' : 'border-[#eeeeee]'}`}>

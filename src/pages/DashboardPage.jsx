@@ -44,12 +44,9 @@ const DashboardPage = ({
     };
   }).filter(data => data.value > 0);
 
-  const safeActivities = Array.isArray(activities) ? activities : [];
-  const safeChannels = Array.isArray(channels) ? channels : [];
-
-  const filteredActivities = safeActivities.filter(a =>
+  const filteredActivities = activities.filter(a =>
     (a.text || '').toLowerCase().includes((searchQuery || '').toLowerCase()) ||
-    (a.author || '').toLowerCase().includes((searchQuery || '').toLowerCase())
+    a.author?.toLowerCase().includes((searchQuery || '').toLowerCase())
   );
 
   return (
@@ -63,14 +60,14 @@ const DashboardPage = ({
         <h1 className={`text-[26px] sm:text-3xl font-black tracking-tight ${textClass}`}>Dashboard</h1>
 
         <div className="flex w-full flex-wrap items-center gap-2 md:w-auto">
-          {safeChannels.length > 1 && (
+          {channels.length > 1 && (
             <select
               value={selectedChannelId || ''}
               onChange={(e) => setSelectedChannelId(e.target.value)}
               className={`${softClass} rounded-full border px-4 py-3 text-xs font-black ${textClass} shadow-sm outline-none cursor-pointer`}
             >
               <option value="">All Channels</option>
-              {safeChannels.map(c => <option key={c.channelId} value={c.channelId}>{c.title}</option>)}
+              {channels.map(c => <option key={c.channelId} value={c.channelId}>{c.title}</option>)}
             </select>
           )}
 

@@ -66,16 +66,6 @@ const ENDPOINT_DOCS = [
     permission: 'customers:read', description: 'Fetch detailed customer profiles with metrics',
     curl: `curl -H "x-api-key: YOUR_KEY" \\\n  "https://server-youtube-auto.onrender.com/api/external/customers/details?page=1&limit=20"`
   },
-  {
-    method: 'GET', path: '/api/external/comments',
-    permission: 'comments:read', description: 'Fetch YouTube comments with author details, commenter channel ID, comment text, and video ID',
-    curl: `curl -H "x-api-key: YOUR_KEY" \\\n  https://server-youtube-auto.onrender.com/api/external/comments`
-  },
-  {
-    method: 'GET', path: '/api/external/analytics',
-    permission: 'analytics:read', description: 'Fetch channel performance and comment analytics',
-    curl: `curl -H "x-api-key: YOUR_KEY" \\\n  https://server-youtube-auto.onrender.com/api/external/analytics`
-  },
 ];
 
 // ── Permission Chip ────────────────────────────────────────────────────────────

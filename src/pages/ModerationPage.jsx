@@ -420,11 +420,11 @@ const ModerationPage = ({
     finally { setLoadingRules(false); }
   };
 
-  const fetchHistoryLogs = async (page = 1, targetChanId = selectedChannelId) => {
+  const fetchHistoryLogs = async (page = 1) => {
     try {
       setLoadingHistory(true);
       const res = await getCommentHistory({
-        channelId: targetChanId || undefined,
+        channelId: selectedChannelId || undefined,
         type: historyType || 'all',
         page,
         limit: 20,
@@ -463,20 +463,17 @@ const ModerationPage = ({
   };
 
   useEffect(() => {
-    const activeChanId = selectedChannelId || (channels.length > 0 ? channels[0].channelId : undefined);
-    if (!selectedChannelId && activeChanId) {
-      setSelectedChannelId(activeChanId);
-    }
-    fetchVideosForChannel(activeChanId);
-    fetchStats(activeChanId);
-    if (mainTab === 'auto-reply') fetchRules(activeChanId);
+    if (!selectedChannelId) return;
+    fetchVideosForChannel(selectedChannelId);
+    fetchStats(selectedChannelId);
+    if (mainTab === 'auto-reply') fetchRules(selectedChannelId);
     if (mainTab === 'comment-chat') {
-      fetchChatLogs(activeChanId);
+      fetchChatLogs(selectedChannelId);
     }
     if (mainTab === 'comment-history') {
-      fetchHistoryLogs(1, activeChanId);
+      fetchHistoryLogs(1);
     }
-  }, [selectedChannelId, mainTab, historyType, channels]);
+  }, [selectedChannelId, mainTab, historyType]);
 
   const selectedContent = useMemo(
     () => selectedVideoId === 'all_videos' ? null : videos.find(v => v.videoId === selectedVideoId),

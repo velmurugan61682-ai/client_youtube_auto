@@ -616,46 +616,6 @@ const AdminPortal = () => {
                           payload: null,
                           curl: (key) => `curl -X GET "${API_BASE_URL}/external/leads" \\\n  -H "x-api-key: ${key}"`,
                           fetch: (key) => `fetch('${API_BASE_URL}/external/leads', {\n  method: 'GET',\n  headers: {\n    'x-api-key': '${key}'\n  }\n})\n.then(res => res.json())\n.then(data => console.log(data));`
-                        },
-                        {
-                          id: 'post-leads',
-                          title: '3. Create Customer Lead (POST /api/external/leads)',
-                          desc: 'Creates a new customer lead record associated with a specified owner ID.',
-                          url: `${API_BASE_URL}/external/leads`,
-                          method: 'POST',
-                          payload: null,
-                          curl: (key) => `curl -X POST "${API_BASE_URL}/external/leads" \\\n  -H "x-api-key: ${key}" \\\n  -H "Content-Type: application/json" \\\n  -d '{"name":"Jane","email":"jane@example.com"}'`,
-                          fetch: (key) => `fetch('${API_BASE_URL}/external/leads', {\n  method: 'POST',\n  headers: {\n    'x-api-key': '${key}',\n    'Content-Type': 'application/json'\n  },\n  body: JSON.stringify({ name: 'Jane', email: 'jane@example.com' })\n})\n.then(res => res.json())\n.then(data => console.log(data));`
-                        },
-                        {
-                          id: 'get-customers',
-                          title: '4. Retrieve Customer Details (GET /api/external/customers/details)',
-                          desc: 'Fetches detailed customer metrics, YouTube connection stats, and subscription status.',
-                          url: `${API_BASE_URL}/external/customers/details`,
-                          method: 'GET',
-                          payload: null,
-                          curl: (key) => `curl -X GET "${API_BASE_URL}/external/customers/details?page=1&limit=20" \\\n  -H "x-api-key: ${key}"`,
-                          fetch: (key) => `fetch('${API_BASE_URL}/external/customers/details?page=1&limit=20', {\n  method: 'GET',\n  headers: {\n    'x-api-key': '${key}'\n  }\n})\n.then(res => res.json())\n.then(data => console.log(data));`
-                        },
-                        {
-                          id: 'get-comments',
-                          title: '5. Retrieve Comments & Moderation (GET /api/external/comments)',
-                          desc: 'Fetches YouTube comment stream, sentiment analysis, and moderation action logs.',
-                          url: `${API_BASE_URL}/external/comments`,
-                          method: 'GET',
-                          payload: null,
-                          curl: (key) => `curl -X GET "${API_BASE_URL}/external/comments" \\\n  -H "x-api-key: ${key}"`,
-                          fetch: (key) => `fetch('${API_BASE_URL}/external/comments', {\n  method: 'GET',\n  headers: {\n    'x-api-key': '${key}'\n  }\n})\n.then(res => res.json())\n.then(data => console.log(data));`
-                        },
-                        {
-                          id: 'get-analytics',
-                          title: '6. Retrieve Analytics Metrics (GET /api/external/analytics)',
-                          desc: 'Fetches aggregated sentiment metrics, channel counts, and lead analytics.',
-                          url: `${API_BASE_URL}/external/analytics`,
-                          method: 'GET',
-                          payload: null,
-                          curl: (key) => `curl -X GET "${API_BASE_URL}/external/analytics" \\\n  -H "x-api-key: ${key}"`,
-                          fetch: (key) => `fetch('${API_BASE_URL}/external/analytics', {\n  method: 'GET',\n  headers: {\n    'x-api-key': '${key}'\n  }\n})\n.then(res => res.json())\n.then(data => console.log(data));`
                         }
                       ].map(doc => (
                         <div key={doc.id} className="border border-slate-900 rounded-2xl overflow-hidden bg-slate-905/30">
