@@ -148,37 +148,7 @@ const Login = ({ onSwitchToRegister }) => {
             )}
           </AnimatePresence>
 
-          {/* Google OAuth Button Section */}
-          <div className="space-y-4">
-            <motion.button
-              type="button"
-              onClick={handleGoogleSignIn}
-              disabled={googleLoading || loading}
-              whileHover={{ scale: 1.01 }}
-              whileTap={{ scale: 0.99 }}
-              className="w-full bg-white hover:bg-zinc-50 border border-zinc-300 hover:border-zinc-400 text-zinc-700 font-bold py-3.5 px-4 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all flex items-center justify-center gap-3 text-[14px] relative group disabled:opacity-70 disabled:cursor-not-allowed"
-            >
-              {googleLoading ? (
-                <div className="flex items-center gap-2.5 text-zinc-600 font-bold text-[13px]">
-                  <Loader2 className="animate-spin text-blue-600" size={18} />
-                  <span className="animate-pulse">{googleLoadingText}</span>
-                </div>
-              ) : (
-                <>
-                  <GoogleIcon />
-                  <span className="text-zinc-700 font-bold tracking-tight">Continue with Google</span>
-                </>
-              )}
-            </motion.button>
-          </div>
 
-          {/* MongoDB-style Enterprise Divider */}
-          <div className="relative flex items-center justify-center my-6">
-            <div className="w-full border-t border-zinc-200" />
-            <span className="absolute bg-white px-3 text-[10px] font-black text-zinc-400 uppercase tracking-widest">
-              or with email and password
-            </span>
-          </div>
 
           {/* Email / Password Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
