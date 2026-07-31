@@ -144,9 +144,12 @@ const ThumbnailImage = ({ initialSrc, alt, className }) => {
       alt={alt}
       className={className}
       onError={() => {
-        if (errorCount === 0) {
-          setSrc('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150&auto=format&fit=crop&q=80');
+        if (errorCount === 0 && src && src.includes('mqdefault')) {
+          setSrc(src.replace('mqdefault', 'hqdefault'));
           setErrorCount(1);
+        } else if (errorCount <= 1) {
+          setSrc('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150&auto=format&fit=crop&q=80');
+          setErrorCount(2);
         }
       }}
     />
@@ -728,7 +731,7 @@ const ModerationPage = ({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.18 }}
-          className="custom-scroll mt-4 h-[calc(100%-178px)] overflow-y-auto pr-1"
+          className="custom-scroll mt-4 min-h-0 overflow-visible pr-0 min-[1025px]:h-[calc(100%-178px)] min-[1025px]:overflow-y-auto min-[1025px]:pr-1"
         >
 
           {/*  TAB: AUTO REPLY  */}
@@ -1208,7 +1211,7 @@ const ModerationPage = ({
             const selectedTriggerItem = channelChatItems.find(t => t.id === selectedChatId) || filteredTriggers[0];
 
             return (
-              <div className="bg-white border border-slate-100 rounded-[28px] p-6 shadow-sm space-y-6">
+              <div className="bg-white border border-slate-100 rounded-[24px] sm:rounded-[28px] p-4 sm:p-6 shadow-sm space-y-5 sm:space-y-6">
                 {/* Header */}
                 <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                   <div>
@@ -1222,7 +1225,7 @@ const ModerationPage = ({
                 </div>
 
                 {/* 2-Column Layout */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-[580px]">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 min-h-0 lg:min-h-[580px]">
 
                   {/* Left Column: List of Triggers & Posts */}
                   <div className="lg:col-span-5 border border-slate-200 rounded-2xl p-4 space-y-4 bg-slate-50/50 flex flex-col">
@@ -1250,7 +1253,7 @@ const ModerationPage = ({
                     </div>
 
                     {/* Trigger Cards */}
-                    <div className="flex-1 space-y-3 overflow-y-auto max-h-[460px] pr-1">
+                    <div className="space-y-3 overflow-visible max-h-none pr-0 lg:flex-1 lg:overflow-y-auto lg:max-h-[460px] lg:pr-1">
                       {filteredTriggers.length === 0 ? (
                         <div className="py-12 text-center text-slate-400 text-xs font-bold">
                           No matching posts or triggers found.
@@ -1300,7 +1303,7 @@ const ModerationPage = ({
                   </div>
 
                   {/* Right Column: Chat Stream */}
-                  <div className="lg:col-span-7 border border-slate-200 rounded-2xl p-5 bg-white flex flex-col justify-between space-y-4">
+                  <div className="lg:col-span-7 border border-slate-200 rounded-2xl p-4 sm:p-5 bg-white flex flex-col justify-between space-y-4 min-w-0">
                     {selectedTriggerItem ? (
                       <>
                         <div className="space-y-4">
@@ -1329,7 +1332,7 @@ const ModerationPage = ({
                           </div>
 
                           {/* Chat Stream Messages */}
-                          <div className="space-y-5 overflow-y-auto max-h-[380px] pr-2">
+                          <div className="space-y-5 overflow-visible max-h-none pr-0 lg:overflow-y-auto lg:max-h-[380px] lg:pr-2">
                             {selectedTriggerItem.comments.map(c => (
                               <div key={c.id} className="space-y-2 border-b border-slate-100 pb-4 last:border-0">
                                 <div className="flex items-center justify-between text-xs font-black">
@@ -1400,8 +1403,8 @@ const ModerationPage = ({
 
           {/*  TAB 3: COMMENT HISTORY  */}
           {mainTab === 'comment-history' && (
-            <div className="space-y-5">
-              <div className="bg-white border border-slate-100 rounded-[28px] p-6 shadow-sm space-y-6">
+            <div className="space-y-5 min-w-0">
+              <div className="bg-white border border-slate-100 rounded-[24px] sm:rounded-[28px] p-4 sm:p-6 shadow-sm space-y-5 sm:space-y-6">
 
                 {/* Header */}
                 <div className="flex items-center justify-between">

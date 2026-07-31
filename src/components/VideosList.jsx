@@ -94,12 +94,15 @@ const ThumbnailImage = ({ initialSrc, videoId, alt, className }) => {
       alt={alt}
       className={className}
       onError={() => {
-        if (errorLevel === 0 && src.includes('hqdefault.jpg') && videoId) {
-          setSrc(`https://i.ytimg.com/vi/${videoId}/default.jpg`);
+        if (errorLevel === 0 && src && src.includes('mqdefault') && videoId) {
+          setSrc(`https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`);
           setErrorLevel(1);
-        } else if (errorLevel <= 1) {
-          setSrc('https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=150&auto=format&fit=crop&q=60');
+        } else if (errorLevel <= 1 && videoId) {
+          setSrc(`https://i.ytimg.com/vi/${videoId}/default.jpg`);
           setErrorLevel(2);
+        } else if (errorLevel <= 2) {
+          setSrc('https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=150&auto=format&fit=crop&q=60');
+          setErrorLevel(3);
         }
       }}
     />
@@ -208,7 +211,7 @@ const VideosList = ({
     if (activeVideosList.length > 0) {
       const isCurrentSelectedInTab = activeVideosList.some(v => v.videoId === selectedVideo);
       if (!isCurrentSelectedInTab) {
-        handleVideoSelect(activeVideosList[0].videoId, false);
+        handleVideoSelect(activeVideosList[0].videoId, isMobileViewport);
       }
     } else {
       if (videoTab === 'videos' && longVideos.length === 0) {
@@ -234,7 +237,7 @@ const VideosList = ({
         setIsMobileDetail(false);
       }
     }
-  }, [videoTab, videos]);
+  }, [videoTab, videos, isMobileViewport]);
 
   useEffect(() => {
     setIsMobileDetail(false);
@@ -318,7 +321,7 @@ const VideosList = ({
       if (mergedVideos.length > 0 && !selectedVideo) {
         const isCurrentSelectedInList = mergedVideos.some(v => v.videoId === selectedVideo);
         if (!isCurrentSelectedInList) {
-          handleVideoSelect(mergedVideos[0].videoId, false);
+          handleVideoSelect(mergedVideos[0].videoId, isMobileViewport);
         }
       }
     } catch (err) {
@@ -717,7 +720,7 @@ const VideosList = ({
       </div>
 
       {/* Right Pane: Analysis & Comments */}
-      <div className={`${isMobileDetail ? 'flex' : 'hidden md:flex'} flex-1 flex-col gap-4 lg:overflow-hidden h-auto md:h-full`}>
+      <div className={`${isMobileDetail || selectedVideo ? 'flex' : 'hidden md:flex'} flex-1 flex-col gap-4 lg:overflow-hidden h-auto md:h-full`}>
         <div className={`yt-card !p-0 flex flex-col h-auto lg:h-full overflow-visible lg:overflow-hidden ${isEmbedded ? '!rounded-none !border-y-0 !border-l-0 !shadow-none' : ''}`}>
           {/* Header & Panel Tabs */}
           <div className="p-4 md:p-6 border-b border-[#e5e5e5] bg-white sticky top-0 z-20 ">

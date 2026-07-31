@@ -9,8 +9,6 @@ import {
   ChevronRight,
   Moon,
   Sun,
-  PanelLeftClose,
-  PanelLeftOpen,
   Key
 } from 'lucide-react';
 
@@ -54,9 +52,6 @@ const AdminLayout = ({ children }) => {
               <span className={`${dashboardDark ? 'text-white' : 'text-[#0f0f0f]'} text-[17px] font-black tracking-tighter block leading-none`}>ChannelBot</span>
               <span className="text-[9px] font-black text-[#ff0000] tracking-[0.2em] uppercase mt-1 block">ADMIN SAAS</span>
             </div>
-            <button type="button" onClick={() => setSidebarPinned(prev => !prev)} className={`absolute right-0 top-0 h-9 w-9 rounded-xl flex items-center justify-center transition-colors ${dashboardDark ? 'text-[#aaaaaa] hover:bg-[#202020] hover:text-white' : 'text-[#606060] hover:bg-[#fff1f1] hover:text-[#ff0000]'}`} title={sidebarPinned ? 'Unpin sidebar' : 'Pin sidebar'}>
-              {sidebarPinned ? <PanelLeftClose size={17} /> : <PanelLeftOpen size={17} />}
-            </button>
           </div>
 
           <nav className="space-y-2">

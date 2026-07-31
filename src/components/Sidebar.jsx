@@ -12,9 +12,7 @@ import {
   CreditCard,
   UserCircle,
   Moon,
-  Sun,
-  PanelLeftClose,
-  PanelLeftOpen
+  Sun
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -77,16 +75,6 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen, user, o
                 <p className={`${isDark ? 'text-white' : 'text-[#0f0f0f]'} text-[16px] font-black leading-none tracking-tight`}>ChannelBot</p>
                 <p className="mt-1 text-[9px] font-black uppercase tracking-[0.18em] text-[#ff0000]">Online</p>
               </div>
-            )}
-            {isDesktop && (
-              <button
-                type="button"
-                onClick={() => setIsOpen(!isOpen)}
-                className={`ml-auto h-9 w-9 items-center justify-center rounded-xl transition-colors ${isDark ? 'text-[#aaaaaa] hover:bg-[#202020] hover:text-white' : 'text-[#606060] hover:bg-[#fff1f1] hover:text-[#ff0000]'} ${expanded ? 'flex' : 'absolute right-3 top-5 flex'}`}
-                title={isOpen ? 'Collapse sidebar' : 'Expand sidebar'}
-              >
-                {isOpen ? <PanelLeftClose size={17} /> : <PanelLeftOpen size={17} />}
-              </button>
             )}
           </div>
         </div>

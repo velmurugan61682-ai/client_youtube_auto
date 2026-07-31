@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
+import { registerSW } from 'virtual:pwa-register'
 import './styles/index.css'
 import App from './App.jsx'
 import { AuthProvider } from './context/AuthContext.jsx'
@@ -83,37 +84,22 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 );
 
-if (import.meta.env.PROD && 'serviceWorker' in navigator) {
-  // Listen for the controllerchange event to reload when a new service worker takes over
-  navigator.serviceWorker.addEventListener('controllerchange', () => {
-    console.log('[PWA] New Service Worker took control. Reloading...');
-    window.location.reload();
-  });
-
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then((reg) => {
-        console.log('✓ Service Worker Ready');
-        console.log('SW scope:', reg.scope);
-
-        // Check for updates immediately
-        reg.update();
-
-        reg.addEventListener('updatefound', () => {
-          const newWorker = reg.installing;
-          if (newWorker) {
-            newWorker.addEventListener('statechange', () => {
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                console.log('[PWA] New Service Worker version available. Skipping waiting...');
-                newWorker.postMessage({ type: 'SKIP_WAITING' });
-              }
-            });
-          }
-        });
-      })
-      .catch((err) => {
-        console.error('SW registration failed:', err);
-      });
+if (import.meta.env.PROD) {
+  registerSW({
+    immediate: true,
+    onRegisteredSW(swUrl, registration) {
+      console.log('[PWA] Service Worker ready:', swUrl);
+      registration?.update();
+    },
+    onNeedRefresh() {
+      window.dispatchEvent(new Event('sw-update-available'));
+    },
+    onOfflineReady() {
+      console.log('[PWA] Offline app shell is ready');
+    },
+    onRegisterError(error) {
+      console.error('[PWA] Service Worker registration failed:', error);
+    }
   });
 }
 

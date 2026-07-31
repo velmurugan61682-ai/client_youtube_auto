@@ -13,11 +13,15 @@ export const getSocket = () => {
     socket = io(SOCKET_URL, {
       withCredentials: true,
       reconnection: true,
-      transports: ['polling', 'websocket'], // Start with HTTP polling to establish connection, then upgrade to WebSocket. This is much more reliable and avoids 404/timeout handshake errors on Render.
+      transports: ['polling', 'websocket'], // Start with HTTP polling to establish connection, then upgrade to WebSocket.
       reconnectionAttempts: Infinity, // Reconnect automatically
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
       autoConnect: false,
+      auth: (cb) => {
+        const token = localStorage.getItem('token') || localStorage.getItem('adminToken');
+        cb({ token: (token && token !== 'null' && token !== 'undefined') ? token : '' });
+      }
     });
 
     // Global connection lifecycle logging
@@ -28,10 +32,21 @@ export const getSocket = () => {
 
     socket.on('connect_error', (error) => {
       console.error('❌ [Socket.IO] Connection error:', error.message);
+      if (error.message === 'Authentication error') {
+        console.warn('⚠️ [Socket.IO] Auth rejected by server. Disconnecting socket.');
+        socket.disconnect();
+      }
     });
 
     socket.on('disconnect', (reason) => {
       console.log(`🔌 [Socket.IO] Disconnected. Reason: ${reason}`);
+      if (reason === 'io server disconnect') {
+        // Disconnection was initiated by the server, attempt reconnect if token is available
+        const token = localStorage.getItem('token') || localStorage.getItem('adminToken');
+        if (token && token !== 'null' && token !== 'undefined') {
+          socket.connect();
+        }
+      }
     });
 
     // Transport upgrade tracking
@@ -58,16 +73,12 @@ export const getSocket = () => {
       console.error('❌ [Socket.IO] Reconnection failed completely after maximum attempts.');
     });
 
-    // Low-level packets debugging
-    socket.io.on('ping', () => {
-      console.log('⚡ [Socket.IO] Ping sent to server');
-    });
-
     // Handle automatic reconnection after network restoration
     if (typeof window !== 'undefined') {
       window.addEventListener('online', () => {
-        console.log('✓ Network Connected (Restored). Reconnecting socket...');
-        if (socket && !socket.connected) {
+        const token = localStorage.getItem('token') || localStorage.getItem('adminToken');
+        if (token && token !== 'null' && token !== 'undefined' && socket && !socket.connected) {
+          console.log('✓ Network Connected (Restored). Reconnecting socket...');
           socket.connect();
         }
       });
@@ -78,18 +89,21 @@ export const getSocket = () => {
 
 /**
  * Connect the socket instance, ensuring the authentication token is attached.
- * @param {string} [token] Optional authorization token (falls back to localStorage)
+ * @param {string} [token] Optional authorization token (falls back to localStorage/adminToken)
  */
 export const connectSocket = (token) => {
   const s = getSocket();
-  const actualToken = token || localStorage.getItem('token');
+  const actualToken = token || localStorage.getItem('token') || localStorage.getItem('adminToken');
 
-  if (actualToken && actualToken !== 'null' && actualToken !== 'undefined') {
-    s.auth = { token: actualToken };
-  } else {
-    console.warn('⚠️ [Socket.IO] Connecting without a token. Server-side validation may fail.');
-    s.auth = {};
+  if (!actualToken || actualToken === 'null' || actualToken === 'undefined') {
+    console.warn('⚠️ [Socket.IO] No authentication token found. Skipping connection to prevent 400 Bad Request.');
+    if (s.connected) {
+      s.disconnect();
+    }
+    return s;
   }
+
+  s.auth = { token: actualToken };
 
   if (!s.connected) {
     console.log('🔌 [Socket.IO] Connecting socket...');
@@ -109,3 +123,4 @@ export const disconnectSocket = () => {
     socket.disconnect();
   }
 };
+

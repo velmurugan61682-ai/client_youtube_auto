@@ -41,6 +41,7 @@ export default defineConfig(({ command, mode }) => {
         registerType: 'autoUpdate',
         injectRegister: false,
         manifest: {
+          id: '/',
           name: 'ChannelBot',
           short_name: 'ChannelBot',
           description: 'ChannelBot is an AI-powered YouTube automation platform for comment replies, moderation, engagement management, and creator analytics.',
@@ -48,9 +49,19 @@ export default defineConfig(({ command, mode }) => {
           background_color: '#ffffff',
 
           display: 'standalone',
+          display_override: ['window-controls-overlay', 'standalone', 'browser'],
           orientation: 'portrait',
           scope: '/',
           start_url: '/',
+          shortcuts: [
+            {
+              name: 'Dashboard',
+              short_name: 'Dashboard',
+              description: 'Open the creator dashboard',
+              url: '/dashboard',
+              icons: [{ src: '/icon-192.png', sizes: '192x192', type: 'image/png' }]
+            }
+          ],
           icons: [
             {
               src: '/icon-192.png',
@@ -71,10 +82,11 @@ export default defineConfig(({ command, mode }) => {
           ]
         },
         injectManifest: {
-          globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}']
+          globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+          maximumFileSizeToCacheInBytes: 5 * 1024 * 1024
         },
         devOptions: {
-          enabled: true
+          enabled: false
         }
       })
     ],
@@ -86,6 +98,8 @@ export default defineConfig(({ command, mode }) => {
       'import.meta.env.VITE_BUILD_TIME': JSON.stringify(new Date().getTime().toString())
     },
     build: {
+      cssCodeSplit: true,
+      assetsInlineLimit: 4096,
       modulePreload: false,
       rollupOptions: {
         output: {

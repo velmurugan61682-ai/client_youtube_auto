@@ -87,7 +87,7 @@ const PermissionChip = ({ scope }) => {
 const CopyButton = ({ text, label = 'Copy' }) => {
   const [copied, setCopied] = useState(false);
   const handleCopy = async () => {
-    try { await navigator.clipboard.writeText(text); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch {}
+    try { await navigator.clipboard.writeText(text); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch (err) { console.error('Failed to copy API key text:', err); }
   };
   return (
     <button onClick={handleCopy} className="apk-copy-btn" style={{
@@ -388,19 +388,19 @@ const KeyCard = ({ keyData, onDelete, onToggle }) => {
 
   const handleDelete = async () => {
     setDeleting(true);
-    try { await deleteApiKey(keyData._id); onDelete(keyData._id); } catch {}
+    try { await deleteApiKey(keyData._id); onDelete(keyData._id); } catch (err) { console.error('Failed to delete API key:', err); }
     setDeleting(false); setShowDelete(false);
   };
 
   const handleToggle = async () => {
     setToggling(true);
-    try { await updateApiKey(keyData._id, { isActive: !keyData.isActive }); onToggle(keyData._id, !keyData.isActive); } catch {}
+    try { await updateApiKey(keyData._id, { isActive: !keyData.isActive }); onToggle(keyData._id, !keyData.isActive); } catch (err) { console.error('Failed to update API key:', err); }
     setToggling(false);
   };
 
   const loadStats = async () => {
     setLoadingStats(true);
-    try { const res = await getApiKeyStats(keyData._id); setStats(res.data.stats); } catch {}
+    try { const res = await getApiKeyStats(keyData._id); setStats(res.data.stats); } catch (err) { console.error('Failed to load API key stats:', err); }
     setLoadingStats(false);
   };
 

@@ -590,7 +590,7 @@ const App = () => {
 
                   {/* Mobile Bottom Navigation */}
                   {!isEmbedded && (
-                    <div className={`min-[1025px]:hidden fixed bottom-0 left-0 right-0 h-[68px] border-t grid grid-cols-5 px-1 z-40 pb-safe shadow-[0_-4px_20px_-4px_rgba(0,0,0,0.05)] ${clientDark ? 'bg-[#0f0f0f] border-[#2a2a2a]' : 'bg-white border-slate-100'}`}>
+                    <div className={`mobile-bottom-nav min-[1025px]:hidden fixed bottom-0 left-0 right-0 border-t grid grid-cols-5 px-1 z-40 shadow-[0_-4px_20px_-4px_rgba(0,0,0,0.05)] ${clientDark ? 'bg-[#0f0f0f] border-[#2a2a2a]' : 'bg-white border-slate-100'}`}>
                       <button
                         onClick={() => setActiveTab('dashboard')}
                         className={`mobile-nav-item ${activeTab === 'dashboard' ? 'active' : ''}`}
@@ -707,7 +707,7 @@ const App = () => {
                   onClick={() => { setActiveTab('settings'); setProfileSheetOpen(false); }}
                   className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-bold transition-all text-left ${clientDark ? 'text-white hover:bg-[#202020]' : 'text-slate-700 hover:bg-slate-50'}`}
                 >
-                  <Settings size={18} /> Settings & Billing
+                  <Settings size={18} /> Settings
                 </button>
                 <button
                   onClick={() => { logout(); setProfileSheetOpen(false); }}

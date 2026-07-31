@@ -59,17 +59,11 @@ const navigationRoute = new NavigationRoute(handler, {
 });
 registerRoute(navigationRoute);
 
-// 4. Handle external Video Thumbnails (ytimg.com) using StaleWhileRevalidate
-// Ensures modified YouTube thumbnails refresh in background without staying stale for 30 days
+// 4. Handle external Video Thumbnails (ytimg.com) using NetworkOnly
+// Lets browser fetch thumbnails directly from YouTube's CDN so missing thumbnails trigger 404/onError without SW 500 errors
 registerRoute(
   ({ url, request }) => request.destination === 'image' && url.hostname.includes('ytimg.com'),
-  new StaleWhileRevalidate({
-    cacheName: 'youtube-thumbnails-cache',
-    plugins: [
-      new CacheableResponsePlugin({ statuses: [0, 200] }),
-      new ExpirationPlugin({ maxEntries: 100, maxAgeSeconds: 7 * 24 * 60 * 60 })
-    ]
-  })
+  new NetworkOnly()
 );
 
 // 5. Handle external Avatars (ggpht.com, googleusercontent.com) using CacheFirst

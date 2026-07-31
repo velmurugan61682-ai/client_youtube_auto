@@ -108,14 +108,14 @@ const DashboardPage = ({
                 Notification
               </button>
               {showNotifications && (
-                <div className={`absolute right-0 top-full z-50 mt-3 w-[min(340px,calc(100vw-2rem))] rounded-2xl border p-4 shadow-2xl ${isDark ? 'bg-[#181818] border-[#2a2a2a]' : 'bg-white border-[#e5e5e5]'}`}>
+                <div className={`fixed left-3 right-3 bottom-[calc(78px+env(safe-area-inset-bottom))] z-[95] max-h-[52svh] rounded-2xl border p-4 shadow-2xl min-[400px]:left-auto min-[400px]:right-6 min-[400px]:w-[min(340px,calc(100vw-2rem))] md:absolute md:left-auto md:right-0 md:top-full md:bottom-auto md:z-50 md:mt-3 md:max-h-none ${isDark ? 'bg-[#181818] border-[#2a2a2a]' : 'bg-white border-[#e5e5e5]'}`}>
                   <div className="flex items-center justify-between border-b border-current/10 pb-3">
                     <p className={`text-sm font-black ${textClass}`}>Live Notifications</p>
                     <button type="button" onClick={fetchAnalytics} disabled={loading} className="rounded-full bg-[#fff1f1] px-3 py-1 text-[10px] font-black text-[#ff0000] disabled:opacity-60">
                       {loading ? 'Syncing' : 'Refresh'}
                     </button>
                   </div>
-                  <div className="max-h-[260px] overflow-y-auto pt-3 custom-scroll space-y-2">
+                  <div className="max-h-[calc(52svh-76px)] md:max-h-[260px] overflow-y-auto pt-3 custom-scroll space-y-2">
                     {filteredActivities.length === 0 ? (
                       <div className={`${softClass} rounded-xl border p-4 text-center text-xs font-semibold ${mutedClass}`}>No live notifications yet.</div>
                     ) : filteredActivities.slice(0, 6).map((activity, index) => (
