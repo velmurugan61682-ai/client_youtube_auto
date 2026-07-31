@@ -616,46 +616,50 @@ const VideosList = ({
           </div>
 
           {/* Tab Selector */}
-          <div className="px-2 py-2 border-b border-[#e5e5e5] bg-[#f2f2f2] grid grid-cols-4 gap-1">
+          <div className="px-1 py-2 border-b border-[#e5e5e5] bg-[#f2f2f2] grid grid-cols-4 gap-0.5">
             <button
               onClick={() => setVideoTab('videos')}
-              className={`min-h-[40px] px-1 py-2 text-[9px] sm:text-[10px] font-black uppercase tracking-wider rounded-xl transition-all border text-center truncate ${videoTab === 'videos'
+              className={`min-h-[40px] px-0.5 py-1.5 flex items-center justify-center gap-0.5 text-[8.5px] min-[360px]:text-[9px] sm:text-[10px] font-black uppercase tracking-tight rounded-xl transition-all border text-center whitespace-nowrap overflow-hidden ${videoTab === 'videos'
                   ? 'bg-[#fff1f1] text-[#ff0000] border-red-100 shadow-sm'
                   : 'text-[#909090] hover:text-[#0f0f0f] border-transparent'
                 }`}
               title={`Videos (${longVideos.length})`}
             >
-              Videos ({longVideos.length})
+              <span>Videos</span>
+              <span>({longVideos.length})</span>
             </button>
             <button
               onClick={() => setVideoTab('shorts')}
-              className={`min-h-[40px] px-1 py-2 text-[9px] sm:text-[10px] font-black uppercase tracking-wider rounded-xl transition-all border text-center truncate ${videoTab === 'shorts'
+              className={`min-h-[40px] px-0.5 py-1.5 flex items-center justify-center gap-0.5 text-[8.5px] min-[360px]:text-[9px] sm:text-[10px] font-black uppercase tracking-tight rounded-xl transition-all border text-center whitespace-nowrap overflow-hidden ${videoTab === 'shorts'
                   ? 'bg-[#fff1f1] text-[#ff0000] border-red-100 shadow-sm'
                   : 'text-[#909090] hover:text-[#0f0f0f] border-transparent'
                 }`}
               title={`Shorts (${shortVideos.length})`}
             >
-              Shorts ({shortVideos.length})
+              <span>Shorts</span>
+              <span>({shortVideos.length})</span>
             </button>
             <button
               onClick={() => setVideoTab('live')}
-              className={`min-h-[40px] px-1 py-2 text-[9px] sm:text-[10px] font-black uppercase tracking-wider rounded-xl transition-all border text-center truncate ${videoTab === 'live'
+              className={`min-h-[40px] px-0.5 py-1.5 flex items-center justify-center gap-0.5 text-[8.5px] min-[360px]:text-[9px] sm:text-[10px] font-black uppercase tracking-tight rounded-xl transition-all border text-center whitespace-nowrap overflow-hidden ${videoTab === 'live'
                   ? 'bg-[#fff1f1] text-[#ff0000] border-red-100 shadow-sm'
                   : 'text-[#909090] hover:text-[#0f0f0f] border-transparent'
                 }`}
               title={`Live (${liveVideos.length})`}
             >
-              Live ({liveVideos.length})
+              <span>Live</span>
+              <span>({liveVideos.length})</span>
             </button>
             <button
               onClick={() => setVideoTab('posts')}
-              className={`min-h-[40px] px-1 py-2 text-[9px] sm:text-[10px] font-black uppercase tracking-wider rounded-xl transition-all border text-center truncate ${videoTab === 'posts'
+              className={`min-h-[40px] px-0.5 py-1.5 flex items-center justify-center gap-0.5 text-[8.5px] min-[360px]:text-[9px] sm:text-[10px] font-black uppercase tracking-tight rounded-xl transition-all border text-center whitespace-nowrap overflow-hidden ${videoTab === 'posts'
                   ? 'bg-[#fff1f1] text-[#ff0000] border-red-100 shadow-sm'
                   : 'text-[#909090] hover:text-[#0f0f0f] border-transparent'
                 }`}
               title={`Posts (${communityPosts.length})`}
             >
-              Posts ({communityPosts.length})
+              <span>Posts</span>
+              <span>({communityPosts.length})</span>
             </button>
           </div>
 
