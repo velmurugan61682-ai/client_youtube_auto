@@ -68,7 +68,7 @@ const ENDPOINT_DOCS = [
   },
   {
     method: 'GET', path: '/api/external/comments',
-    permission: 'comments:read', description: 'Fetch YouTube comments and moderation history',
+    permission: 'comments:read', description: 'Fetch YouTube comments with author details, commenter channel ID, comment text, and video ID',
     curl: `curl -H "x-api-key: YOUR_KEY" \\\n  https://server-youtube-auto.onrender.com/api/external/comments`
   },
   {
