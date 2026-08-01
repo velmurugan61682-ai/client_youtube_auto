@@ -118,7 +118,7 @@ export const connectSocket = (token) => {
  * Disconnect the socket.
  */
 export const disconnectSocket = () => {
-  if (socket) {
+  if (socket && (socket.connected || socket.active)) {
     console.log('🔌 [Socket.IO] Disconnecting socket...');
     socket.disconnect();
   }

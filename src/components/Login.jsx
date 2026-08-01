@@ -242,12 +242,6 @@ const Login = ({ onSwitchToRegister }) => {
                 </Link>
               )}
             </p>
-            <p className="text-[11px] font-bold text-zinc-400 mt-2">
-              Admin?{' '}
-              <Link to="/admin/login" className="text-[#ff0000] hover:underline font-black">
-                Go to Admin Portal
-              </Link>
-            </p>
           </div>
         </div>
 

@@ -192,14 +192,10 @@ const App = () => {
   useEffect(() => {
     if (user) {
       // Free plan is permanent and lets users enter the app; they are restricted at channel-connection level.
-      Promise.resolve().then(() => {
-        setPlanSelected(true);
-      });
+      setPlanSelected(true);
     } else {
-      Promise.resolve().then(() => {
-        setPlanSelected(false);
-        sessionStorage.removeItem('plan_acknowledged');
-      });
+      setPlanSelected(false);
+      sessionStorage.removeItem('plan_acknowledged');
     }
   }, [user]);
 
@@ -280,19 +276,10 @@ const App = () => {
     }
   }, [user, fetchChannels]);
 
-  // 2a. Manage Socket.IO connection state based on login/plan status
+  // 2. Manage Socket.IO connection & live event listeners cleanly in a single effect
   useEffect(() => {
     if (user && planSelected) {
-      connectSocket(localStorage.getItem('token'));
-    } else if (!user) {
-      disconnectSocket();
-    }
-  }, [user, planSelected]);
-
-  // 2b. Register/unregister live Socket.IO event listeners
-  useEffect(() => {
-    if (user && planSelected) {
-      const socket = connectSocket(localStorage.getItem('token'));
+      const socket = connectSocket();
 
       const handleLiveActivity = (activity) => {
         setActivities(prev => {
@@ -311,6 +298,8 @@ const App = () => {
         socket.off('stats_updated', fetchAnalytics);
         socket.off('new_comment_analyzed', fetchAnalytics);
       };
+    } else if (!user) {
+      disconnectSocket();
     }
   }, [user, planSelected, fetchAnalytics]);
 
