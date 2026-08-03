@@ -37,15 +37,12 @@ const getCleanThumbnail = (video) => {
   if (!video) return 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=150&auto=format&fit=crop&q=60';
   let thumb = video.thumbnail || '';
   if (!thumb && video.videoId) {
-    return `https://i.ytimg.com/vi/${video.videoId}/hqdefault.jpg`;
-  }
-  if (thumb.includes('mqdefault')) {
-    thumb = thumb.replace('mqdefault', 'hqdefault');
+    return `https://i.ytimg.com/vi/${video.videoId}/mqdefault.jpg`;
   }
   if (thumb.includes('_live.jpg')) {
-    thumb = thumb.replace('_live.jpg', '.jpg');
+    thumb = thumb.replace(/_live\.jpg$/i, '.jpg');
   }
-  return thumb;
+  return thumb || 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=150&auto=format&fit=crop&q=60';
 };
 
 const parseISO8601Duration = (durationStr) => {
@@ -58,51 +55,44 @@ const parseISO8601Duration = (durationStr) => {
   const hours = parseInt(matches[1] || 0, 10);
   const minutes = parseInt(matches[2] || 0, 10);
   const seconds = parseInt(matches[3] || 0, 10);
-  const totalSeconds = hours * 3600 + minutes * 60 + seconds;
   let formatted = '';
   if (hours > 0) {
-    formatted += hours + ':';
-    formatted += String(minutes).padStart(2, '0') + ':';
+    formatted += `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   } else {
-    formatted += minutes + ':';
+    formatted += `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   }
-  formatted += String(seconds).padStart(2, '0');
-  return { seconds: totalSeconds, formatted };
+  return { seconds: hours * 3600 + minutes * 60 + seconds, formatted };
 };
 
-const formatChartDate = (dateStr) => {
-  try {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
-  } catch (e) {
-    return dateStr;
-  }
-};
+const DEFAULT_VIDEO_THUMBNAIL = 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=150&auto=format&fit=crop&q=60';
 
 const ThumbnailImage = ({ initialSrc, videoId, alt, className }) => {
-  const [src, setSrc] = useState(initialSrc);
-  const [errorLevel, setErrorLevel] = useState(0);
+  const getCleanSrc = (url, vId) => {
+    if (url && typeof url === 'string' && url.trim().length > 0) {
+      return url.replace(/_live\.jpg$/i, '.jpg');
+    }
+    if (vId) {
+      return `https://i.ytimg.com/vi/${vId}/mqdefault.jpg`;
+    }
+    return DEFAULT_VIDEO_THUMBNAIL;
+  };
+
+  const [src, setSrc] = useState(() => getCleanSrc(initialSrc, videoId));
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
-    setSrc(initialSrc);
-    setErrorLevel(0);
-  }, [initialSrc]);
+    setSrc(getCleanSrc(initialSrc, videoId));
+    setHasError(false);
+  }, [initialSrc, videoId]);
 
   return (
     <img
-      src={src}
-      alt={alt}
+      src={hasError ? DEFAULT_VIDEO_THUMBNAIL : src}
+      alt={alt || 'Thumbnail'}
       className={className}
       onError={() => {
-        if (errorLevel === 0 && src && src.includes('mqdefault') && videoId) {
-          setSrc(`https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`);
-          setErrorLevel(1);
-        } else if (errorLevel <= 1 && videoId) {
-          setSrc(`https://i.ytimg.com/vi/${videoId}/default.jpg`);
-          setErrorLevel(2);
-        } else if (errorLevel <= 2) {
-          setSrc('https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=150&auto=format&fit=crop&q=60');
-          setErrorLevel(3);
+        if (!hasError) {
+          setHasError(true);
         }
       }}
     />

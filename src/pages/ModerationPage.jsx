@@ -129,27 +129,30 @@ const getContentIconClasses = (content) => {
 //  Moderation Rule Toggle Row 
 
 
+const DEFAULT_MOD_THUMBNAIL = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150&auto=format&fit=crop&q=80';
+
 const ThumbnailImage = ({ initialSrc, alt, className }) => {
-  const [src, setSrc] = useState(initialSrc);
-  const [errorCount, setErrorCount] = useState(0);
+  const getCleanSrc = (url) => {
+    if (!url || typeof url !== 'string' || url.trim().length === 0) return DEFAULT_MOD_THUMBNAIL;
+    return url.replace(/_live\.jpg$/i, '.jpg');
+  };
+
+  const [src, setSrc] = useState(() => getCleanSrc(initialSrc));
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
-    setSrc(initialSrc);
-    setErrorCount(0);
+    setSrc(getCleanSrc(initialSrc));
+    setHasError(false);
   }, [initialSrc]);
 
   return (
     <img
-      src={src}
-      alt={alt}
+      src={hasError ? DEFAULT_MOD_THUMBNAIL : src}
+      alt={alt || 'Thumbnail'}
       className={className}
       onError={() => {
-        if (errorCount === 0 && src && src.includes('mqdefault')) {
-          setSrc(src.replace('mqdefault', 'hqdefault'));
-          setErrorCount(1);
-        } else if (errorCount <= 1) {
-          setSrc('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150&auto=format&fit=crop&q=80');
-          setErrorCount(2);
+        if (!hasError) {
+          setHasError(true);
         }
       }}
     />
