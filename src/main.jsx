@@ -16,7 +16,7 @@ if (typeof window !== 'undefined') {
 
 // Dev-only cleanup for stale PWA assets. Old service workers can keep serving a
 // cached bundle on localhost and leave the landing page blank after UI edits.
-const DEV_CACHE_CLEANUP_KEY = 'ChannelBot_dev_cache_cleanup_v4';
+const DEV_CACHE_CLEANUP_KEY = 'ChannelMate_dev_cache_cleanup_v5';
 if (typeof window !== 'undefined' && import.meta.env.DEV && !sessionStorage.getItem(DEV_CACHE_CLEANUP_KEY)) {
   sessionStorage.setItem(DEV_CACHE_CLEANUP_KEY, '1');
 
@@ -42,38 +42,6 @@ if (typeof window !== 'undefined' && import.meta.env.DEV && !sessionStorage.getI
     console.warn('[PWA] Dev cache cleanup failed:', error);
   });
 }
-// Cache-busting on new deployment
-const BUILD_TIME = import.meta.env.VITE_BUILD_TIME || 'dev';
-const lastBuildTime = localStorage.getItem('app_build_time');
-
-if (lastBuildTime && lastBuildTime !== BUILD_TIME) {
-  console.warn(`[PWA] New deployment detected (Old: ${lastBuildTime}, New: ${BUILD_TIME}). Purging old service workers and caches...`);
-
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.getRegistrations().then((registrations) => {
-      for (const registration of registrations) {
-        registration.unregister();
-      }
-    });
-  }
-
-  if ('caches' in window) {
-    caches.keys().then((keys) => {
-      for (const key of keys) {
-        caches.delete(key);
-      }
-    });
-  }
-
-  localStorage.setItem('app_build_time', BUILD_TIME);
-
-  setTimeout(() => {
-    window.location.reload();
-  }, 200);
-} else {
-  localStorage.setItem('app_build_time', BUILD_TIME);
-}
-
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
@@ -105,13 +73,13 @@ if (import.meta.env.PROD) {
 
 // Debugging logs for network connectivity and manifest
 if (navigator.onLine) {
-  console.log('✓ Network Connected');
+  console.log('Network connected');
 }
-window.addEventListener('online', () => console.log('✓ Network Connected'));
-window.addEventListener('offline', () => console.log('❌ Network Disconnected'));
+window.addEventListener('online', () => console.log('Network connected'));
+window.addEventListener('offline', () => console.log('Network disconnected'));
 
 const manifestEl = document.querySelector('link[rel="manifest"]');
 if (manifestEl) {
-  console.log('✓ Manifest Loaded:', manifestEl.getAttribute('href'));
+  console.log('Manifest loaded:', manifestEl.getAttribute('href'));
 }
 

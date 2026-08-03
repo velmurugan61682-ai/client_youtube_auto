@@ -307,6 +307,8 @@ const ModerationPage = ({
   const [chatSearch, setChatSearch] = useState('');
   const [selectedChatId, setSelectedChatId] = useState('');
   const [chatReplyInput, setChatReplyInput] = useState('');
+  const [mobileChatView, setMobileChatView] = useState('list'); // 'list' | 'chat'
+
 
   // Dynamic Comment Chat items derived exclusively from the user's actual channel videos and rules
   const channelChatItems = useMemo(() => {
@@ -686,12 +688,12 @@ const ModerationPage = ({
         </div>
 
         {/* Channel Selector */}
-        <div className="relative flex items-center gap-2 bg-white border border-[#e5e5e5] rounded-full px-4 h-11 shadow-sm w-full min-[400px]:w-[200px] md:w-auto md:min-w-[200px] shrink-0">
+        <div className="relative flex items-center justify-center gap-2 bg-white border border-[#e5e5e5] rounded-full px-4 h-11 shadow-sm w-full min-[400px]:w-[200px] md:w-auto md:min-w-[200px] shrink-0 mx-auto md:mx-0">
           <Sliders size={15} className="text-[#ff0000] shrink-0 pointer-events-none" />
           <select
             value={selectedChannelId || ''}
             onChange={(e) => setSelectedChannelId(e.target.value)}
-            className="w-full h-full bg-transparent border-none text-xs font-black uppercase tracking-wider text-[#0f0f0f] focus:outline-none cursor-pointer appearance-none pr-6 py-0"
+            className="w-full h-full bg-transparent border-none text-xs font-black uppercase tracking-wider text-[#0f0f0f] focus:outline-none cursor-pointer appearance-none pr-6 py-0 text-center"
           >
             <option value="" disabled>Select Channel</option>
             {channels.map(ch => (
@@ -703,22 +705,23 @@ const ModerationPage = ({
       </div>
 
       {/* Main Tabs */}
-      <div className="mt-4 flex items-center rounded-[22px] bg-white border border-[#e5e5e5] shadow-sm gap-1 overflow-x-auto no-scrollbar p-2">
+      <div className="mt-4 flex items-center justify-between rounded-[22px] bg-white border border-[#e5e5e5] shadow-sm gap-1 p-1.5 sm:p-2">
         {[
-          { id: 'auto-reply', label: 'Auto Reply', icon: MessageSquare },
-          { id: 'comment-chat', label: 'Comment Chat', icon: MessageCircle },
-          { id: 'comment-history', label: 'Comment History', icon: Clock },
+          { id: 'auto-reply', shortLabel: 'Auto Reply', fullLabel: 'Auto Reply', icon: MessageSquare },
+          { id: 'comment-chat', shortLabel: 'Chat', fullLabel: 'Comment Chat', icon: MessageCircle },
+          { id: 'comment-history', shortLabel: 'History', fullLabel: 'Comment History', icon: Clock },
         ].map(tab => (
           <button
             key={tab.id}
             onClick={() => setMainTab(tab.id)}
-            className={`flex items-center gap-2 px-5 py-3 border-b-2 font-bold text-xs uppercase tracking-wider transition-all rounded-t-xl shrink-0 ${mainTab === tab.id
+            className={`flex-1 flex items-center justify-center gap-1 sm:gap-2 px-1.5 sm:px-5 py-2.5 sm:py-3 border-b-2 font-bold text-[10px] min-[360px]:text-[11px] sm:text-xs uppercase tracking-wider transition-all rounded-xl ${mainTab === tab.id
                 ? 'border-[#ff0000] text-[#ff0000] bg-[#fff1f1] font-black'
                 : 'border-transparent text-slate-500 hover:text-slate-900 hover:bg-slate-50'
               }`}
           >
-            <tab.icon size={15} />
-            {tab.label}
+            <tab.icon size={15} className="shrink-0" />
+            <span className="hidden sm:inline whitespace-nowrap">{tab.fullLabel}</span>
+            <span className="sm:hidden whitespace-nowrap">{tab.shortLabel}</span>
           </button>
         ))}
       </div>
@@ -916,9 +919,9 @@ const ModerationPage = ({
                               <button
                                 type="button"
                                 onClick={() => setFollowersOnly(!followersOnly)}
-                                className={`relative w-11 h-6 rounded-full transition-all ${followersOnly ? 'bg-[#ff0000]' : 'bg-slate-300'}`}
+                                className={`ios-toggle ${followersOnly ? 'active' : ''}`}
                               >
-                                <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${followersOnly ? 'translate-x-5' : ''}`} />
+                                <div className="ios-toggle-thumb" />
                               </button>
                             </div>
                           </div>
@@ -1224,11 +1227,37 @@ const ModerationPage = ({
                   </div>
                 </div>
 
+                {/* Mobile Sub-Tab Switcher (shown on screens < 1024px) */}
+                <div className="flex lg:hidden bg-slate-100 p-1 rounded-2xl border border-slate-200 gap-1">
+                  <button
+                    type="button"
+                    onClick={() => setMobileChatView('list')}
+                    className={`flex-1 py-2 text-xs font-black uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-1.5 ${
+                      mobileChatView === 'list'
+                        ? 'bg-white text-[#ff0000] shadow-sm'
+                        : 'text-slate-500 hover:text-slate-900'
+                    }`}
+                  >
+                    <MessageSquare size={14} /> Videos ({filteredTriggers.length})
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setMobileChatView('chat')}
+                    className={`flex-1 py-2 text-xs font-black uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-1.5 ${
+                      mobileChatView === 'chat'
+                        ? 'bg-white text-[#ff0000] shadow-sm'
+                        : 'text-slate-500 hover:text-slate-900'
+                    }`}
+                  >
+                    <MessageCircle size={14} /> Chat Stream
+                  </button>
+                </div>
+
                 {/* 2-Column Layout */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 min-h-0 lg:min-h-[580px]">
 
                   {/* Left Column: List of Triggers & Posts */}
-                  <div className="lg:col-span-5 border border-slate-200 rounded-2xl p-4 space-y-4 bg-slate-50/50 flex flex-col">
+                  <div className={`lg:col-span-5 border border-slate-200 rounded-2xl p-4 space-y-4 bg-slate-50/50 flex flex-col ${mobileChatView === 'chat' ? 'hidden lg:flex' : 'flex'}`}>
 
                     {/* Header Label */}
                     <div className="flex items-center gap-2 px-1 text-xs font-black text-slate-800 uppercase tracking-wider">
@@ -1264,7 +1293,10 @@ const ModerationPage = ({
                           return (
                             <div
                               key={item.id}
-                              onClick={() => setSelectedChatId(item.id)}
+                              onClick={() => {
+                                setSelectedChatId(item.id);
+                                setMobileChatView('chat');
+                              }}
                               className={`p-3.5 rounded-2xl border cursor-pointer transition-all ${isSelected
                                   ? 'bg-white border-[#ff0000] ring-2 ring-red-500/20 shadow-md'
                                   : 'bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50'
@@ -1303,7 +1335,15 @@ const ModerationPage = ({
                   </div>
 
                   {/* Right Column: Chat Stream */}
-                  <div className="lg:col-span-7 border border-slate-200 rounded-2xl p-4 sm:p-5 bg-white flex flex-col justify-between space-y-4 min-w-0">
+                  <div className={`lg:col-span-7 border border-slate-200 rounded-2xl p-4 sm:p-5 bg-white flex flex-col justify-between space-y-4 min-w-0 ${mobileChatView === 'list' ? 'hidden lg:flex' : 'flex'}`}>
+                    {/* Back to Videos button on mobile */}
+                    <button
+                      type="button"
+                      onClick={() => setMobileChatView('list')}
+                      className="lg:hidden text-xs font-black text-[#ff0000] flex items-center gap-1 hover:underline mb-1"
+                    >
+                      ← Back to Video List
+                    </button>
                     {selectedTriggerItem ? (
                       <>
                         <div className="space-y-4">
@@ -1368,7 +1408,7 @@ const ModerationPage = ({
                         </div>
 
                         {/* Interactive Input Bar */}
-                        <div className="pt-3 border-t border-slate-100 flex items-center gap-2">
+                        <div className="pt-3 border-t border-slate-100 flex items-center gap-2 min-w-0">
                           <input
                             type="text"
                             placeholder="Type a manual reply..."
@@ -1379,13 +1419,13 @@ const ModerationPage = ({
                                 handleSendChatReply();
                               }
                             }}
-                            className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-[#ff0000]"
+                            className="flex-1 min-w-0 bg-slate-50 border border-slate-200 rounded-xl px-3 sm:px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-[#ff0000]"
                           />
                           <button
                             onClick={handleSendChatReply}
-                            className="px-4 py-2.5 bg-[#ff0000] hover:bg-[#cc0000] text-white text-xs font-black rounded-xl transition-all flex items-center gap-1.5 cursor-pointer"
+                            className="px-3.5 sm:px-4 py-2.5 bg-[#ff0000] hover:bg-[#cc0000] text-white text-xs font-black rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shrink-0"
                           >
-                            <Send size={14} /> Send
+                            <Send size={14} className="shrink-0" /> <span className="whitespace-nowrap">Send</span>
                           </button>
                         </div>
                       </>

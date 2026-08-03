@@ -113,7 +113,7 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen, user, o
           <button
             type="button"
             onClick={onProfileClick}
-            className={`w-full flex items-center gap-3 rounded-2xl py-3 transition-colors font-black text-[13px] ${expanded ? 'px-4' : 'justify-center px-0'} ${isDark ? 'text-white bg-[#202020] hover:bg-[#2a2a2a]' : 'text-[#0f0f0f] bg-[#f7f7f7] hover:bg-[#eeeeee]'}`}
+            className={`w-full flex items-center justify-center gap-3 rounded-2xl py-3 transition-colors font-black text-[13px] ${expanded ? 'px-4' : 'justify-center px-0'} ${isDark ? 'text-white bg-[#202020] hover:bg-[#2a2a2a]' : 'text-[#0f0f0f] bg-[#f7f7f7] hover:bg-[#eeeeee]'}`}
             title="Profile"
           >
             <div className="h-8 w-8 rounded-xl bg-[#0f0f0f] text-white flex items-center justify-center text-[11px] font-black shrink-0 overflow-hidden">
@@ -128,7 +128,7 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen, user, o
               )}
             </div>
             {expanded && (
-              <div className="min-w-0 text-left">
+              <div className="min-w-0 text-center">
                 <p className="truncate text-[12px] leading-none">{user?.name || 'ChannelBot'}</p>
                 <p className="mt-1 text-[9px] uppercase tracking-widest text-[#ff0000]">Online</p>
               </div>

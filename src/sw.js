@@ -1,6 +1,6 @@
 import { precacheAndRoute, cleanupOutdatedCaches, createHandlerBoundToURL } from 'workbox-precaching';
 import { registerRoute, NavigationRoute } from 'workbox-routing';
-import { CacheFirst, NetworkOnly, NetworkFirst, StaleWhileRevalidate } from 'workbox-strategies';
+import { CacheFirst, NetworkOnly, StaleWhileRevalidate } from 'workbox-strategies';
 import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 import { ExpirationPlugin } from 'workbox-expiration';
 
@@ -22,33 +22,14 @@ registerRoute(
   })
 );
 
-// 2. NetworkFirst for Socket-synced API routes (Comments, Leads, Stats, Dashboard)
-// Excludes OAuth redirects and Socket.IO to prevent stale authentication/token states
-registerRoute(
-  ({ url }) => {
-    const isApi = url.pathname.startsWith('/api') || url.href.includes('/api');
-    const isBackend = url.hostname.includes('server-youtube-auto.onrender.com');
-    const isSocket = url.pathname.startsWith('/socket.io') || url.href.includes('/socket.io');
-    const isBackendCallback = url.pathname.startsWith('/api/') && (url.pathname.includes('/callback') || url.pathname.includes('/connect'));
-    return (isApi || isBackend) && !isSocket && !isBackendCallback;
-  },
-  new NetworkFirst({
-    cacheName: 'api-network-first-cache',
-    networkTimeoutSeconds: 3,
-    plugins: [
-      new CacheableResponsePlugin({ statuses: [0, 200] }),
-      new ExpirationPlugin({ maxEntries: 50, maxAgeSeconds: 24 * 60 * 60 })
-    ]
-  })
-);
-
-// 3. Socket.IO connections & Backend API OAuth Callbacks must ALWAYS be NetworkOnly
+// 2. Dynamic API, OAuth, and Socket.IO requests must always hit the network.
 registerRoute(
   ({ url }) => 
     url.pathname.startsWith('/socket.io') || 
     url.href.includes('/socket.io') || 
-    ((url.pathname.startsWith('/api') || url.hostname.includes('server-youtube-auto.onrender.com')) && 
-     (url.pathname.includes('/callback') || url.pathname.includes('/connect'))),
+    url.pathname.startsWith('/api') ||
+    url.href.includes('/api') ||
+    url.hostname.includes('server-youtube-auto.onrender.com'),
   new NetworkOnly()
 );
 
@@ -59,14 +40,14 @@ const navigationRoute = new NavigationRoute(handler, {
 });
 registerRoute(navigationRoute);
 
-// 4. Handle external Video Thumbnails (ytimg.com) using NetworkOnly
+// 3. Handle external Video Thumbnails (ytimg.com) using NetworkOnly
 // Lets browser fetch thumbnails directly from YouTube's CDN so missing thumbnails trigger 404/onError without SW 500 errors
 registerRoute(
   ({ url, request }) => request.destination === 'image' && url.hostname.includes('ytimg.com'),
   new NetworkOnly()
 );
 
-// 5. Handle external Avatars (ggpht.com, googleusercontent.com) using CacheFirst
+// 4. Handle external Avatars (ggpht.com, googleusercontent.com) using CacheFirst
 registerRoute(
   ({ url, request }) =>
     request.destination === 'image' &&
@@ -90,7 +71,7 @@ self.addEventListener('activate', (event) => {
 
 // Push Notification Event Listener
 self.addEventListener('push', (event) => {
-  let data = { title: 'Notification', body: 'New updates from ChannelBot' };
+  let data = { title: 'Notification', body: 'New updates from ChannelMate' };
 
   try {
     data = event.data ? event.data.json() : data;

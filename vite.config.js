@@ -25,7 +25,7 @@ export default defineConfig(({ command, mode }) => {
       if (!socketUrl) {
         console.warn(`[Build Audit Warning] VITE_SOCKET_URL is not set.`);
       }
-      console.log(`Ã¢Å“â€œ Environment variables successfully validated for production build.`);
+      console.log('Environment variables successfully validated for production build.');
     }
   }
 
@@ -42,9 +42,9 @@ export default defineConfig(({ command, mode }) => {
         injectRegister: false,
         manifest: {
           id: '/',
-          name: 'ChannelBot',
-          short_name: 'ChannelBot',
-          description: 'ChannelBot is an AI-powered YouTube automation platform for comment replies, moderation, engagement management, and creator analytics.',
+          name: 'ChannelMate',
+          short_name: 'ChannelMate',
+          description: 'ChannelMate is an AI-powered YouTube automation platform for comment replies, moderation, engagement management, and creator analytics.',
           theme_color: '#ff0000',
           background_color: '#ffffff',
 
@@ -53,6 +53,7 @@ export default defineConfig(({ command, mode }) => {
           orientation: 'portrait',
           scope: '/',
           start_url: '/',
+          categories: ['productivity', 'social', 'utilities'],
           shortcuts: [
             {
               name: 'Dashboard',

@@ -58,13 +58,13 @@
     font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    letter-spacing: -0.01em;
+    letter-spacing: 0;
     line-height: 1.6;
   }
 
-  h1 { font-size: clamp(1.5rem, 4vw, 2.25rem); font-weight: 900; color: var(--text-main); letter-spacing: -0.04em; line-height: 1.15; }
-  h2 { font-size: clamp(1.25rem, 3vw, 1.75rem); font-weight: 800; color: var(--text-main); letter-spacing: -0.03em; }
-  h3 { font-size: clamp(1rem,   2vw, 1.35rem);  font-weight: 700; color: var(--text-main); letter-spacing: -0.02em; }
+  h1 { font-size: clamp(1.5rem, 2.25rem, 2.25rem); font-weight: 900; color: var(--text-main); letter-spacing: 0; line-height: 1.15; }
+  h2 { font-size: clamp(1.25rem, 1.75rem, 1.75rem); font-weight: 800; color: var(--text-main); letter-spacing: 0; }
+  h3 { font-size: clamp(1rem, 1.35rem, 1.35rem);  font-weight: 700; color: var(--text-main); letter-spacing: 0; }
 
   *, *::before, *::after { box-sizing: border-box; }
 }
@@ -160,7 +160,7 @@
   gap: 0.5rem;
   font-size: 0.9375rem;
   cursor: pointer;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
 }
 .btn-glass-primary:hover, .yt-btn-primary:hover {
   background: var(--yt-red-hover);
@@ -275,7 +275,7 @@
 /* ── iOS toggle ───────────────────────────────────────────────────────────── */
 .ios-toggle {
   position: relative;
-  width: 52px; height: 30px;
+  width: 42px; height: 24px;
   background-color: #d1d5db;
   border-radius: var(--radius-pill);
   border: none; cursor: pointer;
@@ -285,17 +285,17 @@
 }
 .ios-toggle.active {
   background-color: var(--yt-red);
-  box-shadow: 0 0 0 3px var(--yt-red-soft);
+  box-shadow: 0 0 0 2px var(--yt-red-soft);
 }
 .ios-toggle-thumb {
-  width: 26px; height: 26px;
+  width: 20px; height: 20px;
   background: #fff;
   border-radius: 50%;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.18);
   transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   transform: translateX(0);
 }
-.ios-toggle.active .ios-toggle-thumb { transform: translateX(22px); }
+.ios-toggle.active .ios-toggle-thumb { transform: translateX(18px); }
 
 /* ── Scrollbars ───────────────────────────────────────────────────────────── */
 .custom-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
@@ -543,6 +543,8 @@ button, a, select, input, textarea { min-height: 44px; }
     height: 100%;
     min-height: 0;
     overflow-y: auto !important;
+    padding-left: max(0.75rem, env(safe-area-inset-left));
+    padding-right: max(0.75rem, env(safe-area-inset-right));
     touch-action: pan-y;
     overscroll-behavior-y: contain;
     -webkit-overflow-scrolling: touch;
@@ -582,6 +584,16 @@ button, a, select, input, textarea { min-height: 44px; }
   .admin-shell table {
     max-width: 100%;
   }
+
+  .client-shell [class*="grid-cols-"],
+  .admin-shell [class*="grid-cols-"] {
+    min-width: 0;
+  }
+
+  .client-shell [class*="rounded-3xl"],
+  .admin-shell [class*="rounded-3xl"] {
+    border-radius: 1.25rem;
+  }
 }
 
 @media (max-width: 640px) {
@@ -608,6 +620,20 @@ button, a, select, input, textarea { min-height: 44px; }
   .admin-shell h2,
   .admin-shell h3 {
     overflow-wrap: anywhere;
+  }
+
+  .client-shell .yt-card,
+  .client-shell .glass-garden-card,
+  .admin-shell .yt-card,
+  .admin-shell .glass-garden-card {
+    padding: 0.875rem;
+  }
+
+  .client-shell button,
+  .client-shell a,
+  .admin-shell button,
+  .admin-shell a {
+    max-width: 100%;
   }
 
   .client-shell .recharts-responsive-container,

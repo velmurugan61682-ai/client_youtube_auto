@@ -73,13 +73,31 @@ export const getSocket = () => {
       console.error('❌ [Socket.IO] Reconnection failed completely after maximum attempts.');
     });
 
-    // Handle automatic reconnection after network restoration
+    // Handle automatic reconnection after network restoration & bfcache restoration
     if (typeof window !== 'undefined') {
       window.addEventListener('online', () => {
         const token = localStorage.getItem('token') || localStorage.getItem('adminToken');
         if (token && token !== 'null' && token !== 'undefined' && socket && !socket.connected) {
           console.log('✓ Network Connected (Restored). Reconnecting socket...');
           socket.connect();
+        }
+      });
+
+      // Handle Back-Forward Cache (bfcache) & page hiding to prevent WebSocket crashes
+      window.addEventListener('pagehide', () => {
+        if (socket && (socket.connected || socket.active)) {
+          console.log('⏸️ [Socket.IO] Page entering Back-Forward Cache. Gracefully disconnecting socket...');
+          socket.disconnect();
+        }
+      });
+
+      window.addEventListener('pageshow', (event) => {
+        if (event.persisted) {
+          console.log('▶️ [Socket.IO] Page restored from Back-Forward Cache. Reconnecting socket...');
+          const token = localStorage.getItem('token') || localStorage.getItem('adminToken');
+          if (token && token !== 'null' && token !== 'undefined' && socket && !socket.connected) {
+            socket.connect();
+          }
         }
       });
     }

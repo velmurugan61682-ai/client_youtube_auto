@@ -755,39 +755,41 @@ const VideosList = ({
               </div>
             </div>
             {/* Tab Toggle buttons */}
-            <div className="flex gap-2 border-b border-[#e5e5e5] pb-3 mb-3 overflow-x-auto no-scrollbar">
+            <div className="flex gap-1.5 sm:gap-2 border-b border-[#e5e5e5] pb-3 mb-3">
               <button
                 onClick={() => setActivePanelTab('comments')}
-                className={`min-h-[44px] min-w-max py-2 px-4 text-xs font-black uppercase tracking-wider rounded-xl transition-all border ${activePanelTab === 'comments'
+                className={`flex-1 min-h-[40px] sm:min-h-[44px] py-2 px-2 sm:px-4 text-[10.5px] min-[360px]:text-[11px] sm:text-xs font-black uppercase tracking-wider rounded-xl transition-all border text-center flex items-center justify-center ${activePanelTab === 'comments'
                     ? 'bg-[#fff1f1] text-[#ff0000] border-red-100 shadow-sm'
                     : 'text-[#909090] hover:text-[#0f0f0f] bg-white border-transparent hover:bg-white'
                   }`}
               >
-                Comments & Moderation
+                <span className="hidden sm:inline">Comments & Moderation</span>
+                <span className="sm:hidden">Moderation</span>
               </button>
               <button
                 onClick={() => setActivePanelTab('analytics')}
-                className={`min-h-[44px] min-w-max py-2 px-4 text-xs font-black uppercase tracking-wider rounded-xl transition-all border ${activePanelTab === 'analytics'
+                className={`flex-1 min-h-[40px] sm:min-h-[44px] py-2 px-2 sm:px-4 text-[10.5px] min-[360px]:text-[11px] sm:text-xs font-black uppercase tracking-wider rounded-xl transition-all border text-center flex items-center justify-center ${activePanelTab === 'analytics'
                     ? 'bg-[#fff1f1] text-[#ff0000] border-red-100 shadow-sm'
                     : 'text-[#909090] hover:text-[#0f0f0f] bg-white border-transparent hover:bg-white'
                   }`}
               >
-                Dashboard & Analytics
+                <span className="hidden sm:inline">Dashboard & Analytics</span>
+                <span className="sm:hidden">Dashboard</span>
               </button>
             </div>
 
             {/* Comment Filters (only visible when comments tab is active) */}
             {activePanelTab === 'comments' && (
-              <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+              <div className="flex gap-1 sm:gap-2 justify-between overflow-x-auto no-scrollbar pb-1">
                 {filters.map(f => (
                   <button
                     key={f.id}
                     onClick={() => setFilter(f.id)}
-                    className={`min-h-[44px] shrink-0 flex items-center gap-1.5 px-3 py-1.5 md:px-4 md:py-2 rounded-xl text-[11px] md:text-xs font-bold transition-all border ${filter === f.id ? 'bg-[#ff0000] text-white border-white/20 shadow-md scale-105' : `bg-white border-[#e5e5e5] ${f.color.split(' ')[1]} hover:bg-white hover:border-[#d9d9d9]`
+                    className={`flex-1 min-w-[65px] sm:min-w-0 min-h-[38px] sm:min-h-[44px] flex items-center justify-center gap-1 sm:gap-1.5 px-1.5 sm:px-3 py-1.5 rounded-xl text-[10px] sm:text-xs font-bold transition-all border ${filter === f.id ? 'bg-[#ff0000] text-white border-white/20 shadow-md scale-[1.02]' : `bg-white border-[#e5e5e5] ${f.color.split(' ')[1]} hover:bg-white hover:border-[#d9d9d9]`
                       }`}
                   >
-                    {f.label}
-                    <span className={`px-1.5 py-0.5 rounded-md text-[9px] md:text-[10px] ${filter === f.id ? 'bg-white text-[#ff0000]' : 'bg-white text-[#606060]'}`}>
+                    <span className="whitespace-nowrap">{f.label}</span>
+                    <span className={`px-1 py-0.5 rounded-md text-[9px] sm:text-[10px] ${filter === f.id ? 'bg-white text-[#ff0000]' : 'bg-white text-[#606060]'}`}>
                       {getStatsForFilter(f.id)}
                     </span>
                   </button>
