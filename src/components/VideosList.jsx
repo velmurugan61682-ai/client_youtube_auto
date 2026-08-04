@@ -33,6 +33,17 @@ const safeFormatDistanceToNow = (dateStr) => {
   }
 };
 
+const formatChartDate = (dateStr) => {
+  try {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return '';
+    return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+  } catch (e) {
+    return '';
+  }
+};
+
 const getCleanThumbnail = (video) => {
   if (!video) return 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=150&auto=format&fit=crop&q=60';
   let thumb = video.thumbnail || '';
