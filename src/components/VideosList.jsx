@@ -349,7 +349,7 @@ const VideosList = ({
       if (isLive && currentVideo?.liveChatId) {
         try {
           const liveChatRes = await api.get('/live-chat/messages', {
-            params: { channelId, liveChatId: currentVideo.liveChatId }
+            params: { channelId: currentVideo?.channelId || channelId, liveChatId: currentVideo.liveChatId }
           });
           const messages = liveChatRes.data?.messages || [];
           commentsData = messages.map(m => ({
@@ -368,8 +368,10 @@ const VideosList = ({
         } catch (err) {
           console.error('Error fetching live chat messages:', err);
         }
-      } else {
-        const commentsRes = await api.get('/comments', { params: { videoId } });
+      }
+
+      if (commentsData.length === 0) {
+        const commentsRes = await api.get('/comments', { params: { videoId, channelId: currentVideo?.channelId || channelId } });
         commentsData = Array.isArray(commentsRes.data) ? commentsRes.data : (commentsRes.data?.comments || []);
       }
 
@@ -382,6 +384,23 @@ const VideosList = ({
 
       setComments(commentsData);
       setVideoAnalytics(analyticsData);
+
+      // Auto-sync comments from YouTube API if DB has 0 comments for this video
+      const targetChannelId = currentVideo?.channelId || channelId;
+      if (commentsData.length === 0 && videoId && targetChannelId) {
+        api.get(`/comments/analyze/${videoId}`, { params: { channelId: targetChannelId } })
+          .then(res => {
+            if (res.data?.success) {
+              api.get('/comments', { params: { videoId, channelId: targetChannelId } })
+                .then(freshRes => {
+                  const freshComments = Array.isArray(freshRes.data) ? freshRes.data : (freshRes.data?.comments || []);
+                  if (freshComments.length > 0) setComments(freshComments);
+                })
+                .catch(e => console.error('Fresh comments load error:', e));
+            }
+          })
+          .catch(e => console.error('Auto sync comments on select error:', e));
+      }
     } catch (err) {
       console.error('Error fetching video selection data:', err);
     } finally {

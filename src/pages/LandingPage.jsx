@@ -27,9 +27,11 @@ import {
   Facebook,
   Linkedin,
   Youtube,
-  AlertCircle
+  AlertCircle,
+  Menu,
+  X
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import HumanAiAutomationShowcase from '../components/HumanAiAutomationShowcase';
 
 
@@ -38,6 +40,7 @@ const LandingPage = () => {
 
   const location = useLocation();
   const [activeSection, setActiveSection] = useState('home');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [contactSubmitted, setContactSubmitted] = useState(false);
   const [contactLoading, setContactLoading] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
@@ -208,7 +211,7 @@ const LandingPage = () => {
 
   const navLinks = [
     { id: 'home', label: 'Home' },
-    { id: 'automation-showcase', label: 'Human + AI Workflow' },
+    { id: 'automation-showcase', label: 'AI Workflow' },
     { id: 'about', label: 'About' },
     { id: 'use-cases', label: 'Use Cases' },
     { id: 'features', label: 'Features' },
@@ -221,60 +224,114 @@ const LandingPage = () => {
   return (
     <div className="min-h-screen bg-[#f9f9f9] text-[#0f0f0f] font-['Outfit'] relative overflow-x-hidden selection:bg-red-500/20 selection:text-red-900 scroll-smooth">
 
-      {/* 1. Sticky Floating Glass Navbar */}
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-[#e5e5e5]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2 select-none cursor-pointer" onClick={() => scrollToSection('home')}>
-            <img src="/brand-logo.png" className="h-10 sm:h-11 w-auto object-contain" alt="ChannelBot Logo" />
-            <div className="flex flex-col items-start leading-none">
-              <span className="text-base font-black tracking-tight text-[#0f0f0f]">ChannelBot</span>
-              <span className="text-[9px] font-semibold text-[#606060] mt-0.5">AI-powered YouTube Comment Automation</span>
+      {/* 1. Senior UI/UX Floating Glass Navbar */}
+      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-[#e5e5e5]/80 shadow-xs">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+          {/* Brand Logo */}
+          <div
+            className="flex items-center gap-2.5 select-none cursor-pointer shrink-0"
+            onClick={() => {
+              scrollToSection('home');
+              setMobileMenuOpen(false);
+            }}
+          >
+            <img src="/brand-logo.png" className="h-9 sm:h-10 w-auto object-contain" alt="ChannelBot Logo" />
+            <div className="flex flex-col items-start leading-tight">
+              <span className="text-sm sm:text-base font-black tracking-tight text-[#0f0f0f]">ChannelBot</span>
+              <span className="hidden sm:inline-block text-[9px] font-bold text-[#606060] -mt-0.5">AI-powered YouTube Automation</span>
             </div>
           </div>
 
-          {/* Navigation Links */}
-          <nav className="hidden md:flex items-center gap-1 bg-[#f2f2f2] p-1 rounded-full border border-[#e5e5e5]">
+          {/* Center Floating Capsule Navigation Links (Desktop) */}
+          <nav className="hidden xl:flex items-center gap-0.5 bg-[#f2f2f2]/90 p-1 rounded-full border border-[#e5e5e5] shadow-inner">
             {navLinks.map((link) => (
               <button
                 key={link.id}
                 onClick={() => scrollToSection(link.id)}
-                className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${activeSection === link.id
-                  ? 'bg-[#0f0f0f] text-white shadow-sm'
-                  : 'text-[#606060] hover:text-[#0f0f0f] hover:bg-white'
-                  }`}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-200 whitespace-nowrap cursor-pointer ${
+                  activeSection === link.id
+                    ? 'bg-[#0f0f0f] text-white shadow-sm scale-[1.02]'
+                    : 'text-[#505050] hover:text-[#0f0f0f] hover:bg-white/80'
+                }`}
               >
                 {link.label}
               </button>
             ))}
           </nav>
 
-          <div className="flex items-center gap-3">
-            <Link
-              to="/privacy"
-              className="hidden sm:inline-flex text-xs font-bold text-[#606060] hover:text-[#ff0000] transition-colors px-2 py-2"
-            >
-              Privacy
-            </Link>
-            <Link
-              to="/terms"
-              className="hidden sm:inline-flex text-xs font-bold text-[#606060] hover:text-[#ff0000] transition-colors px-2 py-2"
-            >
-              Terms
-            </Link>
+          {/* Right Action Cluster */}
+          <div className="flex items-center gap-2 sm:gap-3">
             <Link
               to="/login"
-              className="text-xs font-bold text-[#0f0f0f] hover:text-[#ff0000] transition-colors px-3 py-2"
+              className="text-xs font-bold text-[#0f0f0f] hover:text-[#ff0000] transition-colors px-2.5 py-2 whitespace-nowrap"
             >
               Sign In
             </Link>
             <Link
               to="/register"
-              className="btn-glass-primary text-xs px-5 py-2.5 shadow-red-500/25 active:scale-95"
+              className="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-600 text-white text-xs font-black px-4 sm:px-5 py-2.5 rounded-full shadow-md shadow-red-500/20 transition-all duration-200 active:scale-95 whitespace-nowrap"
             >
               Get Started
             </Link>
+
+            {/* Mobile Menu Toggle Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="xl:hidden p-2 rounded-xl text-[#0f0f0f] hover:bg-slate-100 transition-colors cursor-pointer"
+              aria-label="Toggle navigation menu"
+            >
+              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile Navigation Drawer */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="xl:hidden bg-white/98 border-b border-[#e5e5e5] px-4 py-4 space-y-3 overflow-hidden shadow-lg"
+            >
+              <div className="grid grid-cols-2 gap-2 pb-3 border-b border-slate-100">
+                {navLinks.map((link) => (
+                  <button
+                    key={link.id}
+                    onClick={() => {
+                      scrollToSection(link.id);
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`text-left px-3 py-2 rounded-lg text-xs font-bold transition-all ${
+                      activeSection === link.id
+                        ? 'bg-[#0f0f0f] text-white'
+                        : 'text-[#606060] hover:bg-slate-100 hover:text-[#0f0f0f]'
+                    }`}
+                  >
+                    {link.label}
+                  </button>
+                ))}
+              </div>
+              <div className="flex items-center justify-between pt-1">
+                <Link
+                  to="/privacy"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-xs font-bold text-[#606060] hover:text-[#ff0000]"
+                >
+                  Privacy Policy
+                </Link>
+                <Link
+                  to="/terms"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-xs font-bold text-[#606060] hover:text-[#ff0000]"
+                >
+                  Terms of Service
+                </Link>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* SECTION 1: HOME (HERO) */}
