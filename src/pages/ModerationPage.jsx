@@ -131,30 +131,54 @@ const getContentIconClasses = (content) => {
 
 const DEFAULT_MOD_THUMBNAIL = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150&auto=format&fit=crop&q=80';
 
-const ThumbnailImage = ({ initialSrc, alt, className }) => {
-  const getCleanSrc = (url) => {
-    if (!url || typeof url !== 'string' || url.trim().length === 0) return DEFAULT_MOD_THUMBNAIL;
-    return url.replace(/_live\.jpg$/i, '.jpg');
+const ThumbnailImage = ({ initialSrc, videoId, alt, className }) => {
+  const getCleanSrc = (url, vId) => {
+    if (url && typeof url === 'string' && url.trim().length > 0) {
+      return url.replace(/_live/gi, '');
+    }
+    if (vId) {
+      return `https://i.ytimg.com/vi/${vId}/hqdefault.jpg`;
+    }
+    return DEFAULT_MOD_THUMBNAIL;
   };
 
-  const [src, setSrc] = useState(() => getCleanSrc(initialSrc));
-  const [hasError, setHasError] = useState(false);
+  const [src, setSrc] = useState(() => getCleanSrc(initialSrc, videoId));
+  const [errorStage, setErrorStage] = useState(0);
 
   useEffect(() => {
-    setSrc(getCleanSrc(initialSrc));
-    setHasError(false);
-  }, [initialSrc]);
+    setSrc(getCleanSrc(initialSrc, videoId));
+    setErrorStage(0);
+  }, [initialSrc, videoId]);
+
+  const handleError = () => {
+    if (errorStage === 0) {
+      setErrorStage(1);
+      if (src && src.includes('/mqdefault')) {
+        setSrc(src.replace('/mqdefault', '/hqdefault'));
+      } else if (videoId) {
+        setSrc(`https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`);
+      } else {
+        setErrorStage(2);
+        setSrc(DEFAULT_MOD_THUMBNAIL);
+      }
+    } else if (errorStage === 1) {
+      setErrorStage(2);
+      if (src && !src.includes('/default.jpg')) {
+        setSrc(src.replace(/\/hqdefault|\/mqdefault|\/sddefault|\/maxresdefault/, '/default'));
+      } else {
+        setSrc(DEFAULT_MOD_THUMBNAIL);
+      }
+    } else {
+      setSrc(DEFAULT_MOD_THUMBNAIL);
+    }
+  };
 
   return (
     <img
-      src={hasError ? DEFAULT_MOD_THUMBNAIL : src}
+      src={src}
       alt={alt || 'Thumbnail'}
       className={className}
-      onError={() => {
-        if (!hasError) {
-          setHasError(true);
-        }
-      }}
+      onError={handleError}
     />
   );
 };
