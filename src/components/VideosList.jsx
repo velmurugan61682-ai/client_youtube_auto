@@ -53,6 +53,9 @@ const getCleanThumbnail = (video) => {
   if (thumb.includes('_live')) {
     thumb = thumb.replace(/_live/gi, '');
   }
+  if (thumb.includes('/mqdefault')) {
+    thumb = thumb.replace(/\/mqdefault/g, '/hqdefault');
+  }
   return thumb || 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=150&auto=format&fit=crop&q=60';
 };
 
@@ -80,7 +83,11 @@ const DEFAULT_VIDEO_THUMBNAIL = 'https://images.unsplash.com/photo-1611162617213
 const ThumbnailImage = ({ initialSrc, videoId, alt, className }) => {
   const getCleanSrc = (url, vId) => {
     if (url && typeof url === 'string' && url.trim().length > 0) {
-      return url.replace(/_live/gi, '');
+      let clean = url.replace(/_live/gi, '');
+      if (clean.includes('/mqdefault')) {
+        clean = clean.replace(/\/mqdefault/g, '/hqdefault');
+      }
+      return clean;
     }
     if (vId) {
       return `https://i.ytimg.com/vi/${vId}/hqdefault.jpg`;
@@ -390,8 +397,50 @@ const VideosList = ({
       }
 
       if (commentsData.length === 0) {
-        const commentsRes = await api.get('/comments', { params: { videoId, channelId: currentVideo?.channelId || channelId } });
-        commentsData = Array.isArray(commentsRes.data) ? commentsRes.data : (commentsRes.data?.comments || []);
+        const targetChannelId = currentVideo?.channelId || channelId;
+        const [commentsRes, historyRes] = await Promise.allSettled([
+          api.get('/comments', { params: { videoId, channelId: targetChannelId } }),
+          api.get('/comment-history', { params: { channelId: targetChannelId, limit: 100 } })
+        ]);
+
+        const dbComments = commentsRes.status === 'fulfilled'
+          ? (Array.isArray(commentsRes.value.data) ? commentsRes.value.data : (commentsRes.value.data?.comments || []))
+          : [];
+
+        const historyItems = historyRes.status === 'fulfilled' && historyRes.value.data?.items
+          ? historyRes.value.data.items
+          : [];
+
+        // Convert history items for this video into normalized comment objects
+        const videoHistoryComments = historyItems
+          .filter(h => (h.videoId && h.videoId === videoId) || (h.videoTitle && currentVideo?.title && h.videoTitle === currentVideo.title))
+          .map(h => ({
+            _id: h.id,
+            youtubeId: h.id,
+            videoId: videoId,
+            author: h.authorName || 'Anonymous',
+            text: h.commentText || '',
+            replyText: h.replyText || null,
+            status: h.type === 'deleted' ? 'deleted' : (h.type === 'hidden' ? 'flagged' : 'approved'),
+            sentiment: h.category || 'positive',
+            publishedAt: h.actionDate,
+            hasReplied: h.type === 'replied',
+            replyStatus: h.type === 'replied' ? 'sent' : null,
+            isBotHistoryRecord: true
+          }));
+
+        // Deduplicate merged comments
+        const mergedMap = new Map();
+        [...dbComments, ...videoHistoryComments].forEach(c => {
+          const key = c.youtubeId || c._id;
+          if (!mergedMap.has(key)) {
+            mergedMap.set(key, c);
+          } else {
+            const existing = mergedMap.get(key);
+            mergedMap.set(key, { ...existing, ...c, replyText: c.replyText || existing.replyText });
+          }
+        });
+        commentsData = Array.from(mergedMap.values());
       }
 
       try {
@@ -403,23 +452,6 @@ const VideosList = ({
 
       setComments(commentsData);
       setVideoAnalytics(analyticsData);
-
-      // Auto-sync comments from YouTube API if DB has 0 comments for this video
-      const targetChannelId = currentVideo?.channelId || channelId;
-      if (commentsData.length === 0 && videoId && targetChannelId) {
-        api.get(`/comments/analyze/${videoId}`, { params: { channelId: targetChannelId } })
-          .then(res => {
-            if (res.data?.success) {
-              api.get('/comments', { params: { videoId, channelId: targetChannelId } })
-                .then(freshRes => {
-                  const freshComments = Array.isArray(freshRes.data) ? freshRes.data : (freshRes.data?.comments || []);
-                  if (freshComments.length > 0) setComments(freshComments);
-                })
-                .catch(e => console.error('Fresh comments load error:', e));
-            }
-          })
-          .catch(e => console.error('Auto sync comments on select error:', e));
-      }
     } catch (err) {
       console.error('Error fetching video selection data:', err);
     } finally {
@@ -546,22 +578,40 @@ const VideosList = ({
     }
   };
 
-  const filteredComments = comments.filter(c => {
+  const isBotActedComment = (c) => {
+    if (!c) return false;
+    return Boolean(
+      c.hasReplied ||
+      (c.replyText && c.replyText.trim().length > 0) ||
+      c.replyStatus === 'sent' ||
+      c.autoLiked ||
+      c.isModerated ||
+      c.aiActionTaken ||
+      (c.status && ['approved', 'deleted', 'flagged', 'moderate'].includes(c.status)) ||
+      c.moderationAction ||
+      c.actionTaken ||
+      c.deleteReason ||
+      c.moderationReason ||
+      c.isBotHistoryRecord
+    );
+  };
+
+  const processedVideoComments = comments.filter(c => {
     if (!selectedVideo) return false;
     if (c.videoId && c.videoId !== selectedVideo) return false;
     if (c.isBotReply || (c.youtubeId && c.youtubeId.includes('.'))) return false;
+    return isBotActedComment(c);
+  });
+
+  const filteredComments = processedVideoComments.filter(c => {
     if (filter === 'all') return true;
     return c.sentiment === filter;
   });
 
   const getStatsForFilter = (type) => {
     if (!selectedVideo) return 0;
-    const topLevelComments = comments.filter(c => {
-      if (c.videoId && c.videoId !== selectedVideo) return false;
-      return !c.isBotReply && !(c.youtubeId && c.youtubeId.includes('.'));
-    });
-    if (type === 'all') return topLevelComments.length;
-    return topLevelComments.filter(c => c.sentiment === type).length;
+    if (type === 'all') return processedVideoComments.length;
+    return processedVideoComments.filter(c => c.sentiment === type).length;
   };
 
   const filters = [
@@ -864,8 +914,9 @@ const VideosList = ({
                 )}
                 {selectedVideoData.thumbnail && (
                   <div className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-2 flex justify-center items-center overflow-hidden">
-                    <img
-                      src={selectedVideoData.thumbnail}
+                    <ThumbnailImage
+                      initialSrc={selectedVideoData.thumbnail}
+                      videoId={selectedVideoData.videoId}
                       alt="Post Attachment"
                       className="w-full max-h-[480px] object-contain rounded-xl"
                     />

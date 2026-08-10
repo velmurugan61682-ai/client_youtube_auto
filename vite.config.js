@@ -101,7 +101,11 @@ export default defineConfig(({ command, mode }) => {
     build: {
       cssCodeSplit: true,
       assetsInlineLimit: 4096,
-      modulePreload: false,
+      modulePreload: {
+        polyfill: false
+      },
+      reportCompressedSize: false,
+      chunkSizeWarningLimit: 1000,
       rollupOptions: {
         output: {
           manualChunks(id) {

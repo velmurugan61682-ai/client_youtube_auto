@@ -222,6 +222,38 @@ const Login = ({ onSwitchToRegister }) => {
             </motion.button>
           </form>
 
+          {/* Divider */}
+          <div className="relative my-5">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-zinc-200" />
+            </div>
+            <div className="relative flex justify-center text-[10px] uppercase font-black tracking-widest">
+              <span className="bg-white px-3 text-zinc-400">Or</span>
+            </div>
+          </div>
+
+          {/* Google Sign-in Button */}
+          <motion.button
+            type="button"
+            onClick={handleGoogleSignIn}
+            disabled={loading || googleLoading}
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
+            className="w-full bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-700 font-bold py-3.5 px-4 rounded-xl transition-all flex items-center justify-center gap-3 text-[14px] shadow-sm hover:shadow active:scale-[0.99] disabled:opacity-50"
+          >
+            {googleLoading ? (
+              <>
+                <Loader2 className="animate-spin text-zinc-500" size={18} />
+                <span className="text-zinc-600 font-semibold">{googleLoadingText}</span>
+              </>
+            ) : (
+              <>
+                <GoogleIcon />
+                <span>Continue with Google</span>
+              </>
+            )}
+          </motion.button>
+
           {/* Card Footer Links */}
           <div className="mt-8 text-center">
             <p className="text-[12px] font-bold text-zinc-500">

@@ -134,7 +134,11 @@ const DEFAULT_MOD_THUMBNAIL = 'https://images.unsplash.com/photo-1618005182384-a
 const ThumbnailImage = ({ initialSrc, videoId, alt, className }) => {
   const getCleanSrc = (url, vId) => {
     if (url && typeof url === 'string' && url.trim().length > 0) {
-      return url.replace(/_live/gi, '');
+      let clean = url.replace(/_live/gi, '');
+      if (clean.includes('/mqdefault')) {
+        clean = clean.replace(/\/mqdefault/g, '/hqdefault');
+      }
+      return clean;
     }
     if (vId) {
       return `https://i.ytimg.com/vi/${vId}/hqdefault.jpg`;
@@ -826,8 +830,9 @@ const ModerationPage = ({
                             >
                               <div className="flex items-center gap-3 min-w-0">
                                 {selectedVideoId !== 'all_videos' && selectedContent?.thumbnail ? (
-                                  <img
-                                    src={selectedContent.thumbnail}
+                                  <ThumbnailImage
+                                    initialSrc={selectedContent.thumbnail}
+                                    videoId={selectedContent.videoId}
                                     alt="Thumbnail"
                                     className="w-12 h-12 rounded-xl object-cover shrink-0 border border-slate-200"
                                   />
@@ -1330,8 +1335,9 @@ const ModerationPage = ({
                                 }`}
                             >
                               <div className="flex items-start gap-3">
-                                <img
-                                  src={item.thumbnail}
+                                <ThumbnailImage
+                                  initialSrc={item.thumbnail}
+                                  videoId={item.videoId}
                                   alt={item.trigger}
                                   className="w-12 h-12 rounded-xl object-cover shrink-0 border border-slate-200"
                                 />
@@ -1376,8 +1382,9 @@ const ModerationPage = ({
                         <div className="space-y-4">
                           {/* Selected Header Card */}
                           <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex items-start gap-4">
-                            <img
-                              src={selectedTriggerItem.thumbnail}
+                            <ThumbnailImage
+                              initialSrc={selectedTriggerItem.thumbnail}
+                              videoId={selectedTriggerItem.videoId}
                               alt="Selected"
                               className="w-14 h-14 rounded-xl object-cover shrink-0 border border-slate-200"
                             />
