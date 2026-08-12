@@ -81,7 +81,11 @@ const Register = ({ onSwitchToLogin }) => {
         }
       }, 2000);
     } catch (err) {
-      setError(err.response?.data?.error || 'Registration failed. Please try again.');
+      if (!err.response) {
+        setError('Unable to connect to the backend server. Please make sure the server is running.');
+      } else {
+        setError(err.response?.data?.error || 'Registration failed. Please try again.');
+      }
     } finally {
       setLoading(false);
     }

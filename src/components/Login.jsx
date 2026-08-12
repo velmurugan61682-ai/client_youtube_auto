@@ -94,7 +94,11 @@ const Login = ({ onSwitchToRegister }) => {
 
         navigate('/dashboard');
       } catch (err) {
-        setError(err.response?.data?.error || 'Invalid credentials. Please try again.');
+        if (!err.response) {
+          setError('Unable to connect to the backend server. Please make sure the server is running.');
+        } else {
+          setError(err.response?.data?.error || 'Invalid credentials. Please try again.');
+        }
       } finally {
         setLoading(false);
       }

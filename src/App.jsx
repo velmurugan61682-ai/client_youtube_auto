@@ -273,6 +273,8 @@ const App = () => {
   useEffect(() => {
     if (user) {
       fetchChannels();
+    } else {
+      setLoadingChannels(false);
     }
   }, [user, fetchChannels]);
 

@@ -25,7 +25,11 @@ const AdminLogin = () => {
         navigate('/admin/dashboard');
       }
     } catch (err) {
-      setError(err.response?.data?.error || 'Invalid admin credentials');
+      if (!err.response) {
+        setError('Unable to connect to the backend server. Please make sure the server is running.');
+      } else {
+        setError(err.response?.data?.error || 'Invalid admin credentials');
+      }
     } finally {
       setLoading(false);
     }

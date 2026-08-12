@@ -91,7 +91,11 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('user', JSON.stringify(res.data));
       setIsAuthenticated(true);
     } catch (error) {
-      console.warn('Auth check failed:', error.message);
+      if (!error.response) {
+        console.warn('Auth check failed: Unable to connect to server (Network Error)');
+      } else {
+        console.warn('Auth check failed:', error.response?.data?.error || error.message);
+      }
       setIsAuthenticated(false);
       setUser(null);
       if (error.response?.status === 401) {
