@@ -24,6 +24,8 @@ api.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${adminToken}`;
   } else if (token && token !== 'null' && token !== 'undefined') {
     config.headers.Authorization = `Bearer ${token}`;
+  } else if (adminToken && adminToken !== 'null' && adminToken !== 'undefined') {
+    config.headers.Authorization = `Bearer ${adminToken}`;
   }
   return config;
 });
