@@ -70,9 +70,31 @@ const AdminClientsPage = () => {
       setActionLoading(true);
       const res = await api.post('/admin/clients', onboardData);
       if (res.data.success) {
+        const newClient = res.data.client;
+        if (newClient) {
+          setClients(prev => [
+            {
+              _id: newClient.id,
+              id: newClient.id,
+              name: newClient.name,
+              email: newClient.email,
+              organization: onboardData.organization || 'N/A',
+              tenantId: `T-${String(newClient.id).substring(0, 5).toUpperCase()}`,
+              status: newClient.status || 'active',
+              assignedAgent: 'AI Agent',
+              assignedAgentType: 'ai_agent',
+              plan: newClient.plan || 'free',
+              subscriptionStatus: 'active',
+              createdAt: new Date().toISOString(),
+              youtubeChannelsConnected: [],
+              metrics: { totalComments: 0, totalAiReplies: 0, totalLeads: 0 }
+            },
+            ...prev
+          ]);
+        }
         setOnboardModalOpen(false);
         setOnboardData({ name: '', email: '', password: '', organization: '', plan: 'free' });
-        await fetchClients();
+        fetchClients();
       }
     } catch (err) {
       setModalError(err.response?.data?.error || 'Failed to onboard client');
