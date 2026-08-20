@@ -396,13 +396,18 @@ const VideosList = ({
   const [isMobileViewport, setIsMobileViewport] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
   const deferredSearch = useDeferredValue(searchQuery);
 
-  useEffect(() => {
-    const handleResize = () => setIsMobileViewport(window.innerWidth < 768);
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  // Analytics and Interactive Tabs
+  const [activePanelTab, setActivePanelTab] = useState('comments'); // 'comments' or 'analytics'
+  const [videoAnalytics, setVideoAnalytics] = useState(null);
+  const [loadingAnalytics, setLoadingAnalytics] = useState(false);
+  const [submittingLike, setSubmittingLike] = useState(false);
+  const [processingId, setProcessingId] = useState(null);
 
+  // Performance optimizations: lazy render limits for videos and comments
+  const [displayLimit, setDisplayLimit] = useState(50);
+  const [commentsDisplayLimit, setCommentsDisplayLimit] = useState(50);
+
+  // 1. Video Memoizations
   const processedVideos = useMemo(() => {
     return (videos || []).map(v => {
       const isPost = Boolean(v.isPost || v.duration === 'Post' || v.videoId?.startsWith('yt_post_'));
@@ -455,153 +460,50 @@ const VideosList = ({
     return processedVideos.find(v => v.videoId === selectedVideo) || null;
   }, [processedVideos, selectedVideo]);
 
-  useEffect(() => {
-    if (activeVideosList.length > 0) {
-      const isCurrentSelectedInTab = activeVideosList.some(v => v.videoId === selectedVideo);
-      if (!isCurrentSelectedInTab) {
-        handleVideoSelect(activeVideosList[0].videoId, isMobileViewport);
-      }
-    } else {
-      if (videoTab === 'videos' && longVideos.length === 0) {
-        if (shortVideos.length > 0) setVideoTab('shorts');
-        else if (liveVideos.length > 0) setVideoTab('live');
-        else if (communityPosts.length > 0) setVideoTab('posts');
-      } else if (videoTab === 'shorts' && shortVideos.length === 0) {
-        if (longVideos.length > 0) setVideoTab('videos');
-        else if (liveVideos.length > 0) setVideoTab('live');
-        else if (communityPosts.length > 0) setVideoTab('posts');
-      } else if (videoTab === 'live' && liveVideos.length === 0) {
-        if (longVideos.length > 0) setVideoTab('videos');
-        else if (shortVideos.length > 0) setVideoTab('shorts');
-        else if (communityPosts.length > 0) setVideoTab('posts');
-      } else if (videoTab === 'posts' && communityPosts.length === 0) {
-        if (longVideos.length > 0) setVideoTab('videos');
-        else if (shortVideos.length > 0) setVideoTab('shorts');
-        else if (liveVideos.length > 0) setVideoTab('live');
-      } else {
-        setSelectedVideo(null);
-        setComments([]);
-        setVideoAnalytics(null);
-        setIsMobileDetail(false);
-      }
-    }
-  }, [videoTab, videos, isMobileViewport]);
+  // 2. Comment Memoizations & Helpers
+  const isBotActedComment = useCallback((c) => {
+    if (!c) return false;
+    return Boolean(
+      c.hasReplied ||
+      (c.replyText && c.replyText.trim().length > 0) ||
+      c.replyStatus === 'sent' ||
+      c.autoLiked ||
+      c.isModerated ||
+      c.aiActionTaken ||
+      (c.status && ['approved', 'deleted', 'flagged', 'moderate'].includes(c.status)) ||
+      c.moderationAction ||
+      c.actionTaken ||
+      c.deleteReason ||
+      c.moderationReason ||
+      c.isBotHistoryRecord
+    );
+  }, []);
 
-  useEffect(() => {
-    setIsMobileDetail(false);
-  }, [videoTab, channelId]);
+  const processedVideoComments = useMemo(() => {
+    if (!selectedVideo) return [];
+    return (comments || []).filter(c => {
+      if (c.videoId && c.videoId !== selectedVideo) return false;
+      if (c.isBotReply || (c.youtubeId && c.youtubeId.includes('.'))) return false;
+      return isBotActedComment(c);
+    });
+  }, [comments, selectedVideo, isBotActedComment]);
 
-  // Analytics and Interactive Tabs
-  const [activePanelTab, setActivePanelTab] = useState('comments'); // 'comments' or 'analytics'
-  const [videoAnalytics, setVideoAnalytics] = useState(null);
-  const [loadingAnalytics, setLoadingAnalytics] = useState(false);
-  const [submittingLike, setSubmittingLike] = useState(false);
+  const filteredComments = useMemo(() => {
+    if (filter === 'all') return processedVideoComments;
+    return processedVideoComments.filter(c => c.sentiment === filter);
+  }, [processedVideoComments, filter]);
 
-  // Performance optimizations: lazy render limits for videos and comments
-  const [displayLimit, setDisplayLimit] = useState(50);
-  const [commentsDisplayLimit, setCommentsDisplayLimit] = useState(50);
-
-  useEffect(() => {
-    setDisplayLimit(50);
-  }, [channelId, videos]);
-
-  useEffect(() => {
-    setCommentsDisplayLimit(50);
-  }, [selectedVideo, filter]);
-
-  const handleVideoListScroll = (e) => {
-    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
-    if (scrollHeight - scrollTop - clientHeight < 150) {
-      setDisplayLimit(prev => Math.min(activeVideosList.length, prev + 50));
-    }
-  };
-
-  const handleCommentsScroll = (e) => {
-    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
-    if (scrollHeight - scrollTop - clientHeight < 150) {
-      setCommentsDisplayLimit(prev => Math.min(filteredComments.length, prev + 50));
-    }
-  };
-
-  useEffect(() => {
-    if (channelId) {
-      fetchVideos();
-    } else {
-      setLoadingVideos(false);
-    }
-  }, [channelId]);
-
-  const fetchVideos = useCallback(async (forceRefresh = false) => {
-    if (!channelId) {
-      setLoadingVideos(false);
-      return;
-    }
-
-    const cacheKey = `channel_videos_${channelId}`;
-    if (!forceRefresh) {
-      const cached = ttlCache.get(cacheKey);
-      if (cached && Array.isArray(cached) && cached.length > 0) {
-        setVideos(cached);
-        if (!selectedVideo) {
-          const isCurrentSelectedInList = cached.some(v => v.videoId === selectedVideo);
-          if (!isCurrentSelectedInList) {
-            handleVideoSelect(cached[0].videoId, isMobileViewport);
-          }
-        }
-        setLoadingVideos(false);
-        return;
+  const commentStatsMap = useMemo(() => {
+    const counts = { all: processedVideoComments.length, positive: 0, toxic: 0, moderate: 0, neutral: 0 };
+    for (const c of processedVideoComments) {
+      if (counts[c.sentiment] !== undefined) {
+        counts[c.sentiment]++;
       }
     }
+    return counts;
+  }, [processedVideoComments]);
 
-    try {
-      setLoadingVideos(true);
-      const [videosRes, liveRes] = await Promise.allSettled([
-        api.get('/youtube/videos', { params: { channelId } }),
-        api.get('/live-chat/streams', { params: { channelId } })
-      ]);
-
-      const fetchedVideos = videosRes.status === 'fulfilled' && Array.isArray(videosRes.value.data)
-        ? videosRes.value.data
-        : (videosRes.status === 'fulfilled' && videosRes.value.data && Array.isArray(videosRes.value.data.videos))
-          ? videosRes.value.data.videos
-          : [];
-
-      const fetchedLive = liveRes.status === 'fulfilled' && liveRes.value.data && Array.isArray(liveRes.value.data.streams)
-        ? liveRes.value.data.streams
-        : [];
-
-      // Merge videos and live streams cleanly without duplicates
-      const byVideoId = new Map();
-      [...fetchedVideos, ...fetchedLive].forEach(item => {
-        if (!item?.videoId) return;
-        const previous = byVideoId.get(item.videoId) || {};
-        byVideoId.set(item.videoId, {
-          ...previous,
-          ...item,
-          isLive: Boolean(previous.isLive || item.isLive || item.liveChatId || item.liveBroadcastContent === 'live'),
-          liveBroadcastContent: item.liveBroadcastContent || previous.liveBroadcastContent || 'none',
-          liveChatId: item.liveChatId || previous.liveChatId || ''
-        });
-      });
-
-      const mergedVideos = Array.from(byVideoId.values());
-      ttlCache.set(cacheKey, mergedVideos, 3 * 60 * 1000); // 3-minute TTL
-      setVideos(mergedVideos);
-
-      if (mergedVideos.length > 0 && !selectedVideo) {
-        const isCurrentSelectedInList = mergedVideos.some(v => v.videoId === selectedVideo);
-        if (!isCurrentSelectedInList) {
-          handleVideoSelect(mergedVideos[0].videoId, isMobileViewport);
-        }
-      }
-    } catch (err) {
-      console.error('Error fetching videos:', err);
-      setVideos([]);
-    } finally {
-      setLoadingVideos(false);
-    }
-  }, [channelId, selectedVideo, isMobileViewport, handleVideoSelect]);
-
+  // 3. Action Callbacks
   const handleVideoSelect = useCallback(async (videoId, openDetail = true) => {
     try {
       setSelectedVideo(videoId);
@@ -703,6 +605,77 @@ const VideosList = ({
     }
   }, [processedVideos, isMobileViewport, channelId]);
 
+  const fetchVideos = useCallback(async (forceRefresh = false) => {
+    if (!channelId) {
+      setLoadingVideos(false);
+      return;
+    }
+
+    const cacheKey = `channel_videos_${channelId}`;
+    if (!forceRefresh) {
+      const cached = ttlCache.get(cacheKey);
+      if (cached && Array.isArray(cached) && cached.length > 0) {
+        setVideos(cached);
+        if (!selectedVideo) {
+          const isCurrentSelectedInList = cached.some(v => v.videoId === selectedVideo);
+          if (!isCurrentSelectedInList) {
+            handleVideoSelect(cached[0].videoId, isMobileViewport);
+          }
+        }
+        setLoadingVideos(false);
+        return;
+      }
+    }
+
+    try {
+      setLoadingVideos(true);
+      const [videosRes, liveRes] = await Promise.allSettled([
+        api.get('/youtube/videos', { params: { channelId } }),
+        api.get('/live-chat/streams', { params: { channelId } })
+      ]);
+
+      const fetchedVideos = videosRes.status === 'fulfilled' && Array.isArray(videosRes.value.data)
+        ? videosRes.value.data
+        : (videosRes.status === 'fulfilled' && videosRes.value.data && Array.isArray(videosRes.value.data.videos))
+          ? videosRes.value.data.videos
+          : [];
+
+      const fetchedLive = liveRes.status === 'fulfilled' && liveRes.value.data && Array.isArray(liveRes.value.data.streams)
+        ? liveRes.value.data.streams
+        : [];
+
+      // Merge videos and live streams cleanly without duplicates
+      const byVideoId = new Map();
+      [...fetchedVideos, ...fetchedLive].forEach(item => {
+        if (!item?.videoId) return;
+        const previous = byVideoId.get(item.videoId) || {};
+        byVideoId.set(item.videoId, {
+          ...previous,
+          ...item,
+          isLive: Boolean(previous.isLive || item.isLive || item.liveChatId || item.liveBroadcastContent === 'live'),
+          liveBroadcastContent: item.liveBroadcastContent || previous.liveBroadcastContent || 'none',
+          liveChatId: item.liveChatId || previous.liveChatId || ''
+        });
+      });
+
+      const mergedVideos = Array.from(byVideoId.values());
+      ttlCache.set(cacheKey, mergedVideos, 3 * 60 * 1000); // 3-minute TTL
+      setVideos(mergedVideos);
+
+      if (mergedVideos.length > 0 && !selectedVideo) {
+        const isCurrentSelectedInList = mergedVideos.some(v => v.videoId === selectedVideo);
+        if (!isCurrentSelectedInList) {
+          handleVideoSelect(mergedVideos[0].videoId, isMobileViewport);
+        }
+      }
+    } catch (err) {
+      console.error('Error fetching videos:', err);
+      setVideos([]);
+    } finally {
+      setLoadingVideos(false);
+    }
+  }, [channelId, selectedVideo, isMobileViewport, handleVideoSelect]);
+
   const handleLikeVideo = useCallback(async () => {
     if (!selectedVideo || submittingLike) return;
     try {
@@ -737,37 +710,6 @@ const VideosList = ({
       setSubmittingLike(false);
     }
   }, [selectedVideo, submittingLike]);
-
-  // Auto-refresh analytics stats every 30 seconds
-  useEffect(() => {
-    let interval;
-    if (selectedVideo && activePanelTab === 'analytics') {
-      interval = setInterval(() => {
-        api.get(`/youtube/video/${selectedVideo}/analytics`)
-          .then(res => {
-            if (res.data?.video) {
-              setVideoAnalytics(res.data.video);
-              setVideos(prev => prev.map(v => {
-                if (v.videoId !== selectedVideo) return v;
-                return {
-                  ...v,
-                  statistics: res.data.video.statistics,
-                  engagementRate: res.data.video.engagementRate,
-                  likesHistory: res.data.video.likesHistory,
-                  likedByUsers: res.data.video.likedByUsers
-                };
-              }));
-            }
-          })
-          .catch(err => console.error('Auto-refresh stats error:', err));
-      }, 30000);
-    }
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [selectedVideo, activePanelTab]);
-
-  const [processingId, setProcessingId] = useState(null);
 
   const handleAction = useCallback(async (id, action) => {
     // Optimistic UI Update
@@ -821,51 +763,113 @@ const VideosList = ({
     }
   }, [selectedVideo, channelId, handleVideoSelect]);
 
-  const isBotActedComment = useCallback((c) => {
-    if (!c) return false;
-    return Boolean(
-      c.hasReplied ||
-      (c.replyText && c.replyText.trim().length > 0) ||
-      c.replyStatus === 'sent' ||
-      c.autoLiked ||
-      c.isModerated ||
-      c.aiActionTaken ||
-      (c.status && ['approved', 'deleted', 'flagged', 'moderate'].includes(c.status)) ||
-      c.moderationAction ||
-      c.actionTaken ||
-      c.deleteReason ||
-      c.moderationReason ||
-      c.isBotHistoryRecord
-    );
-  }, []);
-
-  const processedVideoComments = useMemo(() => {
-    if (!selectedVideo) return [];
-    return (comments || []).filter(c => {
-      if (c.videoId && c.videoId !== selectedVideo) return false;
-      if (c.isBotReply || (c.youtubeId && c.youtubeId.includes('.'))) return false;
-      return isBotActedComment(c);
-    });
-  }, [comments, selectedVideo, isBotActedComment]);
-
-  const filteredComments = useMemo(() => {
-    if (filter === 'all') return processedVideoComments;
-    return processedVideoComments.filter(c => c.sentiment === filter);
-  }, [processedVideoComments, filter]);
-
-  const commentStatsMap = useMemo(() => {
-    const counts = { all: processedVideoComments.length, positive: 0, toxic: 0, moderate: 0, neutral: 0 };
-    for (const c of processedVideoComments) {
-      if (counts[c.sentiment] !== undefined) {
-        counts[c.sentiment]++;
-      }
-    }
-    return counts;
-  }, [processedVideoComments]);
-
   const getStatsForFilter = useCallback((type) => {
     return commentStatsMap[type] || 0;
   }, [commentStatsMap]);
+
+  // 4. Scroll Handlers
+  const handleVideoListScroll = (e) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+    if (scrollHeight - scrollTop - clientHeight < 150) {
+      setDisplayLimit(prev => Math.min(activeVideosList.length, prev + 50));
+    }
+  };
+
+  const handleCommentsScroll = (e) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+    if (scrollHeight - scrollTop - clientHeight < 150) {
+      setCommentsDisplayLimit(prev => Math.min(filteredComments.length, prev + 50));
+    }
+  };
+
+  // 5. Side Effects
+  useEffect(() => {
+    const handleResize = () => setIsMobileViewport(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (channelId) {
+      fetchVideos();
+    } else {
+      setLoadingVideos(false);
+    }
+  }, [channelId, fetchVideos]);
+
+  useEffect(() => {
+    if (activeVideosList.length > 0) {
+      const isCurrentSelectedInTab = activeVideosList.some(v => v.videoId === selectedVideo);
+      if (!isCurrentSelectedInTab) {
+        handleVideoSelect(activeVideosList[0].videoId, isMobileViewport);
+      }
+    } else {
+      if (videoTab === 'videos' && longVideos.length === 0) {
+        if (shortVideos.length > 0) setVideoTab('shorts');
+        else if (liveVideos.length > 0) setVideoTab('live');
+        else if (communityPosts.length > 0) setVideoTab('posts');
+      } else if (videoTab === 'shorts' && shortVideos.length === 0) {
+        if (longVideos.length > 0) setVideoTab('videos');
+        else if (liveVideos.length > 0) setVideoTab('live');
+        else if (communityPosts.length > 0) setVideoTab('posts');
+      } else if (videoTab === 'live' && liveVideos.length === 0) {
+        if (longVideos.length > 0) setVideoTab('videos');
+        else if (shortVideos.length > 0) setVideoTab('shorts');
+        else if (communityPosts.length > 0) setVideoTab('posts');
+      } else if (videoTab === 'posts' && communityPosts.length === 0) {
+        if (longVideos.length > 0) setVideoTab('videos');
+        else if (shortVideos.length > 0) setVideoTab('shorts');
+        else if (liveVideos.length > 0) setVideoTab('live');
+      } else {
+        setSelectedVideo(null);
+        setComments([]);
+        setVideoAnalytics(null);
+        setIsMobileDetail(false);
+      }
+    }
+  }, [videoTab, videos, isMobileViewport, activeVideosList, longVideos, shortVideos, liveVideos, communityPosts, selectedVideo, handleVideoSelect, setVideoTab]);
+
+  useEffect(() => {
+    setIsMobileDetail(false);
+  }, [videoTab, channelId]);
+
+  useEffect(() => {
+    setDisplayLimit(50);
+  }, [channelId, videos]);
+
+  useEffect(() => {
+    setCommentsDisplayLimit(50);
+  }, [selectedVideo, filter]);
+
+  // Auto-refresh analytics stats every 30 seconds
+  useEffect(() => {
+    let interval;
+    if (selectedVideo && activePanelTab === 'analytics') {
+      interval = setInterval(() => {
+        api.get(`/youtube/video/${selectedVideo}/analytics`)
+          .then(res => {
+            if (res.data?.video) {
+              setVideoAnalytics(res.data.video);
+              setVideos(prev => prev.map(v => {
+                if (v.videoId !== selectedVideo) return v;
+                return {
+                  ...v,
+                  statistics: res.data.video.statistics,
+                  engagementRate: res.data.video.engagementRate,
+                  likesHistory: res.data.video.likesHistory,
+                  likedByUsers: res.data.video.likedByUsers
+                };
+              }));
+            }
+          })
+          .catch(err => console.error('Auto-refresh stats error:', err));
+      }, 30000);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [selectedVideo, activePanelTab]);
 
   const filters = [
     { id: 'all', label: 'All', color: 'bg-[#f2f2f2] text-[#0f0f0f]' },
