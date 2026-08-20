@@ -29,6 +29,16 @@ const OAuthCallbackPage = () => {
           return;
         }
 
+        const code = params.get('code');
+        const state = params.get('state');
+
+        // Handle direct Google redirect to frontend with auth code
+        if (code) {
+          const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+          window.location.replace(`${apiUrl}/auth/callback/google?code=${encodeURIComponent(code)}${state ? `&state=${encodeURIComponent(state)}` : ''}`);
+          return;
+        }
+
         // --- CHANNEL CONNECT FLOW ---
         // User was already logged in and just connected a YouTube channel.
         if (channelId) {
