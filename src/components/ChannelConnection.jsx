@@ -211,7 +211,7 @@ const ChannelConnection = ({ channels, setChannels }) => {
                 >
                   <div className="flex items-center gap-5">
                     <div className="relative shrink-0">
-                      <img src={channel.thumbnailUrl} className="w-16 h-16 rounded-[22px] border-2 border-white shadow-md bg-[#f8f8f8]" alt="" />
+                      <img src={channel.thumbnailUrl} className="w-16 h-16 rounded-[22px] border-2 border-white shadow-md bg-[#f8f8f8]" alt="" loading="lazy" decoding="async" />
                       <div className="absolute -bottom-1 -right-1 p-1.5 bg-white rounded-full shadow-lg border border-[#f0f0f0]">
                         {channel.apiKey ? <Key size={12} className="text-[#909090]" /> : <ShieldCheck size={12} className="text-[#ff0000]" />}
                       </div>

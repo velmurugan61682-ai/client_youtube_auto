@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import useDebounce from '../utils/useDebounce';
 import { 
   Search, 
   Filter, 
@@ -148,16 +149,20 @@ const AdminClientsPage = () => {
     }
   };
 
-  const filteredClients = clients.filter(c => {
-    const query = search.toLowerCase();
-    const matchesSearch = !search || 
-                          c.name?.toLowerCase().includes(query) || 
-                          c.email?.toLowerCase().includes(query) ||
-                          c.organization?.toLowerCase().includes(query);
-    const matchesStatus = statusFilter === 'all' || c.status === statusFilter;
-    const matchesPlan = planFilter === 'all' || c.plan === planFilter;
-    return matchesSearch && matchesStatus && matchesPlan;
-  });
+  const debouncedSearch = useDebounce(search, 300);
+
+  const filteredClients = useMemo(() => {
+    const query = debouncedSearch.toLowerCase().trim();
+    return clients.filter(c => {
+      const matchesSearch = !query || 
+                            c.name?.toLowerCase().includes(query) || 
+                            c.email?.toLowerCase().includes(query) ||
+                            c.organization?.toLowerCase().includes(query);
+      const matchesStatus = statusFilter === 'all' || c.status === statusFilter;
+      const matchesPlan = planFilter === 'all' || c.plan === planFilter;
+      return matchesSearch && matchesStatus && matchesPlan;
+    });
+  }, [clients, debouncedSearch, statusFilter, planFilter]);
 
   return (
     <div className="space-y-5 rounded-[28px] bg-[#eef3f5] p-4 sm:p-5 min-h-[calc(100vh-2.5rem)]">
@@ -286,7 +291,7 @@ const AdminClientsPage = () => {
                     <td className="py-4 px-4">
                       {client.connectedChannel ? (
                         <div className="flex items-center gap-2">
-                          <img src={client.connectedChannel.thumbnailUrl || 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=60'} className="w-6 h-6 rounded-full object-cover" alt="" />
+                          <img src={client.connectedChannel.thumbnailUrl || 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=60'} className="w-6 h-6 rounded-full object-cover" alt="" loading="lazy" decoding="async" />
                           <span className="text-[#0f0f0f] font-bold text-xs truncate max-w-[140px]">
                             {client.connectedChannel.title}
                           </span>

@@ -542,7 +542,7 @@ const App = () => {
                             <Menu size={20} />
                           </button>
                           <div className="min-w-0 flex items-center gap-2">
-                            <img src="/logo_icon.png" className="h-8 w-8 object-contain shrink-0" alt="ChannelBot Logo" />
+                            <img src="/logo_icon.png" className="h-8 w-8 object-contain shrink-0" alt="ChannelBot Logo" loading="lazy" decoding="async" />
                             <span className={`text-sm font-black truncate ${clientDark ? 'text-white' : 'text-[#0f0f0f]'}`}>ChannelBot</span>
                           </div>
                           <button
@@ -679,6 +679,8 @@ const App = () => {
                       src={user.profilePicture}
                       alt={user?.name || 'Profile'}
                       className="w-full h-full object-cover"
+                      loading="lazy"
+                      decoding="async"
                     />
                   ) : (
                     user?.name?.charAt(0).toUpperCase() || 'A'

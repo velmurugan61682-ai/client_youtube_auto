@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import ttlCache from '../utils/ttlCache';
 import {
   ShieldCheck,
   MessageSquare,
@@ -73,6 +74,8 @@ const Toast = ({ toasts }) => (
     </AnimatePresence>
   </div>
 );
+
+//  Helpers 
 const isPostContent = (content) => Boolean(content?.isPost || content?.duration === 'Post' || content?.videoId?.startsWith('yt_post_'));
 
 const isLiveContent = (content) => {
@@ -120,18 +123,15 @@ const getContentKind = (content) => {
 
 const getContentIconClasses = (content) => {
   const kind = getContentKind(content);
-  if (kind === 'Live') return 'bg-[#ff0000] text-white';
-  if (kind === 'Post') return 'bg-sky-50 text-sky-600';
+  if (kind === 'Live') return 'bg-[#fff1f1] text-[#ff0000]';
   if (kind === 'Short') return 'bg-violet-50 text-violet-600';
-  return 'bg-[#ff0000]/10 text-[#ff0000]';
+  if (kind === 'Post') return 'bg-sky-50 text-sky-600';
+  return 'bg-slate-100 text-slate-700';
 };
-
-//  Moderation Rule Toggle Row 
-
 
 const DEFAULT_MOD_THUMBNAIL = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150&auto=format&fit=crop&q=80';
 
-const ThumbnailImage = ({ initialSrc, videoId, alt, className }) => {
+const ThumbnailImage = React.memo(({ initialSrc, videoId, alt, className }) => {
   const getCleanSrc = (url, vId) => {
     if (url && typeof url === 'string' && url.trim().length > 0) {
       let clean = url.replace(/_live/gi, '');
@@ -183,9 +183,232 @@ const ThumbnailImage = ({ initialSrc, videoId, alt, className }) => {
       alt={alt || 'Thumbnail'}
       className={className}
       onError={handleError}
+      loading="lazy"
+      decoding="async"
     />
   );
-};
+});
+
+const ContentPickerCard = React.memo(({ v, isSelected, onSelect }) => {
+  const kind = getContentKind(v);
+  return (
+    <div
+      onClick={() => onSelect(v)}
+      className={`rounded-2xl border-2 overflow-hidden cursor-pointer transition-all relative group flex flex-col ${
+        isSelected ? 'border-[#ff0000] ring-2 ring-red-500/20' : 'border-slate-200 hover:border-red-200'
+      }`}
+    >
+      <div className="h-28 bg-slate-900 relative overflow-hidden">
+        {v.thumbnail ? (
+          <ThumbnailImage 
+            initialSrc={v.thumbnail} 
+            alt={v.title} 
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-slate-600 font-black">
+            <VideoIcon size={24} />
+          </div>
+        )}
+        <div className="absolute top-2 left-2 flex items-center gap-1">
+          {kind === 'Live' ? (
+            <span className="px-2 py-0.5 bg-[#ff0000] text-white text-[9px] font-black uppercase tracking-wider rounded-md flex items-center gap-1 shadow-sm">
+              <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+              Live
+            </span>
+          ) : kind === 'Short' ? (
+            <span className="px-2 py-0.5 bg-violet-600 text-white text-[9px] font-black uppercase tracking-wider rounded-md shadow-sm">
+              Short
+            </span>
+          ) : kind === 'Post' ? (
+            <span className="px-2 py-0.5 bg-sky-600 text-white text-[9px] font-black uppercase tracking-wider rounded-md shadow-sm">
+              Post
+            </span>
+          ) : (
+            <span className="px-2 py-0.5 bg-slate-700 text-white text-[9px] font-black uppercase tracking-wider rounded-md shadow-sm">
+              Video
+            </span>
+          )}
+        </div>
+        {isSelected && (
+          <div className="absolute top-2 right-2 bg-[#ff0000] text-white p-1 rounded-full shadow">
+            <Check size={12} />
+          </div>
+        )}
+      </div>
+      <div className="p-2.5 bg-white flex-1 flex flex-col justify-between">
+        <p className="text-xs font-black text-slate-800 line-clamp-2 leading-tight">{v.title || v.videoId}</p>
+      </div>
+    </div>
+  );
+});
+
+const CommentThreadItem = React.memo(({ c }) => (
+  <div className="space-y-2 border-b border-slate-100 pb-4 last:border-0">
+    <div className="flex items-center justify-between text-xs font-black">
+      <span className="text-[#ff0000] hover:underline cursor-pointer">{c.username}</span>
+      <span className="text-[11px] text-slate-400 font-medium">{c.time}</span>
+    </div>
+
+    <div className="bg-slate-100 text-slate-800 text-xs font-semibold px-4 py-2.5 rounded-2xl max-w-fit">
+      "{c.userComment}"
+    </div>
+
+    <div className="bg-[#fff1f1] border border-red-100 rounded-2xl p-4 space-y-2 ml-4">
+      <div className="flex items-center gap-1.5 text-xs font-black text-[#ff0000]">
+        <Sparkles size={14} /> Automated Reply:
+      </div>
+      <p className="text-xs text-slate-700 font-semibold leading-relaxed whitespace-pre-line">
+        {c.autoReply}
+      </p>
+      {c.link && (
+        <a
+          href={c.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 text-xs font-bold text-[#ff0000] hover:underline mt-1"
+        >
+          View Link <ExternalLink size={12} />
+        </a>
+      )}
+    </div>
+  </div>
+));
+
+const RuleRowCard = React.memo(({ rule, onToggleStatus, onEdit, onTest, onDelete }) => (
+  <div className="flex items-center gap-4 p-4 hover:bg-slate-50 transition-colors">
+    <div className="flex-1 min-w-0">
+      <div className="flex items-center gap-2 flex-wrap">
+        <p className="text-sm font-black text-slate-800 truncate">{rule.name}</p>
+        <span className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wide ${
+          rule.status === 'Active' ? 'bg-[#fff1f1] text-[#ff0000]' : 'bg-slate-100 text-slate-500'
+        }`}>
+          {rule.status}
+        </span>
+      </div>
+      <p className="text-xs text-slate-400 font-medium mt-0.5">
+        {rule.triggerType === 'any_comment' ? 'Any comment' : `Keywords: ${(rule.keywords || []).join(', ')}`}
+        {'  '}Triggers: {rule.triggeredCount || 0}
+      </p>
+    </div>
+    <div className="flex items-center gap-1.5 shrink-0">
+      <button
+        onClick={() => onToggleStatus(rule)}
+        className={`p-2 rounded-xl transition-colors ${rule.status === 'Active' ? 'text-[#f9ab00] hover:bg-[#fff8e1]' : 'text-[#ff0000] hover:bg-[#fff1f1]'}`}
+        title={rule.status === 'Active' ? 'Pause' : 'Activate'}
+      >
+        {rule.status === 'Active' ? <Pause size={15} /> : <Play size={15} />}
+      </button>
+      <button onClick={() => onEdit(rule)} className="p-2 rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors" title="Edit">
+        <Edit size={15} />
+      </button>
+      <button
+        onClick={() => onTest(rule)}
+        className="p-2 rounded-xl text-[#ff0000] hover:bg-[#fff1f1] hover:text-[#ff0000] transition-colors"
+        title="Test"
+      >
+        <Eye size={15} />
+      </button>
+      <button onClick={() => onDelete(rule)} className="p-2 rounded-xl text-red-400 hover:bg-red-50 hover:text-red-600 transition-colors" title="Delete">
+        <Trash2 size={15} />
+      </button>
+    </div>
+  </div>
+));
+
+const HistoryLogCard = React.memo(({ log }) => (
+  <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:border-slate-300 transition-all space-y-3">
+    {/* Card Header: Author + Date */}
+    <div className="flex items-center justify-between flex-wrap gap-2">
+      <div className="flex items-center gap-2">
+        <div className="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center shrink-0">
+          <User size={13} className="text-slate-500" />
+        </div>
+        <span className="text-xs font-black text-slate-900">
+          {log.authorName?.startsWith('@') ? log.authorName : `@${log.authorName || 'user'}`}
+        </span>
+      </div>
+      <span className="text-[11px] text-slate-400 font-semibold">
+        {log.actionDate ? new Date(log.actionDate).toLocaleString() : ''}
+      </span>
+    </div>
+
+    {/* Video Name */}
+    <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
+      <VideoIcon size={12} className="text-slate-400" />
+      {log.videoTitle || 'Unknown Video'}
+    </div>
+
+    {/* Original Comment */}
+    <div className="bg-slate-50 border border-slate-100 rounded-xl p-3.5 text-xs text-slate-800 font-semibold">
+      &ldquo;{log.commentText || 'No comment text recorded.'}&rdquo;
+    </div>
+
+    {/* Type-specific content */}
+    {log.type === 'replied' && log.replyText && (
+      <div className="bg-[#fff1f1] border border-red-100 rounded-xl p-3.5 text-xs text-slate-700 font-semibold space-y-3">
+        <p className="font-bold text-[#ff0000] flex items-center gap-1">
+          <Sparkles size={11} /> {log.replyType === 'Carousel' ? 'Carousel Reply:' : 'AI Reply:'}
+        </p>
+        {log.replyType === 'Carousel' && log.carouselCards && log.carouselCards.length > 0 ? (
+          <div className="flex gap-3 overflow-x-auto pb-2 pt-1 max-w-full scrollbar-thin">
+            {log.carouselCards.map((card, cIdx) => (
+              <div key={cIdx} className="w-[200px] shrink-0 bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between">
+                {card.imageUrl && (
+                  <img src={card.imageUrl} alt={card.title} className="w-full h-24 object-cover border-b border-slate-100" loading="lazy" decoding="async" />
+                )}
+                <div className="p-3 space-y-1.5 flex-1 flex flex-col justify-between">
+                  <div>
+                    <h4 className="text-xs font-black text-slate-900 truncate">{card.title || 'Untitled Card'}</h4>
+                    <p className="text-[10px] text-slate-500 line-clamp-2 mt-0.5 leading-relaxed font-semibold">{card.description || 'No description provided.'}</p>
+                  </div>
+                  {card.link || card.buttonUrl ? (
+                    <a
+                      href={card.link || card.buttonUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block w-full py-1.5 text-center bg-[#fff1f1] hover:bg-red-100 text-[#ff0000] border border-red-100 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all mt-2"
+                    >
+                      {card.btnLabel || card.buttonText || 'View Detail'}
+                    </a>
+                  ) : (
+                    <span className="block w-full py-1.5 text-center bg-slate-50 text-slate-400 border border-slate-200 rounded-lg text-[10px] font-black uppercase tracking-wider mt-2">
+                      {card.btnLabel || card.buttonText || 'View Detail'}
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="whitespace-pre-line leading-relaxed">{log.replyText}</p>
+        )}
+      </div>
+    )}
+
+    {(log.type === 'deleted' || log.type === 'hidden') && log.category && (
+      <div className="bg-red-50 border border-red-100 rounded-xl p-3.5 text-xs space-y-1.5">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="font-bold text-red-700">Category:</span>
+          <span className="capitalize font-semibold text-red-800">{log.category}</span>
+          {log.confidence != null && (
+            <>
+              <span className="text-slate-400"></span>
+              <span className="font-bold text-slate-600">
+                Confidence: {log.confidence > 1
+                  ? `${Math.round(log.confidence)}%`
+                  : `${Math.round(log.confidence * 100)}%`}
+              </span>
+            </>
+          )}
+        </div>
+        {log.reason && (
+          <p className="text-red-600 font-medium">{log.reason}</p>
+        )}
+      </div>
+    )}
+  </div>
+));
 
 //  Main Component 
 const ModerationPage = ({
@@ -205,6 +428,13 @@ const ModerationPage = ({
     if (propSetSelectedChannelId) propSetSelectedChannelId(id);
   };
 
+  // Keep local state in sync when parent selectedChannelId updates
+  useEffect(() => {
+    if (propSelectedChannelId && propSelectedChannelId !== selectedChannelId) {
+      _setSelectedChannelId(propSelectedChannelId);
+    }
+  }, [propSelectedChannelId]);
+
   // Toasts
   const [toasts, setToasts] = useState([]);
   const showToast = (message, type = 'success') => {
@@ -213,12 +443,16 @@ const ModerationPage = ({
     setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 4000);
   };
 
-  // Auto-select channel on mount
+  // Auto-select channel on mount or when channels/prop arrive
   useEffect(() => {
-    if (channels.length > 0 && !selectedChannelId) {
-      setSelectedChannelId(channels[0].channelId);
+    if (!selectedChannelId) {
+      if (propSelectedChannelId) {
+        setSelectedChannelId(propSelectedChannelId);
+      } else if (channels.length > 0) {
+        setSelectedChannelId(channels[0].channelId);
+      }
     }
-  }, [channels]);
+  }, [channels, propSelectedChannelId, selectedChannelId]);
 
   // Sync initialTab prop changes
   useEffect(() => { setMainTab(initialTab); }, [initialTab]);
@@ -258,11 +492,19 @@ const ModerationPage = ({
 
   //  Auto Reply State 
   const [videos, setVideos] = useState([]);
-  const [, setLoadingVideos] = useState(false);
+  const [loadingVideos, setLoadingVideos] = useState(false);
   const [stats, setStats] = useState({ totalRules: 0, totalTriggers: 0, totalSuccess: 0, totalFailed: 0 });
   const [rulesList, setRulesList] = useState([]);
   const [loadingRules, setLoadingRules] = useState(false);
   const [, setRuleToDelete] = useState(null);
+
+  const openContentPicker = () => {
+    const channelIdToUse = selectedChannelId || propSelectedChannelId || (channels.length > 0 ? channels[0].channelId : '');
+    if (channelIdToUse && videos.length === 0) {
+      fetchVideosForChannel(channelIdToUse);
+    }
+    setContentPickerOpen(true);
+  };
 
   // Form
   const [editingRuleId, setEditingRuleId] = useState(null);
@@ -312,7 +554,7 @@ const ModerationPage = ({
   const [chatLogs, setChatLogs] = useState([]);
   const [, setLoadingChatLogs] = useState(false);
 
-  const fetchChatLogs = async (channelId) => {
+  const fetchChatLogs = useCallback(async (channelId) => {
     try {
       setLoadingChatLogs(true);
       const res = await api.get('/auto-mod/comments', { params: { channelId } });
@@ -322,7 +564,7 @@ const ModerationPage = ({
     } finally {
       setLoadingChatLogs(false);
     }
-  };
+  }, []);
 
   const [, setModLogs] = useState([]);
   const [, setModTotal] = useState(0);
@@ -340,23 +582,42 @@ const ModerationPage = ({
   const [chatReplyInput, setChatReplyInput] = useState('');
   const [mobileChatView, setMobileChatView] = useState('list'); // 'list' | 'chat'
 
+  const deferredChatSearch = useDeferredValue(chatSearch);
+  const deferredHistorySearch = useDeferredValue(historySearch);
 
-  // Dynamic Comment Chat items derived exclusively from the user's actual channel videos and rules
+  // Dynamic Comment Chat items derived exclusively from user videos & rules in O(V + L + R)
   const channelChatItems = useMemo(() => {
     if (!videos || videos.length === 0) {
       return [];
     }
 
+    const logsByVideo = new Map();
+    for (const log of chatLogs) {
+      if (!log.videoId) continue;
+      const arr = logsByVideo.get(log.videoId);
+      if (arr) arr.push(log);
+      else logsByVideo.set(log.videoId, [log]);
+    }
+
+    const rulesByVideo = new Map();
+    const globalRules = [];
+    for (const r of rulesList) {
+      if (r.applyToAllVideos) globalRules.push(r);
+      if (r.videoId) {
+        const arr = rulesByVideo.get(r.videoId);
+        if (arr) arr.push(r);
+        else rulesByVideo.set(r.videoId, [r]);
+      }
+    }
+
     return videos.map(v => {
-      // Find rules matching this video or apply to all
-      const matchingRules = rulesList.filter(r => r.videoId === v.videoId || r.applyToAllVideos);
+      const directRules = rulesByVideo.get(v.videoId) || [];
+      const matchingRules = directRules.length > 0 ? directRules : globalRules;
       const mainKeyword = matchingRules.length > 0 && matchingRules[0].keywords?.length > 0
         ? matchingRules[0].keywords[0].toUpperCase()
         : 'COMMENTS';
 
-      // Find real comments (logs) for this video
-      const matchingLogs = chatLogs.filter(log => log.videoId === v.videoId);
-
+      const matchingLogs = logsByVideo.get(v.videoId) || [];
       const commentsMapped = matchingLogs.map(log => ({
         id: log._id,
         username: log.username.startsWith('@') ? log.username : `@${log.username}`,
@@ -373,22 +634,61 @@ const ModerationPage = ({
         ruleType: 'text',
         date: v.publishedAt ? new Date(v.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recent',
         totalComments: commentsMapped.length,
-        thumbnail: v.thumbnail || v.thumbnailUrl || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150&auto=format&fit=crop&q=80',
+        thumbnail: v.thumbnail || v.thumbnailUrl || DEFAULT_MOD_THUMBNAIL,
         caption: v.title || v.description || 'Channel Video Content',
         comments: commentsMapped
       };
     });
   }, [videos, rulesList, chatLogs]);
 
+  // Derived filteredTriggers memoized with deferred search
+  const filteredTriggers = useMemo(() => {
+    const q = (deferredChatSearch || '').toLowerCase().trim();
+    if (!q) return channelChatItems;
+    return channelChatItems.filter(t => 
+      t.trigger.toLowerCase().includes(q) ||
+      t.caption.toLowerCase().includes(q)
+    );
+  }, [channelChatItems, deferredChatSearch]);
+
+  const selectedTriggerItem = useMemo(() => {
+    return channelChatItems.find(t => t.id === selectedChatId) || filteredTriggers[0] || null;
+  }, [channelChatItems, selectedChatId, filteredTriggers]);
+
+  // Sorted Content List for Content Picker Modal
+  const sortedContentList = useMemo(() => {
+    return [...videos].sort((a, b) => {
+      const aLive = isLiveContent(a) && Boolean(a.isLive || a.liveBroadcastContent === 'live');
+      const bLive = isLiveContent(b) && Boolean(b.isLive || b.liveBroadcastContent === 'live');
+      if (aLive && !bLive) return -1;
+      if (!aLive && bLive) return 1;
+      return new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0);
+    });
+  }, [videos]);
+
+  const [pickerDisplayLimit, setPickerDisplayLimit] = useState(40);
+  useEffect(() => {
+    if (contentPickerOpen) {
+      setPickerDisplayLimit(40);
+    }
+  }, [contentPickerOpen]);
+
+  const handlePickerScroll = useCallback((e) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+    if (scrollHeight - scrollTop - clientHeight < 180) {
+      setPickerDisplayLimit(prev => Math.min(sortedContentList.length, prev + 40));
+    }
+  }, [sortedContentList.length]);
+
   // Set default selectedChatId when channelChatItems change
   useEffect(() => {
     if (channelChatItems.length > 0 && !selectedChatId) {
       setSelectedChatId(channelChatItems[0].id);
     }
-  }, [channelChatItems]);
+  }, [channelChatItems, selectedChatId]);
 
-  const handleSendChatReply = () => {
-    if (!chatReplyInput.trim()) return;
+  const handleSendChatReply = useCallback(() => {
+    if (!chatReplyInput.trim() || !selectedChatId) return;
     const newLog = {
       _id: `manual_${Date.now()}`,
       username: 'you',
@@ -400,10 +700,20 @@ const ModerationPage = ({
     setChatLogs(prev => [newLog, ...prev]);
     showToast('Reply posted to comment chat thread!');
     setChatReplyInput('');
-  };
+  }, [chatReplyInput, selectedChatId]);
 
   //  Data Fetching 
-  const fetchVideosForChannel = async (channelId) => {
+  const fetchVideosForChannel = useCallback(async (channelId, forceRefresh = false) => {
+    if (!channelId) return;
+    const cacheKey = `channel_videos_${channelId}`;
+    if (!forceRefresh) {
+      const cached = ttlCache.get(cacheKey);
+      if (cached && Array.isArray(cached) && cached.length > 0) {
+        setVideos(cached);
+        return;
+      }
+    }
+
     try {
       setLoadingVideos(true);
       const [videosResult, liveResult] = await Promise.allSettled([
@@ -435,28 +745,41 @@ const ModerationPage = ({
         });
       });
 
-      setVideos(Array.from(byVideoId.values()));
+      const videoList = Array.from(byVideoId.values());
+      ttlCache.set(cacheKey, videoList, 3 * 60 * 1000); // 3-minute TTL cache
+      setVideos(videoList);
     } catch { showToast('Failed to load videos', 'error'); }
     finally { setLoadingVideos(false); }
-  };
+  }, []);
 
-  const fetchStats = async (channelId) => {
+  const fetchStats = useCallback(async (channelId) => {
     try {
       const data = await getCommentAutomationStats(channelId);
       setStats(data);
     } catch (e) { console.error(e); }
-  };
+  }, []);
 
-  const fetchRules = async (channelId) => {
+  const fetchRules = useCallback(async (channelId, forceRefresh = false) => {
+    if (!channelId) return;
+    const cacheKey = `channel_rules_${channelId}`;
+    if (!forceRefresh) {
+      const cached = ttlCache.get(cacheKey);
+      if (cached && Array.isArray(cached)) {
+        setRulesList(cached);
+        return;
+      }
+    }
+
     try {
       setLoadingRules(true);
       const rules = await getRules(channelId);
+      ttlCache.set(cacheKey, rules, 3 * 60 * 1000); // 3-minute TTL cache
       setRulesList(rules);
     } catch { showToast('Failed to fetch rules', 'error'); }
     finally { setLoadingRules(false); }
-  };
+  }, []);
 
-  const fetchHistoryLogs = async (page = 1) => {
+  const fetchHistoryLogs = useCallback(async (page = 1) => {
     try {
       setLoadingHistory(true);
       const res = await getCommentHistory({
@@ -464,7 +787,7 @@ const ModerationPage = ({
         type: historyType || 'all',
         page,
         limit: 20,
-        search: historySearch || undefined
+        search: deferredHistorySearch || undefined
       });
       setHistoryLogs(res.items || []);
       setHistorySummary(res.summary || { total: 0, replied: 0, deleted: 0, hidden: 0, failed: 0, successRate: 0 });
@@ -477,9 +800,9 @@ const ModerationPage = ({
     } finally {
       setLoadingHistory(false);
     }
-  };
+  }, [selectedChannelId, historyType, deferredHistorySearch]);
 
-  const fetchModerationQueue = async (page = 1) => {
+  const fetchModerationQueue = useCallback(async (page = 1) => {
     try {
       setLoadingMod(true);
       const res = await getModerationLogs({
@@ -496,7 +819,7 @@ const ModerationPage = ({
       setModPage(page);
     } catch { showToast('Failed to load moderation logs', 'error'); }
     finally { setLoadingMod(false); }
-  };
+  }, [selectedChannelId, modFilterStatus, modFilterCategory, modSearch]);
 
   useEffect(() => {
     if (!selectedChannelId) return;
@@ -622,15 +945,16 @@ const ModerationPage = ({
       };
       if (editingRuleId) { await updateRule(editingRuleId, ruleData); showToast('Rule updated!'); }
       else { await createRule(ruleData); showToast('Rule deployed!'); }
+      ttlCache.invalidate(`channel_rules_${selectedChannelId}`);
       resetRuleForm();
-      fetchRules(selectedChannelId);
+      fetchRules(selectedChannelId, true);
       fetchStats(selectedChannelId);
     } catch (err) {
       showToast(err.response?.data?.error || 'Failed to save rule', 'error');
     } finally { setSavingRule(false); }
   };
 
-  const handleEditRule = (rule) => {
+  const handleEditRule = useCallback((rule) => {
     setEditingRuleId(rule._id);
     setRuleName(rule.name);
     setSelectedVideoId(rule.applyToAllVideos ? 'all_videos' : rule.videoId || '');
@@ -653,35 +977,34 @@ const ModerationPage = ({
     setRuleStatus(rule.status || 'Active');
     setShowRuleForm(true);
     showToast('Rule loaded into editor', 'info');
-  };
+  }, []);
 
-  const handleDeleteRule = async (rule) => {
+  const handleDeleteRule = useCallback(async (rule) => {
     try {
       setLoadingRules(true);
       await deleteRule(rule._id);
+      ttlCache.invalidate(`channel_rules_${selectedChannelId}`);
       showToast('Rule deleted');
       setRuleToDelete(null);
-      fetchRules(selectedChannelId);
+      fetchRules(selectedChannelId, true);
       fetchStats(selectedChannelId);
     } catch { showToast('Failed to delete rule', 'error'); }
     finally { setLoadingRules(false); }
-  };
+  }, [selectedChannelId, fetchRules, fetchStats]);
 
-  const handleToggleStatus = async (rule) => {
+  const handleToggleStatus = useCallback(async (rule) => {
     const newStatus = rule.status === 'Active' ? 'Paused' : 'Active';
     try {
       await updateRuleStatus(rule._id, newStatus);
+      ttlCache.invalidate(`channel_rules_${selectedChannelId}`);
       showToast(`Rule ${newStatus === 'Active' ? 'activated' : 'paused'}`);
       setRulesList(prev => prev.map(r => r._id === rule._id ? { ...r, status: newStatus } : r));
     } catch { showToast('Failed to update status', 'error'); }
-  };
+  }, [selectedChannelId]);
 
-  
-
-  
-
-  const handleRunTest = async () => {
+  const handleRunTest = useCallback(async () => {
     if (!testCommentText.trim()) { showToast('Enter a sample comment', 'warning'); return; }
+    if (!testingRule?._id) return;
     try {
       setTestingInProgress(true);
       setTestResult(null);
@@ -690,7 +1013,7 @@ const ModerationPage = ({
       showToast('Test completed!');
     } catch { showToast('Test failed', 'error'); }
     finally { setTestingInProgress(false); }
-  };
+  }, [testCommentText, testingRule]);
 
   
 
@@ -825,7 +1148,7 @@ const ModerationPage = ({
                               1. Select Content / Video
                             </label>
                             <div
-                              onClick={() => setContentPickerOpen(true)}
+                              onClick={openContentPicker}
                               className="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex items-center justify-between cursor-pointer hover:border-[#ff0000] transition-all group"
                             >
                               <div className="flex items-center gap-3 min-w-0">
@@ -1119,7 +1442,7 @@ const ModerationPage = ({
                                       <div key={cIdx} className="w-[180px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-lg flex flex-col justify-between">
                                         <div>
                                           {card.imageUrl ? (
-                                            <img src={card.imageUrl} alt="Card" className="w-full h-24 object-cover" />
+                                            <img src={card.imageUrl} alt="Card" className="w-full h-24 object-cover" loading="lazy" decoding="async" />
                                           ) : (
                                             <div className="w-full h-24 bg-slate-800 flex items-center justify-center text-slate-600">
                                               <VideoIcon size={24} />
@@ -1194,41 +1517,14 @@ const ModerationPage = ({
                 ) : (
                   <div className="divide-y divide-slate-100">
                     {rulesList.map(rule => (
-                      <div key={rule._id} className="flex items-center gap-4 p-4 hover:bg-slate-50 transition-colors">
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <p className="text-sm font-black text-slate-800 truncate">{rule.name}</p>
-                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wide ${rule.status === 'Active' ? 'bg-[#fff1f1] text-[#ff0000]' : 'bg-slate-100 text-slate-500'
-                              }`}>{rule.status}</span>
-                          </div>
-                          <p className="text-xs text-slate-400 font-medium mt-0.5">
-                            {rule.triggerType === 'any_comment' ? 'Any comment' : `Keywords: ${(rule.keywords || []).join(', ')}`}
-                            {'  '}Triggers: {rule.triggeredCount || 0}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-1.5 shrink-0">
-                          <button
-                            onClick={() => handleToggleStatus(rule)}
-                            className={`p-2 rounded-xl transition-colors ${rule.status === 'Active' ? 'text-[#f9ab00] hover:bg-[#fff8e1]' : 'text-[#ff0000] hover:bg-[#fff1f1]'}`}
-                            title={rule.status === 'Active' ? 'Pause' : 'Activate'}
-                          >
-                            {rule.status === 'Active' ? <Pause size={15} /> : <Play size={15} />}
-                          </button>
-                          <button onClick={() => handleEditRule(rule)} className="p-2 rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors" title="Edit">
-                            <Edit size={15} />
-                          </button>
-                          <button
-                            onClick={() => { setTestingRule(rule); setTestModalOpen(true); }}
-                            className="p-2 rounded-xl text-[#ff0000] hover:bg-[#fff1f1] hover:text-[#ff0000] transition-colors"
-                            title="Test"
-                          >
-                            <Eye size={15} />
-                          </button>
-                          <button onClick={() => handleDeleteRule(rule)} className="p-2 rounded-xl text-red-400 hover:bg-red-50 hover:text-red-600 transition-colors" title="Delete">
-                            <Trash2 size={15} />
-                          </button>
-                        </div>
-                      </div>
+                      <RuleRowCard
+                        key={rule._id}
+                        rule={rule}
+                        onToggleStatus={handleToggleStatus}
+                        onEdit={handleEditRule}
+                        onTest={(r) => { setTestingRule(r); setTestModalOpen(true); }}
+                        onDelete={handleDeleteRule}
+                      />
                     ))}
                   </div>
                 )}
@@ -1237,16 +1533,8 @@ const ModerationPage = ({
           )}
 
           {/*  TAB 2: COMMENT CHAT HISTORY  */}
-          {mainTab === 'comment-chat' && (() => {
-            const filteredTriggers = channelChatItems.filter(t => {
-              const matchesSearch = t.trigger.toLowerCase().includes(chatSearch.toLowerCase()) ||
-                t.caption.toLowerCase().includes(chatSearch.toLowerCase());
-              return matchesSearch;
-            });
-            const selectedTriggerItem = channelChatItems.find(t => t.id === selectedChatId) || filteredTriggers[0];
-
-            return (
-              <div className="bg-white border border-slate-100 rounded-[24px] sm:rounded-[28px] p-4 sm:p-6 shadow-sm space-y-5 sm:space-y-6">
+          {mainTab === 'comment-chat' && (
+            <div className="bg-white border border-slate-100 rounded-[24px] sm:rounded-[28px] p-4 sm:p-6 shadow-sm space-y-5 sm:space-y-6">
                 {/* Header */}
                 <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                   <div>
@@ -1408,35 +1696,7 @@ const ModerationPage = ({
                           {/* Chat Stream Messages */}
                           <div className="space-y-5 overflow-visible max-h-none pr-0 lg:overflow-y-auto lg:max-h-[380px] lg:pr-2">
                             {selectedTriggerItem.comments.map(c => (
-                              <div key={c.id} className="space-y-2 border-b border-slate-100 pb-4 last:border-0">
-                                <div className="flex items-center justify-between text-xs font-black">
-                                  <span className="text-[#ff0000] hover:underline cursor-pointer">{c.username}</span>
-                                  <span className="text-[11px] text-slate-400 font-medium">{c.time}</span>
-                                </div>
-
-                                <div className="bg-slate-100 text-slate-800 text-xs font-semibold px-4 py-2.5 rounded-2xl max-w-fit">
-                                  "{c.userComment}"
-                                </div>
-
-                                <div className="bg-[#fff1f1] border border-red-100 rounded-2xl p-4 space-y-2 ml-4">
-                                  <div className="flex items-center gap-1.5 text-xs font-black text-[#ff0000]">
-                                    <Sparkles size={14} /> Automated Reply:
-                                  </div>
-                                  <p className="text-xs text-slate-700 font-semibold leading-relaxed whitespace-pre-line">
-                                    {c.autoReply}
-                                  </p>
-                                  {c.link && (
-                                    <a
-                                      href={c.link}
-                                      target="_blank"
-                                      rel="noreferrer"
-                                      className="inline-flex items-center gap-1.5 text-xs font-bold text-[#ff0000] hover:underline bg-white px-3 py-1.5 rounded-xl border border-red-100 shadow-sm mt-1"
-                                    >
-                                      <ExternalLink size={12} /> {c.link}
-                                    </a>
-                                  )}
-                                </div>
-                              </div>
+                              <CommentThreadItem key={c.id} c={c} />
                             ))}
                           </div>
                         </div>
@@ -1472,8 +1732,7 @@ const ModerationPage = ({
                   </div>
                 </div>
               </div>
-            );
-          })()}
+            )}
 
           {/*  TAB 3: COMMENT HISTORY  */}
           {mainTab === 'comment-history' && (
@@ -1590,148 +1849,7 @@ const ModerationPage = ({
                 ) : (
                   <div className="space-y-4">
                     {historyLogs.map(log => (
-                      <div
-                        key={log.id}
-                        className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:border-slate-300 transition-all space-y-3"
-                      >
-                        {/* Card Header: Author + Date */}
-                        <div className="flex items-center justify-between flex-wrap gap-2">
-                          <div className="flex items-center gap-2">
-                            <div className="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center shrink-0">
-                              <User size={13} className="text-slate-500" />
-                            </div>
-                            <span className="text-xs font-black text-slate-900">
-                              {log.authorName?.startsWith('@') ? log.authorName : `@${log.authorName || 'user'}`}
-                            </span>
-                          </div>
-                          <span className="text-[11px] text-slate-400 font-semibold">
-                            {log.actionDate ? new Date(log.actionDate).toLocaleString() : ''}
-                          </span>
-                        </div>
-
-                        {/* Video Name */}
-                        <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
-                          <VideoIcon size={12} className="text-slate-400" />
-                          {log.videoTitle || 'Unknown Video'}
-                        </div>
-
-                        {/* Original Comment */}
-                        <div className="bg-slate-50 border border-slate-100 rounded-xl p-3.5 text-xs text-slate-800 font-semibold">
-                          &ldquo;{log.commentText || 'No comment text recorded.'}&rdquo;
-                        </div>
-
-                        {/* Type-specific content */}
-                        {log.type === 'replied' && log.replyText && (
-                          <div className="bg-[#fff1f1] border border-red-100 rounded-xl p-3.5 text-xs text-slate-700 font-semibold space-y-3">
-                            <p className="font-bold text-[#ff0000] flex items-center gap-1">
-                              <Sparkles size={11} /> {log.replyType === 'Carousel' ? 'Carousel Reply:' : 'AI Reply:'}
-                            </p>
-                            {log.replyType === 'Carousel' && log.carouselCards && log.carouselCards.length > 0 ? (
-                              <div className="flex gap-3 overflow-x-auto pb-2 pt-1 max-w-full scrollbar-thin">
-                                {log.carouselCards.map((card, cIdx) => (
-                                  <div key={cIdx} className="w-[200px] shrink-0 bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between">
-                                    {card.imageUrl && (
-                                      <img src={card.imageUrl} alt={card.title} className="w-full h-24 object-cover border-b border-slate-100" />
-                                    )}
-                                    <div className="p-3 space-y-1.5 flex-1 flex flex-col justify-between">
-                                      <div>
-                                        <h4 className="text-xs font-black text-slate-900 truncate">{card.title || 'Untitled Card'}</h4>
-                                        <p className="text-[10px] text-slate-500 line-clamp-2 mt-0.5 leading-relaxed font-semibold">{card.description || 'No description provided.'}</p>
-                                      </div>
-                                      {card.link || card.buttonUrl ? (
-                                        <a
-                                          href={card.link || card.buttonUrl}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                          className="block w-full py-1.5 text-center bg-[#fff1f1] hover:bg-red-100 text-[#ff0000] border border-red-100 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all mt-2"
-                                        >
-                                          {card.btnLabel || card.buttonText || 'View Detail'}
-                                        </a>
-                                      ) : (
-                                        <span className="block w-full py-1.5 text-center bg-slate-50 text-slate-400 border border-slate-200 rounded-lg text-[10px] font-black uppercase tracking-wider mt-2">
-                                          {card.btnLabel || card.buttonText || 'View Detail'}
-                                        </span>
-                                      )}
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            ) : (
-                              <p className="whitespace-pre-line leading-relaxed">{log.replyText}</p>
-                            )}
-                          </div>
-                        )}
-
-                        {(log.type === 'deleted' || log.type === 'hidden') && log.category && (
-                          <div className="bg-red-50 border border-red-100 rounded-xl p-3.5 text-xs space-y-1.5">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <span className="font-bold text-red-700">Category:</span>
-                              <span className="capitalize font-semibold text-red-800">{log.category}</span>
-                              {log.confidence != null && (
-                                <>
-                                  <span className="text-slate-400"></span>
-                                  <span className="font-bold text-slate-600">
-                                    Confidence: {log.confidence > 1
-                                      ? `${Math.round(log.confidence)}%`
-                                      : `${Math.round(log.confidence * 100)}%`}
-                                  </span>
-                                </>
-                              )}
-                            </div>
-                            {log.reason && (
-                              <p className="text-slate-600 font-medium">
-                                <span className="font-bold text-slate-700">Reason:</span> {log.reason}
-                              </p>
-                            )}
-                          </div>
-                        )}
-
-                        {log.status === 'failed' && log.reason && log.type === 'replied' && (
-                          <div className="bg-red-50 border border-red-100 rounded-xl p-3 text-xs">
-                            <p className="text-red-600 font-semibold">
-                              <span className="font-bold">Error:</span> {log.reason}
-                            </p>
-                          </div>
-                        )}
-
-                        {/* Footer: Badges */}
-                        <div className="flex items-center gap-2 flex-wrap border-t border-slate-100 pt-3">
-                          {/* Type badge */}
-                          {log.type === 'replied' && (
-                            <span className="px-2.5 py-0.5 text-[10px] font-black rounded-md uppercase bg-[#fff1f1] text-[#ff0000] flex items-center gap-1">
-                              <Send size={9} /> Replied
-                            </span>
-                          )}
-                          {log.type === 'deleted' && (
-                            <span className="px-2.5 py-0.5 text-[10px] font-black rounded-md uppercase bg-red-100 text-red-700 flex items-center gap-1">
-                              <Trash2 size={9} /> Deleted
-                            </span>
-                          )}
-                          {log.type === 'hidden' && (
-                            <span className="px-2.5 py-0.5 text-[10px] font-black rounded-md uppercase bg-[#fff8e1] text-[#b06000] flex items-center gap-1">
-                              <Eye size={9} /> Hidden
-                            </span>
-                          )}
-
-                          {/* Status badge */}
-                          <span className={`px-2.5 py-0.5 text-[10px] font-black rounded-md uppercase flex items-center gap-1 ${
-                            log.status === 'success'
-                              ? 'bg-[#fff1f1] text-[#ff0000]'
-                              : 'bg-rose-100 text-rose-700'
-                          }`}>
-                            {log.status === 'success'
-                              ? <><CheckCircle size={9} /> Success</>
-                              : <><AlertTriangle size={9} /> Failed</>}
-                          </span>
-
-                          {/* Trigger keyword if replied */}
-                          {log.triggerKeyword && log.type === 'replied' && (
-                            <span className="px-2.5 py-0.5 bg-[#fff1f1] text-[#ff0000] text-[10px] font-black rounded-md">
-                              Keyword: {log.triggerKeyword}
-                            </span>
-                          )}
-                        </div>
-                      </div>
+                      <HistoryLogCard key={log.id} log={log} />
                     ))}
                   </div>
                 )}
@@ -1840,7 +1958,7 @@ const ModerationPage = ({
                 </button>
               </div>
 
-              <div className="flex-1 overflow-y-auto pr-1">
+              <div className="flex-1 overflow-y-auto pr-1 custom-scroll" onScroll={handlePickerScroll}>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {/* Option 1: All Content (Channel-wide) */}
                   <div
@@ -1859,69 +1977,27 @@ const ModerationPage = ({
                     <p className="text-[10px] opacity-70 font-semibold mt-1">Channel-wide</p>
                   </div>
 
-                  {/* Channel Videos / Shorts Grid */}
-                  {([...videos].sort((a, b) => {
-                    const aLive = isLiveContent(a) && Boolean(a.isLive || a.liveBroadcastContent === 'live');
-                    const bLive = isLiveContent(b) && Boolean(b.isLive || b.liveBroadcastContent === 'live');
-                    if (aLive && !bLive) return -1;
-                    if (!aLive && bLive) return 1;
-                    return new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0);
-                  })).map(v => (
-                    <div
-                      key={v.videoId}
-                      onClick={() => {
-                        setSelectedVideoId(v.videoId);
-                        setContentPickerOpen(false);
-                        showToast(`Target set to: ${v.title?.substring(0, 20)}...`, 'info');
-                      }}
-                      className={`rounded-2xl border-2 overflow-hidden cursor-pointer transition-all relative group flex flex-col ${selectedVideoId === v.videoId
-                          ? 'border-[#ff0000] ring-2 ring-red-500/20'
-                          : 'border-slate-200 hover:border-red-200'
-                        }`}
-                    >
-                      <div className="h-28 bg-slate-900 relative overflow-hidden">
-                        {v.thumbnail ? (
-                          <ThumbnailImage 
-                            initialSrc={v.thumbnail} 
-                            alt={v.title} 
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-slate-600 font-black">
-                            <VideoIcon size={24} />
-                          </div>
-                        )}
-                        {/* Content Type Badge */}
-                        <div className="absolute top-2 left-2 flex items-center gap-1">
-                          {getContentKind(v) === 'Live' ? (
-                            <span className="px-2 py-0.5 bg-[#ff0000] text-white text-[9px] font-black uppercase tracking-wider rounded-md flex items-center gap-1 shadow-sm">
-                              <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
-                              Live
-                            </span>
-                          ) : getContentKind(v) === 'Short' ? (
-                            <span className="px-2 py-0.5 bg-violet-600 text-white text-[9px] font-black uppercase tracking-wider rounded-md shadow-sm">
-                              Short
-                            </span>
-                          ) : getContentKind(v) === 'Post' ? (
-                            <span className="px-2 py-0.5 bg-sky-600 text-white text-[9px] font-black uppercase tracking-wider rounded-md shadow-sm">
-                              Post
-                            </span>
-                          ) : (
-                            <span className="px-2 py-0.5 bg-slate-700 text-white text-[9px] font-black uppercase tracking-wider rounded-md shadow-sm">
-                              Video
-                            </span>
-                          )}
-                        </div>
-                        {selectedVideoId === v.videoId && (
-                          <div className="absolute top-2 right-2 bg-[#ff0000] text-white p-1 rounded-full shadow">
-                            <Check size={12} />
-                          </div>
-                        )}
-                      </div>
-                      <div className="p-2.5 bg-white flex-1 flex flex-col justify-between">
-                        <p className="text-xs font-black text-slate-800 line-clamp-2 leading-tight">{v.title || v.videoId}</p>
-                      </div>
+                  {/* Loading State */}
+                  {loadingVideos && videos.length === 0 && (
+                    <div className="rounded-2xl border-2 border-dashed border-slate-200 p-3 flex flex-col items-center justify-center text-center aspect-square bg-slate-50 animate-pulse">
+                      <RefreshCw size={24} className="animate-spin text-[#ff0000] mb-2" />
+                      <p className="text-xs font-black text-slate-700">Loading Content...</p>
+                      <p className="text-[10px] text-slate-400 font-semibold mt-1">Syncing library</p>
                     </div>
+                  )}
+
+                  {/* Channel Videos / Shorts Grid with chunked rendering */}
+                  {sortedContentList.slice(0, pickerDisplayLimit).map(v => (
+                    <ContentPickerCard
+                      key={v.videoId}
+                      v={v}
+                      isSelected={selectedVideoId === v.videoId}
+                      onSelect={(item) => {
+                        setSelectedVideoId(item.videoId);
+                        setContentPickerOpen(false);
+                        showToast(`Target set to: ${item.title?.substring(0, 20)}...`, 'info');
+                      }}
+                    />
                   ))}
                 </div>
               </div>
@@ -1942,7 +2018,7 @@ const ModerationPage = ({
   );
 };
 
-export default ModerationPage;
+export default React.memo(ModerationPage);
 
 
 

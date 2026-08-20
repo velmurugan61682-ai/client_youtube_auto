@@ -31,6 +31,8 @@ const ChannelsPage = ({ channels, onDisconnect, onAdd, setActiveTab, setSelected
                   src={channel.thumbnailUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(channel.title)}&background=ff0000&color=ffffff`}
                   alt={channel.title}
                   className="w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
                 />
               </div>
               <div className="min-w-0 flex-1">
