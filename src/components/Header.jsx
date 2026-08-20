@@ -244,7 +244,7 @@ const Header = ({
           onClick={() => setActiveTab && setActiveTab('dashboard')}
           className="flex items-center cursor-pointer group select-none py-1"
         >
-          <img src="/brand-logo.png" className="h-10 sm:h-11 w-auto object-contain drop-shadow-sm transition-transform group-hover:scale-[1.02]" alt="ChannelBot Logo" loading="lazy" decoding="async" />
+          <img src="/brand-logo.png" className="h-10 sm:h-11 w-auto object-contain drop-shadow-sm transition-transform group-hover:scale-[1.02]" alt="ChannelBot Logo" />
         </div>
 
         {user && user.role === 'admin' && orgs.length > 0 && (
@@ -408,7 +408,7 @@ const Header = ({
           >
             <div className="w-9 h-9 rounded-xl bg-[#0f0f0f] flex items-center justify-center text-white text-xs font-black shadow-md border border-white shrink-0 overflow-hidden">
               {user?.profilePicture ? (
-                <img src={user.profilePicture} className="w-full h-full object-cover" alt="" loading="lazy" decoding="async" />
+                <img src={user.profilePicture} className="w-full h-full object-cover" alt="" />
               ) : (
                 user?.name?.charAt(0).toUpperCase() || 'A'
               )}
@@ -435,7 +435,7 @@ const Header = ({
                 <div className="bg-[#0f0f0f] p-4 flex items-center gap-3 text-white text-left">
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-[#ff0000] to-[#cc0000] flex items-center justify-center text-white font-black text-lg border border-white/20 shrink-0 overflow-hidden">
                     {user?.profilePicture ? (
-                      <img src={user.profilePicture} className="w-full h-full object-cover" alt="" loading="lazy" decoding="async" />
+                      <img src={user.profilePicture} className="w-full h-full object-cover" alt="" />
                     ) : (
                       user?.name?.charAt(0).toUpperCase() || 'A'
                     )}

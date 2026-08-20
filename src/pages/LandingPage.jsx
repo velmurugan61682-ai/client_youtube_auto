@@ -235,7 +235,7 @@ const LandingPage = () => {
               setMobileMenuOpen(false);
             }}
           >
-            <img src="/brand-logo.png" className="h-9 sm:h-10 w-auto object-contain" alt="ChannelBot Logo" loading="lazy" decoding="async" />
+            <img src="/brand-logo.png" className="h-9 sm:h-10 w-auto object-contain" alt="ChannelBot Logo" />
             <div className="flex flex-col items-start leading-tight">
               <span className="text-sm sm:text-base font-black tracking-tight text-[#0f0f0f]">ChannelBot</span>
               <span className="hidden sm:inline-block text-[9px] font-bold text-[#606060] -mt-0.5">AI-powered YouTube Automation</span>
@@ -387,7 +387,7 @@ const LandingPage = () => {
 
         {/* AI Generated Talking Hero Image Showcase Banner */}
         <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.7 }} className="max-w-5xl mx-auto mb-10 rounded-2xl overflow-hidden border border-[#e5e5e5] shadow-sm relative group bg-white">
-          <img src="/yt_human_male_ai_talking.png" alt="Male YouTube Creator Talking with AI Co-Pilot" className="w-full h-[320px] sm:h-[420px] object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
+          <img src="/yt_human_male_ai_talking.png" alt="Male YouTube Creator Talking with AI Co-Pilot" className="w-full h-[320px] sm:h-[420px] object-cover group-hover:scale-105 transition-transform duration-700" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f0f]/90 via-[#0f0f0f]/30 to-transparent p-6 sm:p-10 flex flex-col justify-end text-left">
             <div className="flex items-center gap-2 mb-2">
               <span className="px-3 py-1 rounded-full bg-[#ff0000] text-white border border-[#ff0000] text-[10px] font-black uppercase tracking-widest backdrop-blur-md">
@@ -902,7 +902,7 @@ const LandingPage = () => {
           {/* Brand Info */}
           <div className="md:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
-              <img src="/brand-logo.png" className="h-10 w-auto object-contain brightness-110" alt="ChannelBot Logo" loading="lazy" decoding="async" />
+              <img src="/brand-logo.png" className="h-10 w-auto object-contain brightness-110" alt="ChannelBot Logo" />
               <span className="text-base font-black tracking-tight text-white">ChannelBot</span>
             </div>
             <p className="text-xs font-semibold leading-relaxed max-w-sm text-zinc-400">

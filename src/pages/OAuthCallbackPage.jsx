@@ -40,17 +40,6 @@ const OAuthCallbackPage = () => {
         }
 
         // --- GOOGLE LOGIN / SIGNUP FLOW ---
-        const code = params.get('code');
-        const state = params.get('state');
-
-        // If authorization code is received directly on frontend, forward to backend callback
-        if (!urlToken && code && state) {
-          const apiBase = api.defaults.baseURL || '/api';
-          const cleanApiBase = apiBase.replace(/\/+$/, '');
-          window.location.replace(`${cleanApiBase}/auth/google/callback?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`);
-          return;
-        }
-
         // Check token from URL parameter first, fallback to localStorage
         const token = urlToken || localStorage.getItem('token');
         if (!token || token === 'null' || token === 'undefined') {

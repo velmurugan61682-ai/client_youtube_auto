@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useMemo, useDeferredValue } from 'react';
-import useDebounce from '../utils/useDebounce';
+import React, { useState, useEffect } from 'react';
 import api from '../services/api';
 import {
   Search,
@@ -22,8 +21,6 @@ const LeadsList = ({ searchQuery: globalSearch }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [channels, setChannels] = useState([]);
   const [selectedChannel, setSelectedChannel] = useState('');
-  const debouncedSearch = useDebounce(searchQuery, 300);
-  const deferredSearch = useDeferredValue(debouncedSearch);
 
   useEffect(() => {
     fetchLeads();
@@ -77,15 +74,11 @@ const LeadsList = ({ searchQuery: globalSearch }) => {
     }
   };
 
-  const filteredLeads = useMemo(() => {
-    const q = (deferredSearch || '').toLowerCase();
-    if (!q) return leads;
-    return leads.filter(lead => 
-      lead.authorName?.toLowerCase().includes(q) ||
-      lead.whatsappNumber?.toLowerCase().includes(q) ||
-      lead.originalComment?.toLowerCase().includes(q)
-    );
-  }, [leads, deferredSearch]);
+  const filteredLeads = leads.filter(lead => 
+    lead.authorName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    lead.whatsappNumber?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    lead.originalComment?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -356,5 +349,5 @@ const LeadsList = ({ searchQuery: globalSearch }) => {
   );
 };
 
-export default React.memo(LeadsList);
+export default LeadsList;
 

@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import useDebounce from '../utils/useDebounce';
+import React, { useState, useEffect } from 'react';
 import { 
    
   Search, 
@@ -119,20 +118,16 @@ const AdminSubscriptionsPage = () => {
     }
   };
 
-  const debouncedSearch = useDebounce(search, 300);
-
-  const filtered = useMemo(() => {
-    const query = debouncedSearch.toLowerCase().trim();
-    return subscriptions.filter(s => {
-      const matchesSearch = !query || 
-                            s.clientName?.toLowerCase().includes(query) || 
-                            s.email?.toLowerCase().includes(query) ||
-                            s.subscriptionId?.toLowerCase().includes(query);
-      const matchesStatus = statusFilter === 'all' || s.status === statusFilter;
-      const matchesPlan = planFilter === 'all' || s.plan === planFilter;
-      return matchesSearch && matchesStatus && matchesPlan;
-    });
-  }, [subscriptions, debouncedSearch, statusFilter, planFilter]);
+  const filtered = subscriptions.filter(s => {
+    const query = search.toLowerCase();
+    const matchesSearch = !search || 
+                          s.clientName?.toLowerCase().includes(query) || 
+                          s.email?.toLowerCase().includes(query) ||
+                          s.subscriptionId?.toLowerCase().includes(query);
+    const matchesStatus = statusFilter === 'all' || s.status === statusFilter;
+    const matchesPlan = planFilter === 'all' || s.plan === planFilter;
+    return matchesSearch && matchesStatus && matchesPlan;
+  });
 
   return (
     <div className="space-y-6">

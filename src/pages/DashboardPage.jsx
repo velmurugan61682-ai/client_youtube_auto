@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useDeferredValue } from 'react';
+import React, { useState } from 'react';
 import {
   PieChart, Pie, Cell,
   ResponsiveContainer, Tooltip
@@ -14,29 +14,6 @@ import {
 import StatsGrid from '../components/StatsGrid';
 import { SENTIMENT_COLORS, SENTIMENT_ORDER } from '../utils/constants/sentimentColors';
 
-const LiveFeedCard = React.memo(({ activity, isDark, softClass, mutedClass }) => (
-  <div className={`${softClass} p-3 border rounded-2xl`}>
-    <div className="flex items-center justify-between mb-1">
-      <span className={`text-[10px] font-black uppercase ${mutedClass}`}>
-        {activity.type === 'delete' ? 'Auto-Deleted' : activity.type === 'like' ? 'Auto-Liked' : 'Analyzed'}
-      </span>
-      <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${isDark ? 'bg-[#181818] border-[#2a2a2a] text-[#aaaaaa]' : 'bg-white border-[#f0f0f0] text-[#606060]'}`}>
-        {Math.round((activity.confidence || 0) * 100)}%
-      </span>
-    </div>
-    <p className={`text-[11px] line-clamp-1 italic ${mutedClass}`}>"{activity.text}"</p>
-  </div>
-));
-
-const LiveNotificationItem = React.memo(({ activity, softClass, textClass, mutedClass }) => (
-  <div className={`${softClass} rounded-xl border p-3`}>
-    <p className={`text-[11px] font-black uppercase ${textClass}`}>
-      {activity.type === 'delete' ? 'Auto deleted' : activity.type === 'like' ? 'Auto liked' : 'Analyzed'}
-    </p>
-    <p className={`mt-1 line-clamp-2 text-xs font-semibold ${mutedClass}`}>{activity.text || 'New activity received.'}</p>
-  </div>
-));
-
 const DashboardPage = ({
   stats,
   channels,
@@ -44,41 +21,33 @@ const DashboardPage = ({
   setSelectedChannelId,
   fetchAnalytics,
   loading,
-  activities = [],
+  activities,
   searchQuery,
   dateRange,
   setDateRange,
   isDark = false
 }) => {
   const [showNotifications, setShowNotifications] = useState(false);
-  const deferredSearch = useDeferredValue(searchQuery);
-
   const panelClass = isDark ? 'bg-[#181818] border-[#2a2a2a]' : 'bg-white border-white/80';
   const softClass = isDark ? 'bg-[#202020] border-[#2a2a2a]' : 'bg-[#f7f7f7] border-[#ededed]';
   const textClass = isDark ? 'text-white' : 'text-[#0f0f0f]';
   const mutedClass = isDark ? 'text-[#aaaaaa]' : 'text-[#606060]';
 
-  const sentimentData = useMemo(() => {
-    return SENTIMENT_ORDER.map(sentimentKey => {
-      const cat = stats?.categories?.find(c => c._id === sentimentKey);
-      const config = SENTIMENT_COLORS[sentimentKey];
-      return {
-        name: config.label,
-        key: sentimentKey,
-        value: cat?.count || 0,
-        color: config.color
-      };
-    }).filter(data => data.value > 0);
-  }, [stats?.categories]);
+  const sentimentData = SENTIMENT_ORDER.map(sentimentKey => {
+    const cat = stats?.categories?.find(c => c._id === sentimentKey);
+    const config = SENTIMENT_COLORS[sentimentKey];
+    return {
+      name: config.label,
+      key: sentimentKey,
+      value: cat?.count || 0,
+      color: config.color
+    };
+  }).filter(data => data.value > 0);
 
-  const filteredActivities = useMemo(() => {
-    const query = (deferredSearch || '').toLowerCase().trim();
-    if (!query) return activities;
-    return activities.filter(a =>
-      (a.text || '').toLowerCase().includes(query) ||
-      (a.author || '').toLowerCase().includes(query)
-    );
-  }, [activities, deferredSearch]);
+  const filteredActivities = activities.filter(a =>
+    (a.text || '').toLowerCase().includes((searchQuery || '').toLowerCase()) ||
+    a.author?.toLowerCase().includes((searchQuery || '').toLowerCase())
+  );
 
   return (
     <motion.div
@@ -150,13 +119,10 @@ const DashboardPage = ({
                     {filteredActivities.length === 0 ? (
                       <div className={`${softClass} rounded-xl border p-4 text-center text-xs font-semibold ${mutedClass}`}>No live notifications yet.</div>
                     ) : filteredActivities.slice(0, 6).map((activity, index) => (
-                      <LiveNotificationItem
-                        key={activity._id || activity.id || index}
-                        activity={activity}
-                        softClass={softClass}
-                        textClass={textClass}
-                        mutedClass={mutedClass}
-                      />
+                      <div key={activity._id || activity.id || index} className={`${softClass} rounded-xl border p-3`}>
+                        <p className={`text-[11px] font-black uppercase ${textClass}`}>{activity.type === 'delete' ? 'Auto deleted' : activity.type === 'like' ? 'Auto liked' : 'Analyzed'}</p>
+                        <p className={`mt-1 line-clamp-2 text-xs font-semibold ${mutedClass}`}>{activity.text || 'New activity received.'}</p>
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -248,13 +214,13 @@ const DashboardPage = ({
                   <p className="text-[11px] font-bold">No matching activities...</p>
                 </div>
               ) : filteredActivities.map((activity, index) => (
-                <LiveFeedCard
-                  key={activity._id || activity.id || index}
-                  activity={activity}
-                  isDark={isDark}
-                  softClass={softClass}
-                  mutedClass={mutedClass}
-                />
+                <div key={activity._id || activity.id || index} className={`${softClass} p-3 border rounded-2xl`}>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className={`text-[10px] font-black uppercase ${mutedClass}`}>{activity.type === 'delete' ? 'Auto-Deleted' : activity.type === 'like' ? 'Auto-Liked' : 'Analyzed'}</span>
+                    <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${isDark ? 'bg-[#181818] border-[#2a2a2a] text-[#aaaaaa]' : 'bg-white border-[#f0f0f0] text-[#606060]'}`}>{Math.round((activity.confidence || 0) * 100)}%</span>
+                  </div>
+                  <p className={`text-[11px] line-clamp-1 italic ${mutedClass}`}>"{activity.text}"</p>
+                </div>
               ))}
             </div>
           </div>
@@ -305,4 +271,4 @@ const DashboardPage = ({
   );
 };
 
-export default React.memo(DashboardPage);
+export default DashboardPage;

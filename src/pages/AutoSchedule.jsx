@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import api from '../services/api';
 import { 
   Clock, 
@@ -49,8 +49,18 @@ const AutoSchedule = ({ channels = [], selectedChannelId, setSelectedChannelId }
     }
   }, [selectedChannelId]);
 
-  const fetchQueue = useCallback(async () => {
-    if (!activeChannel) return;
+  // Load schedule queue and poll every 30s
+  useEffect(() => {
+    if (activeChannel) {
+      fetchQueue();
+      const interval = setInterval(fetchQueue, 30000);
+      return () => clearInterval(interval);
+    } else {
+      setLoadingQueue(false);
+    }
+  }, [activeChannel]);
+
+  const fetchQueue = async () => {
     try {
       const res = await api.get('/deepseek/schedule-queue', {
         params: { channelId: activeChannel }
@@ -61,50 +71,15 @@ const AutoSchedule = ({ channels = [], selectedChannelId, setSelectedChannelId }
     } finally {
       setLoadingQueue(false);
     }
-  }, [activeChannel]);
+  };
 
-  // Load schedule queue and poll every 30s
-  useEffect(() => {
-    if (activeChannel) {
-      fetchQueue();
-      const interval = setInterval(fetchQueue, 30000);
-      return () => clearInterval(interval);
-    } else {
-      setLoadingQueue(false);
-    }
-  }, [activeChannel, fetchQueue]);
-
-  // Stats computation memoized
-  const { queuedCount, publishedCount, failedCount, nextPublishItem } = useMemo(() => {
-    let queued = 0;
-    let published = 0;
-    let failed = 0;
-    const scheduledItems = [];
-
-    for (const item of queue) {
-      if (item.status === 'scheduled' || item.status === 'pending' || item.status === 'publishing') {
-        queued++;
-      }
-      if (item.status === 'published') {
-        published++;
-      }
-      if (item.status === 'failed') {
-        failed++;
-      }
-      if (item.status === 'scheduled') {
-        scheduledItems.push(item);
-      }
-    }
-
-    scheduledItems.sort((a, b) => new Date(a.scheduledTime || 0) - new Date(b.scheduledTime || 0));
-
-    return {
-      queuedCount: queued,
-      publishedCount: published,
-      failedCount: failed,
-      nextPublishItem: scheduledItems[0] || null
-    };
-  }, [queue]);
+  // Stats computation
+  const queuedCount = queue.filter(item => item.status === 'scheduled' || item.status === 'pending' || item.status === 'publishing').length;
+  const publishedCount = queue.filter(item => item.status === 'published').length;
+  const failedCount = queue.filter(item => item.status === 'failed').length;
+  const nextPublishItem = queue
+    .filter(item => item.status === 'scheduled')
+    .sort((a, b) => new Date(a.scheduledTime) - new Date(b.scheduledTime))[0];
 
   const onDrop = async (acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -720,5 +695,5 @@ const AutoSchedule = ({ channels = [], selectedChannelId, setSelectedChannelId }
   );
 };
 
-export default React.memo(AutoSchedule);
+export default AutoSchedule;
 

@@ -101,7 +101,7 @@ const HumanAiAutomationShowcase = () => {
 
           <div className="lg:col-span-5 space-y-4">
             <div className="relative rounded-[20px] overflow-hidden border border-[#e5e5e5] shadow-xl">
-              <img src="/yt_human_male_ai_talking.png" alt="Creator talking with ChannelBot" className="w-full h-60 object-cover" loading="lazy" decoding="async" />
+              <img src="/yt_human_male_ai_talking.png" alt="Creator talking with ChannelBot" className="w-full h-60 object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f0f]/90 via-transparent to-transparent p-4 flex flex-col justify-end">
                 <span className="w-fit rounded-md bg-[#ff0000] px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-white">YouTube AI Workflow</span>
                 <p className="mt-2 text-xs font-bold text-white">Creator operations with live AI assistance</p>

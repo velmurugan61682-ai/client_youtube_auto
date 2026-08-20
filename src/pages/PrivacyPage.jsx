@@ -17,7 +17,7 @@ const PrivacyPage = () => {
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-[#e5e5e5]">
         <div className="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between gap-4">
           <Link to="/" className="flex items-center gap-2 select-none min-w-0">
-            <img src="/brand-logo.png" className="h-9 w-auto object-contain" alt="ChannelBot Logo" loading="lazy" decoding="async" />
+            <img src="/brand-logo.png" className="h-9 w-auto object-contain" alt="ChannelBot Logo" />
             <div className="flex flex-col items-start leading-none min-w-0">
               <span className="text-base font-black tracking-tight text-zinc-900">ChannelBot</span>
               <span className="text-[9px] font-semibold text-zinc-500 mt-0.5">AI-powered YouTube Comment Automation</span>
