@@ -1,8 +1,19 @@
-import React from 'react';
-import { PlaySquare, AlertTriangle } from 'lucide-react';
+import React, { useState } from 'react';
+import { PlaySquare, AlertTriangle, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const ChannelsPage = ({ channels, onDisconnect, onAdd, setActiveTab, setSelectedChannelId }) => {
+  const [adding, setAdding] = useState(false);
+
+  const handleAdd = async () => {
+    setAdding(true);
+    try {
+      await onAdd();
+    } finally {
+      setAdding(false);
+    }
+  };
+
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 min-h-[calc(100svh-5.5rem)] min-[1025px]:h-[calc(100vh-2.5rem)] min-[1025px]:min-h-[760px] overflow-visible min-[1025px]:overflow-hidden rounded-[28px] bg-[#eef3f5] p-4 sm:p-5 text-[#0f0f0f]">
       <div className="rounded-[22px] bg-white border border-[#e5e5e5] shadow-sm px-5 sm:px-7 py-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -10,11 +21,12 @@ const ChannelsPage = ({ channels, onDisconnect, onAdd, setActiveTab, setSelected
           <h1 className="text-3xl font-black text-[#0f0f0f] tracking-tighter">Connected Channels</h1>
         </div>
         <button
-          onClick={onAdd}
-          className="yt-btn-primary flex items-center gap-2 px-6 py-3"
+          onClick={handleAdd}
+          disabled={adding}
+          className="yt-btn-primary flex items-center gap-2 px-6 py-3 disabled:opacity-50 cursor-pointer"
         >
-          <PlaySquare size={20} fill="currentColor" />
-          Link New Account
+          {adding ? <Loader2 size={20} className="animate-spin" /> : <PlaySquare size={20} fill="currentColor" />}
+          {adding ? 'Connecting...' : 'Link New Account'}
         </button>
       </div>
 
@@ -103,14 +115,15 @@ const ChannelsPage = ({ channels, onDisconnect, onAdd, setActiveTab, setSelected
 
         {/* Add Card */}
         <button
-          onClick={onAdd}
-          className="yt-card border-dashed border-[#cccccc] flex flex-col items-center justify-center gap-4 text-[#909090] hover:text-[#0f0f0f] hover:border-[#909090] bg-[#fcfcfc] min-h-[180px] transition-all"
+          onClick={handleAdd}
+          disabled={adding}
+          className="yt-card border-dashed border-[#cccccc] flex flex-col items-center justify-center gap-4 text-[#909090] hover:text-[#0f0f0f] hover:border-[#909090] bg-[#fcfcfc] min-h-[180px] transition-all disabled:opacity-50 cursor-pointer"
         >
           <div className="w-12 h-12 rounded-full bg-[#f0f0f0] flex items-center justify-center">
-            <PlaySquare size={24} />
+            {adding ? <Loader2 size={24} className="animate-spin text-[#ff0000]" /> : <PlaySquare size={24} />}
           </div>
           <div className="text-center">
-            <p className="text-[15px] font-black">Link New Account</p>
+            <p className="text-[15px] font-black">{adding ? 'Connecting...' : 'Link New Account'}</p>
             <p className="text-[12px] font-medium mt-1">Connect another channel</p>
           </div>
         </button>

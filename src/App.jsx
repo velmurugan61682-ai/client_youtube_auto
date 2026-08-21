@@ -200,8 +200,7 @@ const App = () => {
   }, [user]);
 
   const fetchAnalytics = useCallback(async () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
+    if (!user) {
       console.log('Waiting for login...');
       return;
     }
@@ -229,11 +228,10 @@ const App = () => {
 
     activeAnalyticsPromise = { url, promise };
     return promise;
-  }, [selectedChannelId, dateRange]);
+  }, [selectedChannelId, dateRange, user]);
 
   const fetchChannels = useCallback(async () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
+    if (!user) {
       console.log('Waiting for login...');
       return;
     }
@@ -247,7 +245,7 @@ const App = () => {
         setChannels(res.data);
 
         // Auto-bypass plan gate if they already have 1 or more channels connected
-        if (res.data.length >= 1) {
+        if (res.data && res.data.length >= 1) {
           setPlanSelected(true);
           sessionStorage.setItem('plan_acknowledged', 'true');
         }
@@ -267,7 +265,7 @@ const App = () => {
       });
 
     return activeChannelsPromise;
-  }, [selectedChannelId]);
+  }, [selectedChannelId, user]);
 
   // 1. Fetch channels on startup to verify connected accounts & gate bypass
   useEffect(() => {
@@ -365,32 +363,20 @@ const App = () => {
           onDisconnect={disconnectChannel}
           onAdd={async () => {
             try {
-              const [subRes, channelsRes] = await Promise.all([
-                api.get('/billing/status'),
-                api.get('/youtube/channels')
-              ]);
-              const currentSub = subRes.data?.data?.subscription || subRes.data?.subscription;
-              const userRole = subRes.data?.data?.role || subRes.data?.role;
-              const currentChannelsCount = channelsRes.data?.data?.length || channelsRes.data?.length || 0;
-
-              const isSubActive = currentSub && currentSub.status === 'active';
-              const isAdmin = userRole === 'admin';
-
-              if (!isAdmin && !isSubActive && currentChannelsCount >= 1) {
-
-                setActiveTab('subscription');
-                return;
-              }
-
               const res = await api.post('/youtube/auth/initiate');
-              if (res.data.redirectUrl) {
+              if (res.data && res.data.redirectUrl) {
                 window.location.href = res.data.redirectUrl;
+              } else {
+                throw new Error('No redirect URL returned from server');
               }
             } catch (err) {
-              const errMsg = err.response?.data?.error || 'Failed to initiate secure connection';
-              console.error(errMsg);
-              if (err.response?.status === 403) {
-                setActiveTab('subscription'); // Redirect to subscription plans to upgrade
+              const errMsg = err.response?.data?.error || err.message || 'Failed to initiate secure connection';
+              console.error('[Channel Link Error]', errMsg);
+              if (err.response?.status === 403 || err.response?.status === 402) {
+                alert(errMsg);
+                setActiveTab('subscription');
+              } else {
+                alert(`Unable to connect channel: ${errMsg}`);
               }
             }
           }}
