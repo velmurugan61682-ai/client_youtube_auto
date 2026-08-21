@@ -390,6 +390,9 @@ const VideosList = ({
   const handleVideoSelect = async (videoId, openDetail = true) => {
     try {
       setSelectedVideo(videoId);
+      // Clear comments immediately so previous video's data never bleeds into the new video
+      setComments([]);
+      setFilter('all');  // Reset category filter on every video switch
       if (openDetail && isMobileViewport) setIsMobileDetail(true);
       setLoadingComments(true);
       setLoadingAnalytics(true);
@@ -452,9 +455,9 @@ const VideosList = ({
           ? historyRes.value.data.items
           : [];
 
-        // Convert history items for this video into normalized comment objects
+        // Strict: only keep history comments that belong exactly to this videoId
         const videoHistoryComments = historyItems
-          .filter(h => (h.videoId && h.videoId === videoId) || (h.videoTitle && currentVideo?.title && h.videoTitle === currentVideo.title))
+          .filter(h => h.videoId && h.videoId === videoId)
           .map(h => ({
             _id: h.id,
             youtubeId: h.id,
@@ -463,25 +466,38 @@ const VideosList = ({
             text: h.commentText || '',
             replyText: h.replyText || null,
             status: h.type === 'deleted' ? 'deleted' : (h.type === 'hidden' ? 'flagged' : 'approved'),
-            sentiment: h.category || 'positive',
+            sentiment: h.sentiment || h.category || 'neutral',
             publishedAt: h.actionDate,
             hasReplied: h.type === 'replied',
             replyStatus: h.type === 'replied' ? 'sent' : null,
             isBotHistoryRecord: true
           }));
 
-        // Deduplicate merged comments
+        // Deduplicate merged comments — prefer dbComments data over history
         const mergedMap = new Map();
-        [...dbComments, ...videoHistoryComments].forEach(c => {
-          const key = c.youtubeId || c._id;
+        // Add DB comments first (they are the source of truth)
+        dbComments.forEach(c => {
+          if (!c) return;
+          const key = String(c.youtubeId || c._id || '');
+          if (!key) return;
+          mergedMap.set(key, c);
+        });
+        // Merge history records — only add if not already present from DB
+        videoHistoryComments.forEach(c => {
+          if (!c) return;
+          const key = String(c.youtubeId || c._id || '');
+          if (!key) return;
           if (!mergedMap.has(key)) {
             mergedMap.set(key, c);
           } else {
+            // Merge: keep existing but add replyText if missing
             const existing = mergedMap.get(key);
-            mergedMap.set(key, { ...existing, ...c, replyText: c.replyText || existing.replyText });
+            mergedMap.set(key, { ...existing, replyText: existing.replyText || c.replyText });
           }
         });
         commentsData = Array.from(mergedMap.values());
+        // Final safety: every comment must have the correct videoId
+        commentsData = commentsData.filter(c => !c.videoId || c.videoId === videoId);
       }
 
       try {
@@ -640,8 +656,11 @@ const VideosList = ({
   const getCommentCategory = (c) => {
     if (!c) return 'moderate';
     const sent = String(c.sentiment || c.classification || '').toLowerCase().trim();
-    if (sent === 'positive') return 'positive';
-    if (['toxic', 'spam', 'hate', 'abuse', 'threat', 'scam'].includes(sent)) return 'toxic';
+    // Explicit positive sentiment values
+    if (['positive', 'pos', 'good', 'safe'].includes(sent)) return 'positive';
+    // Explicit toxic sentiment values
+    if (['toxic', 'spam', 'hate', 'abuse', 'threat', 'scam', 'offensive', 'harmful'].includes(sent)) return 'toxic';
+    // Everything else (neutral, negative, moderate, unknown, empty, action types like 'replied'/'deleted') → moderate
     return 'moderate';
   };
 
