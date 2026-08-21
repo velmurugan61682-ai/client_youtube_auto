@@ -60,22 +60,49 @@ const getCleanThumbnail = (video) => {
 };
 
 const parseISO8601Duration = (durationStr) => {
-  if (!durationStr) return { seconds: 0, formatted: '00:00' };
-  const regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
-  const matches = durationStr.match(regex);
-  if (!matches) {
-    return { seconds: 0, formatted: durationStr };
+  if (!durationStr) return { seconds: 0, formatted: '--:--' };
+  
+  const str = String(durationStr).trim();
+
+  // 1. Check MM:SS or HH:MM:SS format (e.g. "0:45", "00:59", "1:30:00")
+  if (str.includes(':')) {
+    const parts = str.split(':').map(p => parseInt(p, 10) || 0);
+    let seconds = 0;
+    if (parts.length === 2) {
+      seconds = parts[0] * 60 + parts[1];
+    } else if (parts.length === 3) {
+      seconds = parts[0] * 3600 + parts[1] * 60 + parts[2];
+    }
+    return { seconds, formatted: str };
   }
-  const hours = parseInt(matches[1] || 0, 10);
-  const minutes = parseInt(matches[2] || 0, 10);
-  const seconds = parseInt(matches[3] || 0, 10);
-  let formatted = '';
-  if (hours > 0) {
-    formatted += `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-  } else {
-    formatted += `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+  // 2. Check pure numbers (e.g. 45 or "45")
+  if (!isNaN(str) && Number(str) > 0) {
+    const totalSec = Math.floor(Number(str));
+    const mins = Math.floor(totalSec / 60);
+    const secs = totalSec % 60;
+    const formatted = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    return { seconds: totalSec, formatted };
   }
-  return { seconds: hours * 3600 + minutes * 60 + seconds, formatted };
+
+  // 3. Check ISO 8601 PT... format (case-insensitive e.g. "PT45S", "pt1m15s")
+  const regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/i;
+  const matches = str.match(regex);
+  if (matches) {
+    const hours = parseInt(matches[1] || 0, 10);
+    const minutes = parseInt(matches[2] || 0, 10);
+    const seconds = parseInt(matches[3] || 0, 10);
+    const totalSec = hours * 3600 + minutes * 60 + seconds;
+    let formatted = '';
+    if (hours > 0) {
+      formatted += `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    } else {
+      formatted += `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    }
+    return { seconds: totalSec, formatted };
+  }
+
+  return { seconds: 0, formatted: str };
 };
 
 const DEFAULT_VIDEO_THUMBNAIL = 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=150&auto=format&fit=crop&q=60';
@@ -184,11 +211,12 @@ const VideosList = ({
 
   const isShortVideo = (video) => {
     if (video.isPost) return false;
+    if (video.isShort || video.type === 'short') return true;
     if (typeof video.durationSeconds === 'number' && video.durationSeconds > 0) {
       return video.durationSeconds <= 60;
     }
     const text = `${video.title || ''} ${video.description || ''} ${video.url || ''}`.toLowerCase();
-    return text.includes('#shorts') || text.includes('/shorts/');
+    return text.includes('#shorts') || text.includes('/shorts/') || text.includes('short');
   };
 
   const isLiveVideo = (video) => {
@@ -596,22 +624,36 @@ const VideosList = ({
     );
   };
 
+  const isMatchingFilter = (c, filterType) => {
+    if (!c) return false;
+    if (filterType === 'all') return true;
+    const sent = String(c.sentiment || c.classification || '').toLowerCase();
+    const status = String(c.status || c.moderationStatus || '').toLowerCase();
+
+    if (filterType === 'positive') {
+      return sent === 'positive' || status === 'approved' || c.autoLiked;
+    }
+    if (filterType === 'toxic') {
+      return sent === 'toxic' || sent === 'spam' || sent === 'hate' || sent === 'abuse' || status === 'deleted' || status === 'flagged';
+    }
+    if (filterType === 'moderate') {
+      return sent === 'moderate' || sent === 'neutral' || status === 'moderate' || status === 'needsreview' || status === 'heldforreview' || status === 'pending';
+    }
+    return false;
+  };
+
   const processedVideoComments = comments.filter(c => {
     if (!selectedVideo) return false;
     if (c.videoId && c.videoId !== selectedVideo) return false;
     if (c.isBotReply || (c.youtubeId && c.youtubeId.includes('.'))) return false;
-    return isBotActedComment(c);
+    return true;
   });
 
-  const filteredComments = processedVideoComments.filter(c => {
-    if (filter === 'all') return true;
-    return c.sentiment === filter;
-  });
+  const filteredComments = processedVideoComments.filter(c => isMatchingFilter(c, filter));
 
   const getStatsForFilter = (type) => {
     if (!selectedVideo) return 0;
-    if (type === 'all') return processedVideoComments.length;
-    return processedVideoComments.filter(c => c.sentiment === type).length;
+    return processedVideoComments.filter(c => isMatchingFilter(c, type)).length;
   };
 
   const filters = [
