@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import api from '../services/api';
 import {
   PlaySquare,
@@ -645,24 +645,29 @@ const VideosList = ({
     return 'moderate';
   };
 
-  const isMatchingFilter = (c, filterType) => {
-    if (!c) return false;
-    if (filterType === 'all') return true;
-    return getCommentCategory(c) === filterType;
-  };
+  // Use useMemo so counts & filtered list always recompute when comments or filter changes
+  const processedVideoComments = useMemo(() => {
+    return comments.filter(c => {
+      if (!c) return false;
+      if (c.isBotReply) return false;
+      if (c.youtubeId && String(c.youtubeId).includes('.')) return false;
+      return true;
+    });
+  }, [comments]);
 
-  const processedVideoComments = comments.filter(c => {
-    if (!c) return false;
-    if (c.isBotReply || (c.youtubeId && c.youtubeId.includes('.'))) return false;
-    return true;
-  });
+  const filteredComments = useMemo(() => {
+    if (filter === 'all') return processedVideoComments;
+    return processedVideoComments.filter(c => getCommentCategory(c) === filter);
+  }, [processedVideoComments, filter]);
 
-  const filteredComments = processedVideoComments.filter(c => isMatchingFilter(c, filter));
+  const commentCounts = useMemo(() => ({
+    all: processedVideoComments.length,
+    positive: processedVideoComments.filter(c => getCommentCategory(c) === 'positive').length,
+    toxic: processedVideoComments.filter(c => getCommentCategory(c) === 'toxic').length,
+    moderate: processedVideoComments.filter(c => getCommentCategory(c) === 'moderate').length,
+  }), [processedVideoComments]);
 
-  const getStatsForFilter = (type) => {
-    if (type === 'all') return processedVideoComments.length;
-    return processedVideoComments.filter(c => getCommentCategory(c) === type).length;
-  };
+  const getStatsForFilter = (type) => commentCounts[type] ?? 0;
 
   const filters = [
     { id: 'all', label: 'All', color: 'bg-[#f2f2f2] text-[#0f0f0f]' },
