@@ -196,10 +196,10 @@ const Settings = () => {
   return (
     <div className="w-full py-4 space-y-8 pb-16">
       {/* Dummy inputs for Chrome Password Manager / Autofill Trap */}
-      <div style={{ position: 'absolute', top: '-1000px', left: '-1000px', width: '0px', height: '0px', overflow: 'hidden' }} aria-hidden="true">
+      <form onSubmit={(e) => e.preventDefault()} style={{ position: 'absolute', top: '-1000px', left: '-1000px', width: '0px', height: '0px', overflow: 'hidden' }} aria-hidden="true">
         <input type="text" name="chrome_autocomplete_trap_email" tabIndex="-1" autoComplete="username" />
         <input type="password" name="chrome_autocomplete_trap_password" tabIndex="-1" autoComplete="current-password" />
-      </div>
+      </form>
       {/* Premium Tab Switcher */}
       <div className="flex flex-wrap bg-white p-1 rounded-[24px] border border-[#f0f0f0] w-full sm:w-fit shadow-sm gap-1">
         {tabs.map((tab) => (

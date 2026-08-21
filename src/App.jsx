@@ -496,10 +496,10 @@ const App = () => {
               ) : (
                 <div className={`client-shell ${clientDark ? 'client-dark' : 'client-light'} min-h-screen min-[1025px]:h-screen flex min-[1025px]:overflow-hidden relative selection:bg-[#ff0000]/20 min-w-0 overflow-x-hidden transition-colors ${clientDark ? 'bg-[#0f0f0f] selection:text-white' : 'bg-white selection:text-[#0f0f0f]'}`}>
                   {/* Dummy inputs for Chrome Password Manager / Autofill Trap */}
-                  <div style={{ position: 'absolute', top: '-1000px', left: '-1000px', width: '0px', height: '0px', overflow: 'hidden' }} aria-hidden="true">
+                  <form onSubmit={(e) => e.preventDefault()} style={{ position: 'absolute', top: '-1000px', left: '-1000px', width: '0px', height: '0px', overflow: 'hidden' }} aria-hidden="true">
                     <input type="text" name="chrome_autocomplete_trap_email" tabIndex="-1" autoComplete="username" />
                     <input type="password" name="chrome_autocomplete_trap_password" tabIndex="-1" autoComplete="current-password" />
-                  </div>
+                  </form>
 
                   <div className="flex flex-1 min-[1025px]:overflow-hidden relative min-w-0 overflow-x-hidden">
                     {!isEmbedded && (
