@@ -33,8 +33,8 @@ export const AuthProvider = ({ children }) => {
 
       if (urlToken) {
         localStorage.setItem('token', urlToken);
-        // Only strip token from URL if NOT on the dedicated OAuth callback route
-        if (window.location.pathname !== '/oauth/callback') {
+        // Only strip token from URL if NOT on an OAuth callback route
+        if (!window.location.pathname.includes('/oauth/callback')) {
           const searchParams = new URLSearchParams(window.location.search);
           searchParams.delete('token');
           const newSearch = searchParams.toString();

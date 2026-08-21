@@ -43,7 +43,7 @@ registerRoute(
 // which serves index.html via its own catch-all rewrite while preserving the full URL.
 const handler = createHandlerBoundToURL('/index.html');
 const navigationRoute = new NavigationRoute(handler, {
-  denylist: [/^\/api/, /^\/socket\.io/, /^\/oauth\/callback/],
+  denylist: [/^\/api/, /^\/socket\.io/, /.*\/oauth\/callback.*/],
 });
 registerRoute(navigationRoute);
 

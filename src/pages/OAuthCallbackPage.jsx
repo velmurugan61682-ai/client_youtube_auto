@@ -16,7 +16,7 @@ const OAuthCallbackPage = () => {
     const handleCallback = async () => {
       try {
         const params = new URLSearchParams(window.location.search);
-        const urlToken = params.get('token');
+        let token = params.get('token') || params.get('jwt') || params.get('access_token');
         const oauthStatus = params.get('status');
         const error = params.get('error');
         const channelId = params.get('channelId');
@@ -51,8 +51,26 @@ const OAuthCallbackPage = () => {
 
         // --- GOOGLE LOGIN / SIGNUP FLOW ---
         // Check token from URL parameter first, fallback to localStorage
-        const token = urlToken || localStorage.getItem('token');
         if (!token || token === 'null' || token === 'undefined') {
+          token = localStorage.getItem('token');
+        }
+
+        // If still no token in URL or localStorage, try cookie-based /auth/me fallback
+        if (!token || token === 'null' || token === 'undefined') {
+          try {
+            const cookieRes = await api.get('/auth/me');
+            if (cookieRes.data) {
+              localStorage.setItem('user', JSON.stringify(cookieRes.data));
+              setStatus('success');
+              setTimeout(() => {
+                window.location.replace('/dashboard');
+              }, 600);
+              return;
+            }
+          } catch (cookieErr) {
+            console.warn('Cookie-based auth verification fallback failed:', cookieErr);
+          }
+
           setErrorMsg('No authentication token received. Please try logging in again.');
           setStatus('error');
           setTimeout(() => window.location.replace('/login'), 3000);
