@@ -33,10 +33,17 @@ registerRoute(
   new NetworkOnly()
 );
 
-// Navigation fallback for SPA routing
+// Navigation fallback for SPA routing.
+// IMPORTANT: /oauth/callback MUST be in the denylist.
+// The Service Worker's createHandlerBoundToURL serves a cached /index.html for any
+// intercepted navigation — which silently strips the entire query string from the URL.
+// That causes window.location.search to be empty when OAuthCallbackPage mounts,
+// so params.get('token') returns null and login always fails.
+// By denylisting /oauth/callback, the browser fetches it from the network (Vercel),
+// which serves index.html via its own catch-all rewrite while preserving the full URL.
 const handler = createHandlerBoundToURL('/index.html');
 const navigationRoute = new NavigationRoute(handler, {
-  denylist: [/^\/api/, /^\/socket.io/],
+  denylist: [/^\/api/, /^\/socket\.io/, /^\/oauth\/callback/],
 });
 registerRoute(navigationRoute);
 
