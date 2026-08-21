@@ -58,6 +58,16 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
+    // Handle 402 Subscription Expired / Required errors
+    if (error.response && error.response.status === 402) {
+      const currentPath = window.location.pathname;
+      if (!currentPath.startsWith('/subscription') && !currentPath.startsWith('/admin') && currentPath !== '/login') {
+        console.warn('[API Interceptor] 402 Subscription Expired/Required received. Redirecting to subscription page...');
+        window.location.href = '/subscription?status=expired';
+      }
+      return Promise.reject(error);
+    }
+
     // Check if it's already a retry or if it's a 4xx error (which we shouldn't retry, e.g. 403/404)
     if (!config || config._retry || (error.response && error.response.status < 500)) {
       return Promise.reject(error);
