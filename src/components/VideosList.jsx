@@ -637,27 +637,22 @@ const VideosList = ({
     );
   };
 
+  const getCommentCategory = (c) => {
+    if (!c) return 'moderate';
+    const sent = String(c.sentiment || c.classification || '').toLowerCase().trim();
+    if (sent === 'positive') return 'positive';
+    if (['toxic', 'spam', 'hate', 'abuse', 'threat', 'scam'].includes(sent)) return 'toxic';
+    return 'moderate';
+  };
+
   const isMatchingFilter = (c, filterType) => {
     if (!c) return false;
     if (filterType === 'all') return true;
-    const sent = String(c.sentiment || c.classification || '').toLowerCase();
-    const status = String(c.status || c.moderationStatus || '').toLowerCase();
-
-    if (filterType === 'positive') {
-      return sent === 'positive' || status === 'approved' || c.autoLiked;
-    }
-    if (filterType === 'toxic') {
-      return sent === 'toxic' || sent === 'spam' || sent === 'hate' || sent === 'abuse' || status === 'deleted' || status === 'flagged';
-    }
-    if (filterType === 'moderate') {
-      return sent === 'moderate' || sent === 'neutral' || status === 'moderate' || status === 'needsreview' || status === 'heldforreview' || status === 'pending';
-    }
-    return false;
+    return getCommentCategory(c) === filterType;
   };
 
   const processedVideoComments = comments.filter(c => {
-    if (!selectedVideo) return false;
-    if (c.videoId && c.videoId !== selectedVideo) return false;
+    if (!c) return false;
     if (c.isBotReply || (c.youtubeId && c.youtubeId.includes('.'))) return false;
     return true;
   });
@@ -665,8 +660,8 @@ const VideosList = ({
   const filteredComments = processedVideoComments.filter(c => isMatchingFilter(c, filter));
 
   const getStatsForFilter = (type) => {
-    if (!selectedVideo) return 0;
-    return processedVideoComments.filter(c => isMatchingFilter(c, type)).length;
+    if (type === 'all') return processedVideoComments.length;
+    return processedVideoComments.filter(c => getCommentCategory(c) === type).length;
   };
 
   const filters = [
