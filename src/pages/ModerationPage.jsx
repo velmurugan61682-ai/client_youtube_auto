@@ -301,6 +301,8 @@ const ModerationPage = ({
   //  Comment History State 
   const [historyType, setHistoryType] = useState('all');
   const [historySummary, setHistorySummary] = useState({ total: 0, replied: 0, deleted: 0, hidden: 0, failed: 0, successRate: 0 });
+  // overallSummary always holds the FULL counts regardless of active filter — used for stat cards
+  const [overallSummary, setOverallSummary] = useState({ total: 0, replied: 0, deleted: 0, hidden: 0, failed: 0, successRate: 0 });
   const [historyLogs, setHistoryLogs] = useState([]);
   const [historyTotal, setHistoryTotal] = useState(0);
   const [historyPages, setHistoryPages] = useState(1);
@@ -479,6 +481,23 @@ const ModerationPage = ({
     }
   };
 
+  // Fetch the overall (unfiltered) summary once per channel — never affected by filter tab
+  const fetchOverallSummary = async (channelId) => {
+    try {
+      const res = await getCommentHistory({
+        channelId: channelId || undefined,
+        type: 'all',
+        page: 1,
+        limit: 1
+      });
+      if (res.summary) {
+        setOverallSummary(res.summary);
+      }
+    } catch (err) {
+      console.error('Failed to load overall summary', err);
+    }
+  };
+
   const fetchModerationQueue = async (page = 1) => {
     try {
       setLoadingMod(true);
@@ -508,6 +527,8 @@ const ModerationPage = ({
     }
     if (mainTab === 'comment-history') {
       fetchHistoryLogs(1);
+      // Always refresh the overall summary when channel or tab changes
+      fetchOverallSummary(selectedChannelId);
     }
   }, [selectedChannelId, mainTab, historyType]);
 
@@ -1501,12 +1522,12 @@ const ModerationPage = ({
                 {/* 6 Summary Cards */}
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
                   {[
-                    { label: 'Total Actions', value: historySummary.total, color: 'text-[#ff0000]', bg: 'bg-[#fff1f1] border-red-100' },
-                    { label: 'AI Replies', value: historySummary.replied, color: 'text-[#ff0000]', bg: 'bg-[#fff1f1] border-red-100' },
-                    { label: 'Deleted', value: historySummary.deleted, color: 'text-red-600', bg: 'bg-red-50 border-red-100' },
-                    { label: 'Hidden', value: historySummary.hidden, color: 'text-[#b06000]', bg: 'bg-[#fff8e1] border-[#f9ab00]/20' },
-                    { label: 'Failed', value: historySummary.failed, color: 'text-rose-600', bg: 'bg-rose-50 border-rose-100' },
-                    { label: 'Success Rate', value: `${historySummary.successRate}%`, color: 'text-[#ff0000]', bg: 'bg-[#fff1f1] border-red-100' }
+                    { label: 'Total Actions', value: overallSummary.total, color: 'text-[#ff0000]', bg: 'bg-[#fff1f1] border-red-100' },
+                    { label: 'AI Replies', value: overallSummary.replied, color: 'text-[#ff0000]', bg: 'bg-[#fff1f1] border-red-100' },
+                    { label: 'Deleted', value: overallSummary.deleted, color: 'text-red-600', bg: 'bg-red-50 border-red-100' },
+                    { label: 'Hidden', value: overallSummary.hidden, color: 'text-[#b06000]', bg: 'bg-[#fff8e1] border-[#f9ab00]/20' },
+                    { label: 'Failed', value: overallSummary.failed, color: 'text-rose-600', bg: 'bg-rose-50 border-rose-100' },
+                    { label: 'Success Rate', value: `${overallSummary.successRate}%`, color: 'text-[#ff0000]', bg: 'bg-[#fff1f1] border-red-100' }
                   ].map(card => (
                     <div key={card.label} className={`border rounded-2xl p-3.5 ${card.bg}`}>
                       <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{card.label}</p>
