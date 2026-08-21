@@ -55,35 +55,14 @@ const OAuthCallbackPage = () => {
           token = localStorage.getItem('token');
         }
 
-        // If still no token in URL or localStorage, try cookie-based /auth/me fallback
-        if (!token || token === 'null' || token === 'undefined') {
-          try {
-            const cookieRes = await api.get('/auth/me');
-            if (cookieRes.data) {
-              localStorage.setItem('user', JSON.stringify(cookieRes.data));
-              setStatus('success');
-              setTimeout(() => {
-                window.location.replace('/dashboard');
-              }, 600);
-              return;
-            }
-          } catch (cookieErr) {
-            console.warn('Cookie-based auth verification fallback failed:', cookieErr);
-          }
-
-          setErrorMsg('No authentication token received. Please try logging in again.');
-          setStatus('error');
-          setTimeout(() => window.location.replace('/login'), 3000);
-          return;
+        if (token && token !== 'null' && token !== 'undefined') {
+          localStorage.setItem('token', token);
         }
 
-        // Save token to localStorage immediately
-        localStorage.setItem('token', token);
-
-        // Verify token against /auth/me
-        const res = await api.get('/auth/me', {
+        // Verify token or httpOnly cookie against /auth/me
+        const res = await api.get('/auth/me', (token && token !== 'null' && token !== 'undefined') ? {
           headers: { Authorization: `Bearer ${token}` }
-        });
+        } : {});
 
         // Save user data and redirect to dashboard
         if (res.data) {

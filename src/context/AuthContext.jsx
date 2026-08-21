@@ -78,12 +78,6 @@ export const AuthProvider = ({ children }) => {
       }
 
       const token = localStorage.getItem('token');
-      if (!token || token === 'null' || token === 'undefined') {
-        setAuthLoading(false);
-        setIsAuthenticated(false);
-        setUser(null);
-        return;
-      }
 
       setAuthLoading(true);
       const res = await api.get('/auth/me');
