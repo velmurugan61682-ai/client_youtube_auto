@@ -426,14 +426,27 @@ const VideosList = ({
 
       if (commentsData.length === 0) {
         const targetChannelId = currentVideo?.channelId || channelId;
-        const [commentsRes, historyRes] = await Promise.allSettled([
+        let [commentsRes, historyRes] = await Promise.allSettled([
           api.get('/comments', { params: { videoId, channelId: targetChannelId } }),
           api.get('/comment-history', { params: { channelId: targetChannelId, limit: 100 } })
         ]);
 
-        const dbComments = commentsRes.status === 'fulfilled'
+        let dbComments = commentsRes.status === 'fulfilled'
           ? (Array.isArray(commentsRes.value.data) ? commentsRes.value.data : (commentsRes.value.data?.comments || []))
           : [];
+
+        // If no comments in DB for this video, auto-sync comments from YouTube Data API
+        if (dbComments.length === 0 && !isLive) {
+          try {
+            await api.get(`/comments/analyze/${videoId}`, { params: { channelId: targetChannelId } });
+            const reFetch = await api.get('/comments', { params: { videoId, channelId: targetChannelId } });
+            if (reFetch.data) {
+              dbComments = Array.isArray(reFetch.data) ? reFetch.data : (reFetch.data.comments || []);
+            }
+          } catch (syncErr) {
+            console.warn('Auto sync for video comments:', syncErr);
+          }
+        }
 
         const historyItems = historyRes.status === 'fulfilled' && historyRes.value.data?.items
           ? historyRes.value.data.items

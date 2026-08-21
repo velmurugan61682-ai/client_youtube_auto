@@ -21,6 +21,10 @@ const OAuthCallbackPage = () => {
         const error = params.get('error');
         const channelId = params.get('channelId');
 
+        if (token && token !== 'null' && token !== 'undefined') {
+          localStorage.setItem('token', token);
+        }
+
         // Handle explicit error parameter from server redirect
         if (oauthStatus === 'error' || error) {
           const msg = decodeURIComponent(error || 'Google connection failed. Please try again.');
