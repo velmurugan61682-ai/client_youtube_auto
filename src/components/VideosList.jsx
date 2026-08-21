@@ -304,16 +304,16 @@ const VideosList = ({
   const [loadingAnalytics, setLoadingAnalytics] = useState(false);
   const [submittingLike, setSubmittingLike] = useState(false);
 
-  // Performance optimizations: render limits for videos and comments
+  // Performance optimizations: lazy render limits for videos and comments
   const [displayLimit, setDisplayLimit] = useState(50);
-  const [commentsDisplayLimit, setCommentsDisplayLimit] = useState(500);
+  const [commentsDisplayLimit, setCommentsDisplayLimit] = useState(50);
 
   useEffect(() => {
     setDisplayLimit(50);
   }, [channelId, videos]);
 
   useEffect(() => {
-    setCommentsDisplayLimit(500);
+    setCommentsDisplayLimit(50);
   }, [selectedVideo, filter]);
 
   const handleVideoListScroll = (e) => {
@@ -430,8 +430,8 @@ const VideosList = ({
       if (commentsData.length === 0) {
         const targetChannelId = currentVideo?.channelId || channelId;
         let [commentsRes, historyRes] = await Promise.allSettled([
-          api.get('/comments', { params: { videoId, channelId: targetChannelId, limit: 500 } }),
-          api.get('/comment-history', { params: { channelId: targetChannelId, limit: 200 } })
+          api.get('/comments', { params: { videoId, channelId: targetChannelId } }),
+          api.get('/comment-history', { params: { channelId: targetChannelId, limit: 100 } })
         ]);
 
         let dbComments = commentsRes.status === 'fulfilled'
@@ -442,7 +442,7 @@ const VideosList = ({
         if (dbComments.length === 0 && !isLive) {
           try {
             await api.get(`/comments/analyze/${videoId}`, { params: { channelId: targetChannelId } });
-            const reFetch = await api.get('/comments', { params: { videoId, channelId: targetChannelId, limit: 500 } });
+            const reFetch = await api.get('/comments', { params: { videoId, channelId: targetChannelId } });
             if (reFetch.data) {
               dbComments = Array.isArray(reFetch.data) ? reFetch.data : (reFetch.data.comments || []);
             }
@@ -455,30 +455,49 @@ const VideosList = ({
           ? historyRes.value.data.items
           : [];
 
-        // Strict: only keep history items that belong exactly to this videoId
-        const matchingHistory = historyItems.filter(h => h.videoId && h.videoId === videoId);
+        // Strict: only keep history comments that belong exactly to this videoId
+        const videoHistoryComments = historyItems
+          .filter(h => h.videoId && h.videoId === videoId)
+          .map(h => ({
+            _id: h.id,
+            youtubeId: h.id,
+            videoId: videoId,
+            author: h.authorName || 'Anonymous',
+            text: h.commentText || '',
+            replyText: h.replyText || null,
+            status: h.type === 'deleted' ? 'deleted' : (h.type === 'hidden' ? 'flagged' : 'approved'),
+            sentiment: h.sentiment || h.category || 'neutral',
+            publishedAt: h.actionDate,
+            hasReplied: h.type === 'replied',
+            replyStatus: h.type === 'replied' ? 'sent' : null,
+            isBotHistoryRecord: true
+          }));
 
-        // Deduplicate and enrich comments strictly belonging to this video
+        // Deduplicate merged comments — prefer dbComments data over history
         const mergedMap = new Map();
+        // Add DB comments first (they are the source of truth)
         dbComments.forEach(c => {
           if (!c) return;
-          if (c.videoId && c.videoId !== videoId) return; // Strict video scoping
-          const key = c.youtubeId ? `yt_${c.youtubeId}` : (c._id ? `id_${c._id}` : `${String(c.author || '').trim().toLowerCase()}:${String(c.text || '').trim().toLowerCase()}`);
+          const key = String(c.youtubeId || c._id || '');
           if (!key) return;
-
-          // Check if there is a matching history record for replyText or status
-          const histMatch = matchingHistory.find(h => h.id === c.youtubeId || h.commentText === (c.text || c.commentText));
-          const enriched = {
-            ...c,
-            videoId: videoId,
-            replyText: c.replyText || histMatch?.replyText || null,
-            hasReplied: Boolean(c.hasReplied || histMatch?.type === 'replied'),
-            status: histMatch?.type === 'deleted' ? 'deleted' : (histMatch?.type === 'hidden' ? 'flagged' : (c.status || 'approved'))
-          };
-          mergedMap.set(key, enriched);
+          mergedMap.set(key, c);
         });
-
-        commentsData = Array.from(mergedMap.values()).filter(c => !c.videoId || c.videoId === videoId);
+        // Merge history records — only add if not already present from DB
+        videoHistoryComments.forEach(c => {
+          if (!c) return;
+          const key = String(c.youtubeId || c._id || '');
+          if (!key) return;
+          if (!mergedMap.has(key)) {
+            mergedMap.set(key, c);
+          } else {
+            // Merge: keep existing but add replyText if missing
+            const existing = mergedMap.get(key);
+            mergedMap.set(key, { ...existing, replyText: existing.replyText || c.replyText });
+          }
+        });
+        commentsData = Array.from(mergedMap.values());
+        // Final safety: every comment must have the correct videoId
+        commentsData = commentsData.filter(c => !c.videoId || c.videoId === videoId);
       }
 
       try {
@@ -634,62 +653,38 @@ const VideosList = ({
     );
   };
 
-  const getNormalizedSentiment = (c) => {
+  const getCommentCategory = (c) => {
     if (!c) return 'moderate';
     const sent = String(c.sentiment || c.classification || '').toLowerCase().trim();
+    // Explicit positive sentiment values
     if (['positive', 'pos', 'good', 'safe'].includes(sent)) return 'positive';
+    // Explicit toxic sentiment values
     if (['toxic', 'spam', 'hate', 'abuse', 'threat', 'scam', 'offensive', 'harmful'].includes(sent)) return 'toxic';
+    // Everything else (neutral, negative, moderate, unknown, empty, action types like 'replied'/'deleted') → moderate
     return 'moderate';
   };
 
-  const getCommentCategory = (c) => getNormalizedSentiment(c);
-
-  // Strict deduplication & video scoping for processedVideoComments
+  // Use useMemo so counts & filtered list always recompute when comments or filter changes
   const processedVideoComments = useMemo(() => {
-    if (!comments || !Array.isArray(comments)) return [];
-    const seen = new Set();
-    const result = [];
-    for (const c of comments) {
-      if (!c) continue;
-      if (c.isBotReply) continue;
-      if (c.youtubeId && String(c.youtubeId).includes('.')) continue;
-      // Strict videoId check
-      if (selectedVideo && c.videoId && c.videoId !== selectedVideo) continue;
-
-      const authKey = String(c.author || c.username || '').toLowerCase().trim();
-      const textKey = String(c.text || c.commentText || '').toLowerCase().trim();
-      const uniqueKey = c.youtubeId ? `yt_${c.youtubeId}` : (c._id ? `id_${c._id}` : `${authKey}:${textKey}`);
-
-      if (!seen.has(uniqueKey)) {
-        seen.add(uniqueKey);
-        result.push(c);
-      }
-    }
-    return result;
-  }, [comments, selectedVideo]);
+    return comments.filter(c => {
+      if (!c) return false;
+      if (c.isBotReply) return false;
+      if (c.youtubeId && String(c.youtubeId).includes('.')) return false;
+      return true;
+    });
+  }, [comments]);
 
   const filteredComments = useMemo(() => {
     if (filter === 'all') return processedVideoComments;
-    return processedVideoComments.filter(c => getNormalizedSentiment(c) === filter);
+    return processedVideoComments.filter(c => getCommentCategory(c) === filter);
   }, [processedVideoComments, filter]);
 
-  const commentCounts = useMemo(() => {
-    let positive = 0;
-    let toxic = 0;
-    let moderate = 0;
-    for (const c of processedVideoComments) {
-      const cat = getNormalizedSentiment(c);
-      if (cat === 'positive') positive++;
-      else if (cat === 'toxic') toxic++;
-      else moderate++;
-    }
-    return {
-      all: processedVideoComments.length,
-      positive,
-      toxic,
-      moderate
-    };
-  }, [processedVideoComments]);
+  const commentCounts = useMemo(() => ({
+    all: processedVideoComments.length,
+    positive: processedVideoComments.filter(c => getCommentCategory(c) === 'positive').length,
+    toxic: processedVideoComments.filter(c => getCommentCategory(c) === 'toxic').length,
+    moderate: processedVideoComments.filter(c => getCommentCategory(c) === 'moderate').length,
+  }), [processedVideoComments]);
 
   const getStatsForFilter = (type) => commentCounts[type] ?? 0;
 
@@ -1050,8 +1045,6 @@ const VideosList = ({
                       const commentKey = comment.youtubeId || comment._id || `comment-${index}`;
                       const authorName = String(comment.author || comment.username || 'Anonymous');
                       const commentText = String(comment.text || comment.commentText || '');
-                      const displaySentiment = getNormalizedSentiment(comment);
-                      const sentimentConfig = getSentimentConfig(displaySentiment);
                       return (
                       <motion.div
                         key={commentKey}
@@ -1071,16 +1064,16 @@ const VideosList = ({
                                 e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(authorName)}&background=random`;
                               }}
                             />
-                            <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 md:w-4 md:h-4 rounded-full border-2 border-white flex items-center justify-center" style={{ backgroundColor: sentimentConfig.color }}>
-                              {displaySentiment === 'toxic' ? <ShieldAlert size={8} className="text-white" /> : <ThumbsUp size={8} className="text-white" />}
+                            <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 md:w-4 md:h-4 rounded-full border-2 border-white flex items-center justify-center" style={{ backgroundColor: getSentimentConfig(comment.sentiment).color }}>
+                              {comment.sentiment === 'toxic' ? <ShieldAlert size={8} className="text-white" /> : <ThumbsUp size={8} className="text-white" />}
                             </div>
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between mb-1">
                               <div className="flex items-center gap-1.5 md:gap-2">
                                 <span className="font-black text-[12px] md:text-[14px] text-[#0f0f0f] truncate max-w-[100px] md:max-w-none">@{authorName}</span>
-                                <span className={`yt-badge ${sentimentConfig.badgeClass} capitalize`}>
-                                  {displaySentiment}
+                                <span className={`yt-badge ${getSentimentConfig(comment.sentiment).badgeClass} capitalize`}>
+                                  {comment.sentiment}
                                 </span>
                               </div>
                               <span className="text-[9px] md:text-[11px] font-bold text-[#909090] uppercase tracking-tighter whitespace-nowrap">
