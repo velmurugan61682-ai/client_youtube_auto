@@ -1013,11 +1013,22 @@ const VideosList = ({
               ) : (
                 <div className="space-y-3 md:space-y-4 max-w-[900px] mx-auto">
                   {filteredComments
-                    .filter(c => c.text.toLowerCase().includes((searchQuery || '').toLowerCase()) || c.author.toLowerCase().includes((searchQuery || '').toLowerCase()))
+                    .filter(c => {
+                      if (!c) return false;
+                      const text = String(c.text || c.commentText || '');
+                      const author = String(c.author || c.username || '');
+                      const q = (searchQuery || '').toLowerCase();
+                      if (!q) return true;
+                      return text.toLowerCase().includes(q) || author.toLowerCase().includes(q);
+                    })
                     .slice(0, commentsDisplayLimit)
-                    .map((comment, index) => (
+                    .map((comment, index) => {
+                      const commentKey = comment.youtubeId || comment._id || `comment-${index}`;
+                      const authorName = String(comment.author || comment.username || 'Anonymous');
+                      const commentText = String(comment.text || comment.commentText || '');
+                      return (
                       <motion.div
-                        key={comment._id}
+                        key={commentKey}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.05 }}
@@ -1026,12 +1037,12 @@ const VideosList = ({
                         <div className="flex gap-3 md:gap-4">
                           <div className="relative flex-shrink-0">
                             <img
-                              src={comment.authorProfileImageUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(comment.author || 'User')}&background=random`}
+                              src={comment.authorProfileImageUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(authorName)}&background=random`}
                               className="w-9 h-9 md:w-11 md:h-11 rounded-full border border-[#f0f0f0]"
                               alt=""
                               onError={(e) => {
                                 e.target.onerror = null;
-                                e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(comment.author || 'User')}&background=random`;
+                                e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(authorName)}&background=random`;
                               }}
                             />
                             <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 md:w-4 md:h-4 rounded-full border-2 border-white flex items-center justify-center" style={{ backgroundColor: getSentimentConfig(comment.sentiment).color }}>
@@ -1041,7 +1052,7 @@ const VideosList = ({
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between mb-1">
                               <div className="flex items-center gap-1.5 md:gap-2">
-                                <span className="font-black text-[12px] md:text-[14px] text-[#0f0f0f] truncate max-w-[100px] md:max-w-none">@{comment.author}</span>
+                                <span className="font-black text-[12px] md:text-[14px] text-[#0f0f0f] truncate max-w-[100px] md:max-w-none">@{authorName}</span>
                                 <span className={`yt-badge ${getSentimentConfig(comment.sentiment).badgeClass} capitalize`}>
                                   {comment.sentiment}
                                 </span>
@@ -1050,7 +1061,7 @@ const VideosList = ({
                                 {safeFormatDistanceToNow(comment.publishedAt)} ago
                               </span>
                             </div>
-                            <p className="text-[13px] md:text-[14px] text-[#222] leading-relaxed mb-3 md:mb-4">{comment.text}</p>
+                            <p className="text-[13px] md:text-[14px] text-[#222] leading-relaxed mb-3 md:mb-4">{commentText}</p>
 
                             {comment.replyText && (comment.replyStatus === 'sent' || comment.hasReplied) && (
                               <div className="mt-4 ml-4 md:ml-6 pl-4 border-l-2 border-red-200 space-y-3 bg-[#fff1f1] p-3 rounded-2xl border border-red-100 text-left">
@@ -1167,7 +1178,8 @@ const VideosList = ({
                           </div>
                         </div>
                       </motion.div>
-                    ))}
+                     );
+                    })}
                 </div>
               )
             ) : (
