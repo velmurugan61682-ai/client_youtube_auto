@@ -113,15 +113,11 @@ export const connectSocket = (token) => {
   const s = getSocket();
   const actualToken = token || localStorage.getItem('token') || localStorage.getItem('adminToken');
 
-  if (!actualToken || actualToken === 'null' || actualToken === 'undefined') {
-    console.warn('⚠️ [Socket.IO] No authentication token found. Skipping connection to prevent 400 Bad Request.');
-    if (s.connected) {
-      s.disconnect();
-    }
-    return s;
+  if (actualToken && actualToken !== 'null' && actualToken !== 'undefined') {
+    s.auth = { token: actualToken };
+  } else {
+    s.auth = {};
   }
-
-  s.auth = { token: actualToken };
 
   if (!s.connected) {
     console.log('🔌 [Socket.IO] Connecting socket...');
