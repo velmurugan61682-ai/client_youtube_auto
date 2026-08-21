@@ -23,10 +23,12 @@ const OAuthCallbackPage = () => {
 
         // Handle explicit error parameter from server redirect
         if (oauthStatus === 'error' || error) {
-          const msg = decodeURIComponent(error || 'Google login failed. Please try again.');
+          const msg = decodeURIComponent(error || 'Google connection failed. Please try again.');
           setErrorMsg(msg);
           setStatus('error');
-          setTimeout(() => window.location.replace('/login'), 3000);
+          const hasSession = localStorage.getItem('token') || localStorage.getItem('user');
+          const redirectTarget = hasSession ? `/dashboard?status=error&error=${encodeURIComponent(msg)}` : '/login';
+          setTimeout(() => window.location.replace(redirectTarget), 3000);
           return;
         }
 
