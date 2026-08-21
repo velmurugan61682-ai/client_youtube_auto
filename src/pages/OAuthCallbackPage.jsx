@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Loader2, CheckCircle, XCircle } from 'lucide-react';
 import api from '../services/api';
+import { API_BASE_URL } from '../config/environment.js';
 
 /**
  * Dedicated OAuth Callback Page
@@ -34,8 +35,7 @@ const OAuthCallbackPage = () => {
 
         // Handle direct Google redirect to frontend with auth code
         if (code) {
-          const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-          window.location.replace(`${apiUrl}/auth/callback/google?code=${encodeURIComponent(code)}${state ? `&state=${encodeURIComponent(state)}` : ''}`);
+          window.location.replace(`${API_BASE_URL}/auth/callback/google?code=${encodeURIComponent(code)}${state ? `&state=${encodeURIComponent(state)}` : ''}`);
           return;
         }
 
