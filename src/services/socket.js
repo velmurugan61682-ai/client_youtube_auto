@@ -13,11 +13,13 @@ export const getSocket = () => {
     socket = io(SOCKET_URL, {
       withCredentials: true,
       reconnection: true,
-      transports: ['polling', 'websocket'], // Start with HTTP polling to establish connection, then upgrade to WebSocket.
-      reconnectionAttempts: Infinity, // Reconnect automatically
+      transports: ['websocket', 'polling'], // Direct WebSocket first, seamless fallback to polling
+      upgrade: true,
+      reconnectionAttempts: Infinity,
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
       autoConnect: false,
+      timeout: 20000,
       auth: (cb) => {
         const token = localStorage.getItem('token') || localStorage.getItem('adminToken');
         cb({ token: (token && token !== 'null' && token !== 'undefined') ? token : '' });
@@ -119,11 +121,11 @@ export const connectSocket = (token) => {
     s.auth = {};
   }
 
-  if (!s.connected) {
+  if (!s.connected && !s.active) {
     console.log('🔌 [Socket.IO] Connecting socket...');
     s.connect();
   } else {
-    console.log('🔌 [Socket.IO] Socket is already connected.');
+    console.log('🔌 [Socket.IO] Socket is already active or connected.');
   }
   return s;
 };
