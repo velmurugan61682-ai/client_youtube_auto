@@ -469,7 +469,10 @@ const ModerationPage = ({
         search: historySearch || undefined
       });
       setHistoryLogs(res.items || []);
-      setHistorySummary(res.summary || { total: 0, replied: 0, deleted: 0, hidden: 0, failed: 0, successRate: 0 });
+      if (res.summary) {
+        setHistorySummary(res.summary);
+        setOverallSummary(res.summary);
+      }
       setHistoryTotal(res.pagination?.total || 0);
       setHistoryPages(res.pagination?.pages || 1);
       setHistoryPage(page);
