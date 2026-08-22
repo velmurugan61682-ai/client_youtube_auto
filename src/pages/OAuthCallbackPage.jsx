@@ -66,9 +66,11 @@ const OAuthCallbackPage = () => {
         }
 
         // Verify token or httpOnly cookie against /auth/me
-        const res = await api.get('/auth/me', (token && token !== 'null' && token !== 'undefined') ? {
+        const authHeaders = (token && token !== 'null' && token !== 'undefined') ? {
           headers: { Authorization: `Bearer ${token}` }
-        } : {});
+        } : {};
+
+        const res = await api.get('/auth/me', authHeaders);
 
         // Save user data and redirect to dashboard
         if (res.data) {
@@ -76,7 +78,7 @@ const OAuthCallbackPage = () => {
           setStatus('success');
           setTimeout(() => {
             window.location.replace('/dashboard');
-          }, 600);
+          }, 400);
         } else {
           throw new Error('User profile verification failed');
         }

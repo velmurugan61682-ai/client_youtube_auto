@@ -50,7 +50,7 @@ api.interceptors.response.use(
         console.warn('[API Interceptor] 401 unauthenticated error received on admin route. Clearing adminToken...');
         localStorage.removeItem('adminToken');
         window.location.href = '/admin/login';
-      } else if (!currentPath.startsWith('/admin') && currentPath !== '/login' && currentPath !== '/register' && currentPath !== '/') {
+      } else if (!currentPath.startsWith('/admin') && currentPath !== '/login' && currentPath !== '/register' && currentPath !== '/' && !currentPath.startsWith('/oauth/callback')) {
         console.warn('[API Interceptor] 401 unauthenticated error received on client route. Clearing token...');
         localStorage.removeItem('token');
         window.location.href = '/login';
