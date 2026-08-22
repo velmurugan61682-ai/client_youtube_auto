@@ -15,7 +15,9 @@ import { useAuth } from '../context/AuthContext';
 import ProFeatureLock from './ProFeatureLock';
 import { hasFeatureAccess } from '../config/planFeatures';
 
-const Settings = () => {
+const Settings = ({ user: propUser }) => {
+  const { user: authUser, checkAuth } = useAuth();
+  const user = propUser || authUser;
   const canRemoveToxic = hasFeatureAccess(user, 'toxicCommentRemove');
   const canAutoDM = hasFeatureAccess(user, 'autoDM');
 
