@@ -12,9 +12,13 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import ProFeatureLock from './ProFeatureLock';
+import { hasFeatureAccess } from '../config/planFeatures';
 
 const Settings = () => {
-  const { user, checkAuth } = useAuth();
+  const canRemoveToxic = hasFeatureAccess(user, 'toxicCommentRemove');
+  const canAutoDM = hasFeatureAccess(user, 'autoDM');
+
   const [activeTab, setActiveTab] = useState('automation');
   const [profileName, setProfileName] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -231,26 +235,30 @@ const Settings = () => {
               >
                 {/* Group 1: AI Automation Rules */}
                     <div className="ios-list-group">
-                      <div className="ios-list-item">
-                        <div className="max-w-[480px] pr-4 text-left">
-                          <p className="text-[14px] font-black text-[#0f0f0f] mb-0.5">Smart Moderation</p>
-                          <p className="text-[11px] text-[#909090] font-semibold leading-relaxed">Automatically purge or hide toxic, abusive, or spam comments using neural analysis.</p>
+                      {!canRemoveToxic ? (
+                        <ProFeatureLock title="Toxic Comment Auto Remove / Delete" />
+                      ) : (
+                        <div className="ios-list-item">
+                          <div className="max-w-[480px] pr-4 text-left">
+                            <p className="text-[14px] font-black text-[#0f0f0f] mb-0.5">Smart Moderation (Toxic Comment Remove)</p>
+                            <p className="text-[11px] text-[#909090] font-semibold leading-relaxed">Automatically purge or hide toxic, abusive, or spam comments using neural analysis.</p>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md ${
+                              autoMod ? 'bg-[#fff1f1] text-[#ff0000]' : 'bg-slate-100 text-slate-400'
+                            }`}>
+                              {autoMod ? 'ON' : 'OFF'}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => setAutoMod(!autoMod)}
+                              className={`ios-toggle ${autoMod ? 'active' : ''}`}
+                            >
+                              <div className="ios-toggle-thumb" />
+                            </button>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-3">
-                          <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md ${
-                            autoMod ? 'bg-[#fff1f1] text-[#ff0000]' : 'bg-slate-100 text-slate-400'
-                          }`}>
-                            {autoMod ? 'ON' : 'OFF'}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => setAutoMod(!autoMod)}
-                            className={`ios-toggle ${autoMod ? 'active' : ''}`}
-                          >
-                            <div className="ios-toggle-thumb" />
-                          </button>
-                        </div>
-                      </div>
+                      )}
 
                       <div className="ios-list-item">
                         <div className="max-w-[480px] pr-4 text-left">
@@ -439,28 +447,32 @@ const Settings = () => {
                           />
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-3 border-t border-[#fcfcfc]">
-                          <div className="space-y-1.5">
-                            <label className="text-[11px] font-black uppercase text-[#909090] tracking-widest ml-1">GoWhats API Token</label>
-                            <input
-                              type="password"
-                              value={credentials.gowhatsApiKey}
-                              onChange={(e) => setCredentials({ ...credentials, gowhatsApiKey: e.target.value })}
-                              className="w-full bg-[#f8f9fa] border border-[#f0f0f0] rounded-xl px-4 py-2.5 text-sm font-semibold focus:bg-white focus:border-[#ff0000]/30 transition-all outline-none"
-                              placeholder="Token..."
-                            />
+                        {!canAutoDM ? (
+                          <ProFeatureLock title="Auto DM (Automated Direct Messages)" />
+                        ) : (
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-3 border-t border-[#fcfcfc]">
+                            <div className="space-y-1.5">
+                              <label className="text-[11px] font-black uppercase text-[#909090] tracking-widest ml-1">GoWhats API Token (Auto DM)</label>
+                              <input
+                                type="password"
+                                value={credentials.gowhatsApiKey}
+                                onChange={(e) => setCredentials({ ...credentials, gowhatsApiKey: e.target.value })}
+                                className="w-full bg-[#f8f9fa] border border-[#f0f0f0] rounded-xl px-4 py-2.5 text-sm font-semibold focus:bg-white focus:border-[#ff0000]/30 transition-all outline-none"
+                                placeholder="Token..."
+                              />
+                            </div>
+                            <div className="space-y-1.5">
+                              <label className="text-[11px] font-black uppercase text-[#909090] tracking-widest ml-1">GoWhats API URL</label>
+                              <input
+                                type="text"
+                                value={credentials.gowhatsUrl}
+                                onChange={(e) => setCredentials({ ...credentials, gowhatsUrl: e.target.value })}
+                                className="w-full bg-[#f8f9fa] border border-[#f0f0f0] rounded-xl px-4 py-2.5 text-sm font-semibold focus:bg-white focus:border-[#ff0000]/30 transition-all outline-none"
+                                placeholder="https://..."
+                              />
+                            </div>
                           </div>
-                          <div className="space-y-1.5">
-                            <label className="text-[11px] font-black uppercase text-[#909090] tracking-widest ml-1">GoWhats API URL</label>
-                            <input
-                              type="text"
-                              value={credentials.gowhatsUrl}
-                              onChange={(e) => setCredentials({ ...credentials, gowhatsUrl: e.target.value })}
-                              className="w-full bg-[#f8f9fa] border border-[#f0f0f0] rounded-xl px-4 py-2.5 text-sm font-semibold focus:bg-white focus:border-[#ff0000]/30 transition-all outline-none"
-                              placeholder="https://..."
-                            />
-                          </div>
-                        </div>
+                        )}
 
                       </div>
                     </motion.div>

@@ -15,7 +15,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 
 const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
-  const { logout } = useAuth();
+  const { logout, checkAuth } = useAuth();
   const [subData, setSubData] = useState(null);
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -129,8 +129,9 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
               planType
             });
             if (verifyRes.data.success) {
+              if (checkAuth) await checkAuth();
               await fetchStatus();
-              setMessage('Subscription activated successfully!');
+              setMessage('🎉 Pro Plan activated successfully! Live Streaming Reply, Toxic Remove, and Auto DM features are now unlocked!');
               if (onSelectPlan) onSelectPlan();
             }
           } catch (err) {
