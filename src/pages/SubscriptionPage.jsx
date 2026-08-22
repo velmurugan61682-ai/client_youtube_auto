@@ -360,16 +360,6 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
                   </p>
                 )}
               </div>
-
-              {hasAnyActiveSub && subData.status !== 'cancelled' && (
-                <button
-                  disabled={cancelling}
-                  onClick={handleCancel}
-                  className="px-6 py-3 bg-red-50 text-red-600 hover:bg-red-100 font-black text-xs uppercase tracking-widest rounded-2xl transition-all border border-red-200 disabled:opacity-50 active:scale-95 shrink-0"
-                >
-                  {cancelling ? 'Cancelling...' : 'Cancel Subscription'}
-                </button>
-              )}
             </div>
           )}
 
