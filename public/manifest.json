@@ -1,8 +1,8 @@
 {
     "id":  "/",
-    "short_name":  "ChannelMate",
-    "name":  "ChannelMate",
-    "description":  "ChannelMate is an AI-powered YouTube automation platform for comment replies, moderation, engagement management, and creator analytics.",
+    "short_name":  "ChannelBot",
+    "name":  "ChannelBot",
+    "description":  "ChannelBot is an AI-powered YouTube automation platform for comment replies, moderation, engagement management, and creator analytics.",
     "categories":  [
                        "productivity",
                        "social",
