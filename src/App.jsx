@@ -155,13 +155,7 @@ const App = () => {
     }
   }, []);
 
-  // When user session is ready AND a channel was just connected via OAuth, re-fetch channels
-  useEffect(() => {
-    if (user && channelJustConnected) {
-      setChannelJustConnected(false);
-      fetchChannels();
-    }
-  }, [user, channelJustConnected, fetchChannels]);
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -289,6 +283,14 @@ const App = () => {
       setLoadingChannels(false);
     }
   }, [user, fetchChannels]);
+
+  // When user session is ready AND a channel was just connected via OAuth, re-fetch channels
+  useEffect(() => {
+    if (user && channelJustConnected) {
+      setChannelJustConnected(false);
+      fetchChannels();
+    }
+  }, [user, channelJustConnected, fetchChannels]);
 
   // 2. Manage Socket.IO connection & live event listeners cleanly in a single effect
   useEffect(() => {
