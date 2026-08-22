@@ -29,12 +29,14 @@ api.interceptors.request.use((config) => {
     if (adminToken === 'null' || adminToken === 'undefined') adminToken = null;
   }
 
-  if (isAdminRoute && adminToken) {
-    config.headers.Authorization = `Bearer ${adminToken}`;
-  } else if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  } else if (adminToken) {
-    config.headers.Authorization = `Bearer ${adminToken}`;
+  if (!config.headers.Authorization) {
+    if (isAdminRoute && adminToken) {
+      config.headers.Authorization = `Bearer ${adminToken}`;
+    } else if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    } else if (adminToken) {
+      config.headers.Authorization = `Bearer ${adminToken}`;
+    }
   }
   return config;
 });

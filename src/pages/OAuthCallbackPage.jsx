@@ -21,7 +21,14 @@ const OAuthCallbackPage = () => {
         const error = params.get('error');
         const channelId = params.get('channelId');
 
-        if (token && token !== 'null' && token !== 'undefined') {
+        if (typeof token === 'string') {
+          token = token.trim().replace(/^["']|["']$/g, '');
+          if (token === 'null' || token === 'undefined' || token === '') {
+            token = null;
+          }
+        }
+
+        if (token) {
           localStorage.setItem('token', token);
         }
 
@@ -57,16 +64,20 @@ const OAuthCallbackPage = () => {
 
         // --- GOOGLE LOGIN / SIGNUP FLOW ---
         // Check token from URL parameter first, fallback to localStorage
-        if (!token || token === 'null' || token === 'undefined') {
+        if (!token) {
           token = localStorage.getItem('token');
+          if (typeof token === 'string') {
+            token = token.trim().replace(/^["']|["']$/g, '');
+            if (token === 'null' || token === 'undefined') token = null;
+          }
         }
 
-        if (token && token !== 'null' && token !== 'undefined') {
+        if (token) {
           localStorage.setItem('token', token);
         }
 
         // Verify token or httpOnly cookie against /auth/me
-        const authHeaders = (token && token !== 'null' && token !== 'undefined') ? {
+        const authHeaders = token ? {
           headers: { Authorization: `Bearer ${token}` }
         } : {};
 

@@ -77,7 +77,11 @@ export const AuthProvider = ({ children }) => {
         }
       }
 
-      const token = localStorage.getItem('token');
+      // On /oauth/callback, allow OAuthCallbackPage component to verify token and navigate to dashboard
+      if (window.location.pathname.includes('/oauth/callback')) {
+        setAuthLoading(false);
+        return;
+      }
 
       setAuthLoading(true);
       const res = await api.get('/auth/me');
