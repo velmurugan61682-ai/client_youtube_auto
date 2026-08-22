@@ -99,6 +99,11 @@ const App = () => {
   const [profileSheetOpen, setProfileSheetOpen] = useState(false);
   const [clientDark, setClientDark] = useState(() => localStorage.getItem('clientTheme') === 'dark');
   const [videoSubTab, setVideoSubTab] = useState('videos');
+  // Track if user just connected a channel via OAuth (to re-fetch channels when user session is ready)
+  const [channelJustConnected, setChannelJustConnected] = useState(() => {
+    const qp = new URLSearchParams(window.location.search);
+    return qp.get('status') === 'success' && !!qp.get('channelId');
+  });
 
   const handleDashboardTabChange = useCallback((tab) => {
     setActiveTab(tab);
@@ -136,11 +141,11 @@ const App = () => {
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
     if (queryParams.get('status') === 'success') {
+      // Clear URL immediately so params don't persist on refresh
       window.history.replaceState({}, document.title, window.location.pathname);
     } else if (queryParams.get('status') === 'error') {
       const errMsg = queryParams.get('error') || 'Failed to connect account.';
       setTimeout(() => {
-
         if (errMsg.toLowerCase().includes('limit') || errMsg.toLowerCase().includes('free plan') || errMsg.toLowerCase().includes('pro')) {
           setActiveTab('subscription');
         }
@@ -148,6 +153,14 @@ const App = () => {
       window.history.replaceState({}, document.title, window.location.pathname);
     }
   }, []);
+
+  // When user session is ready AND a channel was just connected via OAuth, re-fetch channels
+  useEffect(() => {
+    if (user && channelJustConnected) {
+      setChannelJustConnected(false);
+      fetchChannels();
+    }
+  }, [user, channelJustConnected, fetchChannels]);
 
   useEffect(() => {
     const handleResize = () => {
