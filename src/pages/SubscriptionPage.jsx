@@ -3,6 +3,7 @@ import api from '../services/api';
 import {
   CreditCard,
   Check,
+  X,
   AlertTriangle,
   Loader2,
   Star,
@@ -248,10 +249,12 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
       period: "/ 30 days",
       desc: "30-day free trial for single creators.",
       features: [
-        "Connect 1 YouTube Channel",
-        "AI Autopilot Comment Moderation",
-        "Comment Automation Engine",
-        "Basic Analytics Dashboard"
+        { text: "Connect 1 YouTube Channel", included: true },
+        { text: "Standard AI Comment Reply", included: true },
+        { text: "Smart Auto-Like", included: true },
+        { text: "Live Streaming Comment Reply", included: false },
+        { text: "Toxic Comment Auto Remove", included: false },
+        { text: "Auto DM (WhatsApp)", included: false }
       ],
       color: "text-zinc-500",
       bgClass: "border-zinc-200"
@@ -264,11 +267,13 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
       period: "/ 1 month",
       desc: "Monthly plan for professional creators.",
       features: [
-        "Connect 1 YouTube Channel",
-        "AI Autopilot Comment Moderation",
-        "Auto Reply & Smart Auto-Like",
-        "Advanced Audience Analytics",
-        "24/7 Priority Support"
+        { text: "Connect 1 YouTube Channel", included: true },
+        { text: "Standard AI Comment Reply", included: true },
+        { text: "Smart Auto-Like", included: true },
+        { text: "Live Streaming Comment Reply", included: true, highlight: true },
+        { text: "Toxic Comment Auto Remove/Delete", included: true, highlight: true },
+        { text: "Auto DM (WhatsApp Integration)", included: true, highlight: true },
+        { text: "24/7 Priority Support", included: true }
       ],
       color: "text-orange-600",
       bgClass: "border-orange-300 ring-2 ring-orange-400/10",
@@ -412,9 +417,17 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
 
                     <ul className="space-y-3 mb-6">
                       {plan.features.map((feat, idx) => (
-                        <li key={idx} className="flex items-start gap-2.5 text-xs font-bold text-zinc-600">
-                          <Check size={14} className="text-[#ff0000] shrink-0 mt-0.5" />
-                          <span>{feat}</span>
+                        <li key={idx} className={`flex items-start gap-2.5 text-xs font-bold ${
+                          feat.included ? (feat.highlight ? 'text-orange-600 font-black' : 'text-zinc-700') : 'text-zinc-400 line-through opacity-70'
+                        }`}>
+                          {feat.included ? (
+                            <Check size={14} className="text-[#ff0000] shrink-0 mt-0.5" />
+                          ) : (
+                            <X size={14} className="text-zinc-400 shrink-0 mt-0.5" />
+                          )}
+                          <span>
+                            {feat.text} {!feat.included && <span className="no-underline text-[10px] text-red-500 font-bold ml-1 inline-block">(Pro Only)</span>}
+                          </span>
                         </li>
                       ))}
                     </ul>
