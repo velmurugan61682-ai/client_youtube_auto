@@ -201,7 +201,7 @@ const LandingPage = () => {
     {
       name: "Pro Plan",
       price: "₹999",
-      period: "per 3 months",
+      period: "per month",
       desc: "Complete AI comment moderation & lead capture for growing channels.",
       features: ["Up to 3 YouTube Channels", "Unlimited AI Auto-Replies", "Advanced Auto-Liking", "Lead Export to CSV/CRM", "24/7 Priority Support"],
       cta: "Subscribe Now",

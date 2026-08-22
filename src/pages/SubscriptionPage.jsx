@@ -116,7 +116,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
         amount: amount || 99900,
         currency: currency || "INR",
         name: "ChannelBot",
-        description: "Quarterly Pro Subscription (₹999)",
+        description: "Pro Plan Subscription (₹999 / 1 Month)",
         order_id: activeOrderId,
         handler: async function (response) {
           try {
@@ -258,10 +258,10 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
     {
       type: "quarterly",
       name: "BEST VALUE",
-      displayName: "Quarterly Pro",
+      displayName: "Pro Plan",
       price: "₹999",
-      period: "/ 3 months",
-      desc: "Quarterly saver for professional creators.",
+      period: "/ 1 month",
+      desc: "Monthly plan for professional creators.",
       features: [
         "Connect 1 YouTube Channel",
         "AI Autopilot Comment Moderation",

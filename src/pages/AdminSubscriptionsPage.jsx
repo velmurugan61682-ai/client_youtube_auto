@@ -24,7 +24,7 @@ const AdminSubscriptionsPage = () => {
   const [editForm, setEditForm] = useState({ plan: 'quarterly_pro', status: 'active', renewalDate: '' });
   const [assignModalOpen, setAssignModalOpen] = useState(false);
   const [clientsList, setClientsList] = useState([]);
-  const [assignData, setAssignData] = useState({ userId: '', plan: 'quarterly_pro', durationDays: 90 });
+  const [assignData, setAssignData] = useState({ userId: '', plan: 'quarterly_pro', durationDays: 30 });
   const [actionLoading, setActionLoading] = useState(false);
   const [modalError, setModalError] = useState('');
 
@@ -419,7 +419,7 @@ const AdminSubscriptionsPage = () => {
                     className="w-full glass-input py-2.5 px-3.5 text-xs font-bold outline-none bg-white cursor-pointer"
                   >
                     <option value="free">Free Plan (₹0 / 30 Days)</option>
-                    <option value="quarterly_pro">Pro Plan (₹999 / 90 Days)</option>
+                    <option value="quarterly_pro">Pro Plan (₹999 / 30 Days)</option>
                   </select>
                 </div>
 

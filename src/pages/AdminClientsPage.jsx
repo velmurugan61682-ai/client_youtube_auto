@@ -472,7 +472,7 @@ const AdminClientsPage = () => {
                         className="w-full bg-[#f7f7f7] border border-[#ededed] focus:border-[#0f0f0f] rounded-2xl py-3 px-4 text-xs font-black outline-none cursor-pointer transition-colors"
                       >
                         <option value="free">Free Plan - INR 0 / 30 Days</option>
-                        <option value="quarterly_pro">Pro Plan - INR 999 / 90 Days</option>
+                        <option value="quarterly_pro">Pro Plan - INR 999 / 30 Days</option>
                       </select>
                     </div>
 
