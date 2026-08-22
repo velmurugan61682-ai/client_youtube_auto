@@ -99,11 +99,8 @@ const App = () => {
   const [profileSheetOpen, setProfileSheetOpen] = useState(false);
   const [clientDark, setClientDark] = useState(() => localStorage.getItem('clientTheme') === 'dark');
   const [videoSubTab, setVideoSubTab] = useState('videos');
-  // Track if user just connected a channel via OAuth (to re-fetch channels when user session is ready)
-  const [channelJustConnected, setChannelJustConnected] = useState(() => {
-    const qp = new URLSearchParams(window.location.search);
-    return qp.get('status') === 'success' && !!qp.get('channelId');
-  });
+  // Track if user just connected a channel via OAuth (set in useEffect after mount)
+  const [channelJustConnected, setChannelJustConnected] = useState(false);
 
   const handleDashboardTabChange = useCallback((tab) => {
     setActiveTab(tab);
@@ -143,6 +140,10 @@ const App = () => {
     if (queryParams.get('status') === 'success') {
       // Clear URL immediately so params don't persist on refresh
       window.history.replaceState({}, document.title, window.location.pathname);
+      // Set flag so channel list re-fetches when user session is ready
+      if (queryParams.get('channelId')) {
+        setChannelJustConnected(true);
+      }
     } else if (queryParams.get('status') === 'error') {
       const errMsg = queryParams.get('error') || 'Failed to connect account.';
       setTimeout(() => {
