@@ -17,14 +17,23 @@ const api = axios.create({
 // Request interceptor to attach appropriate Bearer Token (Admin vs Client)
 api.interceptors.request.use((config) => {
   const isAdminRoute = config.url && config.url.includes('/admin');
-  const adminToken = localStorage.getItem('adminToken');
-  const token = localStorage.getItem('token');
+  let adminToken = localStorage.getItem('adminToken');
+  let token = localStorage.getItem('token');
 
-  if (isAdminRoute && adminToken && adminToken !== 'null' && adminToken !== 'undefined') {
+  if (typeof token === 'string') {
+    token = token.trim().replace(/^["']|["']$/g, '');
+    if (token === 'null' || token === 'undefined') token = null;
+  }
+  if (typeof adminToken === 'string') {
+    adminToken = adminToken.trim().replace(/^["']|["']$/g, '');
+    if (adminToken === 'null' || adminToken === 'undefined') adminToken = null;
+  }
+
+  if (isAdminRoute && adminToken) {
     config.headers.Authorization = `Bearer ${adminToken}`;
-  } else if (token && token !== 'null' && token !== 'undefined') {
+  } else if (token) {
     config.headers.Authorization = `Bearer ${token}`;
-  } else if (adminToken && adminToken !== 'null' && adminToken !== 'undefined') {
+  } else if (adminToken) {
     config.headers.Authorization = `Bearer ${adminToken}`;
   }
   return config;
