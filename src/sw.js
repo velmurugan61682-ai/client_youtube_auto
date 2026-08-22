@@ -4,6 +4,9 @@ import { CacheFirst, NetworkOnly, StaleWhileRevalidate } from 'workbox-strategie
 import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 import { ExpirationPlugin } from 'workbox-expiration';
 
+// Bump Service Worker cache version tag to invalidate previously registered stale SWs on clients
+const SW_CACHE_VERSION = 'v2_oauth_callback_bypass_v2';
+
 // Clean up old caches automatically
 cleanupOutdatedCaches();
 
@@ -14,7 +17,7 @@ precacheAndRoute(self.__WB_MANIFEST || []);
 registerRoute(
   ({ url }) => url.origin === 'https://fonts.googleapis.com' || url.origin === 'https://fonts.gstatic.com',
   new StaleWhileRevalidate({
-    cacheName: 'google-fonts-cache',
+    cacheName: `google-fonts-cache-${SW_CACHE_VERSION}`,
     plugins: [
       new CacheableResponsePlugin({ statuses: [0, 200] }),
       new ExpirationPlugin({ maxEntries: 30, maxAgeSeconds: 60 * 60 * 24 * 365 })
@@ -22,28 +25,38 @@ registerRoute(
   })
 );
 
-// 2. Dynamic API, OAuth, and Socket.IO requests must always hit the network.
+// 2. Dynamic API, OAuth, callback routes, and token-bearing navigations must always hit the network.
 registerRoute(
   ({ url }) => 
     url.pathname.startsWith('/socket.io') || 
     url.href.includes('/socket.io') || 
     url.pathname.startsWith('/api') ||
     url.href.includes('/api') ||
+    url.pathname.includes('/oauth/') ||
+    url.pathname.includes('/auth/') ||
+    url.searchParams.has('token') ||
+    url.searchParams.has('jwt') ||
+    url.searchParams.has('code') ||
+    url.searchParams.has('access_token') ||
     url.hostname.includes('server-youtube-auto.onrender.com'),
   new NetworkOnly()
 );
 
 // Navigation fallback for SPA routing.
-// IMPORTANT: /oauth/callback MUST be in the denylist.
+// IMPORTANT: /oauth/callback, /auth/callback, and URLs containing token query parameters MUST be in the denylist.
 // The Service Worker's createHandlerBoundToURL serves a cached /index.html for any
-// intercepted navigation — which silently strips the entire query string from the URL.
-// That causes window.location.search to be empty when OAuthCallbackPage mounts,
-// so params.get('token') returns null and login always fails.
-// By denylisting /oauth/callback, the browser fetches it from the network (Vercel),
-// which serves index.html via its own catch-all rewrite while preserving the full URL.
+// intercepted navigation — which silently strips the entire query string from the URL if intercepted.
+// By denylisting these routes and URL patterns, the browser fetches them directly from the network (Vercel/server),
+// preserving the full URL including query parameters (token, code, state).
 const handler = createHandlerBoundToURL('/index.html');
 const navigationRoute = new NavigationRoute(handler, {
-  denylist: [/^\/api/, /^\/socket\.io/, /.*\/oauth\/callback.*/],
+  denylist: [
+    /^\/api/, 
+    /^\/socket\.io/, 
+    /.*\/oauth\/.*/, 
+    /.*\/auth\/.*/, 
+    /[?&](token|jwt|code|access_token)=/
+  ],
 });
 registerRoute(navigationRoute);
 
@@ -60,7 +73,7 @@ registerRoute(
     request.destination === 'image' &&
     (url.hostname.includes('ggpht.com') || url.hostname.includes('googleusercontent.com')),
   new CacheFirst({
-    cacheName: 'youtube-avatars-cache',
+    cacheName: `youtube-avatars-cache-${SW_CACHE_VERSION}`,
     plugins: [
       new CacheableResponsePlugin({ statuses: [0, 200] }),
       new ExpirationPlugin({ maxEntries: 100, maxAgeSeconds: 30 * 24 * 60 * 60 })
@@ -73,7 +86,15 @@ self.addEventListener('install', () => {
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(self.clients.claim());
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames
+          .filter((cacheName) => !cacheName.includes(SW_CACHE_VERSION))
+          .map((cacheName) => caches.delete(cacheName))
+      );
+    }).then(() => self.clients.claim())
+  );
 });
 
 // Push Notification Event Listener
