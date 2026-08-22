@@ -97,12 +97,14 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
         return;
       }
 
-      // Otherwise, handle paid subscription
+      // Create Razorpay Recurring AutoPay Subscription
       const res = await api.post('/subscription/create', { planType });
-      const { orderId, subscriptionId, razorpayKeyId, amount, currency } = res.data;
+      const { subscriptionId, razorpayKeyId } = res.data;
 
-      const activeKey = razorpayKeyId;
-      const activeOrderId = orderId || subscriptionId;
+      if (!subscriptionId || !razorpayKeyId) {
+        setMessage('Failed to initiate subscription. Missing server configuration.');
+        return;
+      }
 
       // Load Razorpay script for standard checkout
       const scriptLoaded = await loadRazorpayScript();
@@ -111,21 +113,18 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
         return;
       }
 
-      // Open Razorpay Standard Checkout Modal
+      // Open Razorpay Recurring Subscription Checkout Modal
       const options = {
-        key: activeKey,
-        amount: amount || 99900,
-        currency: currency || "INR",
+        key: razorpayKeyId,
+        subscription_id: subscriptionId,
         name: "ChannelBot",
-        description: "Pro Plan Subscription (₹999 / 1 Month)",
-        order_id: activeOrderId,
+        description: "ChannelBot Pro — ₹999/month",
         handler: async function (response) {
           try {
             setPurchasingPlan(planType);
             const verifyRes = await api.post('/subscription/verify', {
-              razorpay_order_id: response.razorpay_order_id || activeOrderId,
-              razorpay_subscription_id: response.razorpay_subscription_id || activeOrderId,
               razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_subscription_id: response.razorpay_subscription_id || subscriptionId,
               razorpay_signature: response.razorpay_signature,
               planType
             });
@@ -137,7 +136,7 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
             }
           } catch (err) {
             console.error(err);
-            setMessage('Payment verification failed. Please contact support.');
+            setMessage(err.response?.data?.error || 'Payment verification failed. Please contact support.');
           } finally {
             setPurchasingPlan(null);
           }
@@ -154,31 +153,12 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
           }
         }
       };
+
       const rzp = new window.Razorpay(options);
-      rzp.on('payment.failed', async function (response) {
-        console.warn('Razorpay payment failed or cancelled in test mode:', response.error);
-        if (activeKey && activeKey.startsWith('rzp_test_')) {
-          const autoSimulate = window.confirm('Razorpay Test Payment notice: Would you like to activate the test plan (₹999 Sandbox Mode) instantly?');
-          if (autoSimulate) {
-            try {
-              setPurchasingPlan(planType);
-              const verifyRes = await api.post('/subscription/verify', {
-                planType,
-                razorpay_payment_id: `pay_test_${Date.now()}`,
-                razorpay_order_id: activeOrderId
-              });
-              if (verifyRes.data.success) {
-                await fetchStatus();
-                setMessage('Test Subscription activated successfully!');
-                if (onSelectPlan) onSelectPlan();
-              }
-            } catch (simErr) {
-              console.error('Test simulation error:', simErr);
-            } finally {
-              setPurchasingPlan(null);
-            }
-          }
-        }
+      rzp.on('payment.failed', function (response) {
+        console.warn('Razorpay payment failed:', response.error);
+        setMessage(`Payment failed: ${response.error?.description || 'Transaction declined.'}`);
+        setPurchasingPlan(null);
       });
       rzp.open();
     } catch (err) {
