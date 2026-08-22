@@ -72,23 +72,14 @@ const OAuthCallbackPage = () => {
           }
         }
 
-        // Safety Fallback: If token is missing from both query params and localStorage
-        if (!token) {
-          console.warn('[OAuthCallbackPage] Warning: No authentication token found in URL parameters or localStorage. Session expired or token missing.');
-          setErrorMsg('Session expired, please log in again');
-          setStatus('error');
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
-          setTimeout(() => window.location.replace('/login'), 3500);
-          return;
+        if (token) {
+          localStorage.setItem('token', token);
         }
 
-        localStorage.setItem('token', token);
-
-        // Verify token against /auth/me
-        const authHeaders = {
+        // Verify token or httpOnly cookie against /auth/me
+        const authHeaders = token ? {
           headers: { Authorization: `Bearer ${token}` }
-        };
+        } : {};
 
         const res = await api.get('/auth/me', authHeaders);
 
