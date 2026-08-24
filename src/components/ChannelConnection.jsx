@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '../services/api';
+import { getPlatformParam, openAuthUrl } from '../utils/mobileApp';
 
 const ChannelConnection = ({ channels, setChannels }) => {
   const [apiKey, setApiKey] = useState('');
@@ -24,9 +25,11 @@ const ChannelConnection = ({ channels, setChannels }) => {
       setLoading(true);
       setError('');
       setSuccess('');
-      const res = await api.post('/youtube/auth/initiate');
+      const platformParam = getPlatformParam();
+      const endpoint = `/youtube/auth/initiate${platformParam ? '?' + platformParam.replace(/^&/, '') : ''}`;
+      const res = await api.post(endpoint);
       if (res.data.redirectUrl) {
-        window.location.href = res.data.redirectUrl;
+        openAuthUrl(res.data.redirectUrl);
       } else {
         throw new Error('No redirect URL received');
       }

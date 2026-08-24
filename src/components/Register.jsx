@@ -12,6 +12,7 @@ import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
+import { getPlatformParam, openAuthUrl } from '../utils/mobileApp';
 
 // Official 4-color Google "G" Icon
 const GoogleIcon = () => (
@@ -46,12 +47,12 @@ const Register = ({ onSwitchToLogin }) => {
         setGoogleLoadingText('Redirecting securely...');
       }, 750);
 
-      const response = await api.get('/auth/google?flow=login');
+      const response = await api.get(`/auth/google?flow=login${getPlatformParam()}`);
       clearTimeout(timer);
 
       if (response.data && response.data.redirectUrl) {
         setGoogleLoadingText('Redirecting securely...');
-        window.location.href = response.data.redirectUrl;
+        openAuthUrl(response.data.redirectUrl);
       } else {
         throw new Error('No redirect URL received');
       }
