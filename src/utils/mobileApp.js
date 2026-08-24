@@ -1,16 +1,33 @@
 export const isMobileApp = () => {
   if (typeof window === 'undefined') return false;
+
+  // 1. Native bridge objects injected by Android/iOS WebView app wrappers
   if (
     window.AndroidBridge ||
     window.Android ||
-    (window.webkit && window.webkit.messageHandlers) ||
-    new URLSearchParams(window.location.search).get('platform') === 'mobile' ||
+    (window.webkit && window.webkit.messageHandlers && Object.keys(window.webkit.messageHandlers).length > 0)
+  ) {
+    return true;
+  }
+
+  // 2. Explicit app flags in query params or localStorage
+  const params = new URLSearchParams(window.location.search);
+  if (
+    params.get('platform') === 'mobile' ||
+    params.get('isApp') === 'true' ||
     localStorage.getItem('isMobileApp') === 'true'
   ) {
     return true;
   }
+
+  // 3. Embedded Android WebView user-agent marker (contains '; wv)' or 'WebView')
   const ua = navigator.userAgent || '';
-  return /Android|iPhone|iPad|iPod|Mobile|wv|WebView/i.test(ua);
+  if (/;\s*wv\)/i.test(ua) || /WebView/i.test(ua)) {
+    return true;
+  }
+
+  // Standard Mobile Chrome, Mobile Safari, and Chrome DevTools emulation return false
+  return false;
 };
 
 export const getPlatformParam = () => {
