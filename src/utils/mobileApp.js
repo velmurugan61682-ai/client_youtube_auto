@@ -1,12 +1,16 @@
 export const isMobileApp = () => {
   if (typeof window === 'undefined') return false;
-  return !!(
+  if (
     window.AndroidBridge ||
     window.Android ||
     (window.webkit && window.webkit.messageHandlers) ||
     new URLSearchParams(window.location.search).get('platform') === 'mobile' ||
     localStorage.getItem('isMobileApp') === 'true'
-  );
+  ) {
+    return true;
+  }
+  const ua = navigator.userAgent || '';
+  return /Android|iPhone|iPad|iPod|Mobile|wv|WebView/i.test(ua);
 };
 
 export const getPlatformParam = () => {
