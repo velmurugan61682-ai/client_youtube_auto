@@ -45,18 +45,16 @@ const formatChartDate = (dateStr) => {
 };
 
 const getCleanThumbnail = (video) => {
-  if (!video) return 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=150&auto=format&fit=crop&q=60';
-  let thumb = video.thumbnail || '';
-  if (!thumb && video.videoId) {
-    return `https://i.ytimg.com/vi/${video.videoId}/hqdefault.jpg`;
+  if (!video) return DEFAULT_VIDEO_THUMBNAIL;
+  let thumb = video.thumbnail || video.thumbnailUrl || '';
+  if (thumb && typeof thumb === 'string' && thumb.trim().length > 0) {
+    return thumb.trim().replace(/_live/gi, '');
   }
-  if (thumb.includes('_live')) {
-    thumb = thumb.replace(/_live/gi, '');
+  const cleanVId = video.videoId ? String(video.videoId).trim() : null;
+  if (cleanVId && !cleanVId.startsWith('yt_post_')) {
+    return `https://i.ytimg.com/vi/${cleanVId}/hqdefault.jpg`;
   }
-  if (thumb.includes('/mqdefault')) {
-    thumb = thumb.replace(/\/mqdefault/g, '/hqdefault');
-  }
-  return thumb || 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=150&auto=format&fit=crop&q=60';
+  return DEFAULT_VIDEO_THUMBNAIL;
 };
 
 const parseISO8601Duration = (durationStr) => {
@@ -110,14 +108,11 @@ const DEFAULT_VIDEO_THUMBNAIL = 'https://images.unsplash.com/photo-1611162617213
 const ThumbnailImage = ({ initialSrc, videoId, alt, className }) => {
   const getCleanSrc = (url, vId) => {
     if (url && typeof url === 'string' && url.trim().length > 0) {
-      let clean = url.replace(/_live/gi, '');
-      if (clean.includes('/mqdefault')) {
-        clean = clean.replace(/\/mqdefault/g, '/hqdefault');
-      }
-      return clean;
+      return url.trim().replace(/_live/gi, '');
     }
-    if (vId) {
-      return `https://i.ytimg.com/vi/${vId}/hqdefault.jpg`;
+    const cleanVId = vId ? String(vId).trim() : null;
+    if (cleanVId && !cleanVId.startsWith('yt_post_')) {
+      return `https://i.ytimg.com/vi/${cleanVId}/hqdefault.jpg`;
     }
     return DEFAULT_VIDEO_THUMBNAIL;
   };
@@ -131,19 +126,21 @@ const ThumbnailImage = ({ initialSrc, videoId, alt, className }) => {
   }, [initialSrc, videoId]);
 
   const handleError = () => {
+    const cleanVId = videoId ? String(videoId).trim() : null;
     if (errorStage === 0) {
       setErrorStage(1);
-      if (src && src.includes('/mqdefault')) {
-        setSrc(src.replace('/mqdefault', '/hqdefault'));
-      } else if (videoId) {
-        setSrc(`https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`);
+      if (src && src.includes('/hqdefault')) {
+        setSrc(src.replace('/hqdefault', '/mqdefault'));
+      } else if (src && src.includes('/mqdefault')) {
+        setSrc(src.replace('/mqdefault', '/default'));
+      } else if (cleanVId && !cleanVId.startsWith('yt_post_')) {
+        setSrc(`https://i.ytimg.com/vi/${cleanVId}/mqdefault.jpg`);
       } else {
-        setErrorStage(2);
         setSrc(DEFAULT_VIDEO_THUMBNAIL);
       }
     } else if (errorStage === 1) {
       setErrorStage(2);
-      if (src && !src.includes('/default.jpg')) {
+      if (src && !src.includes('/default.jpg') && src.includes('i.ytimg.com')) {
         setSrc(src.replace(/\/hqdefault|\/mqdefault|\/sddefault|\/maxresdefault/, '/default'));
       } else {
         setSrc(DEFAULT_VIDEO_THUMBNAIL);
