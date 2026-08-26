@@ -5,9 +5,9 @@
 export const PLAN_FEATURES = {
   free: {
     name: 'Free Plan',
-    liveStreamingCommentReply: false,
-    toxicCommentRemove: false,
-    autoDM: false
+    liveStreamingCommentReply: true,
+    toxicCommentRemove: true,
+    autoDM: true
   },
   pro: {
     name: 'Pro Plan (₹999/month)',

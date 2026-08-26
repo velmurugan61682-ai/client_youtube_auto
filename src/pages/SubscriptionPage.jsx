@@ -232,9 +232,9 @@ const SubscriptionPage = ({ isGate = false, onSelectPlan }) => {
         { text: "Connect 1 YouTube Channel", included: true },
         { text: "Standard AI Comment Reply", included: true },
         { text: "Smart Auto-Like", included: true },
-        { text: "Live Streaming Comment Reply", included: false },
-        { text: "Toxic Comment Auto Remove", included: false },
-        { text: "Auto DM (WhatsApp)", included: false }
+        { text: "Live Streaming Comment Reply", included: true },
+        { text: "Toxic Comment Auto Remove", included: true },
+        { text: "Auto DM (WhatsApp)", included: true }
       ],
       color: "text-zinc-500",
       bgClass: "border-zinc-200"
