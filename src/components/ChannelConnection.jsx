@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { 
-  Youtube, 
   Key, 
   Trash2, 
   Loader2, 
@@ -9,6 +8,7 @@ import {
   Globe,
   ArrowRight
 } from 'lucide-react';
+import YouTubeIcon from './icons/YouTubeIcon';
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '../services/api';
 import { getPlatformParam, openAuthUrl } from '../utils/mobileApp';
@@ -101,11 +101,13 @@ const ChannelConnection = ({ channels, setChannels }) => {
           className="relative bg-[#0f0f0f] rounded-[22px] p-8 shadow-2xl shadow-black/10 overflow-hidden flex flex-col md:flex-row items-center gap-8 group"
         >
           <div className="absolute top-0 right-0 p-10 opacity-10 pointer-events-none group-hover:scale-110 transition-transform duration-700">
-             <Youtube size={140} className="text-white" />
+             <YouTubeIcon size={140} monochrome="white" />
           </div>
           
-          <div className="w-20 h-20 bg-white rounded-[24px] flex items-center justify-center text-[#ff0000] shadow-xl shrink-0 rotate-3 group-hover:rotate-0 transition-transform">
-            <Youtube size={44} fill="currentColor" />
+          <div className="w-20 h-20 bg-white rounded-[24px] flex items-center justify-center shadow-xl shrink-0 rotate-3 group-hover:rotate-0 transition-transform">
+            <div className="-rotate-3 group-hover:rotate-0 transition-transform flex items-center justify-center">
+              <YouTubeIcon size={44} />
+            </div>
           </div>
 
           <div className="flex-1 text-center md:text-left relative z-10">

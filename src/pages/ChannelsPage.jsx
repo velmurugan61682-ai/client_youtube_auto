@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { PlaySquare, AlertTriangle, Loader2 } from 'lucide-react';
+import { AlertTriangle, Loader2 } from 'lucide-react';
+import YouTubeIcon from '../components/icons/YouTubeIcon';
 import { motion } from 'framer-motion';
 
 const ChannelsPage = ({ channels, onDisconnect, onAdd, setActiveTab, setSelectedChannelId }) => {
@@ -25,7 +26,7 @@ const ChannelsPage = ({ channels, onDisconnect, onAdd, setActiveTab, setSelected
           disabled={adding}
           className="yt-btn-primary flex items-center gap-2 px-6 py-3 disabled:opacity-50 cursor-pointer"
         >
-          {adding ? <Loader2 size={20} className="animate-spin" /> : <PlaySquare size={20} fill="currentColor" />}
+          {adding ? <Loader2 size={20} className="animate-spin" /> : <YouTubeIcon size={20} />}
           {adding ? 'Connecting...' : 'Link New Account'}
         </button>
       </div>
@@ -120,7 +121,7 @@ const ChannelsPage = ({ channels, onDisconnect, onAdd, setActiveTab, setSelected
           className="yt-card border-dashed border-[#cccccc] flex flex-col items-center justify-center gap-4 text-[#909090] hover:text-[#0f0f0f] hover:border-[#909090] bg-[#fcfcfc] min-h-[180px] transition-all disabled:opacity-50 cursor-pointer"
         >
           <div className="w-12 h-12 rounded-full bg-[#f0f0f0] flex items-center justify-center">
-            {adding ? <Loader2 size={24} className="animate-spin text-[#ff0000]" /> : <PlaySquare size={24} />}
+            {adding ? <Loader2 size={24} className="animate-spin text-[#ff0000]" /> : <YouTubeIcon size={24} />}
           </div>
           <div className="text-center">
             <p className="text-[15px] font-black">{adding ? 'Connecting...' : 'Link New Account'}</p>

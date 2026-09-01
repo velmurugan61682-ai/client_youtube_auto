@@ -9,7 +9,6 @@ import {
   Loader2, 
   CheckCircle, 
   X,
-  PlaySquare,
   AlertTriangle,
   UserPlus,
   Building,
@@ -17,6 +16,7 @@ import {
   Lock,
   Sparkles
 } from 'lucide-react';
+import YouTubeIcon from '../components/icons/YouTubeIcon';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -369,7 +369,7 @@ const AdminClientsPage = () => {
 
                   <div className="space-y-3 text-xs font-bold">
                     <div className="flex items-center gap-3 rounded-2xl bg-white/8 border border-white/10 px-4 py-3">
-                      <PlaySquare size={16} className="text-[#ff0000]" />
+                      <YouTubeIcon size={20} />
                       <span>YouTube channel access ready</span>
                     </div>
                     <div className="flex items-center gap-3 rounded-2xl bg-white/8 border border-white/10 px-4 py-3">

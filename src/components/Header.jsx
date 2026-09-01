@@ -14,12 +14,12 @@ import {
   Trash2,
   AlertCircle,
   X,
-  PlaySquare,
   UsersRound,
   ShieldCheck,
   CreditCard,
   Video
 } from 'lucide-react';
+import YouTubeIcon from './icons/YouTubeIcon';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -134,7 +134,7 @@ const Header = ({
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', path: 'Dashboard', icon: LayoutDashboard },
     { id: 'videos', label: 'Video Library', path: 'Videos', icon: Video },
-    { id: 'channels', label: 'Connected Channels', path: 'Channels', icon: PlaySquare },
+    { id: 'channels', label: 'Connected Channels', path: 'Channels', icon: YouTubeIcon },
     { id: 'leads', label: 'WhatsApp Leads', path: 'Leads', icon: UsersRound },
     { id: 'moderation', label: 'Auto-Mod', path: 'Auto-Mod', icon: ShieldCheck },
 

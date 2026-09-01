@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import {
   LayoutDashboard,
   Video,
-  PlaySquare,
   ShieldCheck,
   MessageCircle,
   Settings,
@@ -14,6 +13,7 @@ import {
   Moon,
   Sun
 } from 'lucide-react';
+import YouTubeIcon from './icons/YouTubeIcon';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen, user, onProfileClick, isDark = false, onToggleTheme }) => {
@@ -35,7 +35,7 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen, user, o
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'videos', label: 'Videos', icon: Video },
-    { id: 'channels', label: 'Channels', icon: PlaySquare },
+    { id: 'channels', label: 'Channels', icon: YouTubeIcon },
     { id: 'leads', label: 'Leads', icon: UsersRound },
     { id: 'moderation', label: 'Auto-Mod', icon: ShieldCheck },
     { id: 'subscription', label: 'Subscription', icon: CreditCard },

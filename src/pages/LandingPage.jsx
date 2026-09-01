@@ -26,11 +26,11 @@ import {
   Instagram,
   Facebook,
   Linkedin,
-  Youtube,
   AlertCircle,
   Menu,
   X
 } from 'lucide-react';
+import YouTubeIcon from '../components/icons/YouTubeIcon';
 import { motion, AnimatePresence } from 'framer-motion';
 import HumanAiAutomationShowcase from '../components/HumanAiAutomationShowcase';
 
@@ -135,7 +135,7 @@ const LandingPage = () => {
 
   const useCases = [
     {
-      icon: <PlaySquare size={26} />,
+      icon: <YouTubeIcon size={26} />,
       title: "AI-powered YouTube Comment Automation",
       desc: "Automate viewer comment replies, filter spam instantly, and keep your video comment section clean 24/7."
     },
@@ -412,7 +412,7 @@ const LandingPage = () => {
           <div className="flex items-center justify-between border-b border-slate-100 pb-5 mb-6">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-2xl bg-[#fff1f1] flex items-center justify-center text-[#ff0000] border border-red-100">
-                <PlaySquare size={20} />
+                <YouTubeIcon size={20} />
               </div>
               <div>
                 <h3 className="text-base font-bold text-slate-900">YouTube Creator Hub</h3>
@@ -517,7 +517,7 @@ const LandingPage = () => {
             </div>
 
             <div className="bg-white p-5 rounded-2xl border border-[#e5e5e5] shadow-sm space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-red-50 text-[#ff0000] flex items-center justify-center border border-red-100"><Youtube size={20} /></div>
+              <div className="w-10 h-10 rounded-xl bg-red-50 text-[#ff0000] flex items-center justify-center border border-red-100"><YouTubeIcon size={20} /></div>
               <h3 className="text-base font-black text-[#0f0f0f]">Connect your YouTube Channel</h3>
               <p className="text-xs font-semibold text-[#606060] leading-relaxed">Select and connect your YouTube channel.</p>
             </div>

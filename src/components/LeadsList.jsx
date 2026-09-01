@@ -7,11 +7,11 @@ import {
   Phone,
   CheckCircle2,
   Clock,
-  Youtube,
   ChevronLeft,
   ChevronRight,
   EyeOff
 } from 'lucide-react';
+import YouTubeIcon from './icons/YouTubeIcon';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const LeadsList = ({ searchQuery: globalSearch }) => {
@@ -158,8 +158,8 @@ const LeadsList = ({ searchQuery: globalSearch }) => {
                   </div>
                   <div className="min-w-0">
                     <p className="text-sm font-black text-[#0f0f0f] truncate">{lead.authorName}</p>
-                    <p className="text-[10px] font-semibold text-[#909090] flex items-center gap-1">
-                      <Youtube size={10} />
+                    <p className="text-[10px] font-semibold text-[#909090] flex items-center gap-1.5">
+                      <YouTubeIcon size={20} />
                       {channels.find(c => c.channelId === lead.channelId)?.title || 'Channel'}
                     </p>
                   </div>
@@ -206,9 +206,9 @@ const LeadsList = ({ searchQuery: globalSearch }) => {
                     href={`https://www.youtube.com/watch?v=${lead.videoId}`} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="text-red-600 font-bold flex items-center gap-1 hover:underline"
+                    className="text-red-600 font-bold flex items-center gap-1.5 hover:underline"
                   >
-                    <Youtube size={12} /> View Video
+                    <YouTubeIcon size={20} /> View Video
                   </a>
                 )}
               </div>
@@ -265,8 +265,8 @@ const LeadsList = ({ searchQuery: globalSearch }) => {
                           </div>
                           <div className="min-w-0">
                             <p className="text-sm font-bold text-[#0f0f0f] truncate">{lead.authorName}</p>
-                            <p className="text-[10px] font-medium text-[#909090] flex items-center gap-1">
-                              <Youtube size={10} />
+                            <p className="text-[10px] font-medium text-[#909090] flex items-center gap-1.5">
+                              <YouTubeIcon size={20} />
                               {channels.find(c => c.channelId === lead.channelId)?.title || 'Channel'}
                             </p>
                           </div>
@@ -316,10 +316,10 @@ const LeadsList = ({ searchQuery: globalSearch }) => {
                              href={`https://www.youtube.com/watch?v=${lead.videoId}`} 
                              target="_blank" 
                              rel="noopener noreferrer"
-                             className="p-2 hover:bg-[#ff0000]/10 rounded-lg text-[#ff0000] transition-colors"
+                             className="p-2 hover:bg-[#ff0000]/10 rounded-lg text-[#ff0000] transition-colors inline-flex items-center justify-center"
                              title="View Video"
                            >
-                             <Youtube size={16} />
+                             <YouTubeIcon size={20} />
                            </a>
                         </div>
                       </td>

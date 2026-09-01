@@ -9,12 +9,11 @@ import {
   Sliders, 
   Sparkles, 
   Loader2,
-  PlaySquare,
   FileVideo,
-  Youtube,
   UploadCloud,
   Trash2
 } from 'lucide-react';
+import YouTubeIcon from '../components/icons/YouTubeIcon';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDropzone } from 'react-dropzone';
 
@@ -601,7 +600,7 @@ const AutoSchedule = ({ channels = [], selectedChannelId, setSelectedChannelId }
       {/* Queue Table */}
       <div className="yt-card !p-0 overflow-hidden shadow-xl border-[#f0f0f0]">
         <div className="flex items-center gap-3 p-6 bg-white border-b border-[#f0f0f0]">
-          <Youtube size={16} className="text-[#ff0000]" />
+          <YouTubeIcon size={20} />
           <span className="text-[11px] font-black uppercase tracking-widest text-[#0f0f0f]">Scheduled Queue</span>
         </div>
 
@@ -628,7 +627,7 @@ const AutoSchedule = ({ channels = [], selectedChannelId, setSelectedChannelId }
                 <tr>
                   <td colSpan="5" className="text-center py-20">
                     <div className="flex flex-col items-center gap-3 opacity-30">
-                      <PlaySquare size={48} className="text-[#909090]" />
+                      <YouTubeIcon size={48} monochrome="#909090" />
                       <p className="text-sm font-black uppercase tracking-widest text-[#909090]">No scheduled videos found</p>
                     </div>
                   </td>
@@ -642,7 +641,7 @@ const AutoSchedule = ({ channels = [], selectedChannelId, setSelectedChannelId }
                     <td className="py-6 px-6 align-top">
                       <div className="flex items-center gap-4">
                         <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center text-gray-500 shrink-0 border border-gray-200">
-                          {item.videoId ? <Youtube size={20} /> : <FileVideo size={20} />}
+                          {item.videoId ? <YouTubeIcon size={20} /> : <FileVideo size={20} />}
                         </div>
                         <div className="min-w-0">
                           <p className="text-[14px] font-black text-[#0f0f0f] truncate max-w-[280px]">
