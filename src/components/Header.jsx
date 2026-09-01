@@ -242,9 +242,10 @@ const Header = ({
 
         <div
           onClick={() => setActiveTab && setActiveTab('dashboard')}
-          className="flex items-center cursor-pointer group select-none py-1"
+          className="flex items-center gap-2.5 cursor-pointer group select-none py-1"
         >
-          <img src="/brand-logo.png" className="h-10 sm:h-11 w-auto object-contain drop-shadow-sm transition-transform group-hover:scale-[1.02]" alt="ChannelBot Logo" />
+          <img src="/logo_icon.png" className="h-8 sm:h-9 w-auto object-contain drop-shadow-sm transition-transform group-hover:scale-[1.03]" alt="ChannelBot Logo" />
+          <span className="text-base sm:text-lg font-black tracking-tight text-[#0f0f0f]">ChannelBot</span>
         </div>
 
         {user && user.role === 'admin' && orgs.length > 0 && (
