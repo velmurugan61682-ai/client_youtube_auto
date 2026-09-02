@@ -60,6 +60,21 @@ const PrivacyPage = () => {
             </ul>
           </Section>
 
+          <Section title="Cookies, Device Storage, and Local Technologies">
+            <p>
+              ChannelBot stores, accesses, and retrieves information directly on and from your device using first-party cookies, browser local storage, session storage, and cache storage strictly to operate the service, keep you signed in, preserve user interface preferences, and optimize load performance:
+            </p>
+            <ul className="list-disc pl-6 space-y-2">
+              <li><strong>Session and Authentication Cookies:</strong> We set secure, first-party authentication cookies (<code>token</code>, <code>adminToken</code>) on your device to maintain your authenticated login session and verify real-time WebSocket communication. These are retained during your active session and removed when you log out.</li>
+              <li><strong>Browser Local Storage:</strong> We store authorization tokens (<code>token</code>, <code>adminToken</code>), user profile information (<code>user</code>), UI theme preferences (<code>adminDashboardTheme</code>), navigation sidebar display preferences (<code>adminSidebarExpanded</code>), and mobile environment detection flags (<code>isMobileApp</code>) in your browser's LocalStorage. This data is retained on your device until you log out or clear your browser data.</li>
+              <li><strong>Browser Session Storage:</strong> We use temporary session storage (<code>plan_acknowledged</code>) to track transient onboarding and plan acknowledgment states during an active browsing tab. This data is automatically deleted when you close your browser tab or session.</li>
+              <li><strong>Cache API and Service Worker Storage:</strong> Our Service Worker caches application assets, web fonts (<code>google-fonts-cache</code>), and YouTube channel avatars (<code>youtube-avatars-cache</code>) directly on your device to enable offline Progressive Web App (PWA) functionality and speed up page load times. Cached items are retained according to standard cache expiration policies (30 to 365 days) or until cleared.</li>
+            </ul>
+            <p>
+              <strong>Third-Party Access:</strong> ChannelBot does not allow third-party advertising networks, tracking brokers, or marketing analytics scripts to access information on your device. When third-party services are loaded for essential functionality—such as Google OAuth/YouTube embedded players (subject to Google's Privacy Policy) or the Razorpay checkout script for secure subscription payments (subject to Razorpay's Privacy Policy)—those providers may receive standard device/browser connection data strictly to complete the authorized transaction or feature.
+            </p>
+          </Section>
+
           <Section title="Why We Use This Information">
             <p>ChannelBot uses this data only to provide the product features you request or configure:</p>
             <ul className="list-disc pl-6 space-y-2">

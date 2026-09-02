@@ -866,15 +866,16 @@ const VideosList = ({
                   </div>
                 </div>
                 <div className="flex items-center gap-0.5 flex-shrink-0">
-                  <span
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      console.log(`Video Audit Details:\n- Video ID: ${video.videoId}\n- Title: ${video.title}`);
-                    }}
-                    className="p-1.5 hover:bg-slate-200 rounded-lg text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
+                  <a
+                    href={`https://www.youtube.com/watch?v=${video.videoId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="p-1.5 hover:bg-red-50 hover:text-[#ff0000] rounded-lg text-slate-400 transition-colors cursor-pointer"
+                    title="Watch on YouTube"
                   >
-                    <MoreVertical size={16} />
-                  </span>
+                    <ExternalLink size={14} />
+                  </a>
                   {selectedVideo === video.videoId && <ChevronRight size={16} className="text-[#ff0000] hidden md:block" />}
                 </div>
               </button>
@@ -996,10 +997,25 @@ const VideosList = ({
               </div>
             ) : selectedVideo && (
               <div className="max-w-[900px] mx-auto mb-6">
+                {selectedVideoData?.title && (
+                  <div className="mb-2.5 flex items-center justify-between gap-3">
+                    <a
+                      href={`https://www.youtube.com/watch?v=${selectedVideoData.videoId || selectedVideo}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm sm:text-base font-black text-[#0f0f0f] hover:text-[#ff0000] hover:underline inline-flex items-center gap-1.5 leading-snug transition-colors group"
+                      title="Watch video on YouTube"
+                    >
+                      <span>{selectedVideoData.title}</span>
+                      <ExternalLink size={14} className="shrink-0 text-[#909090] group-hover:text-[#ff0000] transition-colors" />
+                    </a>
+                  </div>
+                )}
                 <iframe
-                  className="w-full aspect-video rounded-2xl border border-[#e5e5e5] shadow-md"
+                  className="w-full aspect-video rounded-2xl border border-[#e5e5e5] shadow-md min-w-[200px] min-h-[200px]"
+                  style={{ minWidth: '200px', minHeight: '200px' }}
                   src={`https://www.youtube.com/embed/${selectedVideo}`}
-                  title="YouTube video player"
+                  title={selectedVideoData?.title || "YouTube video player"}
                   frameBorder="0"
                   allow="accelerometer *; autoplay; clipboard-write; encrypted-media; gyroscope *; picture-in-picture; web-share"
                   allowFullScreen

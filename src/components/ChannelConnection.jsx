@@ -104,10 +104,8 @@ const ChannelConnection = ({ channels, setChannels }) => {
              <YouTubeIcon size={140} monochrome="white" />
           </div>
           
-          <div className="w-20 h-20 bg-white rounded-[24px] flex items-center justify-center shadow-xl shrink-0 rotate-3 group-hover:rotate-0 transition-transform">
-            <div className="-rotate-3 group-hover:rotate-0 transition-transform flex items-center justify-center">
-              <YouTubeIcon size={44} />
-            </div>
+          <div className="w-20 h-20 bg-white rounded-[24px] flex items-center justify-center shadow-xl shrink-0 group-hover:scale-105 transition-transform duration-300">
+            <YouTubeIcon size={44} />
           </div>
 
           <div className="flex-1 text-center md:text-left relative z-10">

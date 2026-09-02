@@ -27,9 +27,10 @@ const OAuthCallbackPage = () => {
 
   useEffect(() => {
     const handleCallback = async () => {
+      let token = null;
       try {
         const params = new URLSearchParams(window.location.search);
-        let token = params.get('token') || params.get('jwt') || params.get('access_token');
+        token = params.get('token') || params.get('jwt') || params.get('access_token');
         const oauthStatus = params.get('status');
         const error = params.get('error');
         const channelId = params.get('channelId');
@@ -111,18 +112,17 @@ const OAuthCallbackPage = () => {
         console.error('OAuth callback error:', err);
 
         // --- RESILIENT FALLBACK ---
-        // If /auth/me returns 404 (User not found) but we have a valid token,
+        // If /auth/me returns 404 (User not found) or network glitch, but we have a valid token,
         // decode the JWT client-side and redirect to dashboard anyway.
-        // The server-side getMe has an email fallback, but this handles race conditions.
-        if (err.response?.status === 404 && token) {
+        if ((err.response?.status === 404 || !err.response) && token) {
           const decoded = decodeJwtPayload(token);
-          if (decoded && decoded.email) {
+          if (decoded && (decoded.email || decoded.id || decoded._id)) {
             console.warn('[OAuth Fallback] /auth/me returned 404 but token is valid. Using JWT payload as user data.');
             const fallbackUser = {
-              email: decoded.email,
+              email: decoded.email || 'user@channelbot.in',
               role: decoded.role || 'client',
               id: decoded.id || decoded._id,
-              name: decoded.name || decoded.email.split('@')[0]
+              name: decoded.name || (decoded.email ? decoded.email.split('@')[0] : 'User')
             };
             localStorage.setItem('user', JSON.stringify(fallbackUser));
             setStatus('success');
