@@ -369,7 +369,7 @@ const AdminClientsPage = () => {
 
                   <div className="space-y-3 text-xs font-bold">
                     <div className="flex items-center gap-3 rounded-2xl bg-white/8 border border-white/10 px-4 py-3">
-                      <YouTubeIcon size={20} />
+                      <YouTubeIcon size={24} />
                       <span>YouTube channel access ready</span>
                     </div>
                     <div className="flex items-center gap-3 rounded-2xl bg-white/8 border border-white/10 px-4 py-3">

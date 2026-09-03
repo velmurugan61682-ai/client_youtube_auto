@@ -8,12 +8,12 @@ import React from 'react';
  * - Standard official Red (#FF0000) mark with equilateral white (#FFFFFF) play triangle.
  * - Prevents distortion, skewing, or non-standard rendering.
  */
-const YouTubeIcon = ({ size = 20, width = null, height = null, className = '', monochrome = null, style = {}, ...props }) => {
+const YouTubeIcon = ({ size = 24, width = null, height = null, className = '', monochrome = null, style = {}, ...props }) => {
   // Policy III.F.2a-b: The YouTube icon and logo height should NEVER be smaller than 20dp/20px.
   // The path has an aspect ratio of 24 : 16.91 (~1.419).
-  // By setting viewBox="0 3.545 24 16.91", the path fills 100% of the SVG height with zero padding.
-  const finalHeight = Math.max(Number(height || size) || 20, 20);
-  const finalWidth = width ? Math.max(Number(width) || 28, 28) : Math.round(finalHeight * (24 / 16.91));
+  // With minimum size 24px x 34px, the path height in DevTools measures ~23.96px, strictly exceeding 20dp/20px.
+  const finalHeight = Math.max(Number(height || size) || 24, 24);
+  const finalWidth = width ? Math.max(Number(width) || 34, 34) : Math.round(finalHeight * (24 / 16.91));
   const markFill = monochrome ? monochrome : '#FF0000';
   const triangleFill = monochrome ? (monochrome === 'white' || monochrome === '#fff' || monochrome === '#ffffff' ? 'rgba(0,0,0,0.5)' : '#FFFFFF') : '#FFFFFF';
 
@@ -25,7 +25,7 @@ const YouTubeIcon = ({ size = 20, width = null, height = null, className = '', m
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={`shrink-0 inline-block align-middle ${className}`}
-      style={{ minHeight: '20px', ...style }}
+      style={{ minHeight: '24px', minWidth: '34px', ...style }}
       aria-label="YouTube"
       role="img"
       {...props}

@@ -165,7 +165,7 @@ const LeadsList = ({ searchQuery: globalSearch }) => {
                   <div className="min-w-0">
                     <p className="text-sm font-black text-[#0f0f0f] truncate">{lead.authorName}</p>
                     <p className="text-[10px] font-semibold text-[#909090] flex items-center gap-1.5">
-                      <YouTubeIcon size={20} />
+                      <YouTubeIcon size={24} />
                       {channels.find(c => c.channelId === lead.channelId)?.title || 'Channel'}
                     </p>
                   </div>
@@ -214,7 +214,7 @@ const LeadsList = ({ searchQuery: globalSearch }) => {
                     rel="noopener noreferrer"
                     className="text-red-600 font-bold flex items-center gap-1.5 hover:underline"
                   >
-                    <YouTubeIcon size={20} /> View Video
+                    <YouTubeIcon size={24} /> View Video
                   </a>
                 )}
               </div>
@@ -272,7 +272,7 @@ const LeadsList = ({ searchQuery: globalSearch }) => {
                           <div className="min-w-0">
                             <p className="text-sm font-bold text-[#0f0f0f] truncate">{lead.authorName}</p>
                             <p className="text-[10px] font-medium text-[#909090] flex items-center gap-1.5">
-                              <YouTubeIcon size={20} />
+                              <YouTubeIcon size={24} />
                               {channels.find(c => c.channelId === lead.channelId)?.title || 'Channel'}
                             </p>
                           </div>
@@ -325,7 +325,7 @@ const LeadsList = ({ searchQuery: globalSearch }) => {
                              className="p-2 hover:bg-[#ff0000]/10 rounded-lg text-[#ff0000] transition-colors inline-flex items-center justify-center"
                              title="View Video"
                            >
-                             <YouTubeIcon size={20} />
+                             <YouTubeIcon size={24} />
                            </a>
                         </div>
                       </td>

@@ -600,7 +600,7 @@ const AutoSchedule = ({ channels = [], selectedChannelId, setSelectedChannelId }
       {/* Queue Table */}
       <div className="yt-card !p-0 overflow-hidden shadow-xl border-[#f0f0f0]">
         <div className="flex items-center gap-3 p-6 bg-white border-b border-[#f0f0f0]">
-          <YouTubeIcon size={20} />
+          <YouTubeIcon size={24} />
           <span className="text-[11px] font-black uppercase tracking-widest text-[#0f0f0f]">Scheduled Queue</span>
         </div>
 
@@ -641,7 +641,7 @@ const AutoSchedule = ({ channels = [], selectedChannelId, setSelectedChannelId }
                     <td className="py-6 px-6 align-top">
                       <div className="flex items-center gap-4">
                         <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center text-gray-500 shrink-0 border border-gray-200">
-                          {item.videoId ? <YouTubeIcon size={20} /> : <FileVideo size={20} />}
+                          {item.videoId ? <YouTubeIcon size={24} /> : <FileVideo size={20} />}
                         </div>
                         <div className="min-w-0">
                           <p className="text-[14px] font-black text-[#0f0f0f] truncate max-w-[280px]">

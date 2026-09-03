@@ -105,7 +105,7 @@ const AdminClientDetailPage = () => {
             activeTab === 'channels' ? 'bg-[#ff0000] text-white shadow-sm' : 'text-slate-600 hover:bg-white'
           }`}
         >
-          <YouTubeIcon size={20} /> Connected Channels ({youtubeChannelsConnected.length})
+          <YouTubeIcon size={24} /> Connected Channels ({youtubeChannelsConnected.length})
         </button>
         <button
           onClick={() => setActiveTab('audit')}
@@ -258,7 +258,7 @@ const AdminClientDetailPage = () => {
                 <div key={idx} className="p-4 bg-white/80 rounded-2xl border border-slate-100 flex items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center font-black">
-                      <YouTubeIcon size={20} />
+                      <YouTubeIcon size={24} />
                     </div>
                     <div>
                       <p className="font-bold text-slate-900 text-xs">{ch.channelName || ch.title || 'YouTube Channel'}</p>

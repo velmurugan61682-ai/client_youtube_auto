@@ -1018,10 +1018,13 @@ const VideosList = ({
                     <ExternalLink size={12} />
                   </a>
                 </div>
-                <div className="w-full aspect-video rounded-2xl overflow-hidden border border-[#e5e5e5] shadow-md min-w-[200px] min-h-[200px]">
+                <div 
+                  className="w-full aspect-video rounded-2xl overflow-hidden border border-[#e5e5e5] shadow-md min-w-[200px] min-h-[240px] sm:min-h-[320px] md:min-h-[420px]"
+                  style={{ minWidth: '200px', minHeight: '200px', width: '100%' }}
+                >
                   <iframe
                     className="w-full h-full min-w-[200px] min-h-[200px]"
-                    style={{ minWidth: '200px', minHeight: '200px' }}
+                    style={{ minWidth: '200px', minHeight: '200px', width: '100%', height: '100%' }}
                     src={`https://www.youtube.com/embed/${selectedVideo}`}
                     title={selectedVideoData?.title || "YouTube video player"}
                     frameBorder="0"

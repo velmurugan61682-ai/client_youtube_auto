@@ -26,7 +26,7 @@ const ChannelsPage = ({ channels, onDisconnect, onAdd, setActiveTab, setSelected
           disabled={adding}
           className="yt-btn-primary flex items-center gap-2 px-6 py-3 disabled:opacity-50 cursor-pointer"
         >
-          {adding ? <Loader2 size={20} className="animate-spin" /> : <YouTubeIcon size={20} />}
+          {adding ? <Loader2 size={24} className="animate-spin" /> : <YouTubeIcon size={24} />}
           {adding ? 'Connecting...' : 'Link New Account'}
         </button>
       </div>
