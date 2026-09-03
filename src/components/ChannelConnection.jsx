@@ -101,7 +101,7 @@ const ChannelConnection = ({ channels, setChannels }) => {
           className="relative bg-[#0f0f0f] rounded-[22px] p-8 shadow-2xl shadow-black/10 overflow-hidden flex flex-col md:flex-row items-center gap-8 group"
         >
           <div className="absolute top-0 right-0 p-10 opacity-10 pointer-events-none group-hover:scale-110 transition-transform duration-700">
-             <YouTubeIcon size={140} monochrome="white" />
+             <YouTubeIcon size={140} />
           </div>
           
           <div className="w-20 h-20 bg-white rounded-[24px] flex items-center justify-center shadow-xl shrink-0 group-hover:scale-105 transition-transform duration-300">

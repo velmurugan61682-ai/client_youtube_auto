@@ -627,7 +627,7 @@ const AutoSchedule = ({ channels = [], selectedChannelId, setSelectedChannelId }
                 <tr>
                   <td colSpan="5" className="text-center py-20">
                     <div className="flex flex-col items-center gap-3 opacity-30">
-                      <YouTubeIcon size={48} monochrome="#909090" />
+                      <YouTubeIcon size={48} />
                       <p className="text-sm font-black uppercase tracking-widest text-[#909090]">No scheduled videos found</p>
                     </div>
                   </td>

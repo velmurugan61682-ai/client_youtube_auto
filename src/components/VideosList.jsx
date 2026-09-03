@@ -695,7 +695,7 @@ const VideosList = ({
   if (!channelId) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center text-center p-8 bg-white rounded-3xl border border-[#f0f0f0] my-4 shadow-sm">
-        <YouTubeIcon size={48} monochrome="#909090" className="mb-3" />
+        <YouTubeIcon size={48} className="mb-3" />
         <h3 className="text-lg font-bold text-[#0f0f0f]">No Channel Connected</h3>
         <p className="text-xs text-[#909090] max-w-[320px] mt-1 font-medium leading-relaxed">
           Please connect your YouTube channel using an API key or OAuth in the Settings page to analyze videos and comments.
@@ -1036,7 +1036,7 @@ const VideosList = ({
             )}
             {!selectedVideo ? (
               <div className="h-full flex flex-col items-center justify-center text-[#909090] py-16 text-center">
-                <YouTubeIcon size={48} monochrome="#909090" className="mb-4" />
+                <YouTubeIcon size={48} className="mb-4" />
                 <p className="text-base md:text-lg font-bold text-[#0f0f0f]">No Video Selected</p>
                 <p className="text-xs text-[#909090] max-w-[320px] mt-1 font-medium leading-relaxed">
                   Select a video or short from the list on the left to analyze its specific comments and video analytics.

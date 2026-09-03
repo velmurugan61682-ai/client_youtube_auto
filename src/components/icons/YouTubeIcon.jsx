@@ -14,8 +14,8 @@ const YouTubeIcon = ({ size = 24, width = null, height = null, className = '', m
   // With minimum size 24px x 34px, the path height in DevTools measures ~23.96px, strictly exceeding 20dp/20px.
   const finalHeight = Math.max(Number(height || size) || 24, 24);
   const finalWidth = width ? Math.max(Number(width) || 34, 34) : Math.round(finalHeight * (24 / 16.91));
-  const markFill = monochrome ? monochrome : '#FF0000';
-  const triangleFill = monochrome ? (monochrome === 'white' || monochrome === '#fff' || monochrome === '#ffffff' ? 'rgba(0,0,0,0.5)' : '#FFFFFF') : '#FFFFFF';
+  const markFill = '#FF0000';
+  const triangleFill = '#FFFFFF';
 
   return (
     <svg
