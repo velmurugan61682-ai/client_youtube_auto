@@ -996,30 +996,39 @@ const VideosList = ({
                 )}
               </div>
             ) : selectedVideo && (
-              <div className="max-w-[900px] mx-auto mb-6">
-                {selectedVideoData?.title && (
-                  <div className="mb-2.5 flex items-center justify-between gap-3">
-                    <a
-                      href={`https://www.youtube.com/watch?v=${selectedVideoData.videoId || selectedVideo}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm sm:text-base font-black text-[#0f0f0f] hover:text-[#ff0000] hover:underline inline-flex items-center gap-1.5 leading-snug transition-colors group"
-                      title="Watch video on YouTube"
-                    >
-                      <span>{selectedVideoData.title}</span>
-                      <ExternalLink size={14} className="shrink-0 text-[#909090] group-hover:text-[#ff0000] transition-colors" />
-                    </a>
-                  </div>
-                )}
-                <iframe
-                  className="w-full aspect-video rounded-2xl border border-[#e5e5e5] shadow-md min-w-[200px] min-h-[200px]"
-                  style={{ minWidth: '200px', minHeight: '200px' }}
-                  src={`https://www.youtube.com/embed/${selectedVideo}`}
-                  title={selectedVideoData?.title || "YouTube video player"}
-                  frameBorder="0"
-                  allow="accelerometer *; autoplay; clipboard-write; encrypted-media; gyroscope *; picture-in-picture; web-share"
-                  allowFullScreen
-                ></iframe>
+              <div className="max-w-[900px] mx-auto mb-6 min-w-[200px]">
+                <div className="mb-2.5 flex items-center justify-between gap-3">
+                  <a
+                    href={`https://www.youtube.com/watch?v=${selectedVideoData?.videoId || selectedVideo}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm sm:text-base font-black text-[#0f0f0f] hover:text-[#ff0000] hover:underline inline-flex items-center gap-1.5 leading-snug transition-colors group"
+                    title="Watch video on YouTube (Redirects to YouTube)"
+                  >
+                    <span>{selectedVideoData?.title || 'Watch Video on YouTube'}</span>
+                    <ExternalLink size={14} className="shrink-0 text-[#909090] group-hover:text-[#ff0000] transition-colors" />
+                  </a>
+                  <a
+                    href={`https://www.youtube.com/watch?v=${selectedVideoData?.videoId || selectedVideo}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs font-bold text-[#ff0000] hover:underline shrink-0 hidden sm:inline-flex items-center gap-1"
+                  >
+                    <span>Open in YouTube</span>
+                    <ExternalLink size={12} />
+                  </a>
+                </div>
+                <div className="w-full aspect-video rounded-2xl overflow-hidden border border-[#e5e5e5] shadow-md min-w-[200px] min-h-[200px]">
+                  <iframe
+                    className="w-full h-full min-w-[200px] min-h-[200px]"
+                    style={{ minWidth: '200px', minHeight: '200px' }}
+                    src={`https://www.youtube.com/embed/${selectedVideo}`}
+                    title={selectedVideoData?.title || "YouTube video player"}
+                    frameBorder="0"
+                    allow="accelerometer *; autoplay; clipboard-write; encrypted-media; gyroscope *; picture-in-picture; web-share"
+                    allowFullScreen
+                  ></iframe>
+                </div>
               </div>
             )}
             {!selectedVideo ? (

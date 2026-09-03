@@ -82,20 +82,26 @@ const LeadsList = ({ searchQuery: globalSearch }) => {
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      <div className="flex items-center justify-end gap-2">
-        <button 
-          onClick={handleExport}
-          className="flex items-center gap-1.5 bg-white border border-[#e5e5e5] rounded-xl px-3 sm:px-4 py-2 text-xs font-bold text-[#0f0f0f] shadow-sm hover:bg-[#f9f9f9] transition-colors"
-        >
-          <Download size={14} />
-          <span>Export CSV</span>
-        </button>
-        <button 
-          onClick={fetchLeads}
-          className="yt-btn-primary !py-2 !px-4 !text-xs !rounded-xl"
-        >
-          Refresh
-        </button>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50 border border-slate-200/80 rounded-2xl p-3 sm:px-4">
+        <p className="text-[11px] sm:text-xs text-slate-600 font-medium leading-relaxed">
+          <span className="font-bold text-slate-800">YouTube Data Compliance:</span> Per YouTube API Services Policies, CSV exports of YouTube data are subject to a mandatory <strong className="text-slate-900">30-day storage limit</strong>. Exported data must be refreshed or permanently deleted within 30 days. See our <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] hover:underline font-bold">Terms of Service</a>.
+        </p>
+        <div className="flex items-center gap-2 self-end sm:self-auto shrink-0">
+          <button 
+            onClick={handleExport}
+            className="flex items-center gap-1.5 bg-white border border-[#e5e5e5] rounded-xl px-3 sm:px-4 py-2 text-xs font-bold text-[#0f0f0f] shadow-sm hover:bg-[#f9f9f9] transition-colors"
+            title="Export leads to CSV (Subject to 30-day storage limit)"
+          >
+            <Download size={14} />
+            <span>Export CSV</span>
+          </button>
+          <button 
+            onClick={fetchLeads}
+            className="yt-btn-primary !py-2 !px-4 !text-xs !rounded-xl"
+          >
+            Refresh
+          </button>
+        </div>
       </div>
 
       <div className="yt-card !p-3 sm:!p-4 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3">

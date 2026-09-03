@@ -62,6 +62,23 @@ const TermsPage = () => {
             </p>
           </Section>
 
+          <Section title="YouTube Data Handling, CSV Exports, and 30-Day Storage Limit">
+            <p>
+              In accordance with the YouTube API Services Developer Policies (including Policy III.E.4a-g), end users who download or export YouTube data—including CSV exports of leads, comments, or analytics—are legally required to comply with the following data retention and deletion obligations:
+            </p>
+            <ul className="list-disc pl-6 space-y-2 mt-2">
+              <li>
+                <strong>30-Day Data Storage Limit:</strong> End users downloading CSV exports are strictly required to comply with the 30-day data storage limit. You must not retain or store downloaded YouTube data (such as commenter names, comment text, video metrics, or channel identifiers) for longer than thirty (30) calendar days from the download date.
+              </li>
+              <li>
+                <strong>Mandatory Data Refresh or Deletion:</strong> Upon the expiration of thirty (30) days from export, you are required to permanently delete all exported YouTube data files or refresh the data directly from YouTube API Services.
+              </li>
+              <li>
+                <strong>Consistent Consent:</strong> Authorization tokens and downloaded data are used only for purposes consistent with the specific consent granted by an active user according to applicable law.
+              </li>
+            </ul>
+          </Section>
+
           <Section title="Acceptable Use">
             <p>You agree not to use ChannelBot to:</p>
             <ul className="list-disc pl-6 space-y-2">
