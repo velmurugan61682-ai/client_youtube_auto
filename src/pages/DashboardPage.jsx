@@ -132,15 +132,7 @@ const DashboardPage = ({
         </div>
       </div>
 
-      {stats?.aiStatus === 'Unavailable' && (
-        <div className="mt-4 p-4 bg-[#fff1f1] border border-red-100 text-[#cc0000] text-sm font-semibold rounded-2xl flex items-center gap-3 shadow-sm">
-          <AlertTriangle className="shrink-0" size={20} />
-          <div>
-            <p className="font-bold">AI Service is currently unavailable</p>
-            <p className="text-xs font-medium">Automation features will fallback to keyword rules until the balance is recharged.</p>
-          </div>
-        </div>
-      )}
+
 
       <div className="custom-scroll mt-4 min-h-0 lg:h-[calc(100%-92px)] overflow-visible lg:overflow-y-auto pr-0 lg:pr-1 space-y-4">
         <StatsGrid stats={stats} isDark={isDark} />
