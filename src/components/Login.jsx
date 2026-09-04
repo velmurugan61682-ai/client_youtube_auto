@@ -260,7 +260,7 @@ const Login = ({ onSwitchToRegister }) => {
           </motion.button>
 
           {/* Card Footer Links */}
-          <div className="mt-8 text-center">
+          <div className="mt-8 text-center space-y-4">
             <p className="text-[12px] font-bold text-zinc-500">
               Need a pro account?{' '}
               {onSwitchToRegister ? (
@@ -279,6 +279,20 @@ const Login = ({ onSwitchToRegister }) => {
                 </Link>
               )}
             </p>
+
+            <div className="pt-4 border-t border-zinc-100 text-[10px] font-medium text-zinc-400 leading-relaxed">
+              By signing in or connecting YouTube, you agree to be bound by the{' '}
+              <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer" className="text-red-500 font-bold hover:underline">
+                YouTube Terms of Service
+              </a>{' '}
+              and{' '}
+              <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-red-500 font-bold hover:underline">
+                Google Privacy Policy
+              </a>. You can revoke access at any time via{' '}
+              <a href="https://security.google.com/settings/security/permissions" target="_blank" rel="noopener noreferrer" className="text-red-500 font-bold hover:underline">
+                Google Security Settings
+              </a>.
+            </div>
           </div>
         </div>
 

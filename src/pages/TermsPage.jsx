@@ -55,10 +55,23 @@ const TermsPage = () => {
 
           <Section title="Google and YouTube Access">
             <p>
-              ChannelBot uses Google OAuth and YouTube API Services only after you authorize access. You can disconnect your YouTube channel in ChannelBot or revoke access from your Google Account permissions page at any time.
+              By accessing, connecting a YouTube channel, or using ChannelBot, you agree to be bound by the{' '}
+              <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] font-bold hover:underline inline-flex items-center gap-1">
+                YouTube Terms of Service <ExternalLink size={12} />
+              </a>.
             </p>
             <p>
-              Your use of connected YouTube features is also subject to the <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] hover:underline inline-flex items-center gap-1">YouTube Terms of Service <ExternalLink size={12} /></a>, the <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] hover:underline inline-flex items-center gap-1">Google Privacy Policy <ExternalLink size={12} /></a>, and applicable YouTube API policies.
+              ChannelBot uses Google OAuth and YouTube API Services strictly in accordance with the{' '}
+              <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] font-bold hover:underline inline-flex items-center gap-1">
+                Google Privacy Policy <ExternalLink size={12} />
+              </a>{' '}
+              and applicable YouTube API Developer Policies.
+            </p>
+            <p>
+              You can disconnect your YouTube channel directly inside ChannelBot settings or revoke access at any time from your Google Security Settings page at{' '}
+              <a href="https://security.google.com/settings/security/permissions" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] font-bold hover:underline inline-flex items-center gap-1">
+                Google Security Permissions <ExternalLink size={12} />
+              </a>.
             </p>
           </Section>
 

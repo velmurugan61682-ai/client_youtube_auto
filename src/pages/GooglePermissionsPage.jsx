@@ -120,14 +120,21 @@ const GooglePermissionsPage = () => {
             <section className="mt-10 pt-8 border-t border-zinc-200/50 space-y-4">
               <h2 className="text-base font-bold text-zinc-900 flex items-center gap-2">
                 <Lock size={16} className="text-[#ff0000]" />
-                How to Revoke Permissions
+                YouTube API Terms of Service & Revoking Permissions
               </h2>
-              <p className="text-zinc-650 font-medium">
-                You maintain complete control over your Google Account and YouTube channels. If you wish to disconnect ChannelBot:
+              <p className="text-zinc-650 font-medium leading-relaxed">
+                By authorizing ChannelBot or connecting a YouTube channel, users agree to be bound by the{' '}
+                <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] font-bold hover:underline">
+                  YouTube Terms of Service
+                </a>
+                . All data processing is performed in compliance with the{' '}
+                <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] font-bold hover:underline">
+                  Google Privacy Policy
+                </a>.
               </p>
               <ul className="list-decimal pl-6 space-y-2 text-zinc-650">
                 <li>You can disconnect any YouTube channel from the <strong>Settings</strong> page inside the ChannelBot dashboard, which immediately deletes the stored access and refresh tokens.</li>
-                <li>You can completely revoke the app's authorization directly from your Google Account's secure panel by visiting the <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] hover:underline font-bold">Google Third-Party Access Security Page</a>.</li>
+                <li>You can completely revoke the app's authorization directly from your Google Account's secure panel by visiting the <a href="https://security.google.com/settings/security/permissions" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] hover:underline font-bold">Google Security Settings Permissions Page</a> (or <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] hover:underline font-bold">Google Account Permissions</a>).</li>
               </ul>
             </section>
 

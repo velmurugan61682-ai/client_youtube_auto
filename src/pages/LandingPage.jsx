@@ -941,7 +941,7 @@ const LandingPage = () => {
 
           {/* Resources & Support */}
           <div className="space-y-3">
-            <h3 className="text-xs font-black text-white uppercase tracking-widest">Resources</h3>
+            <h3 className="text-xs font-black text-white uppercase tracking-widest">Resources & Policies</h3>
             <ul className="space-y-2 text-xs font-semibold text-zinc-400">
               <li>
                 <Link to="/privacy" className="hover:text-[#ff0000] transition-colors">Privacy Policy</Link>
@@ -953,13 +953,58 @@ const LandingPage = () => {
                 <Link to="/google-permissions" className="hover:text-[#ff0000] transition-colors">Google Permissions</Link>
               </li>
               <li>
-                <Link to="/contact" className="hover:text-[#ff0000] transition-colors">Contact</Link>
+                <a 
+                  href="https://www.youtube.com/t/terms" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="hover:text-[#ff0000] transition-colors inline-flex items-center gap-1"
+                >
+                  YouTube Terms of Service <ExternalLink size={10} />
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="https://policies.google.com/privacy" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="hover:text-[#ff0000] transition-colors inline-flex items-center gap-1"
+                >
+                  Google Privacy Policy <ExternalLink size={10} />
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="https://security.google.com/settings/security/permissions" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="hover:text-[#ff0000] transition-colors inline-flex items-center gap-1"
+                >
+                  Revoke Google Access <ExternalLink size={10} />
+                </a>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-6 border-t border-zinc-800 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        {/* Policy III.C.1 & Policy III.F.2 YouTube API Services Compliance Footer Bar */}
+        <div className="max-w-7xl mx-auto px-6 border-t border-zinc-800/80 pt-6 pb-4">
+          <div className="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-[11px] text-zinc-400 font-medium leading-relaxed">
+            <div className="flex items-center gap-3 shrink-0">
+              <YouTubeIcon size={24} />
+              <span className="font-bold text-white">Powered by YouTube API Services</span>
+            </div>
+            <p className="flex-1">
+              By using ChannelBot, you agree to be bound by the{' '}
+              <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] hover:underline font-bold">YouTube Terms of Service</a>.
+              ChannelBot accesses YouTube API Services in accordance with the{' '}
+              <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] hover:underline font-bold">Google Privacy Policy</a>.
+              You may revoke access at any time via{' '}
+              <a href="https://security.google.com/settings/security/permissions" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] hover:underline font-bold">Google Security Settings</a>.
+            </p>
+          </div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 border-t border-zinc-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-[11px] font-semibold text-zinc-500">
             &copy; {new Date().getFullYear()} ChannelBot. All rights reserved.
           </p>

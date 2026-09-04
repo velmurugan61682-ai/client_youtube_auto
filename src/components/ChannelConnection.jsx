@@ -256,24 +256,70 @@ const ChannelConnection = ({ channels, setChannels }) => {
         )}
       </div>
 
-      {/* Security Footer Banner */}
-      <div className="p-8 bg-[#0f0f0f] rounded-[22px] text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl shadow-black/10">
-         <div className="flex items-center gap-6">
-            <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center">
-               <ShieldCheck size={28} className="text-[#ff0000]" />
+      {/* Security & YouTube API Compliance Footer Banner */}
+      <div className="p-8 bg-[#0f0f0f] rounded-[22px] text-white flex flex-col gap-6 shadow-2xl shadow-black/10">
+         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-6 border-b border-white/10">
+            <div className="flex items-center gap-4">
+               <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center shrink-0">
+                  <YouTubeIcon size={28} />
+               </div>
+               <div>
+                  <h3 className="text-lg font-black tracking-tight text-white flex items-center gap-2">
+                     YouTube API Services Compliance & Infrastructure
+                  </h3>
+                  <p className="text-white/60 text-[12px] font-medium">Powered by YouTube API Services. Encrypted tunnels & 256-bit cloud sync active.</p>
+               </div>
             </div>
-            <div>
-               <h3 className="text-xl font-black tracking-tight">Enterprise Infrastructure</h3>
-               <p className="text-white/40 text-[12px] font-medium">Encrypted tunnels and 256-bit secure cloud sync active.</p>
+            <div className="flex gap-3">
+               <div className="px-3 py-1.5 bg-white/5 rounded-xl border border-white/10 text-[10px] font-black uppercase tracking-widest text-white/70">
+                  Region: Global
+               </div>
+               <div className="px-3 py-1.5 bg-white/5 rounded-xl border border-white/10 text-[10px] font-black uppercase tracking-widest text-white/70">
+                  Protocol: SSL/TLS
+               </div>
             </div>
          </div>
-         <div className="flex gap-4">
-            <div className="px-4 py-2 bg-white/5 rounded-xl border border-white/10 text-[10px] font-black uppercase tracking-widest">
-               Region: Global
-            </div>
-            <div className="px-4 py-2 bg-white/5 rounded-xl border border-white/10 text-[10px] font-black uppercase tracking-widest">
-               Protocol: SSL/TLS
-            </div>
+
+         {/* Mandatory Policy III.C.1 & Policy III.F.2 Compliance Notice */}
+         <div className="bg-white/5 border border-white/10 rounded-2xl p-5 space-y-3 text-[12px] font-medium leading-relaxed text-zinc-300">
+            <p className="text-white font-bold flex items-center gap-2">
+               <ShieldCheck size={16} className="text-[#ff0000]" />
+               YouTube API Terms of Service & Privacy Notice
+            </p>
+            <p>
+               By connecting your YouTube channel or using ChannelBot, you agree to be bound by the{' '}
+               <a 
+                 href="https://www.youtube.com/t/terms" 
+                 target="_blank" 
+                 rel="noopener noreferrer" 
+                 className="text-[#ff0000] hover:underline font-bold inline-flex items-center gap-1"
+               >
+                 YouTube Terms of Service <ExternalLink size={11} />
+               </a>.
+            </p>
+            <p>
+               ChannelBot accesses and processes YouTube API Services data strictly in compliance with the{' '}
+               <a 
+                 href="https://policies.google.com/privacy" 
+                 target="_blank" 
+                 rel="noopener noreferrer" 
+                 className="text-[#ff0000] hover:underline font-bold inline-flex items-center gap-1"
+               >
+                 Google Privacy Policy <ExternalLink size={11} />
+               </a>.
+            </p>
+            <p>
+               You can revoke ChannelBot's access to your YouTube data at any time via the{' '}
+               <a 
+                 href="https://security.google.com/settings/security/permissions" 
+                 target="_blank" 
+                 rel="noopener noreferrer" 
+                 className="text-[#ff0000] hover:underline font-bold inline-flex items-center gap-1"
+               >
+                 Google Security Settings Page <ExternalLink size={11} />
+               </a>{' '}
+               or by disconnecting your channel in ChannelBot.
+            </p>
          </div>
       </div>
     </div>

@@ -112,10 +112,19 @@ const PrivacyPage = () => {
           </Section>
 
           <Section title="Your Controls: Revoke Access or Delete Data">
+            <p className="mb-3">
+              By using ChannelBot, you agree to be bound by the{' '}
+              <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] font-bold hover:underline inline-flex items-center gap-1">
+                YouTube Terms of Service <ExternalLink size={12} />
+              </a>. ChannelBot accesses and processes YouTube API Services data in accordance with the{' '}
+              <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] font-bold hover:underline inline-flex items-center gap-1">
+                Google Privacy Policy <ExternalLink size={12} />
+              </a>.
+            </p>
             <ul className="list-disc pl-6 space-y-2">
-              <li>You can disconnect a YouTube channel from ChannelBot settings when you no longer want the service to access that channel.</li>
-              <li>You can revoke Google OAuth access at any time from your Google Account permissions page: <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] hover:underline inline-flex items-center gap-1">https://myaccount.google.com/permissions <ExternalLink size={12} /></a>.</li>
-              <li>To request deletion of your ChannelBot account or stored YouTube data, email <span className="font-black text-zinc-900">{CONTACT_EMAIL}</span> from the email address associated with your account and include the channel name or account email you want deleted.</li>
+              <li>You can disconnect a YouTube channel from ChannelBot settings at any time to stop accessing that channel.</li>
+              <li>You can revoke Google OAuth access at any time directly from your Google Security Settings page: <a href="https://security.google.com/settings/security/permissions" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] font-bold hover:underline inline-flex items-center gap-1">Google Security Permissions <ExternalLink size={12} /></a> (or <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] font-bold hover:underline inline-flex items-center gap-1">MyAccount Permissions <ExternalLink size={12} /></a>).</li>
+              <li>To request complete deletion of your ChannelBot account or stored YouTube data, email <span className="font-black text-zinc-900">{CONTACT_EMAIL}</span> from the email address associated with your account.</li>
             </ul>
           </Section>
 
