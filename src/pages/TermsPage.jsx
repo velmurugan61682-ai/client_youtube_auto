@@ -53,7 +53,7 @@ const TermsPage = () => {
             </p>
           </Section>
 
-          <Section title="Google and YouTube Access">
+          <Section title="Google & YouTube Services Integration (Policy III.C.1)">
             <p>
               By accessing, connecting a YouTube channel, or using ChannelBot, you agree to be bound by the{' '}
               <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] font-bold hover:underline inline-flex items-center gap-1">
@@ -65,7 +65,7 @@ const TermsPage = () => {
               <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] font-bold hover:underline inline-flex items-center gap-1">
                 Google Privacy Policy <ExternalLink size={12} />
               </a>{' '}
-              and applicable YouTube API Developer Policies.
+              and all applicable YouTube API Services Developer Policies.
             </p>
             <p>
               You can disconnect your YouTube channel directly inside ChannelBot settings or revoke access at any time from your Google Security Settings page at{' '}
@@ -75,19 +75,22 @@ const TermsPage = () => {
             </p>
           </Section>
 
-          <Section title="YouTube Data Handling, CSV Exports, and 30-Day Storage Limit">
+          <Section title="YouTube Data Retention, 30-Day Limit & Deletion Rights (Policy III.I.4 & Section III.E.4)">
             <p>
-              In accordance with the YouTube API Services Developer Policies (including Policy III.E.4a-g), end users who download or export YouTube data—including CSV exports of leads, comments, or analytics—are legally required to comply with the following data retention and deletion obligations:
+              In accordance with the YouTube API Services Developer Policies (including Policy III.I.4 and Policy III.E.4a-g), all storage, retention, and deletion of YouTube API data adheres to the following mandatory compliance standards:
             </p>
             <ul className="list-disc pl-6 space-y-2 mt-2">
               <li>
-                <strong>30-Day Data Storage Limit:</strong> End users downloading CSV exports are strictly required to comply with the 30-day data storage limit. You must not retain or store downloaded YouTube data (such as commenter names, comment text, video metrics, or channel identifiers) for longer than thirty (30) calendar days from the download date.
+                <strong>30-Day Data Storage Limitation:</strong> Non-authorized YouTube API data stored on ChannelBot servers or exported by users (such as commenter names, comment text, video metrics, or channel identifiers) is retained for no longer than thirty (30) calendar days without a data refresh.
               </li>
               <li>
-                <strong>Mandatory Data Refresh or Deletion:</strong> Upon the expiration of thirty (30) days from export, you are required to permanently delete all exported YouTube data files or refresh the data directly from YouTube API Services.
+                <strong>Automated Data Deletion Mechanism:</strong> Users have full right and capability to trigger an immediate deletion of all their stored YouTube channel records, cached comments, moderation logs, and OAuth tokens via <strong>Settings -&gt; YouTube Privacy &amp; Data Controls</strong> in the ChannelBot application.
               </li>
               <li>
-                <strong>Consistent Consent:</strong> Authorization tokens and downloaded data are used only for purposes consistent with the specific consent granted by an active user according to applicable law.
+                <strong>Revocation Handling:</strong> Upon user revocation of access via Google Security Settings or channel disconnection, all associated YouTube data and OAuth access tokens stored on ChannelBot servers are permanently deleted.
+              </li>
+              <li>
+                <strong>Exported Data Obligations:</strong> End users downloading CSV exports or reports are legally required to delete exported YouTube API data files after 30 days or refresh the data directly from YouTube API Services.
               </li>
             </ul>
           </Section>

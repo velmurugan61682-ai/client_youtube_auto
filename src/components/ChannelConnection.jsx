@@ -280,48 +280,54 @@ const ChannelConnection = ({ channels, setChannels }) => {
             </div>
          </div>
 
-         {/* Mandatory Policy III.C.1 & Policy III.F.2 Compliance Notice */}
-         <div className="bg-white/5 border border-white/10 rounded-2xl p-5 space-y-3 text-[12px] font-medium leading-relaxed text-zinc-300">
-            <p className="text-white font-bold flex items-center gap-2">
-               <ShieldCheck size={16} className="text-[#ff0000]" />
-               YouTube API Terms of Service & Privacy Notice
-            </p>
-            <p>
-               By connecting your YouTube channel or using ChannelBot, you agree to be bound by the{' '}
-               <a 
-                 href="https://www.youtube.com/t/terms" 
-                 target="_blank" 
-                 rel="noopener noreferrer" 
-                 className="text-[#ff0000] hover:underline font-bold inline-flex items-center gap-1"
-               >
-                 YouTube Terms of Service <ExternalLink size={11} />
-               </a>.
-            </p>
-            <p>
-               ChannelBot accesses and processes YouTube API Services data strictly in compliance with the{' '}
-               <a 
-                 href="https://policies.google.com/privacy" 
-                 target="_blank" 
-                 rel="noopener noreferrer" 
-                 className="text-[#ff0000] hover:underline font-bold inline-flex items-center gap-1"
-               >
-                 Google Privacy Policy <ExternalLink size={11} />
-               </a>.
-            </p>
-            <p>
-               You can revoke ChannelBot's access to your YouTube data at any time via the{' '}
-               <a 
-                 href="https://security.google.com/settings/security/permissions" 
-                 target="_blank" 
-                 rel="noopener noreferrer" 
-                 className="text-[#ff0000] hover:underline font-bold inline-flex items-center gap-1"
-               >
-                 Google Security Settings Page <ExternalLink size={11} />
-               </a>{' '}
-               or by disconnecting your channel in ChannelBot.
-            </p>
-         </div>
-      </div>
+          {/* Mandatory Policy III.C.1 & Policy III.I.4 YouTube API Services Compliance Notice */}
+          <div className="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-5 space-y-3.5 text-[12px] font-medium leading-relaxed text-zinc-300">
+             <div className="flex items-center justify-between pb-2 border-b border-zinc-800">
+               <p className="text-white font-bold flex items-center gap-2">
+                  <ShieldCheck size={16} className="text-[#ff0000]" />
+                  YouTube API Terms & Data Deletion Compliance (Policy III.C.1 & III.I.4)
+               </p>
+               <span className="text-[10px] font-black uppercase text-red-400 bg-red-950/60 px-2 py-0.5 rounded border border-red-800/50">
+                 Official Disclosures
+               </span>
+             </div>
+
+             <p>
+                By connecting your YouTube channel or using ChannelBot, you agree to be bound by the{' '}
+                <a 
+                  href="https://www.youtube.com/t/terms" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-[#ff0000] hover:underline font-bold inline-flex items-center gap-1"
+                >
+                  YouTube Terms of Service <ExternalLink size={11} />
+                </a>.
+             </p>
+             <p>
+                ChannelBot accesses and processes YouTube API Services data strictly in accordance with the{' '}
+                <a 
+                  href="https://policies.google.com/privacy" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-[#ff0000] hover:underline font-bold inline-flex items-center gap-1"
+                >
+                  Google Privacy Policy <ExternalLink size={11} />
+                </a>.
+             </p>
+             <p>
+                <strong>Revocation & Data Deletion (Policy III.I.4):</strong> You can revoke ChannelBot's access to your YouTube data at any time via the{' '}
+                <a 
+                  href="https://security.google.com/settings/security/permissions" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-[#ff0000] hover:underline font-bold inline-flex items-center gap-1"
+                >
+                  Google Security Settings Page <ExternalLink size={11} />
+                </a>{' '}
+                or by disconnecting your channel. Stored YouTube API data is deleted upon channel disconnection or via Settings -&gt; YouTube Privacy & Data Controls.
+             </p>
+          </div>
+       </div>
     </div>
   );
 };

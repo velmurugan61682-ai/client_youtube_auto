@@ -7,7 +7,11 @@ import {
   ChevronRight,
   Phone,
   User,
-  Camera
+  Camera,
+  ShieldCheck,
+  ExternalLink,
+  Trash2,
+  AlertTriangle
 } from 'lucide-react';
 import YouTubeIcon from './icons/YouTubeIcon';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -28,6 +32,29 @@ const Settings = ({ user: propUser }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [savingProfile, setSavingProfile] = useState(false);
   const [profilePictureBase64, setProfilePictureBase64] = useState('');
+
+  // YouTube Data Deletion & Privacy Controls State (Policy III.I.4)
+  const [purgingData, setPurgingData] = useState(false);
+  const [showPurgeModal, setShowPurgeModal] = useState(false);
+  const [purgeSuccess, setPurgeSuccess] = useState('');
+
+  const handlePurgeYouTubeData = async () => {
+    setPurgingData(true);
+    setPurgeSuccess('');
+    try {
+      const res = await api.post('/auth/purge-youtube-data');
+      if (res.data.success) {
+        setPurgeSuccess(res.data.message || 'All stored YouTube API data has been permanently purged from our servers.');
+        setShowPurgeModal(false);
+        if (checkAuth) await checkAuth();
+      }
+    } catch (err) {
+      console.error(err);
+      setPurgeSuccess(err.response?.data?.error || 'Failed to purge stored YouTube data.');
+    } finally {
+      setPurgingData(false);
+    }
+  };
 
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
@@ -198,6 +225,7 @@ const Settings = ({ user: propUser }) => {
     { id: 'automation', label: 'Automation Rules', icon: Zap },
     { id: 'credentials', label: 'API Credentials', icon: Key },
     { id: 'profile', label: 'Profile Settings', icon: User },
+    { id: 'privacy', label: 'YouTube Privacy & Data Controls', icon: ShieldCheck }
   ];
 
   return (
@@ -597,10 +625,205 @@ const Settings = ({ user: propUser }) => {
                       </div>
                     </motion.div>
                   )}
+
+                  {activeTab === 'privacy' && (
+                    <motion.div
+                      key="privacy"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 20 }}
+                      className="space-y-6"
+                    >
+                      {/* Policy III.C.1 Compliance Notice Card */}
+                      <div className="bg-white border border-[#e5e5e5] rounded-[22px] p-6 sm:p-8 shadow-sm text-left space-y-4">
+                        <div className="flex items-center gap-3 pb-4 border-b border-zinc-100">
+                          <div className="w-10 h-10 rounded-2xl bg-red-500/10 flex items-center justify-center text-[#ff0000] border border-red-500/20">
+                            <ShieldCheck size={20} />
+                          </div>
+                          <div>
+                            <h3 className="text-base sm:text-lg font-black text-zinc-900">
+                              YouTube API Terms of Service & Privacy Disclosures
+                            </h3>
+                            <p className="text-[11px] font-black text-zinc-400 uppercase tracking-widest mt-0.5">
+                              Policy # :III.C.1 Mandatory Directives
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-3 text-xs sm:text-sm text-zinc-650 font-medium leading-relaxed">
+                          <p>
+                            ChannelBot accesses and processes YouTube API Services data in full compliance with YouTube Developer Policies and Google API Terms.
+                          </p>
+                          <div className="p-4 bg-[#f9fafb] border border-zinc-200/80 rounded-xl space-y-2">
+                            <p className="font-bold text-zinc-900 flex items-center gap-2">
+                              <span className="w-2 h-2 rounded-full bg-[#ff0000]" />
+                              User Binding Terms:
+                            </p>
+                            <p>
+                              By connecting a YouTube channel or using ChannelBot, you agree to be bound by the{' '}
+                              <a
+                                href="https://www.youtube.com/t/terms"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-[#ff0000] font-black hover:underline inline-flex items-center gap-1"
+                              >
+                                YouTube Terms of Service <ExternalLink size={12} />
+                              </a>.
+                            </p>
+                          </div>
+
+                          <div className="p-4 bg-[#f9fafb] border border-zinc-200/80 rounded-xl space-y-2">
+                            <p className="font-bold text-zinc-900 flex items-center gap-2">
+                              <span className="w-2 h-2 rounded-full bg-blue-600" />
+                              Privacy Policy Notice:
+                            </p>
+                            <p>
+                              All data accessed, collected, or processed through YouTube API Services is handled strictly in accordance with the{' '}
+                              <a
+                                href="https://policies.google.com/privacy"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-[#ff0000] font-black hover:underline inline-flex items-center gap-1"
+                              >
+                                Google Privacy Policy <ExternalLink size={12} />
+                              </a>.
+                            </p>
+                          </div>
+
+                          <div className="p-4 bg-[#f9fafb] border border-zinc-200/80 rounded-xl space-y-2">
+                            <p className="font-bold text-zinc-900 flex items-center gap-2">
+                              <span className="w-2 h-2 rounded-full bg-emerald-600" />
+                              Revoke Authorization at Any Time:
+                            </p>
+                            <p>
+                              You can revoke ChannelBot's access to your Google/YouTube account data at any time via the{' '}
+                              <a
+                                href="https://security.google.com/settings/security/permissions"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-[#ff0000] font-black hover:underline inline-flex items-center gap-1"
+                              >
+                                Google Security Settings Permissions Page <ExternalLink size={12} />
+                              </a>.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Policy III.I.4 Compliance & Data Deletion Controls Card */}
+                      <div className="bg-white border border-[#e5e5e5] rounded-[22px] p-6 sm:p-8 shadow-sm text-left space-y-5">
+                        <div className="flex items-center gap-3 pb-4 border-b border-zinc-100">
+                          <div className="w-10 h-10 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-600 border border-amber-500/20">
+                            <Trash2 size={20} />
+                          </div>
+                          <div>
+                            <h3 className="text-base sm:text-lg font-black text-zinc-900">
+                              YouTube API Data Retention & User Data Deletion Controls
+                            </h3>
+                            <p className="text-[11px] font-black text-zinc-400 uppercase tracking-widest mt-0.5">
+                              Policy # :III.I.4 Compliance Controls
+                            </p>
+                          </div>
+                        </div>
+
+                        {purgeSuccess && (
+                          <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs font-bold flex items-center gap-2">
+                            <CheckCircle2 size={16} className="text-emerald-600 shrink-0" />
+                            {purgeSuccess}
+                          </div>
+                        )}
+
+                        <div className="space-y-3 text-xs sm:text-sm text-zinc-650 font-medium leading-relaxed">
+                          <div className="p-4 bg-amber-50/60 border border-amber-200/70 rounded-xl text-amber-900 space-y-2">
+                            <p className="font-bold flex items-center gap-2 text-amber-950">
+                              <AlertTriangle size={16} className="text-amber-600 shrink-0" />
+                              30-Day Data Storage Limit (Policy III.I.4 & Section III.E.4):
+                            </p>
+                            <p className="text-xs font-semibold leading-relaxed">
+                              In accordance with YouTube API Services Developer Policies, ChannelBot stores non-authorized YouTube API data for no longer than 30 calendar days without a refresh. If access is revoked or data deletion is requested, all stored channel data, cached comments, and OAuth tokens are permanently erased.
+                            </p>
+                          </div>
+
+                          <div className="pt-2 space-y-3">
+                            <h4 className="text-sm font-black text-zinc-900">Self-Service Data Deletion Mechanism</h4>
+                            <p className="text-xs text-zinc-500">
+                              Clicking the button below will immediately trigger our automated data purge handler to permanently delete all connected YouTube channels, stored comment records, moderation logs, and OAuth tokens associated with your account from ChannelBot servers.
+                            </p>
+
+                            <button
+                              type="button"
+                              onClick={() => setShowPurgeModal(true)}
+                              className="flex items-center gap-2 px-6 py-3.5 bg-[#ff0000] hover:bg-[#cc0000] text-white rounded-2xl text-xs font-black uppercase tracking-wider shadow-lg shadow-red-500/10 transition-all cursor-pointer"
+                            >
+                              <Trash2 size={16} />
+                              Purge Stored YouTube API Data
+                            </button>
+                          </div>
+
+                          <div className="pt-4 border-t border-zinc-100 text-xs text-zinc-500 font-semibold space-y-1">
+                            <p>
+                              <strong>Manual Deletion Request:</strong> You can also send a data deletion request by emailing{' '}
+                              <span className="font-bold text-zinc-900">support@channelbot.in</span>. Requests are processed within 24-48 hours.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
                 </AnimatePresence>
 
+                {/* Data Purge Confirmation Modal */}
+                {showPurgeModal && (
+                  <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div className="bg-white rounded-[24px] max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl border border-zinc-100 text-left animate-in fade-in zoom-in-95 duration-200">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-2xl bg-red-500/10 flex items-center justify-center text-[#ff0000] border border-red-500/20 shrink-0">
+                          <AlertTriangle size={24} />
+                        </div>
+                        <div>
+                          <h3 className="text-base font-black text-zinc-900">Purge All Stored YouTube Data?</h3>
+                          <p className="text-xs text-zinc-500 font-bold mt-0.5">Policy # :III.I.4 Action</p>
+                        </div>
+                      </div>
+
+                      <p className="text-xs text-zinc-650 font-medium leading-relaxed">
+                        Are you sure you want to proceed? This will permanently delete all your connected YouTube channel records, cached comments, moderation logs, and OAuth access tokens stored on ChannelBot servers.
+                      </p>
+
+                      <div className="flex items-center justify-end gap-3 pt-2">
+                        <button
+                          type="button"
+                          onClick={() => setShowPurgeModal(false)}
+                          disabled={purgingData}
+                          className="px-5 py-2.5 rounded-xl border border-zinc-200 text-xs font-bold text-zinc-600 hover:bg-zinc-50 transition-colors"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handlePurgeYouTubeData}
+                          disabled={purgingData}
+                          className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#ff0000] hover:bg-[#cc0000] text-white text-xs font-black uppercase tracking-wider transition-all disabled:opacity-50"
+                        >
+                          {purgingData ? (
+                            <>
+                              <Loader2 className="animate-spin" size={14} />
+                              Purging...
+                            </>
+                          ) : (
+                            <>
+                              <Trash2 size={14} />
+                              Confirm Data Purge
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* Footer Save Button */}
-                {activeTab !== 'profile' && (
+                {(activeTab === 'automation' || activeTab === 'credentials') && (
                   <div className="flex items-center justify-between p-4 bg-[#fcfcfc] border border-[#f0f0f0] rounded-[24px]">
                     <div className="flex items-center gap-3">
                       <div className={`w-2 h-2 rounded-full ${savingSettings ? 'bg-[#ff0000] animate-ping' : 'bg-[#ff0000]'}`} />

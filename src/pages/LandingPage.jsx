@@ -987,21 +987,34 @@ const LandingPage = () => {
           </div>
         </div>
 
-        {/* Policy III.C.1 & Policy III.F.2 YouTube API Services Compliance Footer Bar */}
+        {/* Policy III.C.1 & Policy III.I.4 YouTube API Services Compliance Footer Bar */}
         <div className="max-w-7xl mx-auto px-6 border-t border-zinc-800/80 pt-6 pb-4">
-          <div className="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-[11px] text-zinc-400 font-medium leading-relaxed">
+          <div className="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-[11px] text-zinc-300 font-medium leading-relaxed">
             <div className="flex items-center gap-3 shrink-0">
               <YouTubeIcon size={24} />
-              <span className="font-bold text-white">Powered by YouTube API Services</span>
+              <div className="flex flex-col text-left">
+                <span className="font-bold text-white text-xs">Powered by YouTube API Services</span>
+                <span className="text-[10px] text-zinc-400 font-semibold">Policy # :III.C.1 & III.I.4 Compliant</span>
+              </div>
             </div>
-            <p className="flex-1">
-              By using ChannelBot, you agree to be bound by the{' '}
-              <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] hover:underline font-bold">YouTube Terms of Service</a>.
-              ChannelBot accesses YouTube API Services in accordance with the{' '}
-              <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] hover:underline font-bold">Google Privacy Policy</a>.
-              You may revoke access at any time via{' '}
-              <a href="https://security.google.com/settings/security/permissions" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] hover:underline font-bold">Google Security Settings</a>.
-            </p>
+            <div className="flex-1 space-y-1 text-left">
+              <p>
+                By using ChannelBot or connecting a channel, you agree to be bound by the{' '}
+                <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] hover:underline font-bold inline-flex items-center gap-1">
+                  YouTube Terms of Service <ExternalLink size={10} />
+                </a>.
+                ChannelBot accesses YouTube API Services in accordance with the{' '}
+                <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] hover:underline font-bold inline-flex items-center gap-1">
+                  Google Privacy Policy <ExternalLink size={10} />
+                </a>.
+              </p>
+              <p className="text-zinc-400 text-[10.5px]">
+                <strong>Data Controls & Revocation (Policy III.I.4):</strong> You can revoke access at any time via{' '}
+                <a href="https://security.google.com/settings/security/permissions" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] hover:underline font-bold inline-flex items-center gap-1">
+                  Google Security Settings <ExternalLink size={10} />
+                </a>. Stored YouTube data is deleted upon channel disconnection or via Settings -&gt; YouTube Privacy & Data Controls.
+              </p>
+            </div>
           </div>
         </div>
 

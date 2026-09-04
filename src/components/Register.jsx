@@ -279,18 +279,25 @@ const Register = ({ onSwitchToLogin }) => {
               )}
             </p>
 
-            <div className="pt-4 border-t border-zinc-100 text-[10px] font-medium text-zinc-400 leading-relaxed">
-              By creating an account or connecting YouTube, you agree to be bound by the{' '}
-              <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer" className="text-red-500 font-bold hover:underline">
-                YouTube Terms of Service
-              </a>{' '}
-              and{' '}
-              <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-red-500 font-bold hover:underline">
-                Google Privacy Policy
-              </a>. You can revoke access at any time via{' '}
-              <a href="https://security.google.com/settings/security/permissions" target="_blank" rel="noopener noreferrer" className="text-red-500 font-bold hover:underline">
-                Google Security Settings
-              </a>.
+            <div className="pt-4 border-t border-zinc-100 text-[10px] font-medium text-zinc-400 leading-relaxed space-y-1">
+              <p>
+                By creating an account or connecting YouTube, you agree to be bound by the{' '}
+                <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] font-bold hover:underline">
+                  YouTube Terms of Service
+                </a>.
+              </p>
+              <p>
+                ChannelBot processes data according to the{' '}
+                <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] font-bold hover:underline">
+                  Google Privacy Policy
+                </a>. Revoke access via{' '}
+                <a href="https://security.google.com/settings/security/permissions" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] font-bold hover:underline">
+                  Google Security Settings
+                </a>.
+              </p>
+              <p className="text-[9px] text-zinc-400 font-semibold pt-0.5">
+                Compliant with YouTube Developer Policies (Policy III.C.1 & Policy III.I.4 - 30-day retention & self-service data deletion available in Settings).
+              </p>
             </div>
           </div>
         </div>

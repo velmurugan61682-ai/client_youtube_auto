@@ -99,32 +99,33 @@ const PrivacyPage = () => {
             </p>
           </Section>
 
-          <Section title="Data Retention">
+          <Section title="Data Retention & YouTube 30-Day Storage Limitation (Policy III.I.4)">
+            <p>
+              In strict accordance with the YouTube API Services Developer Policies (including Policy III.I.4 and Section III.E.4), ChannelBot stores YouTube API data (such as commenter names, comment text, video metrics, and channel details) for no longer than thirty (30) calendar days without a refresh or data update.
+            </p>
             <p>
               We keep account records, connected channel records, OAuth tokens, cached comments, video metadata, analytics snapshots, moderation logs, and reply logs while your ChannelBot account or YouTube channel connection is active and the information is needed to provide the service.
             </p>
             <p>
               If you disconnect a YouTube channel, we delete stored OAuth tokens for that channel and stop syncing new YouTube data. Cached operational records tied to the channel, such as moderation and reply logs, are removed from active systems within a reasonable period unless we must keep limited records for security, fraud prevention, dispute resolution, legal compliance, or backup recovery.
             </p>
-            <p>
-              Backup copies may remain for a limited backup-retention period before they are overwritten or deleted. They are not used for normal product activity after deletion is requested.
-            </p>
           </Section>
 
-          <Section title="Your Controls: Revoke Access or Delete Data">
+          <Section title="YouTube TOS, Google Privacy & Data Deletion Controls (Policy III.C.1 & III.I.4)">
             <p className="mb-3">
-              By using ChannelBot, you agree to be bound by the{' '}
+              By using ChannelBot or connecting a YouTube channel, you agree to be bound by the{' '}
               <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] font-bold hover:underline inline-flex items-center gap-1">
                 YouTube Terms of Service <ExternalLink size={12} />
-              </a>. ChannelBot accesses and processes YouTube API Services data in accordance with the{' '}
+              </a>. ChannelBot accesses and processes YouTube API Services data strictly in accordance with the{' '}
               <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] font-bold hover:underline inline-flex items-center gap-1">
                 Google Privacy Policy <ExternalLink size={12} />
               </a>.
             </p>
             <ul className="list-disc pl-6 space-y-2">
-              <li>You can disconnect a YouTube channel from ChannelBot settings at any time to stop accessing that channel.</li>
-              <li>You can revoke Google OAuth access at any time directly from your Google Security Settings page: <a href="https://security.google.com/settings/security/permissions" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] font-bold hover:underline inline-flex items-center gap-1">Google Security Permissions <ExternalLink size={12} /></a> (or <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] font-bold hover:underline inline-flex items-center gap-1">MyAccount Permissions <ExternalLink size={12} /></a>).</li>
-              <li>To request complete deletion of your ChannelBot account or stored YouTube data, email <span className="font-black text-zinc-900">{CONTACT_EMAIL}</span> from the email address associated with your account.</li>
+              <li><strong>Self-Service Data Deletion (Policy III.I.4):</strong> You can immediately trigger a complete purge of all your stored YouTube channel data, cached comments, moderation logs, and OAuth tokens by navigating to <strong>Settings -&gt; YouTube Privacy &amp; Data Controls</strong> and clicking <em>"Purge Stored YouTube API Data"</em>.</li>
+              <li><strong>Disconnecting Channels:</strong> You can disconnect a YouTube channel from ChannelBot settings at any time to stop accessing that channel.</li>
+              <li><strong>Revoking Access via Google:</strong> You can revoke Google OAuth access at any time directly from your Google Security Settings page: <a href="https://security.google.com/settings/security/permissions" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] font-bold hover:underline inline-flex items-center gap-1">Google Security Permissions <ExternalLink size={12} /></a> (or <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer" className="text-[#ff0000] font-bold hover:underline inline-flex items-center gap-1">MyAccount Permissions <ExternalLink size={12} /></a>).</li>
+              <li><strong>Email Deletion Request:</strong> To request complete deletion of your ChannelBot account or stored YouTube data manually, email <span className="font-black text-zinc-900">{CONTACT_EMAIL}</span> from your registered email address.</li>
             </ul>
           </Section>
 
