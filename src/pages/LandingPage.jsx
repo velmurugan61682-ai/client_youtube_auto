@@ -28,7 +28,8 @@ import {
   Linkedin,
   AlertCircle,
   Menu,
-  X
+  X,
+  ExternalLink
 } from 'lucide-react';
 import YouTubeIcon from '../components/icons/YouTubeIcon';
 import { motion, AnimatePresence } from 'framer-motion';
