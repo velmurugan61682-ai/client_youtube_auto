@@ -854,8 +854,17 @@ const VideosList = ({
                   )}
                 </div>
                 <div className="min-w-0 flex-1 flex flex-col justify-center gap-0.5">
-                  <h4 className={`text-[12px] font-black line-clamp-1 group-hover:text-slate-900 transition-colors leading-snug ${selectedVideo === video.videoId ? 'text-[#ff0000]' : 'text-slate-900'}`}>
-                    {video.title}
+                  <h4 className={`text-[12px] font-black line-clamp-1 leading-snug ${selectedVideo === video.videoId ? 'text-[#ff0000]' : 'text-slate-900'}`}>
+                    <a
+                      href={`https://www.youtube.com/watch?v=${video.videoId}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="hover:text-[#ff0000] hover:underline transition-colors cursor-pointer"
+                      title={`Watch "${video.title}" on YouTube`}
+                    >
+                      {video.title}
+                    </a>
                   </h4>
                   <div className="flex items-center flex-wrap gap-x-2 gap-y-0.5 text-[10px] text-slate-400 font-semibold">
                     <span className="flex items-center gap-1">

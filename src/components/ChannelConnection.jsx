@@ -221,7 +221,17 @@ const ChannelConnection = ({ channels, setChannels }) => {
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-[16px] font-black text-[#0f0f0f] truncate mb-2">{channel.title}</h4>
+                      <h4 className="text-[16px] font-black text-[#0f0f0f] truncate mb-2">
+                        <a 
+                          href={`https://youtube.com/channel/${channel.channelId}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="hover:text-[#ff0000] hover:underline transition-colors"
+                          title={`View ${channel.title} on YouTube`}
+                        >
+                          {channel.title}
+                        </a>
+                      </h4>
                       <div className="flex flex-wrap items-center gap-2">
                         <span className={`px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider ${channel.apiKey ? 'bg-slate-50 text-slate-500 border border-slate-100' : 'bg-red-50 text-red-600 border-red-100'}`}>
                           {channel.apiKey ? 'Data Read' : 'Core Secure'}
