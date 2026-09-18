@@ -66,6 +66,16 @@ const ENDPOINT_DOCS = [
     permission: 'customers:read', description: 'Fetch detailed customer profiles with metrics',
     curl: `curl -H "x-api-key: YOUR_KEY" \\\n  "https://server-youtube-auto.onrender.com/api/external/customers/details?page=1&limit=20"`
   },
+  {
+    method: 'GET', path: '/api/external/messages',
+    permission: 'comments:read', description: 'Fetch comments & messages (all incoming & old comments)',
+    curl: `curl -H "x-api-key: YOUR_KEY" \\\n  "https://server-youtube-auto.onrender.com/api/external/messages?page=1&limit=50"`
+  },
+  {
+    method: 'PATCH', path: '/api/external/messages/:id',
+    permission: 'comments:write', description: 'Update a comment status, note, sentiment, or reply',
+    curl: `curl -X PATCH \\\n  -H "x-api-key: YOUR_KEY" \\\n  -H "Content-Type: application/json" \\\n  -d '{"status":"approved","note":"Reviewed"}' \\\n  https://server-youtube-auto.onrender.com/api/external/messages/COMMENT_ID`
+  },
 ];
 
 // ── Permission Chip ────────────────────────────────────────────────────────────
