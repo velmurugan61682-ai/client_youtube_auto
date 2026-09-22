@@ -81,6 +81,11 @@ const ENDPOINT_DOCS = [
   },
   // ── Tech Vaseegrah Dedicated Endpoints ────────────────────────────────────
   {
+    method: 'GET', path: '/api/external/techvaseegrah/videos',
+    permission: 'comments:read', description: '[Tech Vaseegrah] Fetch ALL videos with comment counts & sentiment stats (channelId, search, page, limit)',
+    curl: `curl -H "x-api-key: YOUR_TV_KEY" \\\n  "https://server-youtube-auto.onrender.com/api/external/techvaseegrah/videos?page=1&limit=50"`
+  },
+  {
     method: 'GET', path: '/api/external/techvaseegrah/comments',
     permission: 'comments:read', description: '[Tech Vaseegrah] Fetch ALL comments — paginated with filters (channelId, videoId, status, sentiment, search)',
     curl: `curl -H "x-api-key: YOUR_TV_KEY" \\\n  "https://server-youtube-auto.onrender.com/api/external/techvaseegrah/comments?page=1&limit=50"`
@@ -691,6 +696,7 @@ const TechVaseegrahKeyModal = ({ onClose, onCreated }) => {
                   <PermissionChip scope="comments:write" />
                 </div>
                 <div style={{ marginTop: 10, fontSize: 12, color: '#475569', lineHeight: 1.6 }}>
+                  • Fetch all videos with comment counts & sentiment stats<br />
                   • Fetch all YouTube comments (paginated)<br />
                   • Fetch new/recent comments by time window<br />
                   • Update comment status, sentiment, note, replyText
