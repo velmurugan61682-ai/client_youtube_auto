@@ -44,3 +44,11 @@ export const deleteApiKey = (id) =>
  */
 export const getApiKeyStats = (id) =>
   api.get(`${BASE}/${id}/stats`, { headers: authHeaders() });
+
+/**
+ * Create a Tech Vaseegrah scoped API key (tv_* prefix).
+ * Generates a key with comments:read + comments:write permissions only.
+ * Uses JWT auth (not an API key).
+ */
+export const createTechVaseegrahApiKey = (payload) =>
+  api.post('/external/techvaseegrah/api-key', payload, { headers: authHeaders() });

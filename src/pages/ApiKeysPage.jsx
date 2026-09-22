@@ -11,16 +11,18 @@ import {
   updateApiKey,
   deleteApiKey,
   getApiKeyStats,
+  createTechVaseegrahApiKey,
 } from '../services/api/apiKeyService';
 
 // ── Available Permissions ───────────────────────────────────────────────────
 const AVAILABLE_PERMISSIONS = [
-  { scope: 'leads:read',     label: 'Leads — Read',     description: 'Read leads captured from YouTube comments' },
-  { scope: 'leads:write',    label: 'Leads — Write',    description: 'Create new leads via the external API' },
-  { scope: 'users:read',     label: 'Users — Read',     description: 'Read the full list of registered users (admin keys only)' },
-  { scope: 'customers:read', label: 'Customers — Read', description: 'Read detailed customer profiles with metrics' },
-  { scope: 'comments:read',  label: 'Comments — Read',  description: 'Read YouTube comment data and moderation history' },
-  { scope: 'analytics:read', label: 'Analytics — Read', description: 'Read channel and content analytics data' },
+  { scope: 'leads:read',     label: 'Leads — Read',       description: 'Read leads captured from YouTube comments' },
+  { scope: 'leads:write',    label: 'Leads — Write',      description: 'Create new leads via the external API' },
+  { scope: 'users:read',     label: 'Users — Read',       description: 'Read the full list of registered users (admin keys only)' },
+  { scope: 'customers:read', label: 'Customers — Read',   description: 'Read detailed customer profiles with metrics' },
+  { scope: 'comments:read',  label: 'Comments — Read',    description: 'Fetch all YouTube comments and new/recent comments' },
+  { scope: 'comments:write', label: 'Comments — Write',   description: 'Reply to, update or delete YouTube comments via API' },
+  { scope: 'analytics:read', label: 'Analytics — Read',   description: 'Read channel and content analytics data' },
 ];
 
 const formatDate = (d) => {
@@ -42,6 +44,7 @@ const SCOPE_COLORS = {
   'users:read':     { bg: '#fefce8', border: '#fef08a', text: '#ca8a04' },
   'customers:read': { bg: '#fef2f2', border: '#fecaca', text: '#e11d48' },
   'comments:read':  { bg: '#faf5ff', border: '#e9d5ff', text: '#9333ea' },
+  'comments:write': { bg: '#f0f9ff', border: '#bae6fd', text: '#0284c7' },
   'analytics:read': { bg: '#f0fdf4', border: '#bbf7d0', text: '#16a34a' },
 };
 
@@ -75,6 +78,22 @@ const ENDPOINT_DOCS = [
     method: 'PATCH', path: '/api/external/messages/:id',
     permission: 'comments:write', description: 'Update a comment status, note, sentiment, or reply',
     curl: `curl -X PATCH \\\n  -H "x-api-key: YOUR_KEY" \\\n  -H "Content-Type: application/json" \\\n  -d '{"status":"approved","note":"Reviewed"}' \\\n  https://server-youtube-auto.onrender.com/api/external/messages/COMMENT_ID`
+  },
+  // ── Tech Vaseegrah Dedicated Endpoints ────────────────────────────────────
+  {
+    method: 'GET', path: '/api/external/techvaseegrah/comments',
+    permission: 'comments:read', description: '[Tech Vaseegrah] Fetch ALL comments — paginated with filters (channelId, videoId, status, sentiment, search)',
+    curl: `curl -H "x-api-key: YOUR_TV_KEY" \\\n  "https://server-youtube-auto.onrender.com/api/external/techvaseegrah/comments?page=1&limit=50"`
+  },
+  {
+    method: 'GET', path: '/api/external/techvaseegrah/comments/new',
+    permission: 'comments:read', description: '[Tech Vaseegrah] Fetch NEW/recent comments in the last N hours (default: 24 h)',
+    curl: `curl -H "x-api-key: YOUR_TV_KEY" \\\n  "https://server-youtube-auto.onrender.com/api/external/techvaseegrah/comments/new?hours=24&limit=100"`
+  },
+  {
+    method: 'PATCH', path: '/api/external/techvaseegrah/comments/:id',
+    permission: 'comments:write', description: '[Tech Vaseegrah] Update a comment — status, note, sentiment, replyText',
+    curl: `curl -X PATCH \\\n  -H "x-api-key: YOUR_TV_KEY" \\\n  -H "Content-Type: application/json" \\\n  -d '{"status":"approved","replyText":"Thank you!"}' \\\n  https://server-youtube-auto.onrender.com/api/external/techvaseegrah/comments/COMMENT_ID`
   },
 ];
 
@@ -593,11 +612,176 @@ const DocsPanel = () => {
   );
 };
 
+// ── Tech Vaseegrah Quick-Create Modal ──────────────────────────────────────────
+const TechVaseegrahKeyModal = ({ onClose, onCreated }) => {
+  const [name, setName] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [createdKey, setCreatedKey] = useState(null);
+
+  const handleCreate = async () => {
+    if (!name.trim()) { setError('Key name is required.'); return; }
+    setLoading(true); setError('');
+    try {
+      const res = await createTechVaseegrahApiKey({ name: name.trim(), description: 'Tech Vaseegrah comment read/write key' });
+      setCreatedKey(res.data.apiKey);
+      onCreated();
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to create Tech Vaseegrah API key.');
+    } finally { setLoading(false); }
+  };
+
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, background: 'rgba(15, 23, 42, 0.55)', backdropFilter: 'blur(10px)',
+      zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20
+    }}>
+      <div style={{
+        background: '#ffffff', border: '1px solid #bae6fd',
+        borderRadius: 24, width: '100%', maxWidth: 520,
+        boxShadow: '0 25px 50px -12px rgba(0,0,0,0.15)', overflow: 'hidden'
+      }}>
+        {/* Header */}
+        <div style={{ background: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)', padding: '22px 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <div style={{ width: 42, height: 42, borderRadius: 14, background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Key size={22} color="#fff" />
+            </div>
+            <div>
+              <h2 style={{ margin: 0, fontSize: 18, fontWeight: 900, color: '#fff' }}>Tech Vaseegrah API Key</h2>
+              <p style={{ margin: 0, fontSize: 12, color: 'rgba(255,255,255,0.8)' }}>comments:read + comments:write only</p>
+            </div>
+          </div>
+          <button onClick={onClose} style={{ background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: 10, color: '#fff', cursor: 'pointer', padding: '6px 8px', display: 'flex', alignItems: 'center' }}>
+            <X size={16} />
+          </button>
+        </div>
+
+        <div style={{ padding: '24px 28px 28px' }}>
+          {createdKey ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+              <div style={{ background: '#f0f9ff', border: '1px solid #bae6fd', borderRadius: 16, padding: 20 }}>
+                <p style={{ margin: '0 0 12px', fontSize: 13, color: '#0284c7', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <CheckCircle2 size={17} /> Key generated — copy it now!
+                </p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                  <code style={{ flex: 1, background: '#fff', border: '1px solid #bae6fd', borderRadius: 10, padding: '10px 14px', fontSize: 12, color: '#0284c7', fontFamily: 'monospace', wordBreak: 'break-all', fontWeight: 700 }}>{createdKey.key}</code>
+                  <CopyButton text={createdKey.key} label="Copy" />
+                </div>
+              </div>
+              <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 14, padding: 16 }}>
+                <div style={{ fontSize: 11, fontWeight: 800, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 10 }}>Enabled Endpoints</div>
+                {Object.entries(createdKey.endpoints || {}).map(([k, v]) => (
+                  <div key={k} style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 6 }}>
+                    <code style={{ fontSize: 11, color: '#0284c7', background: '#f0f9ff', padding: '4px 10px', borderRadius: 6, fontFamily: 'monospace', fontWeight: 700, whiteSpace: 'nowrap' }}>{v}</code>
+                  </div>
+                ))}
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                {(createdKey.permissions || []).map(p => <PermissionChip key={p} scope={p} />)}
+              </div>
+              <button onClick={onClose} style={{ padding: '12px', borderRadius: 12, background: '#0284c7', color: '#fff', border: 'none', cursor: 'pointer', fontWeight: 800, fontSize: 14, boxShadow: '0 4px 14px rgba(2,132,199,0.3)' }}>Done</button>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+              <div style={{ background: '#f0f9ff', border: '1px solid #bae6fd', borderRadius: 14, padding: '14px 18px' }}>
+                <div style={{ fontSize: 12, fontWeight: 800, color: '#0284c7', marginBottom: 8 }}>This key grants access to:</div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                  <PermissionChip scope="comments:read" />
+                  <PermissionChip scope="comments:write" />
+                </div>
+                <div style={{ marginTop: 10, fontSize: 12, color: '#475569', lineHeight: 1.6 }}>
+                  • Fetch all YouTube comments (paginated)<br />
+                  • Fetch new/recent comments by time window<br />
+                  • Update comment status, sentiment, note, replyText
+                </div>
+              </div>
+
+              {error && (
+                <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 12, padding: '12px 16px', display: 'flex', gap: 8, alignItems: 'center' }}>
+                  <AlertTriangle size={15} color="#dc2626" />
+                  <span style={{ fontSize: 13, color: '#dc2626', fontWeight: 600 }}>{error}</span>
+                </div>
+              )}
+
+              <div>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 800, color: '#475569', marginBottom: 7, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Key Name *</label>
+                <input value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Tech Vaseegrah Production"
+                  style={{ width: '100%', padding: '11px 14px', background: '#f8fafc', border: '1px solid #bae6fd', borderRadius: 12, color: '#0f172a', fontSize: 14, outline: 'none', boxSizing: 'border-box', fontWeight: 600 }}
+                />
+              </div>
+
+              <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
+                <button onClick={onClose} style={{ flex: 1, padding: '12px', borderRadius: 12, background: '#f1f5f9', color: '#475569', border: '1px solid #cbd5e1', cursor: 'pointer', fontWeight: 700, fontSize: 14 }}>Cancel</button>
+                <button onClick={handleCreate} disabled={loading} style={{
+                  flex: 2, padding: '12px', borderRadius: 12,
+                  background: loading ? '#94a3b8' : '#0284c7',
+                  color: '#fff', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', fontWeight: 800, fontSize: 14,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                  boxShadow: loading ? 'none' : '0 4px 14px rgba(2,132,199,0.35)'
+                }}>
+                  {loading ? <><Loader2 size={16} className="spin" /> Generating...</> : <><Plus size={16} /> Generate TV Key</>}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ── Tech Vaseegrah Info Panel ────────────────────────────────────────────────
+const TechVaseegrahPanel = ({ onCreateClick }) => (
+  <div style={{ background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)', border: '1px solid #bae6fd', borderRadius: 18, overflow: 'hidden', boxShadow: '0 2px 8px rgba(14,165,233,0.08)' }}>
+    <div style={{ padding: '16px 20px 14px', borderBottom: '1px solid #bae6fd', display: 'flex', alignItems: 'center', gap: 10 }}>
+      <div style={{ width: 32, height: 32, borderRadius: 10, background: '#0284c7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Shield size={16} color="#fff" />
+      </div>
+      <div>
+        <div style={{ fontSize: 14, fontWeight: 900, color: '#0c4a6e' }}>Tech Vaseegrah</div>
+        <div style={{ fontSize: 11, color: '#0369a1' }}>Comment API Integration</div>
+      </div>
+    </div>
+    <div style={{ padding: '14px 20px' }}>
+      <div style={{ fontSize: 12, color: '#0369a1', lineHeight: 1.7, marginBottom: 14 }}>
+        Create a dedicated API key that provides access to <strong>comment read</strong> and <strong>comment write</strong> operations only.
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 16 }}>
+        {[
+          { endpoint: 'GET /techvaseegrah/comments', desc: 'All comments' },
+          { endpoint: 'GET /techvaseegrah/comments/new', desc: 'New/recent comments' },
+          { endpoint: 'PATCH /techvaseegrah/comments/:id', desc: 'Write comment' },
+        ].map(item => (
+          <div key={item.endpoint} style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+            <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#0284c7', flexShrink: 0 }} />
+            <code style={{ fontSize: 10, color: '#0284c7', fontFamily: 'monospace', fontWeight: 700 }}>{item.endpoint}</code>
+          </div>
+        ))}
+      </div>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 14 }}>
+        <PermissionChip scope="comments:read" />
+        <PermissionChip scope="comments:write" />
+      </div>
+      <button onClick={onCreateClick} style={{
+        width: '100%', padding: '11px', borderRadius: 12,
+        background: '#0284c7', color: '#fff', border: 'none',
+        cursor: 'pointer', fontWeight: 800, fontSize: 13,
+        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+        boxShadow: '0 4px 14px rgba(2,132,199,0.3)', transition: 'all .2s'
+      }}>
+        <Plus size={15} /> Create Tech Vaseegrah Key
+      </button>
+    </div>
+  </div>
+);
+
 // ── Main Page ──────────────────────────────────────────────────────────────────
 export default function ApiKeysPage() {
   const [keys, setKeys] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
+  const [showTVCreate, setShowTVCreate] = useState(false);
   const [error, setError] = useState('');
 
   const fetchKeys = useCallback(async () => {
@@ -634,6 +818,12 @@ export default function ApiKeysPage() {
           <CreateKeyModal
             onClose={() => setShowCreate(false)}
             onCreated={() => { setShowCreate(false); fetchKeys(); }}
+          />
+        )}
+        {showTVCreate && (
+          <TechVaseegrahKeyModal
+            onClose={() => setShowTVCreate(false)}
+            onCreated={() => { setShowTVCreate(false); fetchKeys(); }}
           />
         )}
 
@@ -741,6 +931,7 @@ export default function ApiKeysPage() {
 
           {/* Right column */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16, position: 'sticky', top: 24 }}>
+            <TechVaseegrahPanel onCreateClick={() => setShowTVCreate(true)} />
             <DocsPanel />
           </div>
         </div>

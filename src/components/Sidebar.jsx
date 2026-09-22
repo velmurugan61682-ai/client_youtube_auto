@@ -11,7 +11,8 @@ import {
   CreditCard,
   UserCircle,
   Moon,
-  Sun
+  Sun,
+  Key
 } from 'lucide-react';
 import YouTubeIcon from './icons/YouTubeIcon';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -33,13 +34,14 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen, user, o
 
   const expanded = isOpen || (isDesktop && hoverOpen);
   const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'videos', label: 'Videos', icon: Video },
-    { id: 'channels', label: 'Channels', icon: YouTubeIcon },
-    { id: 'leads', label: 'Leads', icon: UsersRound },
-    { id: 'moderation', label: 'Auto-Mod', icon: ShieldCheck },
+    { id: 'dashboard',    label: 'Dashboard',    icon: LayoutDashboard },
+    { id: 'videos',       label: 'Videos',       icon: Video },
+    { id: 'channels',     label: 'Channels',     icon: YouTubeIcon },
+    { id: 'leads',        label: 'Leads',        icon: UsersRound },
+    { id: 'moderation',   label: 'Auto-Mod',     icon: ShieldCheck },
+    { id: 'api-keys',     label: 'API Keys',     icon: Key },
     { id: 'subscription', label: 'Subscription', icon: CreditCard },
-    { id: 'settings', label: 'Settings', icon: Settings },
+    { id: 'settings',     label: 'Settings',     icon: Settings },
   ];
 
   return (
